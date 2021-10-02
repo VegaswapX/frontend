@@ -40,7 +40,8 @@
       
           <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
             <h1 class="display-4">Boost Pool</h1>
-            <p class="lead">Provide liquidity in USDT and earn VGA tokens. Rewards dynamically adjust. The benefit of staking USDT..</p>           
+            <p class="lead">Provide liquidity in USDT and earn VGA tokens. Rewards dynamically adjust. 
+              <br>The benefit of staking USDT is that the risk is limited. The reward is received in VGA at a high yield.</p>           
            
           </div>
       
@@ -53,14 +54,16 @@
                 <div class="card-body">
 
                     <p>BNB balance: <span id="balance">0</span></p>
+                    <p>USDT balance: <span id="usdtbalance">0</span></p>
                     <p>VGA balance: <span id="vgabalance">0</span></p>
-                    <p>VGA allowance: <span id="vgaallowance">0</span></p>
+                    <p>VGA allowance for pool: <span id="vgaallowance">0</span></p>
+                    <p>Staked: <span id="staked">0</span></p>
                     <p>account: <span id="account"></span></p>
-                    <p>amount staked: <span id="staked">0</span></p>
+                    
                     <p>reward: <span id="reward">0</span></p>
                     <!-- <p>total Supply: <span id="totalsupply"></span></p> -->
 
-                    <p>Reward: <span id="result"></span></p>
+                    
                     <input id="stakeinput" type="text"/>
                     <!-- <input type="submit" value="submit"/> -->
                     
@@ -82,6 +85,7 @@
                 <div class="card-body">
                   <h2 class="card-title pricing-card-title">current ROI: 15%</h2>
                   <h2 class="card-title pricing-card-title">current APY: 95%</h2>
+                  <p>Reward: <span id="result"></span></p>
                 </div>
               </div>
               
@@ -90,6 +94,7 @@
                   <h4 class="my-0 font-weight-normal">Pool Info</h4>
                 </div>
                 <div class="card-body">
+                  <p>total amount staked: <span id="totalstaked">0</span> $</p>
                   <h2 class="card-title pricing-card-title">Total staked: 100'000$</h2>
                   <h2 class="card-title pricing-card-title">% of rewards: 15%</h2>
                   <h2 class="card-title pricing-card-title">Reward per USD</h2>

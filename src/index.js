@@ -1,4 +1,7 @@
 //TODO: disconnect
+//TODO: handle error eg. evert BoostPool: can only stake once
+//TODO: stake USDT
+
 
 const ethereumButton = document.querySelector('#connectWeb3');
 const statusEl = document.querySelector('#status');
@@ -13,8 +16,10 @@ let connected = false;
 let afterConnectCallback;
 let BoostPool;
 let VegaToken;
+let stakeAmount;
 const vega_contactAddress = "0x18A1938C6D7bCC9459f13832210707FcaEaAB201";
 const pool_contactAddress = "0x081d2605123B574459A014b963d0ad323D336959";
+
 
 function detectMetaMask() {
   if (typeof window.ethereum !== 'undefined') {                
@@ -114,11 +119,24 @@ async function setBalance(){
   document.querySelector("#account").innerHTML = currentAccount;
 
 }
+
 async function stake(){
-  BoostPool.methods.stake(100).send({from:currentAccount}).then(function (result) {
-    console.log(result);
-    // $('#getValue').html(input_value)
-  });
+  //TODO check allowance
+  let amount = stakeAmount;
+  if (amount > 0){
+    BoostPool.methods.stake(amount).send({from:currentAccount}).then(function (result) {
+      console.log(result);
+      if (result.status) {
+        console.log("approved")
+        setValues()
+        
+      } else {
+        console.log("not approved")
+      }
+      
+    });
+  }
+  
 }
 
 async function approve(){
@@ -128,6 +146,7 @@ async function approve(){
     console.log(result);
     if (result.status) {
       console.log("approved")
+      setValues()
       
     } else {
       console.log("not approved")
@@ -142,8 +161,6 @@ async function setValues() {
     
     document.querySelector("#balance").innerHTML = balance;
 
-    
-
     VegaToken = new web3.eth.Contract(
       tokenABI,
       vega_contactAddress
@@ -156,8 +173,15 @@ async function setValues() {
 
     BoostPool.methods.totalAmountStaked().call().then(function(result) {
       console.log("totalAmountStaked " + result);
-      $('#staked').html(result);
+      $('#totalstaked').html(result);
     });
+
+    BoostPool.methods.stakes(currentAccount).call().then(function(result) {
+      console.log("stakes " + result.stakeAmount);
+      $('#staked').html(result.stakeAmount);
+
+    });
+    
     
     BoostPool.methods.reward().call().then(function(result) {
       reward = result;
@@ -278,10 +302,15 @@ $( document ).ready(function() {
     // Print entered value in a div box
     let v = $(this).val();
     try {
-      stakeAmount = parseInt(v);
-      if (stakeAmount >0) {
-        let rewardamount = stakeAmount*15;
-      $("#result").text(rewardamount);
+      v = parseInt(v);
+      if (v >0) {
+        // let rewardamount = stakeAmount*15;
+        // $("#result").text(rewardamount);
+        if (v < 1000){
+          stakeAmount = v;
+        } else {
+          console.log("amount too large")
+        }
       }
       
     } catch {

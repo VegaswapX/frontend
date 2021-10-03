@@ -1,0 +1,12 @@
+sudo apt update
+sudo apt install python3 python3-pip tmux htop
+mkdir deployedapp
+sudo apt-get install -y python
+
+sudo rsync -rv ./ ubuntu@13.213.2.182:/home/ubuntu/deployedapp
+sudo rsync -rv ./app.py ubuntu@13.213.2.182:/home/ubuntu/deployedapp
+
+
+aws ec2 describe-instance-attribute --instance-id instance_id --attribute groupSet
+
+http://18.208.142.28

@@ -1,7 +1,10 @@
 //TODO: disconnect
 //TODO: handle error eg. evert BoostPool: can only stake once
 //TODO: stake USDT
-
+//TODO: poll update
+//TODO: network change and display
+//TODO: roi calculation
+//disconnect see: https://github.com/MetaMask/metamask-extension/issues/8990
 
 const ethereumButton = document.querySelector('#connectWeb3');
 const statusEl = document.querySelector('#status');
@@ -17,8 +20,11 @@ let afterConnectCallback;
 let BoostPool;
 let VegaToken;
 let stakeAmount;
-const vega_contactAddress = "0x18A1938C6D7bCC9459f13832210707FcaEaAB201";
-const pool_contactAddress = "0x081d2605123B574459A014b963d0ad323D336959";
+// const vega_contactAddress = "0x82458F05ad144dc3AC4fa9E418686a559ecfCdF8";
+// const pool_contactAddress = "0x0a6c26f89a121864B93743c7e29aD6C479350d59";
+
+const vega_contactAddress = "0x8076584601196a6261Fe03366b006E7867edF198";
+const pool_contactAddress = "0xAee1bdf0D313F6B2F0A6627E1Ff81AFb34bBb283";
 
 
 function detectMetaMask() {
@@ -30,13 +36,19 @@ function detectMetaMask() {
 }
 
 function handleAccountsChanged(accounts) {
-  console.log('Calling HandleChanged')
-  
-  if (accounts.length === 0) {
+  console.log("accountsChanged " + accounts)
+
+    // Handle the new accounts, or lack thereof.
+    // "accounts" will always be an array, but it can be empty.
+      
+    if (accounts.length === 0) {
+      // MetaMask is locked or the user has not connected any accounts
       console.log('Please connect to MetaMask.');
       // $('#enableMetamask').html('Connect with Metamask')
-  } else if (accounts[0] !== currentAccount) {
+    } else if (accounts[0] !== currentAccount) {
       currentAccount = accounts[0];
+      console.log("currentAccount " + currentAccount);
+
       // $('#enableMetamask').html(currentAccount)
       // $('#status').html('')
       
@@ -45,13 +57,13 @@ function handleAccountsChanged(accounts) {
           showAccount.innerHTML = currentAccount;
           ethereumButton.innerHTML = "Connected";
 
-          console.log('>> ' + currentAccount)
+          setValues();
           // let a = Web3.utils.toChecksumAddress(currentAccount);
-
 
       }
   }
-  console.log('WalletAddress in HandleAccountChanged ='+currentAccount)
+  console.log('current account ='+currentAccount)
+  
 }
 
 
@@ -74,22 +86,16 @@ async function connect() {
     }
 
     window.ethereum.on('accountsChanged', (accounts) => {
-      // Handle the new accounts, or lack thereof.
-      // "accounts" will always be an array, but it can be empty.
-      console.log("accountsChanged " + accounts)
+      handleAccountsChanged(accounts  )
+    })
 
-      if (accounts.length === 0) {
-        // MetaMask is locked or the user has not connected any accounts
-        console.log('Please connect to MetaMask.');
-      } else if (accounts[0] !== currentAccount) {
-        currentAccount = accounts[0];
-        console.log("currentAccount " + currentAccount);
-      }
-    });
+    // window.ethereum.on('accountsChanged', (accounts) => {
+   
+    // });
     
-    window.ethereum.on('networkChanged', function (networkId) {
+    window.ethereum.on('chainChanged', function (networkId) {
       // Time to reload your interface with the new networkId
-      console.log("networkChanged " + networkId)
+      console.log("chainChanged " + networkId)
     })
     
   }
@@ -159,6 +165,7 @@ async function setValues() {
 
   if (currentAccount){
     
+    var balance = await web3.eth.getBalance(currentAccount)/10**18;
     document.querySelector("#balance").innerHTML = balance;
 
     VegaToken = new web3.eth.Contract(
@@ -171,10 +178,28 @@ async function setValues() {
       pool_contactAddress
     );
 
+    $("#pooladdress").html(pool_contactAddress);
+
     BoostPool.methods.totalAmountStaked().call().then(function(result) {
       console.log("totalAmountStaked " + result);
       $('#totalstaked').html(result);
     });
+
+    // for (m in BoostPool.methods){
+    //   console.log(m)
+    // }
+
+    BoostPool.methods.duration().call().then(function(result) {
+      console.log("duration " + result);
+    });
+
+    // BoostPool.startTime().call().then(function(result) {
+    //   $('#starttime').html(result);
+    // });
+
+    // BoostPool.methods.endTime().call().then(function(result) {
+    //   $('#endtime').html(result);
+    // });
 
     BoostPool.methods.stakes(currentAccount).call().then(function(result) {
       console.log("stakes " + result.stakeAmount);
@@ -187,6 +212,16 @@ async function setValues() {
       reward = result;
       $('#reward').html(result);
     });
+    
+    BoostPool.methods.StakeToken().call().then(function(result){
+      $('#stakeaddress').html(result);
+    })
+
+    BoostPool.methods.YieldToken().call().then(function(result){
+      $('#yieldaddress').html(result);
+    })
+
+    // yieldTotal
 
 
     // BoostPool.methods.reward
@@ -330,6 +365,7 @@ $( document ).ready(function() {
   
 
 });
+
 
 // var waitforWeb3 = function(callback){
 //   if(typeof web3 != 'undefined'){

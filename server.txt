@@ -1,12 +1,33 @@
+#fix contract abi static file
+#server/abi
+
+#TODO ssl/https
+https://blog.miguelgrinberg.com/post/running-your-flask-application-over-https
+#TODO images
+
 sudo apt update
 sudo apt install python3 python3-pip tmux htop
 mkdir deployedapp
 sudo apt-get install -y python
 
-sudo rsync -rv ./ ubuntu@13.213.2.182:/home/ubuntu/deployedapp
-sudo rsync -rv ./app.py ubuntu@13.213.2.182:/home/ubuntu/deployedapp
+sudo rsync -rv ./ ubuntu@vegaec2:/home/ubuntu/vegaapp
+sudo rsync -rv ./app.py ubuntu@vegaec2:/home/ubuntu/vegaapp
 
 
 aws ec2 describe-instance-attribute --instance-id instance_id --attribute groupSet
 
 http://18.208.142.28
+
+sudo cp vegaapp.service /etc/systemd/system/
+cat /etc/systemd/system/vegaapp.service
+sudo systemctl daemon-reload
+sudo systemctl start vegaapp
+sudo systemctl status vegaapp
+journalctl -u vegaapp
+
+# sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+
+
+ps -fA | grep python
+
+/usr/bin/python3 /home/ubuntu/vegaapp/app.py

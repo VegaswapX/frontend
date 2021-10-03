@@ -147,8 +147,8 @@ async function stake(){
 
 async function approve(){
   console.log("approve")
-
-  VegaToken.methods.approve(pool_contactAddress, 100).send({from:currentAccount}).then(function (result) {
+  let approveAmount = 5000 * 10**18;
+  VegaToken.methods.approve(pool_contactAddress, approveAmount).send({from:currentAccount}).then(function (result) {
     console.log(result);
     if (result.status) {
       console.log("approved")
@@ -184,10 +184,6 @@ async function setValues() {
       console.log("totalAmountStaked " + result);
       $('#totalstaked').html(result);
     });
-
-    // for (m in BoostPool.methods){
-    //   console.log(m)
-    // }
 
     BoostPool.methods.duration().call().then(function(result) {
       console.log("duration " + result);
@@ -248,36 +244,7 @@ async function loadContracts() {
 
 }
 
-async function loadWeb3() {
-  if (window.ethereum) {
-    const web3 = new Web3(window.ethereum);
-    try {
-      // Request account access if needed
-      await window.ethereum.enable();
-      // Acccounts now exposed
-      return web3;
-    } catch (error) {
-      console.error(error);
-    }
 
-
-  }
-  // Legacy dapp browsers...
-  else if (window.web3) {
-    // Use Mist/MetaMask's provider.
-    const web3 = window.web3;
-    console.log('Injected web3 detected.');
-    return web3;
-  }
-  // Fallback to localhost; use dev console port by default...
-  else {
-    //TODO
-    const provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545');
-    const web3 = new Web3(provider);
-    console.log('No web3 instance injected, using Local web3.');
-    return web3;
-  }
-}
 
 afterConnectCallback= function() {
   console.log("afterConnectCallback")
@@ -292,11 +259,13 @@ $( document ).ready(function() {
   // boostApp();
   console.log("ready");
 
-  $.getJSON("./VegaToken.json", function(result) {            
+  const API_endpoint = "http://localhost:8080/abi/";
+
+  $.getJSON(API_endpoint + "VegaToken.json", function(result) {            
     tokenABI = result.abi
   });
 
-  $.getJSON("./BoostPool.json", function(result) {            
+  $.getJSON(API_endpoint + "BoostPool.json", function(result) {            
     poolABI = result.abi
   });
 
@@ -396,3 +365,34 @@ $( document ).ready(function() {
   //   const msg = "eth not installed";
   //   console.log(msg)
   //   statusEl.innerHTML = msg;
+
+  // async function loadWeb3() {
+  //   if (window.ethereum) {
+  //     const web3 = new Web3(window.ethereum);
+  //     try {
+  //       // Request account access if needed
+  //       await window.ethereum.enable();
+  //       // Acccounts now exposed
+  //       return web3;
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  
+  
+  //   }
+  //   // Legacy dapp browsers...
+  //   else if (window.web3) {
+  //     // Use Mist/MetaMask's provider.
+  //     const web3 = window.web3;
+  //     console.log('Injected web3 detected.');
+  //     return web3;
+  //   }
+  //   // Fallback to localhost; use dev console port by default...
+  //   else {
+  //     //TODO
+  //     const provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545');
+  //     const web3 = new Web3(provider);
+  //     console.log('No web3 instance injected, using Local web3.');
+  //     return web3;
+  //   }
+  // }

@@ -1,0 +1,17 @@
+[Unit]
+; https://blog.miguelgrinberg.com/post/running-a-flask-application-as-a-service-with-systemd
+Description=Web Service
+After=multi-user.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/vegaapp
+ExecStart=/usr/bin/python3 /home/ubuntu/vegaapp/app.py
+ExecStop=/bin/echo "web stopped"
+StandardInput=tty-force
+StandardOutput=file:/home/ubuntu/server.log
+
+[Install]
+WantedBy=multi-user.target

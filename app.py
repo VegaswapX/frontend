@@ -4,26 +4,19 @@ from flask import Flask, render_template
 app = Flask(__name__, static_url_path='/static')
 # cors = CORS(app)
 
-# url_for('static', filename='style.css')
-
-# @app.route("/")
-# def index():
-#     return "<p>Hello, World!</p>"
-
-# @app.route('/')
-# @app.route('/index')
-# def index():
-#     return app.send_static_file('index.html')
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
+    print("path ", path)
     if len(path)==0:
-        # return("index")
         return app.send_static_file('index.html')
-        # return app.send_static_file('hello.html')
     else:
-        return app.send_static_file(path)
+        if path.startswith("abi/"):
+            print("load abi ", path)
+            return app.send_static_file(path)
+        else:
+            return app.send_static_file(path)
         # return 'You want path: %s' % path
 
 # @app.route('/', defaults={'path': ''})

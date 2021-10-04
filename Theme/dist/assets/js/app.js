@@ -377,6 +377,8 @@ function ($) {
         var config = self.layout.getConfig();
         
         if (config) {
+            // console.log(">> ",config);
+            console.log("mode >> ",config.mode);
             $('.right-bar input[type=checkbox]').prop('checked',false);
             $('input[type=checkbox][name=color-scheme-mode][value=' + config.mode + ']').prop('checked', true);
             $('input[type=checkbox][name=width][value=' + config.width + ']').prop('checked', true);
@@ -543,8 +545,11 @@ function ($) {
      LayoutThemeApp.prototype.loadConfig = function() {
         var bodyConfig = JSON.parse(this.body.attr('data-layout') ? this.body.attr('data-layout') : '{}');
         
+
+        console.log("load config...");
+
         var config = $.extend({}, {
-            mode: "light",
+            mode: "dark",
             width: "fluid",
             menuPosition: 'fixed',
             sidebar: {
@@ -560,6 +565,8 @@ function ($) {
         if (bodyConfig) {
             config = $.extend({}, config, bodyConfig);
         };
+        config.mode = "dark";
+        console.log("config..."  + config.mode);
         return config;
     },
 
@@ -609,6 +616,7 @@ function ($) {
         var self = this;
 
         // sets the theme
+        console.log("changeMode >> " + mode);
         switch (mode) {
             case "dark": {
                 this.body.prepend("")

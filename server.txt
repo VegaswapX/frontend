@@ -13,11 +13,6 @@ sudo apt-get install -y python
 sudo rsync -rv ./ ubuntu@vegaec2:/home/ubuntu/vegaapp
 sudo rsync -rv ./app.py ubuntu@vegaec2:/home/ubuntu/vegaapp
 
-
-aws ec2 describe-instance-attribute --instance-id instance_id --attribute groupSet
-
-http://18.208.142.28
-
 sudo cp vegaapp.service /etc/systemd/system/
 cat /etc/systemd/system/vegaapp.service
 sudo systemctl daemon-reload
@@ -31,3 +26,4 @@ journalctl -u vegaapp
 ps -fA | grep python
 
 /usr/bin/python3 /home/ubuntu/vegaapp/app.py
+aws ec2 describe-instance-attribute --instance-id instance_id --attribute groupSet

@@ -6,6 +6,14 @@
 //TODO: roi calculation
 //disconnect see: https://github.com/MetaMask/metamask-extension/issues/8990
 
+const API_server = "http://18.208.142.28"
+const API_endpoint = API_server + "/abi/";
+// const API_endpoint = "http://localhost:8080/abi/";
+const vega_contactAddress = "0x8076584601196a6261Fe03366b006E7867edF198";
+const pool_contactAddress = "0xAee1bdf0D313F6B2F0A6627E1Ff81AFb34bBb283";
+
+// const USDT_address = 0xa11c8d9dc9b66e209ef60f0c8d969d3cd988782c;
+
 const ethereumButton = document.querySelector('#connectWeb3');
 const statusEl = document.querySelector('#status');
 const showAccount = document.querySelector('#account');
@@ -20,11 +28,17 @@ let afterConnectCallback;
 let BoostPool;
 let VegaToken;
 let stakeAmount;
+let loaded = false;
 // const vega_contactAddress = "0x82458F05ad144dc3AC4fa9E418686a559ecfCdF8";
 // const pool_contactAddress = "0x0a6c26f89a121864B93743c7e29aD6C479350d59";
 
-const vega_contactAddress = "0x8076584601196a6261Fe03366b006E7867edF198";
-const pool_contactAddress = "0xAee1bdf0D313F6B2F0A6627E1Ff81AFb34bBb283";
+function modal(){
+  $('.modal').modal('show');
+  setTimeout(function () {
+    console.log('hejsan');
+    $('.modal').modal('hide');
+  }, 3000);
+}
 
 
 function detectMetaMask() {
@@ -108,10 +122,10 @@ async function connect() {
   }
   // Fallback to localhost; use dev console port by default...
   else {
-    const provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545');
-    const web3 = new Web3(provider);
+    // const provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545');
+    // const web3 = new Web3(provider);
     console.log('No web3 instance injected, using Local web3.');
-    return web3;
+    // return web3;
   }
   
 }
@@ -238,12 +252,52 @@ async function setValues() {
     console.log("no account loaded");
   }
 
-}
-
-async function loadContracts() {
+  load.innerHTML = "";
 
 }
 
+function loadContracts() {
+
+  $.ajax({
+    url: API_endpoint + "VegaToken.json",
+    dataType: "json",
+    // crossDomain: true,
+    headers: {  'Access-Control-Allow-Origin': API_server },
+    // data: data,
+    // type: 'dataType',
+    /* etc */
+    success: function(jsondata){
+      console.log(">> " + jsondata)
+      tokenABI = jsondata.abi
+    }
+  })
+
+  $.ajax({
+    url: API_endpoint + "BoostPool.json",
+    dataType: "json",
+    // crossDomain: true,
+    headers: {  'Access-Control-Allow-Origin': API_server },
+    // data: data,
+    // type: 'dataType',
+    /* etc */
+    success: function(jsondata){
+      console.log(">> " + jsondata)
+      poolABI = jsondata.abi
+
+      setValues()
+    }
+  })
+}
+
+function afterLoadCallback() {
+
+}
+
+function loadAll() {
+  loadContracts();
+
+  setValues();
+}
 
 
 afterConnectCallback= function() {
@@ -252,84 +306,78 @@ afterConnectCallback= function() {
   ethereumButton.disabled = true;
   setBalance();
 
-  setValues()
+  
 }
 
 $( document ).ready(function() {
-  // boostApp();
-  console.log("ready");
+    // boostApp();
+    console.log("ready"); 
+    console.log(API_endpoint + "VegaToken.json");
 
-  const API_endpoint = "http://localhost:8080/abi/";
+    loadContracts();
 
-  $.getJSON(API_endpoint + "VegaToken.json", function(result) {            
-    tokenABI = result.abi
-  });
+    m = detectMetaMask();
+    if(m) {
+      console.log("metamask installed")
+      
+      // $('#metaicon').removeClass('meta-gray')
+      // $('#metaicon').addClass('meta-normal')
+      // $('#enableMetamask').attr('disabled',false)
+      connect() 
+    } else {
+      const msg = "metamask not installed";
+      console.log(msg)
+      statusEl.innerHTML = msg;
+      alert(msg);
+      // $('#enableMetamask').attr('disabled',true)
+      // $('#metaicon').removeClass('meta-normal')
+      // $('#metaicon').addClass('meta-gray')
+    }
 
-  $.getJSON(API_endpoint + "BoostPool.json", function(result) {            
-    poolABI = result.abi
-  });
+  
+    $('#connectWeb3').click(function() {
+      connect()
+      console.log(connected);
 
-  m = detectMetaMask();
-  if(m) {
-    console.log("metamask installed")
-    
-    // $('#metaicon').removeClass('meta-gray')
-    // $('#metaicon').addClass('meta-normal')
-    // $('#enableMetamask').attr('disabled',false)
-    connect() 
-  } else {
-    const msg = "metamask not installed";
-    console.log(msg)
-    statusEl.innerHTML = msg;
-    alert(msg);
-    // $('#enableMetamask').attr('disabled',true)
-    // $('#metaicon').removeClass('meta-normal')
-    // $('#metaicon').addClass('meta-gray')
-  }
+    });
 
- 
-  $('#connectWeb3').click(function() {
-    connect()
-    console.log(connected);
+    // $('#stakeinput').on('input',function(e){
+    //   alert('Changed!')
+    //  });
 
-  });
+    $('#stakeinput').change(function() {
+      
+    });
 
-  // $('#stakeinput').on('input',function(e){
-  //   alert('Changed!')
-  //  });
-
-   $('#stakeinput').change(function() {
-    
-  });
-
-  $("#stakeinput").on("input", function(){
-    // Print entered value in a div box
-    let v = $(this).val();
-    try {
-      v = parseInt(v);
-      if (v >0) {
-        // let rewardamount = stakeAmount*15;
-        // $("#result").text(rewardamount);
-        if (v < 1000){
-          stakeAmount = v;
-        } else {
-          console.log("amount too large")
+    $("#stakeinput").on("input", function(){
+      // Print entered value in a div box
+      let v = $(this).val();
+      try {
+        v = parseInt(v);
+        if (v >0) {
+          // let rewardamount = stakeAmount*15;
+          // $("#result").text(rewardamount);
+          if (v < 1000){
+            stakeAmount = v;
+          } else {
+            console.log("amount too large")
+          }
         }
+        
+      } catch {
+
       }
       
-    } catch {
+    });
 
-    }
-    
-  });
+    $("#approveButton").on("click", function(){
+      approve();
+    });
 
-  $("#approveButton").on("click", function(){
-    approve();
-  });
+    $("#stakeButton").on("click", function(){
+      stake();
+    });
 
-  $("#stakeButton").on("click", function(){
-    stake();
-  });
 
   
 

@@ -1,12 +1,14 @@
 import flask
 from flask import Flask, render_template
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__, static_url_path='/static')
-# cors = CORS(app)
+cors = CORS(app)
 
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
+@cross_origin()
 def catch_all(path):
     print("path ", path)
     if len(path)==0:

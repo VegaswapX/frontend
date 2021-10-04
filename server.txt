@@ -17,6 +17,7 @@ sudo cp vegaapp.service /etc/systemd/system/
 cat /etc/systemd/system/vegaapp.service
 sudo systemctl daemon-reload
 sudo systemctl start vegaapp
+sudo systemctl restart vegaapp
 sudo systemctl status vegaapp
 journalctl -u vegaapp
 

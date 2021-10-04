@@ -1,16 +1,79 @@
 /*
-Template Name: Adminto - Responsive Bootstrap 5 Admin Dashboard
-Author: CoderThemes
-Website: https://coderthemes.com/
-Contact: support@coderthemes.com
 File: Main Js File
 */
 
+var connected = false;
+var accounts;
+var currentAccount;
+var web3;
+
+function detectMetaMask() {
+    if (typeof window.ethereum !== 'undefined') {                
+        return true
+    } else {                
+        return false
+    }
+}
+
+// async function connect() {
+function connect() {
+    console.log('..connect()' + window);
+    
+    if (window.ethereum) {
+        console.log('eth..');
+
+        web3 = new Web3(window.ethereum);
+        try {
+            //Request account access if needed
+            // await window.ethereum.enable();
+            connected = true;
+            //need fix
+            //https://babeljs.io/docs/en/babel-plugin-transform-async-to-generator
+            accounts = await web3.eth.getAccounts();
+            currentAccount = accounts[0];
+
+            // // console.log(connected);
+            console.log(accounts);
+        
+        //   afterConnectCallback();
+        
+        } catch (error) {
+            console.error(error);
+        }
+    } 
+    // else if (window.web3) {
+    //     // Use Mist/MetaMask's provider.
+    //     const web3 = window.web3;
+    //     console.log('Injected web3 detected.');
+    //     return web3;
+    // }
+    
+    // else {        
+    //     console.log('else...');
+    //   }
+
+    // window.ethereum.on('accountsChanged', (accounts) => {
+    //   handleAccountsChanged(accounts  )
+    // })
+
+    // // window.ethereum.on('accountsChanged', (accounts) => {
+   
+    // // });
+    
+    // window.ethereum.on('chainChanged', function (networkId) {
+    //   // Time to reload your interface with the new networkId
+    //   console.log("chainChanged " + networkId)
+    // })      
+       
+} 
+  
 
 !function ($) {
     "use strict";
 
     var Components = function () { };
+
+    console.log("init");
 
     //initializing tooltip
     Components.prototype.initTooltipPlugin = function () {
@@ -194,6 +257,12 @@ function($) {
                 });
             }, 500 + 300 * (Math.random() * 5));
         });
+
+        $('#metamaskBtn').on("click",function (ev) {
+            console.log("connect metamask");
+
+        })
+
     },
     //
     $.Portlet = new Portlet, $.Portlet.Constructor = Portlet
@@ -208,11 +277,17 @@ function ($) {
         this.$window = $(window)
     };
 
+    console.log("init")
+
+
     /** 
      * Initlizes the controls
     */
     App.prototype.initControls = function () {
+        // $("#loading").html("loading");
+
         // remove loading
+        //TODO
         setTimeout(function() {
             document.body.classList.remove('loading');
         }, 350);
@@ -320,6 +395,28 @@ function ($) {
         if(document.getElementById('app-dark-stylesheet').href.includes('rtl.min.css')){
             document.getElementsByTagName('html')[0].dir="rtl";
         }
+
+        // $("#loading").html("");
+
+        //INIT WEB#
+        var m = detectMetaMask();
+        if(m) {
+            console.log("metamask installed")
+        } else {
+            var msg = "metamask not installed";
+            console.log(msg)
+            // statusEl.innerHTML = msg;
+            // alert(msg);
+            // $('#enableMetamask').attr('disabled',true)
+            // $('#metaicon').removeClass('meta-normal')
+            // $('#metaicon').addClass('meta-gray')
+        }
+
+        $('#metamaskBtn').click(function() {
+            connect();
+            console.log(connected);
+      
+          });
     },
 
     $.App = new App, $.App.Constructor = App

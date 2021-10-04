@@ -1,7 +1,7 @@
+//TODO: poll update
 //TODO: disconnect
 //TODO: handle error eg. evert BoostPool: can only stake once
 //TODO: stake USDT
-//TODO: poll update
 //TODO: network change and display
 //TODO: roi calculation
 //disconnect see: https://github.com/MetaMask/metamask-extension/issues/8990

@@ -1,5 +1,6 @@
-ssh-add $HOME/.ssh/benaws.pem
 sudo rsync -rv ./ ubuntu@vegaec2:/home/ubuntu/vegaapp
+
+ssh-add $HOME/.ssh/benaws.pem
 ssh ubuntu@vegaec2
 sudo systemctl daemon-reload
 sudo systemctl restart vegaapp

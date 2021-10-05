@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useMemo } from "react";
-import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom'
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import { Container, Navbar, Nav , Button, Row, Col, Card} from 'react-bootstrap'
 import './styles.css'
@@ -9,7 +9,7 @@ import VEGA_CONTRACT_ABI from './abis/erc20.json';
 import Web3 from "web3";
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { useWeb3React } from "@web3-react/core"
-import { formatEther } from '@ethersproject/units'
+// import { formatEther } from '@ethersproject/units'
 import { Contract } from '@ethersproject/contracts';
 import WrappedWeb3ReactProvider from './WrappedWeb3ReactProvider';
 // import { useQuery } from 'react-query';
@@ -51,7 +51,7 @@ const useContract = (
   ABI,
   withSignerIfPossible = true,
 ) => {
-  const { account, library, chainId } = useWeb3React()
+  const { account, library } = useWeb3React()
 
   return useMemo(() => {
     if (!address || !ABI || !library) return null;
@@ -126,7 +126,8 @@ const useInput = initialValue => {
 
 function BoostPools() {
 
-  const { value, bind, reset } = useInput('');
+  // const { value, bind, reset } = useInput('');
+  const { value, bind } = useInput('');
 
   const [roiValue, setRoiValue] = React.useState()
 
@@ -288,7 +289,7 @@ function Balance() {
   )
 }
 
-const refetchInterval = 3000;
+// const refetchInterval = 3000;
 
 function VGABalance() {
   const { account, library, chainId } = useWeb3React()
@@ -300,7 +301,7 @@ function VGABalance() {
     true,
   );
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const [vgabalance, setVgaBalance] = React.useState()
 
@@ -340,7 +341,7 @@ function VGABalance() {
 
 function InnerApp() {
   // const { chainId, account, activate, active } = useWeb3React<Web3Provider>()
-  const { chainId, active, account, library, connector, activate, deactivate } = useWeb3React()
+  const { active, account, activate, deactivate } = useWeb3React()
   
   // const balance = useEthBalance();
 

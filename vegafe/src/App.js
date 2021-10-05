@@ -7,6 +7,11 @@ import { CSSTransition } from 'react-transition-group'
 import { Container, Navbar, Nav , Button, Row, Col, Card} from 'react-bootstrap'
 import './styles.css'
 
+import { BigNumber } from '@ethersproject/bignumber';
+import { ethers } from "ethers";
+
+// const {utils, BigNumber} = require('ethers');
+
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
 
 import Web3 from "web3";
@@ -20,6 +25,12 @@ import { formatEther } from '@ethersproject/units'
 import { Contract } from '@ethersproject/contracts';
 
 import WrappedWeb3ReactProvider from './WrappedWeb3ReactProvider';
+
+import { useQuery } from 'react-query';
+
+
+
+
 
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -102,6 +113,7 @@ export const getEthereum = async () => {
 
 }
 
+//TODO remove?
 export const getWeb3 = async () => {
 
     const ethereum = await getEthereum()
@@ -148,7 +160,7 @@ function BoostPools() {
     <Card.Body>
       <Card.Title>Balance</Card.Title>
       <Card.Text>
-      {/* <VGABalance/> */}
+      <VGABalance/>
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
       
@@ -273,6 +285,7 @@ function Balance() {
   )
 }
 
+const refetchInterval = 3000;
 
 function VGABalance() {
   const { account, library, chainId } = useWeb3React()
@@ -286,17 +299,86 @@ function VGABalance() {
 
   console.log("vegaContract " + vegaContract);
 
+  const tokenBalance = useQuery<BigNumber>('token-balance', async () => {
+    if (vegaContract && account) {
+      console.log("!>> " + vegaContract.address)
+      const v1Balance = await vegaContract.callStatic.balanceOf(account);
+      return v1Balance;
+    } else {
+      return BigNumber.from('0');
+    }
+  }, { refetchInterval })
+
+  console.log("tokenBalance " + tokenBalance);
+
+  const [loading, setLoading] = useState(false);
+
+  const [vgabalance, setVgaBalance] = React.useState()
+
+  React.useEffect(() => {
+    if (!!account && !!library) {
+      let stale = false
+
+      console.log("library " + library);
+      console.log("account " + account);
+
+      vegaContract.callStatic.balanceOf(account)
+        .then((x) => {
+          if (!stale) {
+            console.log(">>>>> " + x);
+            console.log(">>>>> " + typeof(x));
+            let z = ethers.utils.formatEther(x);
+            console.log(">>>>> " + z);
+            let b = BigNumber.from(x);
+            
+            setVgaBalance(z);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            // setVgaBalance(null)
+          }
+        })
+
+      return () => {
+        stale = true
+        // setVgaBalance(undefined)
+      }
+    }
+  }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
+
+
+
+  const LoadData = async () => {
+    console.log("LoadData");
+    if (vegaContract && account) {
+      setLoading(true);
+
+      try {
+        // await depositLpToken(vegaContract, lpContract, account, amount);
+        // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
+        // tokenBalance.refetch();
+        // lpBalance.refetch();
+      } catch (error) {
+        console.log({error})
+        // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const [balance, setBalance] = React.useState()
   React.useEffect(() => {
     if (!!account && !!library) {
       let stale = false
 
-      console.log(library)
+      console.log("vegaContract " + vegaContract);
 
-      vegaContract.methods.getBalance("0x3d6793D1C9eE7b7D7c03E47438e69200438DF85d").then((balance) => {
-        console.log(balance);
-      }
-      )
+      // vegaContract.methods.getBalance("0x3d6793D1C9eE7b7D7c03E47438e69200438DF85d").then((balance) => {
+      //   console.log(balance);
+      // }
+      // )
 
       // library
       //   .eth.getBalance(account)
@@ -313,27 +395,20 @@ function VGABalance() {
 
       return () => {
         stale = true
-        setBalance(undefined)
+        setVgaBalance(undefined)
       }
     }
   }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
 
   return (
     <>
-      <span>VGA Balance</span>
-      <span role="img" aria-label="gold">
-      {/* <img 
-      src="https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
-      alt="new"
-      /> */}
-     
+      <span>VGA Balance {vgabalance}</span>
+      <Button onClick={LoadData}  variant="info">Load</Button>{' '}
+      {/* <span role="img" aria-label="gold">
       
       </span>
-
       
-
-      
-      <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span>
+      <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span> */}
     </>
   )
 }
@@ -410,6 +485,10 @@ function InnerApp() {
                     <Button onClick={connect}  variant="primary">Connect to MetaMask</Button>}
                     
                     <Button onClick={disconnect}  variant="info">Disconnect</Button>{' '}
+
+                    
+
+                    
                     
 
                     <Component />

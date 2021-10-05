@@ -4,3 +4,4 @@ node_modules/
 __pycache__/
 Theme/node_modules
 Theme/dist/
+vegafe/node_modules

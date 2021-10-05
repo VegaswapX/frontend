@@ -1,46 +1,25 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { useState, useMemo } from "react";
-
 import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import { Container, Navbar, Nav , Button, Row, Col, Card} from 'react-bootstrap'
 import './styles.css'
-
-// import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from "ethers";
-
-// const {utils, BigNumber} = require('ethers');
-
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
-
 import Web3 from "web3";
-// import { Web3ReactProvider } from '@web3-react/core'
-
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { useWeb3React } from "@web3-react/core"
 import { formatEther } from '@ethersproject/units'
-// import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
-
 import { Contract } from '@ethersproject/contracts';
-
 import WrappedWeb3ReactProvider from './WrappedWeb3ReactProvider';
-
-import { useQuery } from 'react-query';
-
+// import { useQuery } from 'react-query';
 
 
-
-
-
-// returns the checksummed address if the address is valid, otherwise returns false
-// export function isAddress(value) {
-//   try {
-//     return getAddress(value);
-//   } catch {
-//     return false;
-//   }
-// }
+const routes = [
+  { path: '/', name: 'BoostPools', Component: BoostPools },
+  { path: '/mining', name: 'LiquidityMining', Component: LiquidityMining },
+  { path: '/about', name: 'About', Component: About }
+]
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
@@ -72,15 +51,11 @@ const useContract = (
   ABI,
   withSignerIfPossible = true,
 ) => {
-  // const { library, account } = useActiveWeb3React();
-  
-
   const { account, library, chainId } = useWeb3React()
 
   return useMemo(() => {
     if (!address || !ABI || !library) return null;
-    try {
-      console.log("get contract " + address);
+    try {      
       return getContract(
         address,
         ABI,
@@ -93,7 +68,6 @@ const useContract = (
     }
   }, [address, ABI, library, withSignerIfPossible, account]);
 };
-
 
 
 export const injected = new InjectedConnector({
@@ -134,7 +108,37 @@ export const getWeb3 = async () => {
     return web3
 }
 
+const useInput = initialValue => {
+  const [value, setValue] = useState(initialValue);
+
+  return {
+    value,
+    setValue,
+    reset: () => setValue(""),
+    bind: {
+      value,
+      onChange: event => {
+        setValue(event.target.value);
+      }
+    }
+  };
+};
+
 function BoostPools() {
+
+  const { value, bind, reset } = useInput('');
+
+  const [roiValue, setRoiValue] = React.useState()
+
+  //calc on change
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    console.log(`Submitting value ${value}`);
+    // reset();
+    setRoiValue(value*2);
+}
+  
   return (
     <>
       <h1>BoostPools</h1>
@@ -147,6 +151,8 @@ function BoostPools() {
       <Card.Title>Balances</Card.Title>
       <Card.Text>        
         <Balance />
+        <br />
+        <VGABalance/>
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
     </Card.Body>
@@ -158,30 +164,17 @@ function BoostPools() {
     <Card style={{ width: '18rem' }}>
     {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
     <Card.Body>
-      <Card.Title>Balance</Card.Title>
-      <Card.Text>
-      <VGABalance/>
-      </Card.Text>
-      {/* <Button variant="primary">Go somewhere</Button> */}
-      
-    </Card.Body>
-    </Card>
-</Col>
-
-<Col>
-<Card style={{ width: '18rem' }}>
-    {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-    <Card.Body>
       <Card.Title>Pool Info</Card.Title>
       <Card.Text>
-      info.. 
-      
+      Balance in the pool<br />
+      % of total staked<br />
+      time info<br />
       
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
     </Card.Body>
     </Card>
-</Col>
+    </Col>
 
   </Row>
 
@@ -193,19 +186,30 @@ function BoostPools() {
     <Card.Body>
       <Card.Title>ROI info</Card.Title>
       <Card.Text>
-      ROI
-      APY
+      
+      <form onSubmit={handleSubmit}>
+      <label>
+        stake amount:
+        <input type="text" {...bind} />
+      </label>
+      <label>
+        duration days: 30, 60
+        {/* <input type="text" {...bind} /> */}
+      </label>
+      <br />
+      <input type="submit" value="Submit" />
+
+      roiValue: {roiValue}
+    </form>
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
     </Card.Body>
     </Card>
     </Col>
-    <Col>Pool balance</Col>
-    <Col>3 of 3</Col>
-
-  </Row>
-</Container>
     
+
+    </Row>
+  </Container>
       
     </>
   )
@@ -234,37 +238,19 @@ function About() {
   )
 }
 
-function truncate(str) {
-  if (str.includes('.')) {
-      const parts = str.split('.');
-      return parts[0];
-  }
-  return str;
-}
-
 function Balance() {
   const { account, library, chainId } = useWeb3React()
 
   const [balance, setBalance] = React.useState()
   React.useEffect(() => {
     if (!!account && !!library) {
-      let stale = false
-
-      console.log("library " + library);
-      console.log("account " + account);
+      let stale = false      
 
       library
         .getBalance(account)
         .then((balance) => {
           if (!stale) {
             let z = ethers.utils.formatEther(balance);
-            // balance = "" + balance;
-            // // console.log(">> " + balance);
-            // // console.log("??? >> " + typeof(balance));
-            // balance = truncate(balance);
-            // console.log("??? >> " + balance);
-            
-            // var z = ethers.utils.formatEther(balance);
             setBalance(z);
           }
         })
@@ -314,20 +300,6 @@ function VGABalance() {
     true,
   );
 
-  console.log("VGABalance vegaContract " + vegaContract);
-
-  // const tokenBalance = useQuery<BigNumber>('token-balance', async () => {
-  //   if (vegaContract && account) {
-  //     console.log("!>> " + vegaContract.address)
-  //     const v1Balance = await vegaContract.callStatic.balanceOf(account);
-  //     return v1Balance;
-  //   } else {
-  //     return BigNumber.from('0');
-  //   }
-  // }, { refetchInterval })
-
-  // console.log("tokenBalance " + tokenBalance);
-
   const [loading, setLoading] = useState(false);
 
   const [vgabalance, setVgaBalance] = React.useState()
@@ -336,14 +308,10 @@ function VGABalance() {
     if (!!account && !!library) {
       let stale = false
 
-      console.log("library " + library);
-      console.log("account " + account);
-
       vegaContract.callStatic.balanceOf(account)
         .then((x) => {
           if (!stale) {
             let z = ethers.utils.formatEther(x);
-            console.log(">>>> " + z);
             setVgaBalance(z);
           }
         })
@@ -360,54 +328,20 @@ function VGABalance() {
     }
   }, [account, library, chainId, vegaContract]) // ensures refresh if referential identity of library doesn't change across chainIds
 
-
-
-  const LoadData = async () => {
-    console.log("LoadData");
-    if (vegaContract && account) {
-      setLoading(true);
-
-      try {
-        // await depositLpToken(vegaContract, lpContract, account, amount);
-        // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
-        // tokenBalance.refetch();
-        // lpBalance.refetch();
-      } catch (error) {
-        console.log({error})
-        // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  
   return (
     <>
       {/* <span>VGA Balance {vgabalance}</span> */}
-      <span>VGA Balance: {vgabalance === null ? 'Error' : vgabalance ? `${vgabalance}` : ''}</span>
-      {/* <Button onClick={LoadData}  variant="info">Load</Button>{' '} */}
-      {/* <span role="img" aria-label="gold">
+      <span>VGA: {vgabalance === null ? 'Error' : vgabalance ? `${vgabalance}` : ''}</span>
       
-      </span>
-      
-      <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span> */}
     </>
   )
 }
 
 
-const routes = [
-  { path: '/', name: 'BoostPools', Component: BoostPools },
-  { path: '/mining', name: 'LiquidityMining', Component: LiquidityMining },
-  { path: '/about', name: 'About', Component: About }
-]
-
 function InnerApp() {
   // const { chainId, account, activate, active } = useWeb3React<Web3Provider>()
   const { chainId, active, account, library, connector, activate, deactivate } = useWeb3React()
   
-
   // const balance = useEthBalance();
 
   async function connect() {
@@ -460,7 +394,7 @@ function InnerApp() {
               </Nav.Link>
           </Nav>
       </Navbar>
-        <Container className="container">
+        <Container className="container" style={{marginTop : '15px'}}>
         
           {routes.map(({ path, Component }) => (
             <Route key={path} exact path={path}>
@@ -488,24 +422,16 @@ function InnerApp() {
   )
 }
 
-function getLibrary(provider) {
-  return new Web3(provider)
-}
-
 
 function App() {
 
   return (
-    // <Web3ReactProvider getLibrary={getLibrary}>
-    //   <InnerApp />
-    // </Web3ReactProvider>
+    
     <WrappedWeb3ReactProvider>
       <InnerApp />
       </WrappedWeb3ReactProvider>
   )
 }
 
-// const rootElement = document.getElementById('root')
-// ReactDOM.render(<Example />, rootElement)
 
 export default App;

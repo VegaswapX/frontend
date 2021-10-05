@@ -461,6 +461,18 @@ function InnerApp() {
                 {route.name}
               </Nav.Link>
             ))}
+              <Nav.Link>
+                  {active ? <span>Account: <b>{account}</b></span> : <span>Not connected</span>}
+              </Nav.Link>
+              <Nav.Link>
+                  {/* {active ? <span>Balance: <b>{balance}</b></span> : <span>Not connected</span>} */}
+                  {active ?
+                      <Button onClick={connect}  variant="primary">...</Button> :
+                      <Button onClick={connect}  variant="primary">Connect to MetaMask</Button>}
+              </Nav.Link>
+              <Nav.Link className={"nav-right"}>
+                  <Button onClick={disconnect}  variant="info">Disconnect</Button>
+              </Nav.Link>
           </Nav>
         </Navbar>
         <Container className="container">
@@ -475,22 +487,9 @@ function InnerApp() {
                   unmountOnExit
                 >
                   <div className="page">
-                    
+
 
                     <div className="flex flex-col items-center justify-center">
-                    {active ? <span>Account: <b>{account}</b></span> : <span>Not connected</span>}
-                    {/* {active ? <span>Balance: <b>{balance}</b></span> : <span>Not connected</span>} */}
-                    {active ? 
-                    <Button onClick={connect}  variant="primary">...</Button> :
-                    <Button onClick={connect}  variant="primary">Connect to MetaMask</Button>}
-                    
-                    <Button onClick={disconnect}  variant="info">Disconnect</Button>{' '}
-
-                    
-
-                    
-                    
-
                     <Component />
                   </div>
                   </div>

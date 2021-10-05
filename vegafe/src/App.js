@@ -11,6 +11,7 @@ import { Web3ReactProvider } from '@web3-react/core'
 
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { useWeb3React } from "@web3-react/core"
+import { formatEther } from '@ethersproject/units'
 
 
 export const injected = new InjectedConnector({
@@ -38,6 +39,7 @@ export const getWeb3 = async () => {
     } else if (window.web3) {
         web3 = window.web3
     } else {
+        //TODO
         const provider = new Web3.providers.HttpProvider(
             "http://127.0.0.1:8545"
         );
@@ -72,6 +74,47 @@ function About() {
   )
 }
 
+function Balance() {
+  const { account, library, chainId } = useWeb3React()
+
+  const [balance, setBalance] = React.useState()
+  React.useEffect(() => {
+    if (!!account && !!library) {
+      let stale = false
+
+      console.log(library)
+
+      library
+        .eth.getBalance(account)
+        .then((balance) => {
+          if (!stale) {
+            setBalance(balance)
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setBalance(null)
+          }
+        })
+
+      return () => {
+        stale = true
+        setBalance(undefined)
+      }
+    }
+  }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
+
+  return (
+    <>
+      <span>Balance</span>
+      <span role="img" aria-label="gold">
+        💰
+      </span>
+      <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span>
+    </>
+  )
+}
+
 
 const routes = [
   { path: '/', name: 'BoostPools', Component: BoostPools },
@@ -79,7 +122,11 @@ const routes = [
 ]
 
 function InnerApp() {
-  const { active, account, library, connector, activate, deactivate } = useWeb3React()
+  // const { chainId, account, activate, active } = useWeb3React<Web3Provider>()
+  const { chainId, active, account, library, connector, activate, deactivate } = useWeb3React()
+  
+
+  // const balance = useEthBalance();
 
   async function connect() {
     try {
@@ -133,9 +180,10 @@ function InnerApp() {
 
                     <div className="flex flex-col items-center justify-center">
                     {active ? <span>Account: <b>{account}</b></span> : <span>Not connected</span>}
+                    {/* {active ? <span>Balance: <b>{balance}</b></span> : <span>Not connected</span>} */}
                     <Button onClick={connect}  variant="primary">Connect to MetaMask</Button>{' '}
                     <Button onClick={disconnect}  variant="info">Disconnect</Button>{' '}
-                    
+                    <Balance />
                   </div>
                   </div>
                 </CSSTransition>

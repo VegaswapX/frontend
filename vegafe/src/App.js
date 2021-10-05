@@ -461,7 +461,9 @@ function InnerApp() {
                 {route.name}
               </Nav.Link>
             ))}
-              <Nav.Link>
+          </Nav>
+          <Nav>
+              <Nav.Link disabled className={'d-flex align-items-center'}>
                   {active ? <span>Account: <b>{account}</b></span> : <span>Not connected</span>}
               </Nav.Link>
               <Nav.Link>
@@ -474,7 +476,7 @@ function InnerApp() {
                   <Button onClick={disconnect}  variant="info">Disconnect</Button>
               </Nav.Link>
           </Nav>
-        </Navbar>
+      </Navbar>
         <Container className="container">
         
           {routes.map(({ path, Component }) => (

@@ -1,32 +1,25 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { useState, useMemo } from "react";
-
 import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import { Container, Navbar, Nav , Button, Row, Col, Card} from 'react-bootstrap'
 import './styles.css'
-
-// import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from "ethers";
-
-// const {utils, BigNumber} = require('ethers');
-
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
-
 import Web3 from "web3";
-// import { Web3ReactProvider } from '@web3-react/core'
-
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { useWeb3React } from "@web3-react/core"
 import { formatEther } from '@ethersproject/units'
-// import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
-
 import { Contract } from '@ethersproject/contracts';
-
 import WrappedWeb3ReactProvider from './WrappedWeb3ReactProvider';
-
 // import { useQuery } from 'react-query';
+
+
+const routes = [
+  { path: '/', name: 'BoostPools', Component: BoostPools },
+  { path: '/mining', name: 'LiquidityMining', Component: LiquidityMining },
+  { path: '/about', name: 'About', Component: About }
+]
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
@@ -58,15 +51,11 @@ const useContract = (
   ABI,
   withSignerIfPossible = true,
 ) => {
-  // const { library, account } = useActiveWeb3React();
-  
-
   const { account, library, chainId } = useWeb3React()
 
   return useMemo(() => {
     if (!address || !ABI || !library) return null;
-    try {
-      console.log("get contract " + address);
+    try {      
       return getContract(
         address,
         ABI,
@@ -79,7 +68,6 @@ const useContract = (
     }
   }, [address, ABI, library, withSignerIfPossible, account]);
 };
-
 
 
 export const injected = new InjectedConnector({
@@ -220,9 +208,8 @@ function BoostPools() {
     </Col>
     
 
-  </Row>
-</Container>
-    
+    </Row>
+  </Container>
       
     </>
   )
@@ -251,17 +238,13 @@ function About() {
   )
 }
 
-
 function Balance() {
   const { account, library, chainId } = useWeb3React()
 
   const [balance, setBalance] = React.useState()
   React.useEffect(() => {
     if (!!account && !!library) {
-      let stale = false
-
-      console.log("library " + library);
-      console.log("account " + account);
+      let stale = false      
 
       library
         .getBalance(account)
@@ -317,8 +300,6 @@ function VGABalance() {
     true,
   );
 
-  console.log("VGABalance vegaContract " + vegaContract); 
-
   const [loading, setLoading] = useState(false);
 
   const [vgabalance, setVgaBalance] = React.useState()
@@ -347,8 +328,6 @@ function VGABalance() {
     }
   }, [account, library, chainId, vegaContract]) // ensures refresh if referential identity of library doesn't change across chainIds
 
-  
-  
   return (
     <>
       {/* <span>VGA Balance {vgabalance}</span> */}
@@ -359,19 +338,10 @@ function VGABalance() {
 }
 
 
-
-
-const routes = [
-  { path: '/', name: 'BoostPools', Component: BoostPools },
-  { path: '/mining', name: 'LiquidityMining', Component: LiquidityMining },
-  { path: '/about', name: 'About', Component: About }
-]
-
 function InnerApp() {
   // const { chainId, account, activate, active } = useWeb3React<Web3Provider>()
   const { chainId, active, account, library, connector, activate, deactivate } = useWeb3React()
   
-
   // const balance = useEthBalance();
 
   async function connect() {
@@ -452,24 +422,16 @@ function InnerApp() {
   )
 }
 
-function getLibrary(provider) {
-  return new Web3(provider)
-}
-
 
 function App() {
 
   return (
-    // <Web3ReactProvider getLibrary={getLibrary}>
-    //   <InnerApp />
-    // </Web3ReactProvider>
+    
     <WrappedWeb3ReactProvider>
       <InnerApp />
       </WrappedWeb3ReactProvider>
   )
 }
 
-// const rootElement = document.getElementById('root')
-// ReactDOM.render(<Example />, rootElement)
 
 export default App;

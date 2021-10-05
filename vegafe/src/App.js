@@ -26,21 +26,7 @@ import { Contract } from '@ethersproject/contracts';
 
 import WrappedWeb3ReactProvider from './WrappedWeb3ReactProvider';
 
-import { useQuery } from 'react-query';
-
-
-
-
-
-
-// returns the checksummed address if the address is valid, otherwise returns false
-// export function isAddress(value) {
-//   try {
-//     return getAddress(value);
-//   } catch {
-//     return false;
-//   }
-// }
+// import { useQuery } from 'react-query';
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
@@ -134,7 +120,37 @@ export const getWeb3 = async () => {
     return web3
 }
 
+const useInput = initialValue => {
+  const [value, setValue] = useState(initialValue);
+
+  return {
+    value,
+    setValue,
+    reset: () => setValue(""),
+    bind: {
+      value,
+      onChange: event => {
+        setValue(event.target.value);
+      }
+    }
+  };
+};
+
 function BoostPools() {
+
+  const { value, bind, reset } = useInput('');
+
+  const [roiValue, setRoiValue] = React.useState()
+
+  //calc on change
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    console.log(`Submitting value ${value}`);
+    // reset();
+    setRoiValue(value*2);
+}
+  
   return (
     <>
       <h1>BoostPools</h1>
@@ -147,6 +163,8 @@ function BoostPools() {
       <Card.Title>Balances</Card.Title>
       <Card.Text>        
         <Balance />
+        <br />
+        <VGABalance/>
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
     </Card.Body>
@@ -158,30 +176,17 @@ function BoostPools() {
     <Card style={{ width: '18rem' }}>
     {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
     <Card.Body>
-      <Card.Title>Balance</Card.Title>
-      <Card.Text>
-      <VGABalance/>
-      </Card.Text>
-      {/* <Button variant="primary">Go somewhere</Button> */}
-      
-    </Card.Body>
-    </Card>
-</Col>
-
-<Col>
-<Card style={{ width: '18rem' }}>
-    {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-    <Card.Body>
       <Card.Title>Pool Info</Card.Title>
       <Card.Text>
-      info.. 
-      
+      Balance in the pool<br />
+      % of total staked<br />
+      time info<br />
       
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
     </Card.Body>
     </Card>
-</Col>
+    </Col>
 
   </Row>
 
@@ -193,15 +198,27 @@ function BoostPools() {
     <Card.Body>
       <Card.Title>ROI info</Card.Title>
       <Card.Text>
-      ROI
-      APY
+      
+      <form onSubmit={handleSubmit}>
+      <label>
+        stake amount:
+        <input type="text" {...bind} />
+      </label>
+      <label>
+        duration days: 30, 60
+        {/* <input type="text" {...bind} /> */}
+      </label>
+      <br />
+      <input type="submit" value="Submit" />
+
+      roiValue: {roiValue}
+    </form>
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
     </Card.Body>
     </Card>
     </Col>
-    <Col>Pool balance</Col>
-    <Col>3 of 3</Col>
+    
 
   </Row>
 </Container>
@@ -234,13 +251,6 @@ function About() {
   )
 }
 
-function truncate(str) {
-  if (str.includes('.')) {
-      const parts = str.split('.');
-      return parts[0];
-  }
-  return str;
-}
 
 function Balance() {
   const { account, library, chainId } = useWeb3React()
@@ -258,13 +268,6 @@ function Balance() {
         .then((balance) => {
           if (!stale) {
             let z = ethers.utils.formatEther(balance);
-            // balance = "" + balance;
-            // // console.log(">> " + balance);
-            // // console.log("??? >> " + typeof(balance));
-            // balance = truncate(balance);
-            // console.log("??? >> " + balance);
-            
-            // var z = ethers.utils.formatEther(balance);
             setBalance(z);
           }
         })
@@ -314,19 +317,7 @@ function VGABalance() {
     true,
   );
 
-  console.log("VGABalance vegaContract " + vegaContract);
-
-  // const tokenBalance = useQuery<BigNumber>('token-balance', async () => {
-  //   if (vegaContract && account) {
-  //     console.log("!>> " + vegaContract.address)
-  //     const v1Balance = await vegaContract.callStatic.balanceOf(account);
-  //     return v1Balance;
-  //   } else {
-  //     return BigNumber.from('0');
-  //   }
-  // }, { refetchInterval })
-
-  // console.log("tokenBalance " + tokenBalance);
+  console.log("VGABalance vegaContract " + vegaContract); 
 
   const [loading, setLoading] = useState(false);
 
@@ -336,14 +327,10 @@ function VGABalance() {
     if (!!account && !!library) {
       let stale = false
 
-      console.log("library " + library);
-      console.log("account " + account);
-
       vegaContract.callStatic.balanceOf(account)
         .then((x) => {
           if (!stale) {
             let z = ethers.utils.formatEther(x);
-            console.log(">>>> " + z);
             setVgaBalance(z);
           }
         })
@@ -360,41 +347,18 @@ function VGABalance() {
     }
   }, [account, library, chainId, vegaContract]) // ensures refresh if referential identity of library doesn't change across chainIds
 
-
-
-  const LoadData = async () => {
-    console.log("LoadData");
-    if (vegaContract && account) {
-      setLoading(true);
-
-      try {
-        // await depositLpToken(vegaContract, lpContract, account, amount);
-        // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
-        // tokenBalance.refetch();
-        // lpBalance.refetch();
-      } catch (error) {
-        console.log({error})
-        // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
+  
   
   return (
     <>
       {/* <span>VGA Balance {vgabalance}</span> */}
-      <span>VGA Balance: {vgabalance === null ? 'Error' : vgabalance ? `${vgabalance}` : ''}</span>
-      {/* <Button onClick={LoadData}  variant="info">Load</Button>{' '} */}
-      {/* <span role="img" aria-label="gold">
+      <span>VGA: {vgabalance === null ? 'Error' : vgabalance ? `${vgabalance}` : ''}</span>
       
-      </span>
-      
-      <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span> */}
     </>
   )
 }
+
+
 
 
 const routes = [
@@ -460,7 +424,7 @@ function InnerApp() {
               </Nav.Link>
           </Nav>
       </Navbar>
-        <Container className="container">
+        <Container className="container" style={{marginTop : '15px'}}>
         
           {routes.map(({ path, Component }) => (
             <Route key={path} exact path={path}>

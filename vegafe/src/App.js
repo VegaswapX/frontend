@@ -325,12 +325,7 @@ function VGABalance() {
       vegaContract.callStatic.balanceOf(account)
         .then((x) => {
           if (!stale) {
-            console.log(">>>>> " + x);
-            console.log(">>>>> " + typeof(x));
             let z = ethers.utils.formatEther(x);
-            console.log(">>>>> " + z);
-            let b = BigNumber.from(x);
-            
             setVgaBalance(z);
           }
         })

@@ -7,7 +7,7 @@ import { CSSTransition } from 'react-transition-group'
 import { Container, Navbar, Nav , Button, Row, Col, Card} from 'react-bootstrap'
 import './styles.css'
 
-import { BigNumber } from '@ethersproject/bignumber';
+// import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from "ethers";
 
 // const {utils, BigNumber} = require('ethers');
@@ -234,6 +234,14 @@ function About() {
   )
 }
 
+function truncate(str) {
+  if (str.includes('.')) {
+      const parts = str.split('.');
+      return parts[0];
+  }
+  return str;
+}
+
 function Balance() {
   const { account, library, chainId } = useWeb3React()
 
@@ -249,7 +257,15 @@ function Balance() {
         .getBalance(account)
         .then((balance) => {
           if (!stale) {
-            setBalance(balance)
+            let z = ethers.utils.formatEther(balance);
+            // balance = "" + balance;
+            // // console.log(">> " + balance);
+            // // console.log("??? >> " + typeof(balance));
+            // balance = truncate(balance);
+            // console.log("??? >> " + balance);
+            
+            // var z = ethers.utils.formatEther(balance);
+            setBalance(z);
           }
         })
         .catch(() => {
@@ -280,7 +296,8 @@ function Balance() {
       
       </span>
       
-      <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span>
+      {/* <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span> */}
+      <span>{balance === null ? 'Error' : balance ? `${balance}` : ''}</span>
     </>
   )
 }
@@ -297,19 +314,19 @@ function VGABalance() {
     true,
   );
 
-  console.log("vegaContract " + vegaContract);
+  console.log("VGABalance vegaContract " + vegaContract);
 
-  const tokenBalance = useQuery<BigNumber>('token-balance', async () => {
-    if (vegaContract && account) {
-      console.log("!>> " + vegaContract.address)
-      const v1Balance = await vegaContract.callStatic.balanceOf(account);
-      return v1Balance;
-    } else {
-      return BigNumber.from('0');
-    }
-  }, { refetchInterval })
+  // const tokenBalance = useQuery<BigNumber>('token-balance', async () => {
+  //   if (vegaContract && account) {
+  //     console.log("!>> " + vegaContract.address)
+  //     const v1Balance = await vegaContract.callStatic.balanceOf(account);
+  //     return v1Balance;
+  //   } else {
+  //     return BigNumber.from('0');
+  //   }
+  // }, { refetchInterval })
 
-  console.log("tokenBalance " + tokenBalance);
+  // console.log("tokenBalance " + tokenBalance);
 
   const [loading, setLoading] = useState(false);
 
@@ -326,6 +343,7 @@ function VGABalance() {
         .then((x) => {
           if (!stale) {
             let z = ethers.utils.formatEther(x);
+            console.log(">>>> " + z);
             setVgaBalance(z);
           }
         })
@@ -340,7 +358,7 @@ function VGABalance() {
         // setVgaBalance(undefined)
       }
     }
-  }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, chainId, vegaContract]) // ensures refresh if referential identity of library doesn't change across chainIds
 
 
 
@@ -363,42 +381,12 @@ function VGABalance() {
     }
   };
 
-  const [balance, setBalance] = React.useState()
-  React.useEffect(() => {
-    if (!!account && !!library) {
-      let stale = false
-
-      console.log("vegaContract " + vegaContract);
-
-      // vegaContract.methods.getBalance("0x3d6793D1C9eE7b7D7c03E47438e69200438DF85d").then((balance) => {
-      //   console.log(balance);
-      // }
-      // )
-
-      // library
-      //   .eth.getBalance(account)
-      //   .then((balance) => {
-      //     if (!stale) {
-      //       setBalance(balance)
-      //     }
-      //   })
-      //   .catch(() => {
-      //     if (!stale) {
-      //       setBalance(null)
-      //     }
-      //   })
-
-      return () => {
-        stale = true
-        setVgaBalance(undefined)
-      }
-    }
-  }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
-
+  
   return (
     <>
-      <span>VGA Balance {vgabalance}</span>
-      <Button onClick={LoadData}  variant="info">Load</Button>{' '}
+      {/* <span>VGA Balance {vgabalance}</span> */}
+      <span>VGA Balance: {vgabalance === null ? 'Error' : vgabalance ? `${vgabalance}` : ''}</span>
+      {/* <Button onClick={LoadData}  variant="info">Load</Button>{' '} */}
       {/* <span role="img" aria-label="gold">
       
       </span>

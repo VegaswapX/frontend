@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
 import POOL_CONTRACT_ABI from './abis/BoostPool.json';
-import {injected, useContract} from './eth.js'
+import {useContract} from './eth.js'
 import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
 
 import { Button} from 'react-bootstrap'
@@ -35,7 +35,7 @@ export function PoolStake() {
     const [loading, setLoading] = useState(false);
   
     const approve = async () => {
-      console.log("approve");
+      console.log("approve " + loading);
 
       setLoading(true);
 
@@ -111,7 +111,7 @@ export function PoolStake() {
         vegaContract.callStatic.allowance(account, POOL_TOKEN_ADDRESS)
           .then((x) => {
             if (!stale) {
-              let z = ethers.utils.formatEther(x);
+              // let z = ethers.utils.formatEther(x);
               setVgaAllowance(x);
             }
           })

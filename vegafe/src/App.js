@@ -4,18 +4,14 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import { Container, Navbar, Nav , Button, Row, Col, Card} from 'react-bootstrap'
 import './styles.css'
-import { ethers } from "ethers";
-import VEGA_CONTRACT_ABI from './abis/erc20.json';
 
 import { useWeb3React } from "@web3-react/core"
 // import { formatEther } from '@ethersproject/units'
 
 import WrappedWeb3ReactProvider from './WrappedWeb3ReactProvider';
-import {injected, useContract} from './eth.js'
+import {injected} from './eth.js'
 import {Balance, Vgabalance} from './Balance.js'
 
-import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
-import { concat } from '@ethersproject/bytes';
 import {PoolStake} from "./Pool";
 
 const routes = [
@@ -45,18 +41,9 @@ const useInput = initialValue => {
 function BoostPools() {
 
   // const { value, bind, reset } = useInput('');
-  const { value, bind } = useInput('');
+  const { value } = useInput('');
 
-  const [roiValue, setRoiValue] = React.useState()
-
-  //calc on change
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    console.log(`Submitting value ${value}`);
-    // reset();
-    setRoiValue(value*2);
-}
+  
   
   return (
     <>

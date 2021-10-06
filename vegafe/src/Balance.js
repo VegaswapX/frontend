@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
 import {useContract} from './eth.js'
 // import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
-import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
+import {VEGA_TOKEN_ADDRESS} from './Contracts.js'
 
 import { formatEther } from '@ethersproject/units';
 
@@ -45,7 +45,7 @@ export function Vgabalance() {
         vegaContract.callStatic.balanceOf(account)
           .then((x) => {
             if (!stale) {
-              let z = ethers.utils.formatEther(x);
+            //   let z = ethers.utils.formatEther(x);
               setVgaBalance(x);
             }
           })

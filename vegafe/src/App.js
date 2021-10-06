@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from "react";
+// import { useState } from "react";
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import { Container, Navbar, Nav , Button, Row, Col, Card} from 'react-bootstrap'
@@ -21,27 +21,27 @@ const routes = [
 ]
 
 
-const useInput = initialValue => {
-  const [value, setValue] = useState(initialValue);
+// const useInput = initialValue => {
+//   const [value, setValue] = useState(initialValue);
 
-  return {
-    value,
-    setValue,
-    reset: () => setValue(""),
-    bind: {
-      value,
-      onChange: event => {
-        setValue(event.target.value);
-      }
-    }
-  };
-};
+//   return {
+//     value,
+//     setValue,
+//     reset: () => setValue(""),
+//     bind: {
+//       value,
+//       onChange: event => {
+//         setValue(event.target.value);
+//       }
+//     }
+//   };
+// };
 
 
 function BoostPools() {
 
   // const { value, bind, reset } = useInput('');
-  const { value } = useInput('');
+  // const { value } = useInput('');
 
   
   

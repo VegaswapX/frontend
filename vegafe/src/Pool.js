@@ -1,7 +1,6 @@
 import React from 'react'
 import { useState } from "react";
 import { useWeb3React } from "@web3-react/core"
-import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
 import POOL_CONTRACT_ABI from './abis/BoostPool.json';
 import {useContract} from './eth.js'
@@ -24,7 +23,6 @@ export function PoolStake() {
       POOL_CONTRACT_ABI,
       true,
     );
-  
   
     // const [loading, setLoading] = useState(false);
   
@@ -87,7 +85,7 @@ export function PoolStake() {
         poolContract.callStatic.totalAmountStaked()
           .then((x) => {
             if (!stale) {
-              let z = ethers.utils.formatEther(x);
+              // let z = ethers.utils.formatEther(x);
               setPoolstaked(x);
             }
           })
@@ -102,7 +100,7 @@ export function PoolStake() {
           setPoolstaked(undefined)
         }
       }
-    }, [account, library, chainId, vegaContract]) // ensures refresh if referential identity of library doesn't change across chainIds
+    }, [account, library, chainId, vegaContract, poolContract]) // ensures refresh if referential identity of library doesn't change across chainIds
   
     React.useEffect(() => {
       if (!!account && !!library) {

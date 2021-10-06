@@ -8,12 +8,14 @@ import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
 
 import { Button} from 'react-bootstrap'
 
+const chainId = 1137;
+
 export function PoolInfo() {
-  const { account, library, chainId } = useWeb3React()
+  const { account, library } = useWeb3React()
 
   //CONTRACT_MAP["BoostPool"]
   const vegaContract = useContract(
-    VEGA_TOKEN_ADDRESS,
+    VEGA_TOKEN_ADDRESS,    
     VEGA_CONTRACT_ABI,
     true,
   );
@@ -31,6 +33,8 @@ export function PoolInfo() {
   const [poolYield, setMaxyield] = React.useState()
   const [startTime, setStartTime] = React.useState()
   const [endTime, setEndTime] = React.useState()
+  const [totalAmountStaked, setTotalAmountStaked] = React.useState()
+  const [percentStaked, setPercentStaked] = React.useState()
 
   // const [loading, setLoading] = useState(false);
 
@@ -107,7 +111,35 @@ export function PoolInfo() {
 
       
     }
+  }, [account, library, chainId, poolContract])
+
+  
+
+  React.useEffect(() => {
+    if (!!account && !!library) {
+      let stale = false       
+
+      poolContract.callStatic.totalAmountStaked()
+        .then((x) => {
+          if (!stale) {
+            setTotalAmountStaked(x);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setTotalAmountStaked(null)
+          }
+        })
+
+      return () => {
+        stale = true
+        setTotalAmountStaked(undefined)
+      }
+
+      
+    }
   }, [account, library, chainId, poolContract]) // ensures refresh if referential identity of library doesn't change across chainIds
+
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -141,10 +173,13 @@ export function PoolInfo() {
       
       {/* loading={loading} */}
       Balance in the pool<br />
+      <br />
         % of total staked<br />
         time info<br />
-        duration: public(uint256)        
-        endTime: public(uint256)
+        duration
+
+      <div>totalAmountStaked: {totalAmountStaked === null ? 'Error' : totalAmountStaked ? `${totalAmountStaked}` : ''}</div>
+      <div>percentStaked: {totalAmountStaked === null ? 'Error' : poolStaked/totalAmountStaked ? `${poolStaked/totalAmountStaked}` : ''}</div>
 
       <div>startTime: {startTime === null ? 'Error' : startTime ? `${startTime}` : ''}</div>
       <div>endTime: {endTime === null ? 'Error' : endTime ? `${endTime}` : ''}</div>
@@ -161,7 +196,7 @@ export function PoolInfo() {
 
 
 export function PoolStake() {
-    const { account, library, chainId } = useWeb3React()
+    const { account, library } = useWeb3React()
   
     //CONTRACT_MAP["BoostPool"]
     const vegaContract = useContract(

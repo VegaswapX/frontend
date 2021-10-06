@@ -3,9 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
 import {useContract} from './eth.js'
-// import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
-import {VEGA_TOKEN_ADDRESS} from './Contracts.js'
-
+import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
 import { formatEther } from '@ethersproject/units';
 
 
@@ -25,8 +23,10 @@ export const formatCurrency = (balance) => {
 
 export function Vgabalance() {
     const { account, library, chainId } = useWeb3React()
+    
   
     //CONTRACT_MAP["BoostPool"]
+    //contractMap[chainId]["VEGA_TOKEN"],
     const vegaContract = useContract(
       VEGA_TOKEN_ADDRESS,
       VEGA_CONTRACT_ABI,

@@ -87,6 +87,10 @@
                 "type": "uint256"
             },
             {
+                "name": "_totalAmountStaked",
+                "type": "uint256"
+            },
+            {
                 "name": "_stakeDecimals",
                 "type": "uint256"
             },
@@ -104,7 +108,7 @@
         "type": "constructor"
     },
     {
-        "gas": 298619,
+        "gas": 300510,
         "inputs": [
             {
                 "name": "_stakeAmount",
@@ -299,7 +303,7 @@
     {
         "gas": 1568,
         "inputs": [],
-        "name": "totalAmountStaked",
+        "name": "maxStake",
         "outputs": [
             {
                 "name": "",
@@ -312,6 +316,19 @@
     {
         "gas": 1598,
         "inputs": [],
+        "name": "totalAmountStaked",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1628,
+        "inputs": [],
         "name": "stakingActive",
         "outputs": [
             {
@@ -323,27 +340,9 @@
         "type": "function"
     },
     {
-        "gas": 1628,
+        "gas": 1658,
         "inputs": [],
         "name": "reward",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "gas": 1703,
-        "inputs": [
-            {
-                "name": "arg0",
-                "type": "uint256"
-            }
-        ],
-        "name": "rewardSteps",
         "outputs": [
             {
                 "name": "",
@@ -361,6 +360,24 @@
                 "type": "uint256"
             }
         ],
+        "name": "rewardSteps",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1763,
+        "inputs": [
+            {
+                "name": "arg0",
+                "type": "uint256"
+            }
+        ],
         "name": "stakeSteps",
         "outputs": [
             {
@@ -372,7 +389,7 @@
         "type": "function"
     },
     {
-        "gas": 1718,
+        "gas": 1748,
         "inputs": [],
         "name": "rewardQuote",
         "outputs": [
@@ -385,7 +402,7 @@
         "type": "function"
     },
     {
-        "gas": 1793,
+        "gas": 1823,
         "inputs": [
             {
                 "name": "arg0",
@@ -403,7 +420,7 @@
         "type": "function"
     },
     {
-        "gas": 1778,
+        "gas": 1808,
         "inputs": [],
         "name": "stakeCount",
         "outputs": [
@@ -416,7 +433,7 @@
         "type": "function"
     },
     {
-        "gas": 6753,
+        "gas": 6783,
         "inputs": [
             {
                 "name": "arg0",

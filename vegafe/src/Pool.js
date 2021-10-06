@@ -65,6 +65,7 @@ export function PoolInfo() {
       poolContract.callStatic.maxYield()
         .then((x) => {
           if (!stale) {
+            x = x/10**18;
             setMaxyield(x);
           }
         })
@@ -152,7 +153,6 @@ export function PoolInfo() {
       <div>poolStaked: {poolStaked === null ? 'Error' : poolStaked ? `${poolStaked}` : ''}</div>
       <div>poolYield: {poolYield === null ? 'Error' : poolYield ? `${poolYield}` : ''}</div>
       
-      
       </span>
       
     </div>
@@ -190,7 +190,8 @@ export function PoolStake() {
       setLoading(true);
 
       try {
-        let approveAmount = 10000;
+        //TODO
+        let approveAmount = 1000 * 10**18;
         await vegaContract.approve(POOL_TOKEN_ADDRESS, approveAmount);
         // await depositLpToken(vegaContract, lpContract, account, amount);
         // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
@@ -214,7 +215,7 @@ export function PoolStake() {
 
       try {
         // let approveAmount = 10000 * 10**18;
-        let stakeAmount = 10000;
+        let stakeAmount = 1000 * 10**18;
         await poolContract.stake(stakeAmount);
         // await depositLpToken(vegaContract, lpContract, account, amount);
         // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
@@ -258,6 +259,8 @@ export function PoolStake() {
     return (
       <div>
         <span>VGA allowance: {vgaallow === null ? 'Error' : vgaallow ? `${vgaallow}` : ''}
+        <br />      
+        Mystake?
         <br />      
         
         {/* loading={loading} */}

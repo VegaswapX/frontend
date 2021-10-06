@@ -46,6 +46,7 @@ export function Vgabalance() {
           .then((x) => {
             if (!stale) {
             //   let z = ethers.utils.formatEther(x);
+               x = x/10**18;
               setVgaBalance(x);
             }
           })

@@ -40,8 +40,11 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
   }, [address, ABI, library, withSignerIfPossible, account]);
 };
 
+// const BSC_MAINNET = 56;
+const BSC_TESTNET = 97;
+const LCOAL_NET = 1337
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 1337],
+  supportedChainIds: [BSC_TESTNET, LCOAL_NET],  
 });
 
 // https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696

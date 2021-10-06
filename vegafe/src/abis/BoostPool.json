@@ -195,7 +195,7 @@
     {
         "gas": 1328,
         "inputs": [],
-        "name": "duration",
+        "name": "stakeDecimals",
         "outputs": [
             {
                 "name": "",
@@ -208,7 +208,7 @@
     {
         "gas": 1358,
         "inputs": [],
-        "name": "startTime",
+        "name": "yieldDecimals",
         "outputs": [
             {
                 "name": "",
@@ -221,7 +221,7 @@
     {
         "gas": 1388,
         "inputs": [],
-        "name": "endTime",
+        "name": "duration",
         "outputs": [
             {
                 "name": "",
@@ -234,7 +234,7 @@
     {
         "gas": 1418,
         "inputs": [],
-        "name": "yieldTotal",
+        "name": "startTime",
         "outputs": [
             {
                 "name": "",
@@ -247,7 +247,7 @@
     {
         "gas": 1448,
         "inputs": [],
-        "name": "maxPerStake",
+        "name": "endTime",
         "outputs": [
             {
                 "name": "",
@@ -260,7 +260,7 @@
     {
         "gas": 1478,
         "inputs": [],
-        "name": "totalAmountStaked",
+        "name": "yieldTotal",
         "outputs": [
             {
                 "name": "",
@@ -273,6 +273,45 @@
     {
         "gas": 1508,
         "inputs": [],
+        "name": "maxPerStake",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1538,
+        "inputs": [],
+        "name": "maxYield",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1568,
+        "inputs": [],
+        "name": "totalAmountStaked",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1598,
+        "inputs": [],
         "name": "stakingActive",
         "outputs": [
             {
@@ -284,58 +323,9 @@
         "type": "function"
     },
     {
-        "gas": 1538,
-        "inputs": [],
-        "name": "reward",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "gas": 1613,
-        "inputs": [
-            {
-                "name": "arg0",
-                "type": "uint256"
-            }
-        ],
-        "name": "rewardSteps",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "gas": 1643,
-        "inputs": [
-            {
-                "name": "arg0",
-                "type": "uint256"
-            }
-        ],
-        "name": "stakeSteps",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "gas": 1628,
         "inputs": [],
-        "name": "rewardQuote",
+        "name": "reward",
         "outputs": [
             {
                 "name": "",
@@ -353,6 +343,55 @@
                 "type": "uint256"
             }
         ],
+        "name": "rewardSteps",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1733,
+        "inputs": [
+            {
+                "name": "arg0",
+                "type": "uint256"
+            }
+        ],
+        "name": "stakeSteps",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1718,
+        "inputs": [],
+        "name": "rewardQuote",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1793,
+        "inputs": [
+            {
+                "name": "arg0",
+                "type": "uint256"
+            }
+        ],
         "name": "staker_addresses",
         "outputs": [
             {
@@ -364,7 +403,20 @@
         "type": "function"
     },
     {
-        "gas": 6633,
+        "gas": 1778,
+        "inputs": [],
+        "name": "stakeCount",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 6753,
         "inputs": [
             {
                 "name": "arg0",

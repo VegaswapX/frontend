@@ -12,7 +12,7 @@ import WrappedWeb3ReactProvider from './WrappedWeb3ReactProvider';
 import {injected} from './eth.js'
 import {Balance, Vgabalance} from './Balance.js'
 
-import {PoolStake} from "./Pool";
+import {PoolStake, PoolInfo} from "./Pool";
 
 const routes = [
   { path: '/', name: 'BoostPools', Component: BoostPools },
@@ -49,62 +49,58 @@ function BoostPools() {
     <>
       <h1>BoostPools</h1>
       <Container>
-  <Row>
-    <Col>
-    <Card style={{ width: '18rem' }}>
-    {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-    <Card.Body>
-      <Card.Title>Balances</Card.Title>
-      <Card.Text>        
-        <Balance />
-        <br />
-        <Vgabalance/>
-      </Card.Text>
-      {/* <Button variant="primary">Go somewhere</Button> */}
-    </Card.Body>
-    </Card>
+    <Row>
+      <Col>
+      <Card style={{ width: '18rem' }}>
+      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+      <Card.Body>
+        <Card.Title>Balances</Card.Title>
+        <Card.Text>        
+          <Balance />
+          <br />
+          <Vgabalance/>
+        </Card.Text>
+        {/* <Button variant="primary">Go somewhere</Button> */}
+      </Card.Body>
+      </Card>
 
-    
-    </Col>
-    <Col>
-    <Card style={{ width: '18rem' }}>
-    {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-    <Card.Body>
-      <Card.Title>Pool Info</Card.Title>
-      <Card.Text>
-      Balance in the pool<br />
-      % of total staked<br />
-      time info<br />
       
-      </Card.Text>
-      {/* <Button variant="primary">Go somewhere</Button> */}
-    </Card.Body>
-    </Card>
-    </Col>
-
-  </Row>
-
-  <Row style={{ marginTop: '1rem' }}>
-
-    <Col>
-    <Card style={{ width: '18rem' }}>
-    {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-    <Card.Body>
-      <Card.Title>Stake</Card.Title>
-      <Card.Text>
-      
-     
-
-    <PoolStake />
-      </Card.Text>
-      {/* <Button variant="primary">Go somewhere</Button> */}
-    </Card.Body>
-    </Card>
-    </Col>
-    
+      </Col>
+      <Col>
+      <Card style={{ width: '18rem' }}>
+      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+      <Card.Body>
+        <Card.Title>Pool Info</Card.Title>
+        <PoolInfo />
+        
+        
+        {/* <Button variant="primary">Go somewhere</Button> */}
+      </Card.Body>
+      </Card>
+      </Col>
 
     </Row>
-  </Container>
+
+    <Row style={{ marginTop: '1rem' }}>
+
+      <Col>
+      <Card style={{ width: '18rem' }}>
+      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+      <Card.Body>
+        <Card.Title>Stake</Card.Title>
+
+        <PoolStake />
+
+        {/* <Card.Text>
+        </Card.Text> */}
+        {/* <Button variant="primary">Go somewhere</Button> */}
+      </Card.Body>
+      </Card>
+      </Col>
+      
+
+      </Row>
+    </Container>
       
     </>
   )

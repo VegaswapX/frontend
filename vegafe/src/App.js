@@ -16,7 +16,7 @@ import {Balance, Vgabalance} from './Balance.js'
 
 import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
 import { concat } from '@ethersproject/bytes';
-import {Approve} from "./Pool";
+import {PoolStake} from "./Pool";
 
 const routes = [
   { path: '/', name: 'BoostPools', Component: BoostPools },
@@ -108,7 +108,7 @@ function BoostPools() {
       
      
 
-    <Approve />
+    <PoolStake />
       </Card.Text>
       {/* <Button variant="primary">Go somewhere</Button> */}
     </Card.Body>

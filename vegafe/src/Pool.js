@@ -3,12 +3,13 @@ import { useState } from "react";
 import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from './abis/erc20.json';
+import POOL_CONTRACT_ABI from './abis/BoostPool.json';
 import {injected, useContract} from './eth.js'
 import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
 
 import { Button} from 'react-bootstrap'
 
-export function Approve() {
+export function PoolStake() {
     const { account, library, chainId } = useWeb3React()
   
     //CONTRACT_MAP["BoostPool"]
@@ -17,6 +18,13 @@ export function Approve() {
       VEGA_CONTRACT_ABI,
       true,
     );
+
+    const poolContract = useContract(
+      POOL_TOKEN_ADDRESS,
+      POOL_CONTRACT_ABI,
+      true,
+    );
+  
   
     // const [loading, setLoading] = useState(false);
   
@@ -44,31 +52,28 @@ export function Approve() {
       }
 
     }
-  
-    // React.useEffect(() => {
-    //   if (!!account && !!library) {
-    //     let stale = false       
-  
-    //     vegaContract.callStatic.totalSupply()
-    //       .then((x) => {
-    //         if (!stale) {
-    //           let z = ethers.utils.formatEther(x);
-    //           setVgaAllowance(x);
-    //         }
-    //       })
-    //       .catch(() => {
-    //         if (!stale) {
-    //           setVgaAllowance(null)
-    //         }
-    //       })
-  
-    //     return () => {
-    //       stale = true
-    //       setVgaAllowance(undefined)
-    //     }
-    //   }
-    // }, [account, library, chainId, vegaContract]) // ensures refresh if referential identity of library doesn't change across chainIds
 
+    const stake = async () => {
+      console.log("stake " + poolContract);
+
+      setLoading(true);
+
+      try {
+        await poolContract.stake(100);
+        // await depositLpToken(vegaContract, lpContract, account, amount);
+        // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
+        // tokenBalance.refetch();
+        // lpBalance.refetch();
+      } catch (error) {
+        console.log({error})
+        // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+      } finally {
+        setLoading(false);
+        console.log("stake done");
+      }
+
+    }
+  
     React.useEffect(() => {
       if (!!account && !!library) {
         let stale = false       
@@ -108,7 +113,13 @@ export function Approve() {
               Approve
             </Button>      
         <br />
-        <button> stake</button>
+        <Button 
+              variant="secondary" 
+              onClick={stake}
+              
+            >
+              Stake
+            </Button>  
         <br />
         <input></input>
         </span>

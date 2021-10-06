@@ -1,6 +1,6 @@
-import { Web3Provider } from '@ethersproject/providers';
-import { Web3ReactProvider } from '@web3-react/core';
-import React from 'react';
+import { Web3Provider } from "@ethersproject/providers";
+import { Web3ReactProvider } from "@web3-react/core";
+import React from "react";
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider);
@@ -9,7 +9,9 @@ function getLibrary(provider) {
 }
 
 function WrappedWeb3ReactProvider({ children }) {
-  return <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>;
+  return (
+    <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
+  );
 }
 
 export default WrappedWeb3ReactProvider;

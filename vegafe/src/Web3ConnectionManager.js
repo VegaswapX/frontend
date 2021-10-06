@@ -1,10 +1,10 @@
-import { Web3Provider } from '@ethersproject/providers';
-import { useWeb3React } from '@web3-react/core';
-import { useEffect } from 'react';
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
+import { useEffect } from "react";
 
-import { network } from './connectors';
-import useEagerConnect from './useEagerConnect';
-import useInactiveListener from './useInactiveListener';
+import { network } from "./connectors";
+import useEagerConnect from "./useEagerConnect";
+import useInactiveListener from "./useInactiveListener";
 
 function Web3ConnectionManager({ children }) {
   const context = useWeb3React();

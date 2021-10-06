@@ -1,7 +1,7 @@
-import { InjectedConnector } from '@web3-react/injected-connector';
-import { NetworkConnector } from '@web3-react/network-connector';
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { NetworkConnector } from "@web3-react/network-connector";
 
-import { IChain, IRPC_URLS } from './type';
+import { IChain, IRPC_URLS } from "./type";
 
 const CHAINS = {
   LOCALHOST: 1337,
@@ -10,7 +10,7 @@ const CHAINS = {
 const RPC_URLS = {
   // [CHAINS.BSCMAIN]: process.env.REACT_APP_RPC_URL_BSCMAIN || '',
   // [CHAINS.RINKEBY]: process.env.REACT_APP_RPC_URL_BSCMAIN || '',
-  [CHAINS.LOCALHOST]: process.env.REACT_APP_RPC_URL_LOCAL || '',
+  [CHAINS.LOCALHOST]: process.env.REACT_APP_RPC_URL_LOCAL || "",
 };
 
 export const injected = new InjectedConnector({
@@ -24,6 +24,6 @@ export const injected = new InjectedConnector({
 
 export const network = new NetworkConnector({
   urls: {
-    1337: 'http://127.0.0.1:8545'
-  }
+    1337: "http://127.0.0.1:8545",
+  },
 });

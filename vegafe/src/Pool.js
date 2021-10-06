@@ -30,6 +30,8 @@ export function PoolStake() {
   
     const [vgaallow, setVgaAllowance] = React.useState()
 
+    const [poolStaked, setPoolstaked] = React.useState()
+
     const [loading, setLoading] = useState(false);
   
     const approve = async () => {
@@ -38,7 +40,8 @@ export function PoolStake() {
       setLoading(true);
 
       try {
-        await vegaContract.approve(POOL_TOKEN_ADDRESS, 22);
+        let approveAmount = 10000;
+        await vegaContract.approve(POOL_TOKEN_ADDRESS, approveAmount);
         // await depositLpToken(vegaContract, lpContract, account, amount);
         // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
         // tokenBalance.refetch();
@@ -48,7 +51,8 @@ export function PoolStake() {
         // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
       } finally {
         setLoading(false);
-        console.log("done");
+        //TODO reload amount
+        console.log("approve done");
       }
 
     }
@@ -59,7 +63,9 @@ export function PoolStake() {
       setLoading(true);
 
       try {
-        await poolContract.stake(100);
+        // let approveAmount = 10000 * 10**18;
+        let stakeAmount = 10000;
+        await poolContract.stake(stakeAmount);
         // await depositLpToken(vegaContract, lpContract, account, amount);
         // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
         // tokenBalance.refetch();
@@ -73,6 +79,30 @@ export function PoolStake() {
       }
 
     }
+  
+    React.useEffect(() => {
+      if (!!account && !!library) {
+        let stale = false       
+  
+        poolContract.callStatic.totalAmountStaked()
+          .then((x) => {
+            if (!stale) {
+              let z = ethers.utils.formatEther(x);
+              setPoolstaked(x);
+            }
+          })
+          .catch(() => {
+            if (!stale) {
+              setPoolstaked(null)
+            }
+          })
+  
+        return () => {
+          stale = true
+          setPoolstaked(undefined)
+        }
+      }
+    }, [account, library, chainId, vegaContract]) // ensures refresh if referential identity of library doesn't change across chainIds
   
     React.useEffect(() => {
       if (!!account && !!library) {
@@ -121,6 +151,8 @@ export function PoolStake() {
               Stake
             </Button>  
         <br />
+        <div>poolStaked: {poolStaked === null ? 'Error' : poolStaked ? `${poolStaked}` : ''}</div>
+        
         <input></input>
         </span>
         

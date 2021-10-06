@@ -47,60 +47,47 @@ function BoostPools() {
   
   return (
     <>
-      <h1>BoostPools</h1>
+      <h1 className="text-center mb-5">BoostPools</h1>
       <Container>
-    <Row>
-      <Col>
-      <Card style={{ width: '18rem' }}>
-      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-      <Card.Body>
-        <Card.Title>Balances</Card.Title>
-        <Card.Text>        
-          <Balance />
-          <br />
-          <Vgabalance/>
-        </Card.Text>
-        {/* <Button variant="primary">Go somewhere</Button> */}
-      </Card.Body>
-      </Card>
-
-      
-      </Col>
-      <Col>
-      <Card style={{ width: '18rem' }}>
-      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-      <Card.Body>
-        <Card.Title>Pool Info</Card.Title>
-        <PoolInfo />
-        
-        
-        {/* <Button variant="primary">Go somewhere</Button> */}
-      </Card.Body>
-      </Card>
-      </Col>
-
-    </Row>
-
-    <Row style={{ marginTop: '1rem' }}>
-
-      <Col>
-      <Card style={{ width: '18rem' }}>
-      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-      <Card.Body>
-        <Card.Title>Stake</Card.Title>
-
-        <PoolStake />
-
-        {/* <Card.Text>
-        </Card.Text> */}
-        {/* <Button variant="primary">Go somewhere</Button> */}
-      </Card.Body>
-      </Card>
-      </Col>
-      
-
-      </Row>
-    </Container>
+        <Row>
+          <Col>
+              <Card style={{ width: '18rem', height: '100%' }}>
+              {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+              <Card.Header>Balances</Card.Header>
+              <Card.Body>
+                <Card.Text>
+                  <Balance />
+                  <br />
+                  <Vgabalance/>
+                </Card.Text>
+                {/* <Button variant="primary">Go somewhere</Button> */}
+              </Card.Body>
+              </Card>
+          </Col>
+          <Col>
+              <Card style={{ width: '18rem', height: '100%' }}>
+              {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+              <Card.Header>Pool Info</Card.Header>
+              <Card.Body>
+                <PoolInfo />
+                {/* <Button variant="primary">Go somewhere</Button> */}
+              </Card.Body>
+              </Card>
+          </Col>
+            <Col>
+                <Card style={{ width: '18rem', height: '100%' }}>
+                    {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                    <Card.Header>Stake</Card.Header>
+                    <Card.Body>
+                        <PoolStake />
+                        {/* <Card.Text>
+                        </Card.Text> */}
+                        {/* <Button variant="primary">Go somewhere</Button> */}
+                    </Card.Body>
+                </Card>
+            </Col>
+        </Row>
+      </Container>
       
     </>
   )

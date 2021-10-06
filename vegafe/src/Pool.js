@@ -6,7 +6,7 @@ import POOL_CONTRACT_ABI from './abis/BoostPool.json';
 import {useContract} from './eth.js'
 import {VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS} from './Contracts.js'
 
-import { Button} from 'react-bootstrap'
+import { Button, Row, Col } from 'react-bootstrap'
 
 const chainId = 1137;
 
@@ -294,29 +294,34 @@ export function PoolStake() {
     return (
       <div>
         <span>VGA allowance: {vgaallow === null ? 'Error' : vgaallow ? `${vgaallow}` : ''}
-        <br />      
+        <br />
         Mystake?
         <br />      
         
         {/* loading={loading} */}
-        <Button 
-              variant="secondary" 
-              onClick={approve}
-              
-            >
-              Approve
-            </Button>      
-        <br />
-        <Button 
-              variant="secondary" 
-              onClick={stake}
-              
-            >
-              Stake
-            </Button>  
-        <br />        
-        
-        <input></input>
+        <Row>
+            <Col>
+                <input className="mt-4 w-100"></input>
+            </Col>
+        </Row>
+        <Row className="mt-5">
+            <Col>
+                <Button
+                      variant="secondary"
+                      onClick={approve}
+                    >
+                      Approve
+                    </Button>
+            </Col>
+            <Col className="d-flex justify-content-end">
+                <Button
+                      variant="secondary"
+                      onClick={stake}
+                    >
+                      Stake
+                    </Button>
+            </Col>
+        </Row>
         </span>
         
       </div>

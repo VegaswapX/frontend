@@ -3,12 +3,15 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "../eth.js";
 
 // actions
 import { showRightSidebar } from '../redux/actions';
 
 // components
 import LanguageDropdown from '../components/LanguageDropdown';
+import AccountInfo from '../components/AccountInfo';
 import NotificationDropdown from '../components/NotificationDropdown';
 import ProfileDropdown from '../components/ProfileDropdown';
 import SearchDropdown from '../components/SearchDropdown';
@@ -22,6 +25,10 @@ import logo from '../assets/images/logo-light.png';
 
 //constants
 import * as layoutConstants from '../constants/layout';
+
+import {
+    Button
+  } from "react-bootstrap";
 
 // get the notifications
 const Notifications = [
@@ -38,71 +45,16 @@ const Notifications = [
         subText: '5 min ago',
         icon: 'mdi mdi-account-plus',
         bgColor: 'info',
-    },
-    {
-        id: 3,
-        text: 'Cristina Pride',
-        subText: 'Hi, How are you? What about our next meeting',
-        icon: 'mdi mdi-comment-account-outline',
-        bgColor: 'success',
-    },
-    {
-        id: 4,
-        text: 'Caleb Flakelar commented on Admin',
-        subText: '4 days ago',
-        icon: 'mdi mdi-comment-account-outline',
-        bgColor: 'danger',
-    },
-    {
-        id: 5,
-        text: 'New user registered.',
-        subText: '5 min ago',
-        icon: 'mdi mdi-account-plus',
-        bgColor: 'info',
-    },
-    {
-        id: 6,
-        text: 'Cristina Pride',
-        subText: 'Hi, How are you? What about our next meeting',
-        icon: 'mdi mdi-comment-account-outline',
-        bgColor: 'success',
-    },
-    {
-        id: 7,
-        text: 'Carlos Crouch liked Admin',
-        subText: '13 days ago',
-        icon: 'mdi mdi-heart',
-        bgColor: 'info',
-    },
+    }    
 ];
 
 // get the profilemenu
 const ProfileMenus = [
     {
-        label: 'My Account',
+        label: 'Account',
         icon: 'mdi mdi-account-circle',
         redirectTo: '/',
-    },
-    {
-        label: 'Settings',
-        icon: 'mdi mdi-account-edit',
-        redirectTo: '/',
-    },
-    {
-        label: 'Support',
-        icon: 'mdi mdi-lifebuoy',
-        redirectTo: '/',
-    },
-    {
-        label: 'Lock Screen',
-        icon: 'mdi mdi-lock-outline',
-        redirectTo: '/account/lock-screen',
-    },
-    {
-        label: 'Logout',
-        icon: 'mdi mdi-logout',
-        redirectTo: '/account/logout',
-    },
+    }   
 ];
 
 // dummy search results
@@ -112,19 +64,7 @@ const SearchResults = [
         title: 'Analytics Report',
         icon: 'uil-notes',
         redirectTo: '/',
-    },
-    {
-        id: 2,
-        title: 'How can I help you?',
-        icon: 'uil-life-ring',
-        redirectTo: '/',
-    },
-    {
-        id: 3,
-        icon: 'uil-cog',
-        title: 'User profile settings',
-        redirectTo: '/',
-    },
+    }    
 ];
 
 type TopbarProps = {
@@ -138,6 +78,8 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
     const dispatch = useDispatch();
 
     const [isopen, setIsopen] = useState(false);
+
+    const { account, activate, deactivate } = useWeb3React();
 
     const navbarCssClasses = navCssClasses || '';
     const containerCssClasses = !hideLogo ? 'container-fluid' : '';
@@ -161,6 +103,27 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
         dispatch(showRightSidebar());
     };
 
+    const handleConnect = () => {
+        console.log("connect")
+        connect();
+    };
+
+    async function connect() {
+        try {
+          await activate(injected);
+        } catch (ex) {
+          console.log(ex);
+        }
+      }
+    
+      async function disconnect() {
+        try {
+          deactivate();
+        } catch (ex) {
+          console.log(ex);
+        }
+      }
+
     return (
         <React.Fragment>
             <div className={`navbar-custom ${navbarCssClasses}`}>
@@ -177,18 +140,53 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                     )}
 
                     <ul className="list-unstyled topbar-menu float-end mb-0">
-                        <li className="notification-list topbar-dropdown d-xl-none">
+                        {/* <li className="notification-list topbar-dropdown d-xl-none">
                             <SearchDropdown />
                         </li>
+
+                        <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
+                            <AccountInfo />
+                        </li>
+                                              
                         <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
                             <LanguageDropdown />
-                        </li>
-                        <li className="dropdown notification-list">
+                        </li> */}
+                        {/* <li className="dropdown notification-list">
                             <NotificationDropdown notifications={Notifications} />
+                        </li> */}
+                        <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
+                        {account ? (
+                                <div style={{marginTop: "23px", marginRight: "10px"}}>
+                                Account: <b>{account}</b>
+                                </div>
+                            ) : (
+                                <span></span>
+                            )}    
                         </li>
-                        <li className="dropdown notification-list d-none d-sm-inline-block">
+
+                        <li className="dropdown notification-list d-lg-block">
+                            {/* <button
+                                className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
+                                onClick={handleConnect}>
+                                    connect                                
+                            </button> */}
+
+            
+                        <span>
+                            {account ?
+                                (<Button onClick={disconnect} variant="info" style={{marginTop: "15px"}}>
+                                    Disconnect
+                                </Button>)
+                                :
+                                (<Button onClick={connect} variant="primary" style={{marginTop: "15px"}}>
+                                    Connect
+                                </Button>)
+                            }
+                        </span>
+                        </li>
+                        {/* <li className="dropdown notification-list d-none d-sm-inline-block">
                             <AppsDropdown />
-                        </li>
+                        </li> */}
                         <li className="notification-list">
                             <button
                                 className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
@@ -196,14 +194,14 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                                 <i className="dripicons-gear noti-icon"></i>
                             </button>
                         </li>
-                        <li className="dropdown notification-list">
+                        {/* <li className="dropdown notification-list">
                             <ProfileDropdown
                                 profilePic={profilePic}
                                 menuItems={ProfileMenus}
-                                username={'Dominic Keller'}
-                                userTitle={'Founder'}
+                                username={account}
+                                userTitle={'Connect'}
                             />
-                        </li>
+                        </li> */}
                     </ul>
 
                     {/* toggle for vertical layout */}
@@ -237,7 +235,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                             </div>
                         </Link>
                     )}
-                    <TopbarSearch items={SearchResults} />
+                    {/* <TopbarSearch items={SearchResults} /> */}
                 </div>
             </div>
         </React.Fragment>

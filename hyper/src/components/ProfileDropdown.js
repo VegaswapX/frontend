@@ -21,7 +21,7 @@ type ProfileDropdownState = {
 };
 
 const ProfileDropdown = (props: ProfileDropdownProps, state: ProfileDropdownState): React$Element<any> => {
-    const profilePic = props.profilePic || null;
+    // const profilePic = props.profilePic || null;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     /*
@@ -41,10 +41,11 @@ const ProfileDropdown = (props: ProfileDropdownProps, state: ProfileDropdownStat
                 onClick={toggleDropdown}
                 className="nav-link dropdown-toggle nav-user arrow-none me-0">
                 <span className="account-user-avatar">
-                    <img src={profilePic} className="rounded-circle" alt="user" />
+                    {/* <img src={profilePic} className="rounded-circle" alt="user" /> */}
                 </span>
                 <span>
-                    <span className="account-user-name">{props.username}</span>
+                    {/* <span className="account-user-name">{props.username}</span> */}
+                    {/* <span className="account-user-name">ZZZ</span> */}
                     <span className="account-position">{props.userTitle}</span>
                 </span>
             </Dropdown.Toggle>

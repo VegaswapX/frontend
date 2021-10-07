@@ -2,6 +2,10 @@
 import React from 'react';
 import Routes from './routes/Routes';
 
+import WrappedWeb3ReactProvider from "./featurs/web3/WrappedWeb3ReactProvider";
+import Web3ConnectionManager from "./featurs/web3/Web3ConnectionManager";
+
+
 // setup fake backend
 import { configureFakeBackend } from './helpers';
 
@@ -30,8 +34,18 @@ type AppProps = {};
 /**
  * Main app component
  */
-const App = (props: AppProps): React$Element<any> => {
+const InnerApp = (props: AppProps): React$Element<any> => {
     return <Routes></Routes>;
 };
+
+function App() {
+    return (
+      <WrappedWeb3ReactProvider>
+        <Web3ConnectionManager>
+          <InnerApp />
+        </Web3ConnectionManager>
+      </WrappedWeb3ReactProvider>
+    );
+  }
 
 export default App;

@@ -105,13 +105,7 @@ const Dripicons = React.lazy(() => import('../pages/uikit/Dripicons'));
 const MDIIcons = React.lazy(() => import('../pages/uikit/MDIIcons'));
 const Unicons = React.lazy(() => import('../pages/uikit/Unicons'));
 
-// forms
-const BasicForms = React.lazy(() => import('../pages/forms/Basic'));
-const FormAdvanced = React.lazy(() => import('../pages/forms/Advanced'));
-const FormValidation = React.lazy(() => import('../pages/forms/Validation'));
-const FormWizard = React.lazy(() => import('../pages/forms/Wizard'));
-const FileUpload = React.lazy(() => import('../pages/forms/FileUpload'));
-const Editors = React.lazy(() => import('../pages/forms/Editors'));
+
 
 // charts
 const ApexChart = React.lazy(() => import('../pages/charts/Apex'));
@@ -134,7 +128,7 @@ const rootRoute = {
     path: '/',
     exact: true,
     component: () => <Redirect to="/dashboard/boost" />,
-    route: PrivateRoute,
+    route: Route,
 };
 
 // dashboards
@@ -148,20 +142,21 @@ const dashboardRoutes = {
             path: '/dashboard/boost',
             name: 'Boost',
             component: BoostPage,
-            route: PrivateRoute,
+            // route: PrivateRoute,
+            route: Route,
         },
         {
             path: '/dashboard/liq',
             name: 'Liq',
             component: LiqPage,
-            route: PrivateRoute,
+            route: Route,
         },
         
         {
             path: '/dashboard/tx',
             name: 'Tx',
             component: TxPage,
-            route: PrivateRoute,
+            route: Route,
         },
         
         
@@ -612,64 +607,22 @@ const uiRoutes = {
                     path: '/ui/icons/dripicons',
                     name: 'Dripicons',
                     component: Dripicons,
-                    route: PrivateRoute,
+                    route: Route,
                 },
                 {
                     path: '/ui/icons/mdi',
                     name: 'Material Design',
                     component: MDIIcons,
-                    route: PrivateRoute,
+                    route: Route,
                 },
                 {
                     path: '/ui/icons/unicons',
                     name: 'Unicons',
                     component: Unicons,
-                    route: Unicons,
+                    route: Route,
                 },
             ],
-        },
-        {
-            path: '/ui/forms',
-            name: 'Forms',
-            children: [
-                {
-                    path: '/ui/forms/basic',
-                    name: 'Basic Elements',
-                    component: BasicForms,
-                    route: PrivateRoute,
-                },
-                {
-                    path: '/ui/forms/advanced',
-                    name: 'Form Advanced',
-                    component: FormAdvanced,
-                    route: PrivateRoute,
-                },
-                {
-                    path: '/ui/forms/validation',
-                    name: 'Form Validation',
-                    component: FormValidation,
-                    route: PrivateRoute,
-                },
-                {
-                    path: '/ui/forms/wizard',
-                    name: 'Form Wizard',
-                    component: FormWizard,
-                    route: PrivateRoute,
-                },
-                {
-                    path: '/ui/forms/upload',
-                    name: 'File Upload',
-                    component: FileUpload,
-                    route: PrivateRoute,
-                },
-                {
-                    path: '/ui/forms/editors',
-                    name: 'Editors',
-                    component: Editors,
-                    route: PrivateRoute,
-                },
-            ],
-        },
+        },        
         {
             path: '/ui/charts',
             name: 'Charts',
@@ -678,19 +631,19 @@ const uiRoutes = {
                     path: '/ui/charts/apex',
                     name: 'Apex',
                     component: ApexChart,
-                    route: PrivateRoute,
+                    route: Route,
                 },
                 {
                     path: '/ui/charts/brite',
                     name: 'Brite',
                     component: BriteChart,
-                    route: PrivateRoute,
+                    route: Route,
                 },
                 {
                     path: '/ui/charts/chartjs',
                     name: 'Chartjs',
                     component: ChartJs,
-                    route: PrivateRoute,
+                    route: Route
                 },
             ],
         },

@@ -11,16 +11,17 @@ import {
   Col,
   Card,
 } from "react-bootstrap";
-import "./styles.css";
+import "../../style/styles.css";
 
 import { useWeb3React } from "@web3-react/core";
 // import { formatEther } from '@ethersproject/units'
 
-import WrappedWeb3ReactProvider from "./WrappedWeb3ReactProvider";
-import { injected } from "./eth.js";
-import { Balance, Vgabalance } from "./Balance.js";
+import WrappedWeb3ReactProvider from "../../featurs/web3/WrappedWeb3ReactProvider";
+import { injected } from "../../eth.js";
+import { Balance, Vgabalance } from "../Balance/Balance.js";
 
-import { PoolStake, PoolInfo } from "./Pool";
+import { PoolStake, PoolInfo } from "../Pools/Pool";
+import Web3ConnectionManager from "../../featurs/web3/Web3ConnectionManager";
 
 const routes = [
   { path: "/", name: "BoostPools", Component: BoostPools },
@@ -152,7 +153,7 @@ function InnerApp() {
           </Nav>
           <Nav>
             <Nav.Link disabled className={"d-flex align-items-center"}>
-              {active ? (
+              {account ? (
                 <span>
                   Account: <b>{account}</b>
                 </span>
@@ -160,22 +161,16 @@ function InnerApp() {
                 <span>Not connected</span>
               )}
             </Nav.Link>
-            <Nav.Link>
-              {/* {active ? <span>Balance: <b>{balance}</b></span> : <span>Not connected</span>} */}
-              {active ? (
-                <Button onClick={connect} variant="primary">
-                  ...
-                </Button>
-              ) : (
-                <Button onClick={connect} variant="primary">
-                  Connect to MetaMask
-                </Button>
-              )}
-            </Nav.Link>
             <Nav.Link className={"nav-right"}>
-              <Button onClick={disconnect} variant="info">
-                Disconnect
-              </Button>
+              {account ?
+                  (<Button onClick={disconnect} variant="info">
+                    Disconnect
+                  </Button>)
+                  :
+                  (<Button onClick={connect} variant="primary">
+                    Connect
+                  </Button>)
+              }
             </Nav.Link>
           </Nav>
         </Navbar>
@@ -207,7 +202,9 @@ function InnerApp() {
 function App() {
   return (
     <WrappedWeb3ReactProvider>
-      <InnerApp />
+      <Web3ConnectionManager>
+        <InnerApp />
+      </Web3ConnectionManager>
     </WrappedWeb3ReactProvider>
   );
 }

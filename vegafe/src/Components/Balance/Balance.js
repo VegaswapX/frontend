@@ -1,9 +1,9 @@
 import React from "react";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
-import VEGA_CONTRACT_ABI from "./abis/erc20.json";
-import { useContract } from "./eth.js";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "./Contracts.js";
+import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
+import { useContract } from "../../eth.js";
+import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../Constant/Contracts.js";
 import { formatEther } from "@ethersproject/units";
 
 export const formatCurrency = (balance) => {

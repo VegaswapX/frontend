@@ -1,12 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
-import VEGA_CONTRACT_ABI from "./abis/erc20.json";
-import POOL_CONTRACT_ABI from "./abis/BoostPool.json";
-import { useContract } from "./eth.js";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "./Contracts.js";
+import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
+import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import { useContract } from "../../eth.js";
+import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../Constant/Contracts.js";
 
 import { Button, Row, Col } from "react-bootstrap";
+import {BigNumber} from "@ethersproject/bignumber";
+import {parseEther} from "ethers/lib/utils";
 
 const chainId = 1137;
 
@@ -222,7 +224,8 @@ export function PoolStake() {
 
     try {
       //TODO
-      let approveAmount = 1000 * 10 ** 18;
+      let approveAmount = parseEther("1000");
+      console.log(vegaContract)
       await vegaContract.approve(POOL_TOKEN_ADDRESS, approveAmount);
       // await depositLpToken(vegaContract, lpContract, account, amount);
       // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
@@ -291,7 +294,7 @@ export function PoolStake() {
         VGA allowance:{" "}
         {vgaallow === null ? "Error" : vgaallow ? `${vgaallow}` : ""}
         <br />
-        Mystake?
+        My stake?
         <br />
         {/* loading={loading} */}
         <Row>

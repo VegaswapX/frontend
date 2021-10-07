@@ -7,10 +7,9 @@ import { useContract } from "../../eth.js";
 import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../Constant/Contracts.js";
 
 import { Button, Row, Col } from "react-bootstrap";
-import {BigNumber} from "@ethersproject/bignumber";
 import {parseEther} from "ethers/lib/utils";
 
-const chainId = 1137;
+// const chainId = 1137;
 
 export function PoolInfo() {
   const { account, library } = useWeb3React();
@@ -27,7 +26,6 @@ export function PoolInfo() {
   const [startTime, setStartTime] = React.useState();
   const [endTime, setEndTime] = React.useState();
   const [totalAmountStaked, setTotalAmountStaked] = React.useState();
-  const [percentStaked, setPercentStaked] = React.useState();
 
   // const [loading, setLoading] = useState(false);
 
@@ -53,7 +51,7 @@ export function PoolInfo() {
         setPoolstaked(undefined);
       };
     }
-  }, [account, library, chainId, vegaContract, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, vegaContract, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -78,7 +76,7 @@ export function PoolInfo() {
         setMaxyield(undefined);
       };
     }
-  }, [account, library, chainId, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -102,7 +100,7 @@ export function PoolInfo() {
         setStartTime(undefined);
       };
     }
-  }, [account, library, chainId, poolContract]);
+  }, [account, library, poolContract]);
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -126,7 +124,7 @@ export function PoolInfo() {
         setTotalAmountStaked(undefined);
       };
     }
-  }, [account, library, chainId, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -150,7 +148,7 @@ export function PoolInfo() {
         setEndTime(undefined);
       };
     }
-  }, [account, library, chainId, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
 
   return (
     <div>
@@ -286,7 +284,7 @@ export function PoolStake() {
         setVgaAllowance(undefined);
       };
     }
-  }, [account, library, chainId, vegaContract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, vegaContract]); // ensures refresh if referential identity of library doesn't change across chainIds
 
   return (
     <div>

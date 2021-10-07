@@ -115,7 +115,7 @@ function About() {
 }
 
 function InnerApp() {
-  const { active, account, activate, deactivate } = useWeb3React();
+  const { account, activate, deactivate } = useWeb3React();
 
   async function connect() {
     try {

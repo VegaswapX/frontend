@@ -11,7 +11,8 @@ import AppMenu from './Menu';
 import logoSm from '../assets/images/logo_sm.png';
 import logoDark from '../assets/images/logo-dark.png';
 import logoDarkSm from '../assets/images/logo_sm_dark.png';
-import logo from '../assets/images/logo.png';
+// import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo_black.jpeg';
 import profileImg from '../assets/images/users/avatar-1.jpg';
 
 type SideBarContentProps = {
@@ -91,19 +92,21 @@ const LeftSidebar = ({ isCondensed, isLight, hideLogo, hideUserProfile }: LeftSi
                     <React.Fragment>
                         <Link to="/" className="logo text-center logo-light">
                             <span className="logo-lg">
-                                <img src={isLight ? logoDark : logo} alt="logo" height="16" />
+
+                                {/* <div style={{color: "white", marginTop: "0px", whitespace: "break-spaces"}}>Vegaswap</div> */}
+                                <img src={isLight ? logoDark : logo} alt="logo" height="40" style={{marginTop: "10px", float: "center"}}/>
                             </span>
                             <span className="logo-sm">
-                                <img src={isLight ? logoSm : logoDarkSm} alt="logo" height="16" />
+                                {/* <img src={isLight ? logoSm : logoDarkSm} alt="logo" height="16" /> */}
                             </span>
                         </Link>
 
                         <Link to="/" className="logo text-center logo-dark">
                             <span className="logo-lg">
-                                <img src={isLight ? logoDark : logo} alt="logo" height="16" />
+                                {/* <img src={isLight ? logoDark : logo} alt="logo" height="16" /> */}
                             </span>
                             <span className="logo-sm">
-                                <img src={isLight ? logoSm : logoDarkSm} alt="logo" height="16" />
+                                {/* <img src={isLight ? logoSm : logoDarkSm} alt="logo" height="16" /> */}
                             </span>
                         </Link>
                     </React.Fragment>

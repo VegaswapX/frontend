@@ -10,7 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // import styled from 'styled-components';
 import { Card } from 'react-bootstrap';
-
+import {PoolInfo} from './Pool.js';
 
 const BoostPage = (): React$Element<React$FragmentType> => {
     
@@ -42,8 +42,8 @@ const BoostPage = (): React$Element<React$FragmentType> => {
                         <Card.Body>
                             <Card.Title as="h5">Pool Info</Card.Title>
                             <Card.Text>
-                                Total distribution
-                                Total amount staked
+                                <PoolInfo />
+                                
                             </Card.Text>
                             {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
                         </Card.Body>

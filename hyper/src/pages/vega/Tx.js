@@ -14,78 +14,6 @@ const records = [
     { id: 5, firstName: 'Shreyu', lastName: 'Navadiya', username: '@sn' },
 ];
 
-// const BasicTable = () => {
-//     return (
-//         <Card>
-//             <Card.Body>
-//                 <h4 className="header-title">Basic example</h4>
-//                 <p className="text-muted font-14 mb-4">
-//                     Just use <code>Table</code> element
-//                 </p>
-
-//                 <Table className="mb-0">
-//                     <thead>
-//                         <tr>
-//                             <th>#</th>
-//                             <th>First Name</th>
-//                             <th>Last Name</th>
-//                             <th>Username</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {records.map((record, index) => {
-//                             return (
-//                                 <tr key={index}>
-//                                     <th scope="row">{record.id}</th>
-//                                     <td>{record.firstName}</td>
-//                                     <td>{record.lastName}</td>
-//                                     <td>{record.username}</td>
-//                                 </tr>
-//                             );
-//                         })}
-//                     </tbody>
-//                 </Table>
-//             </Card.Body>
-//         </Card>
-//     );
-// };
-
-// const InverseTable = () => {
-//     return (
-//         <Card>
-//             <Card.Body>
-//                 <h4 className="header-title">Inverse Table</h4>
-//                 <p className="text-muted font-14 mb-4">
-//                     You can also invert the colors—with light text on dark backgrounds—by specifying <code>dark</code>{' '}
-//                     attribute
-//                 </p>
-
-//                 <Table className="mb-0" variant="dark">
-//                     <thead>
-//                         <tr>
-//                             <th>#</th>
-//                             <th>First Name</th>
-//                             <th>Last Name</th>
-//                             <th>Username</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {records.map((record, index) => {
-//                             return (
-//                                 <tr key={index}>
-//                                     <th scope="row">{record.id}</th>
-//                                     <td>{record.firstName}</td>
-//                                     <td>{record.lastName}</td>
-//                                     <td>{record.username}</td>
-//                                 </tr>
-//                             );
-//                         })}
-//                     </tbody>
-//                 </Table>
-//             </Card.Body>
-//         </Card>
-//     );
-// };
 
 const TxTable = () => {
     return (
@@ -128,10 +56,7 @@ const TxPage = (): React$Element<React$FragmentType> => {
     return (
         <React.Fragment>
             <PageTitle
-                breadCrumbItems={[
-                    { label: 'Tables', path: '/ui/tables/basic' },
-                    { label: 'Basic Tables', path: '/ui/tables/basic', active: true },
-                ]}
+                // breadCrumbItems={}
                 title={'Basic Tables'}
             />
 

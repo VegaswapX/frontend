@@ -36,6 +36,28 @@ export function PoolInfo() {
   const [totalAmountStaked, setTotalAmountStaked] = React.useState();
   const [reward, setReward] = React.useState();
 
+//   const [myArray, dispatchValue] = React.useReducer((myArray, { type, value }) => {
+//     switch (type) {
+//       case "add":
+//         return [...myArray, value];
+//       case "remove":
+//         return myArray.filter((_, index) => index !== value);
+//       default:
+//         return myArray;
+//     }
+//   }, []);
+
+//   const [nameArray, dispatchName] = React.useReducer((nameArray, { type, value }) => {
+//     switch (type) {
+//       case "add":
+//         return [...nameArray, value];
+//       case "remove":
+//         return nameArray.filter((_, index) => index !== value);
+//       default:
+//         return nameArray;
+//     }
+//   }, []);
+
   // const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
@@ -47,6 +69,8 @@ export function PoolInfo() {
         .then((x) => {
           if (!stale) {
             setPoolstaked(x);
+            // dispatchValue({ type: "add", value: x.toString()})
+            // dispatchName({ type: "add", value: "totalAmountStaked"})
           }
         })
         .catch(() => {
@@ -187,43 +211,55 @@ export function PoolInfo() {
   return (
     <>
     <Table className="mb-0" striped>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Username</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                <tr key={1}>
-                                    <th scope="row">Total amount staked</th>
-                                    <td>{" "}
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr key={1}>
+        <th scope="row">Total amount staked</th>
+            <td>{" "}
             {totalAmountStaked === null
-              ? "Error"
-              : totalAmountStaked
-              ? `${totalAmountStaked}`
-              : ""}</td>
+                ? "Error"
+                : totalAmountStaked
+                ? `${totalAmountStaked}`
+                : ""}</td>
                     </tr>
 
-                    <tr key={2}>
-                                    <th scope="row">Reward</th>
-                                    <td>{" "}
+        <tr key={2}>
+            <th scope="row">Reward</th>
+                        <td>{" "}
             {reward === null
               ? "Error"
               : reward
               ? `${reward}`
               : ""}</td>
-                    </tr>
+        </tr>
 
-                        {/* {records.map((record, index) => {
-                            return (
-                                <tr key={index}>
-                                    <th scope="row">{record.id}</th>
-                                    <td>{record.username}</td>
-                                </tr>
-                            );
-                        })} */}
-                    </tbody>
-                </Table>
+        <tr key={3}>
+            <th scope="row">StartTime</th>
+                        <td>{" "}
+            {startTime === null
+              ? "Error"
+              : startTime
+              ? `${startTime}`
+              : ""}</td>
+        </tr>
+
+
+                       
+        </tbody>
+    </Table>
+
+
+                    {/* {myArray.map((item, index) => (
+                        <tr key={index}>
+                            <td>{nameArray[index]}</td>
+                            <td>{item}</td>
+                            </tr>
+                    ))} */}
 
       <ListGroup>
         {/* loading={loading} */}

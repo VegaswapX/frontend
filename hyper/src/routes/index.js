@@ -9,39 +9,20 @@ import TxPage from '../pages/vega/Tx';
 
 // lazy load all the views
 
-// auth
-const Login = React.lazy(() => import('../pages/account/Login'));
-const Logout = React.lazy(() => import('../pages/account/Logout'));
-const Register = React.lazy(() => import('../pages/account/Register'));
-const Confirm = React.lazy(() => import('../pages/account/Confirm'));
-const ForgetPassword = React.lazy(() => import('../pages/account/ForgetPassword'));
-const LockScreen = React.lazy(() => import('../pages/account/LockScreen'));
-
-const Login2 = React.lazy(() => import('../pages/account2/Login2'));
-const Logout2 = React.lazy(() => import('../pages/account2/Logout2'));
-const Register2 = React.lazy(() => import('../pages/account2/Register2'));
-const Confirm2 = React.lazy(() => import('../pages/account2/Confirm2'));
-const ForgetPassword2 = React.lazy(() => import('../pages/account2/ForgetPassword2'));
-const LockScreen2 = React.lazy(() => import('../pages/account2/LockScreen2'));
 
 // dashboard
 
 // pages
 const Profile = React.lazy(() => import('../pages/profile'));
 const Profile2 = React.lazy(() => import('../pages/profile2'));
-const ErrorPageNotFound = React.lazy(() => import('../pages/error/PageNotFound'));
 const ErrorPageNotFoundAlt = React.lazy(() => import('../pages/error/PageNotFoundAlt'));
-const ServerError = React.lazy(() => import('../pages/error/ServerError'));
 // - other
 const Invoice = React.lazy(() => import('../pages/other/Invoice'));
 const FAQ = React.lazy(() => import('../pages/other/FAQ'));
 const Pricing = React.lazy(() => import('../pages/other/Pricing'));
-const Maintenance = React.lazy(() => import('../pages/other/Maintenance'));
 const Starter = React.lazy(() => import('../pages/other/Starter'));
 const PreLoader = React.lazy(() => import('../pages/other/PreLoader/'));
 const Timeline = React.lazy(() => import('../pages/other/Timeline'));
-
-const Landing = React.lazy(() => import('../pages/landing/'));
 
 // uikit
 const Accordions = React.lazy(() => import('../pages/uikit/Accordions'));
@@ -89,10 +70,6 @@ const AdvancedTables = React.lazy(() => import('../pages/tables/Advanced'));
 
 // widgets
 const Widgets = React.lazy(() => import('../pages/uikit/Widgets'));
-
-// maps
-const GoogleMaps = React.lazy(() => import('../pages/maps/GoogleMaps'));
-const VectorMaps = React.lazy(() => import('../pages/maps/VectorMaps'));
 
 // root routes
 const rootRoute = {
@@ -445,60 +422,9 @@ const uiRoutes = {
                     route: Route,
                 },
             ],
-        },
-        {
-            path: '/ui/maps',
-            name: 'Maps',
-            children: [
-                {
-                    path: '/ui/googlemaps',
-                    name: 'Google Maps',
-                    component: GoogleMaps,
-                    route: Route,
-                },
-                {
-                    path: '/ui/vectorMaps',
-                    name: 'Google Maps',
-                    component: VectorMaps,
-                    route: Route,
-                },
-            ],
-        },
+        }        
     ],
 };
-
-const otherPublicRoutes = [
-    {
-        path: '/landing',
-        name: 'landing',
-        component: Landing,
-        route: Route,
-    },
-    {
-        path: '/maintenance',
-        name: 'Maintenance',
-        component: Maintenance,
-        route: Route,
-    },
-    {
-        path: '/error-404',
-        name: 'Error - 404',
-        component: ErrorPageNotFound,
-        route: Route,
-    },
-    {
-        path: '/error-500',
-        name: 'Error - 500',
-        component: ServerError,
-        route: Route,
-    },
-    {
-        path: '/account/confirm',
-        name: 'Confirm',
-        component: Confirm,
-        route: Route,
-    },
-];
 
 // flatten the list of all nested routes
 const flattenRoutes = (routes) => {
@@ -515,79 +441,10 @@ const flattenRoutes = (routes) => {
     return flatRoutes;
 };
 
-// auth
-const authRoutes = [
-    {
-        path: '/account/login',
-        name: 'Login',
-        component: Login,
-        route: Route,
-    },
-    {
-        path: '/account/logout',
-        name: 'Logout',
-        component: Logout,
-        route: Route,
-    },
-    {
-        path: '/account/register',
-        name: 'Register',
-        component: Register,
-        route: Route,
-    },
-    {
-        path: '/account/forget-password',
-        name: 'Forget Password',
-        component: ForgetPassword,
-        route: Route,
-    },
-    {
-        path: '/account/lock-screen',
-        name: 'Lock Screen',
-        component: LockScreen,
-        route: Route,
-    },
-    {
-        path: '/account/login2',
-        name: 'Login2',
-        component: Login2,
-        route: Route,
-    },
-    {
-        path: '/account/logout2',
-        name: 'Logout2',
-        component: Logout2,
-        route: Route,
-    },
-    {
-        path: '/account/register2',
-        name: 'Register2',
-        component: Register2,
-        route: Route,
-    },
-    {
-        path: '/account/confirm2',
-        name: 'Confirm2',
-        component: Confirm2,
-        route: Route,
-    },
-    {
-        path: '/account/forget-password2',
-        name: 'Forget Password2',
-        component: ForgetPassword2,
-        route: Route,
-    },
-    {
-        path: '/account/lock-screen2',
-        name: 'Lock Screen2',
-        component: LockScreen2,
-        route: Route,
-    },
-];
 
 // All routes
 const authProtectedRoutes = [rootRoute, dashboardRoutes, pageRoutes, uiRoutes];
-const publicRoutes = [...authRoutes, ...otherPublicRoutes];
+const publicRoutes = [];
 
 const authProtectedFlattenRoutes = flattenRoutes([...authProtectedRoutes]);
 const publicProtectedFlattenRoutes = flattenRoutes([...publicRoutes]);

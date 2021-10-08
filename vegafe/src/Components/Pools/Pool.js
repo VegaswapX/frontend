@@ -6,7 +6,7 @@ import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { useContract } from "../../eth.js";
 import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../Constant/Contracts.js";
 
-import { Button, Row, Col } from "react-bootstrap";
+import {Button, Row, Col, ListGroup} from "react-bootstrap";
 import {parseEther} from "ethers/lib/utils";
 
 // const chainId = 1137;
@@ -151,57 +151,60 @@ export function PoolInfo() {
   }, [account, library, poolContract]); // ensures refresh if referential identity of library doesn't change across chainIds
 
   return (
-    <div>
-      <span>
+    <>
+      <ListGroup>
         {/* loading={loading} */}
-        Balance in the pool
-        <br />
-        <br />
-        % of total staked
-        <br />
-        time info
-        <br />
-        duration
-        <div>
-          totalAmountStaked:{" "}
-          {totalAmountStaked === null
-            ? "Error"
-            : totalAmountStaked
-            ? `${totalAmountStaked}`
-            : ""}
-        </div>
-        <div>
+        <ListGroup.Item>
+          Balance in the pool
+        </ListGroup.Item>
+        <ListGroup.Item>
+          % of total staked
+        </ListGroup.Item>
+        <ListGroup.Item>
+          time info
+        </ListGroup.Item>
+        <ListGroup.Item>
+          duration
+        </ListGroup.Item>
+        <ListGroup.Item>
+            totalAmountStaked:{" "}
+            {totalAmountStaked === null
+              ? "Error"
+              : totalAmountStaked
+              ? `${totalAmountStaked}`
+              : ""}
+        </ListGroup.Item>
+        <ListGroup.Item>
           percentStaked:{" "}
           {totalAmountStaked === null
             ? "Error"
             : poolStaked / totalAmountStaked
             ? `${poolStaked / totalAmountStaked}`
             : ""}
-        </div>
-        <div>
+        </ListGroup.Item>
+        <ListGroup.Item>
           startTime:{" "}
           {startTime === null ? "Error" : startTime ? `${startTime}` : ""}
-        </div>
-        <div>
+        </ListGroup.Item>
+        <ListGroup.Item>
           endTime: {endTime === null ? "Error" : endTime ? `${endTime}` : ""}
-        </div>
-        <br />
-        <div>
+        </ListGroup.Item>
+        <ListGroup.Item>
           poolStaked:{" "}
           {poolStaked === null ? "Error" : poolStaked ? `${poolStaked}` : ""}
-        </div>
-        <div>
+        </ListGroup.Item>
+        <ListGroup.Item>
           poolYield:{" "}
           {poolYield === null ? "Error" : poolYield ? `${poolYield}` : ""}
-        </div>
-      </span>
-    </div>
+        </ListGroup.Item>
+      </ListGroup>
+    </>
   );
 }
 
 export function PoolStake() {
   const { account, library } = useWeb3React();
-
+  const [stakeBalance, setStakeBalance] = useState(0)
   //CONTRACT_MAP["BoostPool"]
   const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
 
@@ -223,7 +226,6 @@ export function PoolStake() {
     try {
       //TODO
       let approveAmount = parseEther("1000");
-      console.log(vegaContract)
       await vegaContract.approve(POOL_TOKEN_ADDRESS, approveAmount);
       // await depositLpToken(vegaContract, lpContract, account, amount);
       // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
@@ -246,8 +248,7 @@ export function PoolStake() {
 
     try {
       // let approveAmount = 10000 * 10**18;
-      let stakeAmount = 1000 * 10 ** 18;
-      await poolContract.stake(stakeAmount);
+      await poolContract.stake(stakeBalance.toString());
       // await depositLpToken(vegaContract, lpContract, account, amount);
       // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
       // tokenBalance.refetch();
@@ -297,7 +298,7 @@ export function PoolStake() {
         {/* loading={loading} */}
         <Row>
           <Col>
-            <input className="mt-4 w-100"></input>
+            <input onChange={e => setStakeBalance(e.target.value)} value={stakeBalance} />
           </Col>
         </Row>
         <Row className="mt-5">

@@ -14,7 +14,6 @@ import TxPage from '../pages/vega/Tx';
 
 // pages
 const Profile = React.lazy(() => import('../pages/profile'));
-const Profile2 = React.lazy(() => import('../pages/profile2'));
 const ErrorPageNotFoundAlt = React.lazy(() => import('../pages/error/PageNotFoundAlt'));
 // - other
 const Invoice = React.lazy(() => import('../pages/other/Invoice'));
@@ -124,13 +123,7 @@ const pageRoutes = {
             name: 'Profile',
             component: Profile,
             route: Route,
-        },
-        {
-            path: '/pages/profile2',
-            name: 'Profile2',
-            component: Profile2,
-            route: Route,
-        },
+        },        
         {
             path: '/pages/invoice',
             name: 'Invoice',

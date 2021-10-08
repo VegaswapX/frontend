@@ -30,6 +30,7 @@ export function PoolInfo() {
   // const [loading, setLoading] = useState(false);
 
   const [poolStaked, setPoolstaked] = React.useState();
+  const [poolMaxStake, setMaxStake] = React.useState();
   const [poolYield, setMaxyield] = React.useState();
   const [startTime, setStartTime] = React.useState();
   const [endTime, setEndTime] = React.useState();
@@ -58,33 +59,7 @@ export function PoolInfo() {
 //     }
 //   }, []);
 
-  // const [loading, setLoading] = useState(false);
-
-  React.useEffect(() => {
-    if (!!account && !!library) {
-      let stale = false;
-
-      poolContract.callStatic
-        .totalAmountStaked()
-        .then((x) => {
-          if (!stale) {
-            setPoolstaked(x);
-            // dispatchValue({ type: "add", value: x.toString()})
-            // dispatchName({ type: "add", value: "totalAmountStaked"})
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setPoolstaked(null);
-          }
-        });
-
-      return () => {
-        stale = true;
-        setPoolstaked(undefined);
-      };
-    }
-  }, [account, library, vegaContract, poolContract]); 
+  // const [loading, setLoading] = useState(false);  
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -143,7 +118,7 @@ export function PoolInfo() {
         .totalAmountStaked()
         .then((x) => {
           if (!stale) {
-            setTotalAmountStaked(x);
+            setTotalAmountStaked(x/10**18);
           }
         })
         .catch(() => {
@@ -155,6 +130,30 @@ export function PoolInfo() {
       return () => {
         stale = true;
         setTotalAmountStaked(undefined);
+      };
+    }
+  }, [account, library, poolContract]); 
+
+  React.useEffect(() => {
+    if (!!account && !!library) {
+      let stale = false;
+
+      poolContract.callStatic
+        .totalAmountStaked()
+        .then((x) => {
+          if (!stale) {
+            setMaxStake(x/10**18);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setMaxStake(null);
+          }
+        });
+
+      return () => {
+        stale = true;
+        setMaxStake(undefined);
       };
     }
   }, [account, library, poolContract]); 
@@ -226,9 +225,31 @@ export function PoolInfo() {
                 : totalAmountStaked
                 ? `${totalAmountStaked}`
                 : ""}</td>
-                    </tr>
+              </tr>
+
+        <tr key={1}>
+        <th scope="row">Max stake</th>
+            <td>{" "}
+            {poolMaxStake === null
+                ? "Error"
+                : poolMaxStake
+                ? `${poolMaxStake}`
+                : ""}</td>
+          </tr>
+              
 
         <tr key={2}>
+        <th scope="row">% staked</th>
+            <td>{" "}
+            {totalAmountStaked === null
+            ? "Error"
+            : poolStaked / totalAmountStaked
+            ? `${poolStaked / totalAmountStaked}`
+            : ""}
+                </td>
+          </tr>              
+
+        <tr key={3}>
             <th scope="row">Reward</th>
                         <td>{" "}
             {reward === null
@@ -238,7 +259,7 @@ export function PoolInfo() {
               : ""}</td>
         </tr>
 
-        <tr key={3}>
+        <tr key={4}>
             <th scope="row">StartTime</th>
                         <td>{" "}
             {startTime === null
@@ -246,6 +267,23 @@ export function PoolInfo() {
               : startTime
               ? `${startTime}`
               : ""}</td>
+        </tr>
+
+        <tr key={5}>
+            <th scope="row">EndTime</th>
+              <td>{" "}
+            {endTime === null
+              ? "Error"
+              : endTime
+              ? `${endTime}`
+              : ""}</td>
+        </tr>
+
+        <tr key={5}>
+            <th scope="row">poolYield</th>
+          <td>{" "}                        
+          {poolYield === null ? "Error" : poolYield ? `${poolYield}` : ""}
+          </td>
         </tr>
 
 
@@ -266,25 +304,13 @@ export function PoolInfo() {
         <ListGroup.Item>
           Balance in the pool
         </ListGroup.Item>
-        <ListGroup.Item>
-          % of total staked
-        </ListGroup.Item>
-        <ListGroup.Item>
-          time info
-        </ListGroup.Item>
+               
         <ListGroup.Item>
           duration
           Total distribution
-                                Total amount staked
+          Max Yield
         </ListGroup.Item>
-        <ListGroup.Item>
-            totalAmountStaked:{" "}
-            {totalAmountStaked === null
-              ? "Error"
-              : totalAmountStaked
-              ? `${totalAmountStaked}`
-              : ""}
-        </ListGroup.Item>
+        
         <ListGroup.Item>
           percentStaked:{" "}
           {totalAmountStaked === null
@@ -293,20 +319,13 @@ export function PoolInfo() {
             ? `${poolStaked / totalAmountStaked}`
             : ""}
         </ListGroup.Item>
-        <ListGroup.Item>
-          startTime:{" "}
-          {startTime === null ? "Error" : startTime ? `${startTime}` : ""}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          endTime: {endTime === null ? "Error" : endTime ? `${endTime}` : ""}
-        </ListGroup.Item>
+       
         <ListGroup.Item>
           poolStaked:{" "}
           {poolStaked === null ? "Error" : poolStaked ? `${poolStaked}` : ""}
         </ListGroup.Item>
         <ListGroup.Item>
-          poolYield:{" "}
-          {poolYield === null ? "Error" : poolYield ? `${poolYield}` : ""}
+         
         </ListGroup.Item>
       </ListGroup>
     </>

@@ -59,9 +59,24 @@ export function Vgabalance() {
   return (
     <>
       {/* <span>VGA Balance {vgabalance}</span> */}
-      <span>
-        VGA balance: {vgabal === null ? "Error" : vgabal ? `${vgabal}` : ""}
-      </span>
+      
+      <>
+    <StatisticsChartWidget
+                        description="Campaign Sent"
+                        title="VGA balance"
+                        stats={Math.round(vgabal)}
+                        bimg={"https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696"}
+                        // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
+                        colors={['#0acf97']}
+                        data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}></StatisticsChartWidget>
+
+      {/* <span>VGA Balance</span>
+      
+      <span style={{fontSize: "10pt"}}>{vgabal === null ? "Error" : vgabal ? `${vgabal}` : ""}</span> 
+      */}
+    </>
+
+      
     </>
   );
 }
@@ -100,26 +115,57 @@ export function BNBBalance() {
     <StatisticsChartWidget
                         description="Campaign Sent"
                         title="BNB balance"
-                        stats={balance}
+                        stats={Math.round(balance*10)/10}
                         bimg={"https://assets.coingecko.com/coins/images/825/thumb_2x/binance-coin-logo.png?1547034615"}
                         // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
                         colors={['#727cf5']}
                         data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}></StatisticsChartWidget>
-
-      <span>BNB Balance</span>
-      <span role="img" aria-label="gold">
-        {/* <img 
-        src="https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
-        alt="new"
-        /> */}
-        {/* <img
-          src="https://assets.coingecko.com/coins/images/825/thumb_2x/binance-coin-logo.png?1547034615"
-          alt="new"
-        /> */}
-      </span>
-
-      {/* <span>{balance === null ? 'Error' : balance ? `${formatEther(balance)}` : ''}</span> */}
-      <span>{balance === null ? "Error" : balance ? `${balance}` : ""}</span>
+      
     </>
   );
 }
+
+export function USDTBalance() {
+    const { account, library, chainId } = useWeb3React();
+  
+    const [balance, setBalance] = React.useState();
+    React.useEffect(() => {
+      if (!!account && !!library) {
+        let stale = false;
+  
+        library
+          .getBalance(account)
+          .then((balance) => {
+            if (!stale) {
+              let z = ethers.utils.formatEther(balance);
+              setBalance(z);
+            }
+          })
+          .catch(() => {
+            if (!stale) {
+              setBalance(null);
+            }
+          });
+  
+        return () => {
+          stale = true;
+          setBalance(undefined);
+        };
+      }
+    }, [account, library, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
+  
+    return (
+      <>
+      <StatisticsChartWidget
+                          description="Campaign Sent"
+                          title="USDT balance"
+                          stats={Math.round(balance*10)/10}
+                          bimg={"https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"}
+                          // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
+                          colors={['#727cf5']}
+                          data={[12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14]}></StatisticsChartWidget>
+        
+      </>
+    );
+  }
+  

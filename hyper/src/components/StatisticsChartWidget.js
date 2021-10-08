@@ -87,7 +87,7 @@ const StatisticsChartWidget = (props: StatisticsChartWidgetProps): React$Element
                         {/* <img src={props.bimg} /> */}                        
 
                         <img src={`${props.bimg}`}></img>
-                        <h3 className="my-2 py-1">{props.stats}</h3>
+                        <h4 className="my-2 py-1">{props.stats}</h4>
 
 
                         {props.trend && (

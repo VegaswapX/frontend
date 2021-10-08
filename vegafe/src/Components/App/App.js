@@ -72,7 +72,7 @@ function BoostPools() {
             <Card style={{ width: "18rem", height: "100%" }}>
               {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
               <Card.Header>Pool Info</Card.Header>
-              <Card.Body>
+              <Card.Body className={"p-0"}>
                 <PoolInfo />
                 {/* <Button variant="primary">Go somewhere</Button> */}
               </Card.Body>

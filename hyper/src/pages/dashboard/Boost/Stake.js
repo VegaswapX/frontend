@@ -2,7 +2,7 @@
 import React from 'react';
 import { Row, Col, Card, Form, Button} from 'react-bootstrap';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // components

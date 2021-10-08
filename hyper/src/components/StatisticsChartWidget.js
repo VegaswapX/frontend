@@ -86,7 +86,7 @@ const StatisticsChartWidget = (props: StatisticsChartWidgetProps): React$Element
 
                         {/* <img src={props.bimg} /> */}                        
 
-                        <img src={`${props.bimg}`}></img>
+                        <img src={`${props.bimg}`} alt="currency"></img>
                         <h4 className="my-2 py-1">{props.stats}</h4>
 
 

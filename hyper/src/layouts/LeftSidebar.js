@@ -8,9 +8,7 @@ import { getMenuItems } from '../helpers/menu';
 // components
 import AppMenu from './Menu';
 
-import logoSm from '../assets/images/logo_sm.png';
 import logoDark from '../assets/images/logo-dark.png';
-import logoDarkSm from '../assets/images/logo_sm_dark.png';
 // import logo from '../assets/images/logo.png';
 import logo from '../assets/images/logo_black.jpeg';
 import profileImg from '../assets/images/users/avatar-1.jpg';

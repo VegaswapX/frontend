@@ -6,7 +6,7 @@ import Balances from './Balances';
 // import PageTitle from '../../components/PageTitle';
 import Stake from './Stake.js'
 import classNames from 'classnames';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // import styled from 'styled-components';
 import { Card } from 'react-bootstrap';

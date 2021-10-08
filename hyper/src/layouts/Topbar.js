@@ -10,15 +10,6 @@ import { injected } from "../eth.js";
 import { showRightSidebar } from '../redux/actions';
 
 // components
-import LanguageDropdown from '../components/LanguageDropdown';
-import AccountInfo from '../components/AccountInfo';
-import NotificationDropdown from '../components/NotificationDropdown';
-import ProfileDropdown from '../components/ProfileDropdown';
-import SearchDropdown from '../components/SearchDropdown';
-import TopbarSearch from '../components/TopbarSearch';
-import AppsDropdown from '../components/AppsDropdown/';
-
-import profilePic from '../assets/images/users/avatar-1.jpg';
 import logoSmDark from '../assets/images/logo_sm_dark.png';
 import logoSmLight from '../assets/images/logo_sm.png';
 import logo from '../assets/images/logo-light.png';
@@ -31,41 +22,7 @@ import {
   } from "react-bootstrap";
 
 // get the notifications
-const Notifications = [
-    {
-        id: 1,
-        text: 'Caleb Flakelar commented on Admin',
-        subText: '1 min ago',
-        icon: 'mdi mdi-comment-account-outline',
-        bgColor: 'primary',
-    },
-    {
-        id: 2,
-        text: 'New user registered.',
-        subText: '5 min ago',
-        icon: 'mdi mdi-account-plus',
-        bgColor: 'info',
-    }    
-];
 
-// get the profilemenu
-const ProfileMenus = [
-    {
-        label: 'Account',
-        icon: 'mdi mdi-account-circle',
-        redirectTo: '/',
-    }   
-];
-
-// dummy search results
-const SearchResults = [
-    {
-        id: 1,
-        title: 'Analytics Report',
-        icon: 'uil-notes',
-        redirectTo: '/',
-    }    
-];
 
 type TopbarProps = {
     hideLogo?: boolean,
@@ -103,10 +60,10 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
         dispatch(showRightSidebar());
     };
 
-    const handleConnect = () => {
-        console.log("connect")
-        connect();
-    };
+    // const handleConnect = () => {
+    //     console.log("connect")
+    //     connect();
+    // };
 
     async function connect() {
         try {

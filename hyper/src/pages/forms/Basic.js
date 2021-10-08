@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import { Row, Col, Card, Form, FloatingLabel, InputGroup, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
 // components
-import PageTitle from '../../components/PageTitle';
-import { FormInput } from '../../components/';
+import PageTitle from '../../../components/PageTitle';
+import { FormInput } from '../../../components/';
 
 const BasicInputElements = () => {
     /*

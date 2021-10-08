@@ -1,55 +1,53 @@
 // @flow
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import Statistics from './Statistics';
-import CampaignsChart from './CampaignsChart';
-import Performers from './Performers';
+import Balances from './Balances';
 // components
-import PageTitle from '../../../components/PageTitle';
-
+// import PageTitle from '../../components/PageTitle';
+import Stake from './Stake.js'
+import classNames from 'classnames';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // import styled from 'styled-components';
+import { Card } from 'react-bootstrap';
 
 
 const BoostPage = (): React$Element<React$FragmentType> => {
     
-    const notify = () => toast("Custom style",{
-        className: 'success',
-        bodyClassName: "grow-font-size",
-        progressClassName: 'fancy-progress-bar'
-      });
-
 
     return (
         <>
-            <PageTitle
-                breadCrumbItems={[
-                    // { label: 'Dashboard', path: '/dashboard/crm' },
-                    // { label: 'CRM', path: '/dashboard/crm', active: true },
-                ]}
-                title={'Boost Pool'}
-            />
+        <h1>Boost Pool</h1>
 
-<div>
-        <button onClick={notify}>Notify!</button>
+
+      <div>
         <ToastContainer
-  progressClassName="toastProgress"
-  bodyClassName="toastBody"
-/>
+            progressClassName="toastProgress"
+            bodyClassName="toastBody"
+        />
       </div>
 
-            <Statistics />
-
-
-           
+            <Balances />
 
             <Row>
-                <Col lg={5}>
-                    <CampaignsChart />
-                </Col>
+                
                 <Col lg={7}>
-                <Performers />
+                <Stake />
+                </Col>
+
+                <Col lg={5}>
+                    {/* <CampaignsChart /> */}                    
+
+                    <Card className={classNames('border', [`border-primary`])}>
+                        <Card.Body>
+                            <Card.Title as="h5">Pool Info</Card.Title>
+                            <Card.Text>
+                                Total distribution
+                                Total amount staked
+                            </Card.Text>
+                            {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
+                        </Card.Body>
+                        </Card>
                 </Col>
             </Row>
             

@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import BoostPage from '../pages/dashboard/Boost';
+import BoostPageVGA from '../pages/dashboard/BoostVGA';
 import LiqPage from '../pages/vega/Liq';
 import TxPage from '../pages/vega/Tx';
 
@@ -89,6 +90,12 @@ const dashboardRoutes = {
             path: '/dashboard/boost',
             name: 'Boost',
             component: BoostPage,
+            route: Route,
+        },
+        {
+            path: '/dashboard/boostvga',
+            name: 'Boost',
+            component: BoostPageVGA,
             route: Route,
         },
         {

@@ -1,6 +1,12 @@
 const MENU_ITEMS = [
     // { key: 'navigation', label: '', isTitle: true },
-    { key: 'boost', label: 'Boost Pools', isTitle: false, icon: 'dripicons-rocket', url: '/dashboard/boost' },
+    { key: 'boost', label: 'Boost Pool', isTitle: false, icon: 'dripicons-rocket', 
+    // url: '/dashboard/boost' 
+    children: [
+        { key: 'pool1', label: 'USDT', url:  '/dashboard/boost' , parentKey: 'boost' },
+        { key: 'pool2', label: 'VGA', url:  '/dashboard/boostvga' , parentKey: 'boost' }
+    ]
+    },
 
     { key: 'liq', label: 'Liquidity', isTitle: false, icon: 'uil-layer-group', url: '/dashboard/liq' },
 

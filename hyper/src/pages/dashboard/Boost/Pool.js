@@ -18,6 +18,18 @@ import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../Contracts.js";
 //     { id: 2, username: '@fat' }
 // ];
 
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return time;
+}
 
 export function PoolInfo() {
   const { account, library } = useWeb3React();
@@ -86,6 +98,8 @@ export function PoolInfo() {
     }
   }, [account, library, poolContract]); 
 
+  
+
   React.useEffect(() => {
     if (!!account && !!library) {
       let stale = false;
@@ -94,7 +108,9 @@ export function PoolInfo() {
         .startTime()
         .then((x) => {
           if (!stale) {
-            setStartTime(x);
+            
+            var formattedTime = timeConverter(x);
+            setStartTime(formattedTime);
           }
         })
         .catch(() => {
@@ -118,6 +134,8 @@ export function PoolInfo() {
         .totalAmountStaked()
         .then((x) => {
           if (!stale) {
+            console.log("totalAmountStaked " + x)
+            // setTotalAmountStaked(x/10**18);
             setTotalAmountStaked(x/10**18);
           }
         })
@@ -139,7 +157,7 @@ export function PoolInfo() {
       let stale = false;
 
       poolContract.callStatic
-        .totalAmountStaked()
+        .maxStake()
         .then((x) => {
           if (!stale) {
             setMaxStake(x/10**18);
@@ -166,7 +184,8 @@ export function PoolInfo() {
         .endTime()
         .then((x) => {
           if (!stale) {
-            setEndTime(x);
+            var formattedTime = timeConverter(x);
+            setEndTime(formattedTime);
           }
         })
         .catch(() => {
@@ -187,7 +206,7 @@ export function PoolInfo() {
       let stale = false;
 
       poolContract.callStatic
-        .reward()
+        .rewardSteps(0)
         .then((x) => {
           if (!stale) {
             setReward(x);
@@ -210,24 +229,21 @@ export function PoolInfo() {
   return (
     <>
     <Table className="mb-0" striped>
-        <thead>
+        {/* <thead>
             <tr>
                 <th>#</th>
-                <th>Username</th>
+                <th>data</th>
             </tr>
-        </thead>
+        </thead> */}
         <tbody>
         <tr key={1}>
         <th scope="row">Total amount staked</th>
-            <td>{" "}
-            {totalAmountStaked === null
-                ? "Error"
-                : totalAmountStaked
-                ? `${totalAmountStaked}`
-                : ""}</td>
-              </tr>
+            <td>
+            {totalAmountStaked == 0 ? `${totalAmountStaked}`: ""}                
+                </td>
+        </tr>
 
-        <tr key={1}>
+        <tr key={2}>
         <th scope="row">Max stake</th>
             <td>{" "}
             {poolMaxStake === null
@@ -238,18 +254,16 @@ export function PoolInfo() {
           </tr>
               
 
-        <tr key={2}>
+        <tr key={3}>
         <th scope="row">% staked</th>
             <td>{" "}
-            {totalAmountStaked === null
-            ? "Error"
-            : poolStaked / totalAmountStaked
-            ? `${poolStaked / totalAmountStaked}`
+            {totalAmountStaked / poolMaxStake > -1
+            ? `${totalAmountStaked / poolMaxStake}%`
             : ""}
                 </td>
           </tr>              
 
-        <tr key={3}>
+        <tr key={4}>
             <th scope="row">Reward</th>
                         <td>{" "}
             {reward === null
@@ -259,7 +273,7 @@ export function PoolInfo() {
               : ""}</td>
         </tr>
 
-        <tr key={4}>
+        <tr key={5}>
             <th scope="row">StartTime</th>
                         <td>{" "}
             {startTime === null
@@ -269,7 +283,7 @@ export function PoolInfo() {
               : ""}</td>
         </tr>
 
-        <tr key={5}>
+        <tr key={6}>
             <th scope="row">EndTime</th>
               <td>{" "}
             {endTime === null
@@ -279,10 +293,17 @@ export function PoolInfo() {
               : ""}</td>
         </tr>
 
-        <tr key={5}>
+        <tr key={7}>
             <th scope="row">poolYield</th>
           <td>{" "}                        
           {poolYield === null ? "Error" : poolYield ? `${poolYield}` : ""}
+          </td>
+        </tr>
+
+        <tr key={8}>
+            <th scope="row">Pool address</th>
+          <td>{" "}                        
+          {POOL_TOKEN_ADDRESS === null ? "Error" : POOL_TOKEN_ADDRESS ? `${POOL_TOKEN_ADDRESS.substring(0,10)}` : ""}...
           </td>
         </tr>
 
@@ -310,23 +331,7 @@ export function PoolInfo() {
           Total distribution
           Max Yield
         </ListGroup.Item>
-        
-        <ListGroup.Item>
-          percentStaked:{" "}
-          {totalAmountStaked === null
-            ? "Error"
-            : poolStaked / totalAmountStaked
-            ? `${poolStaked / totalAmountStaked}`
-            : ""}
-        </ListGroup.Item>
-       
-        <ListGroup.Item>
-          poolStaked:{" "}
-          {poolStaked === null ? "Error" : poolStaked ? `${poolStaked}` : ""}
-        </ListGroup.Item>
-        <ListGroup.Item>
-         
-        </ListGroup.Item>
+                
       </ListGroup>
     </>
   );

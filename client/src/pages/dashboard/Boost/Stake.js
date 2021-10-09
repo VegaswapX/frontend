@@ -44,8 +44,7 @@ const StakeForm = () => {
         try {
           // let approveAmount = 10000 * 10**18;
           let stakeAmountDec = stakeAmount * 10**18;
-          alert(stakeAmountDec);
-          await poolContract.stake(stakeAmount);
+          await poolContract.stake(stakeAmountDec);
           // await depositLpToken(vegaContract, lpContract, account, amount);
           // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
           // tokenBalance.refetch();

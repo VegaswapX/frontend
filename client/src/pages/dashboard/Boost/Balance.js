@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import { useContract } from "../../../chain/eth.js";
-import { VEGA_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
+import { VEGA_TOKEN_ADDRESS, BSC_USDT } from "../../../chain/Contracts.js";
 import { formatEther } from "@ethersproject/units";
 import StatisticsChartWidget from '../../../components/StatisticsChartWidget';
 
@@ -131,16 +131,20 @@ export function USDTBalance() {
     const { account, library, chainId } = useWeb3React();
   
     const [balance, setBalance] = React.useState();
+
+    const usdtontract = useContract(BSC_USDT, VEGA_CONTRACT_ABI, true);
+
     React.useEffect(() => {
       if (!!account && !!library) {
         let stale = false;
   
-        library
-          .getBalance(account)
-          .then((balance) => {
+        usdtontract.callStatic
+          .balanceOf(account)
+          .then((x) => {
             if (!stale) {
-              let z = ethers.utils.formatEther(balance);
-              setBalance(z);
+              //   let z = ethers.utils.formatEther(x);
+              x = x / 10 ** 18;
+              setBalance(x);
             }
           })
           .catch(() => {
@@ -154,7 +158,7 @@ export function USDTBalance() {
           setBalance(undefined);
         };
       }
-    }, [account, library, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
+    }, [account, library, chainId, usdtontract]); // ensures refresh if referential identity of library doesn't change across chainIds
   
     return (
       <>

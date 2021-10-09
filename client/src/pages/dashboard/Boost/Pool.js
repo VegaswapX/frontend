@@ -133,7 +133,8 @@ export function PoolInfo() {
         .totalAmountStaked()
         .then((x) => {
           if (!stale) {
-            console.log("totalAmountStaked " + x)
+            console.log("totalAmountStaked " + x/10**18)
+            // setTotalAmountStaked(x/10**18);
             // setTotalAmountStaked(x/10**18);
             setTotalAmountStaked(x/10**18);
           }
@@ -238,7 +239,7 @@ export function PoolInfo() {
         <tr key={1}>
         <th scope="row">Total amount staked</th>
             <td>
-            {totalAmountStaked === 0 ? `${totalAmountStaked}`: ""}                
+            {totalAmountStaked !== null ? `${totalAmountStaked}`: "0"}
                 </td>
         </tr>
 
@@ -322,13 +323,15 @@ export function PoolInfo() {
       <ListGroup>
         {/* loading={loading} */}
         <ListGroup.Item>
-          Balance in the pool
+          VGA Balance in the pool
+        </ListGroup.Item>
+
+        <ListGroup.Item>
+          VGA Balance in the pool
         </ListGroup.Item>
                
         <ListGroup.Item>
-          duration
           Total distribution
-          Max Yield
         </ListGroup.Item>
                 
       </ListGroup>

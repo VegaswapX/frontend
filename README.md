@@ -2,6 +2,6 @@
 
 simple httpserver to serve files
 
-basic frontend in static folder
+frontend in client folder
 
 

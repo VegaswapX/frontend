@@ -8,6 +8,9 @@ const MENU_ITEMS = [
     ]
     },
 
+    { key: 'swap', label: 'Swap', isTitle: false, icon: 'uil-exchange', url: '/dashboard/swap' },
+    // { key: 'liq', label: 'Swap', isTitle: false, icon: 'uil-favourite', url: '/dashboard/liq' },
+
     { key: 'liq', label: 'Liquidity', isTitle: false, icon: 'uil-layer-group', url: '/dashboard/liq' },
 
     {

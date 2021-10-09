@@ -13,7 +13,6 @@ import { Card } from 'react-bootstrap';
 import {PoolInfo} from '../Boost/Pool.js';
 
 const BoostPageVGA = (): React$Element<React$FragmentType> => {
-    
 
     return (
         <>

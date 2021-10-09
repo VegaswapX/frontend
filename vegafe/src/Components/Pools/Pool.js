@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
-import { useContract } from "../../eth.js";
+import { useContract } from "../../web3/eth.js";
 import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../Constant/Contracts.js";
 
 import {Button, Row, Col, ListGroup} from "react-bootstrap";

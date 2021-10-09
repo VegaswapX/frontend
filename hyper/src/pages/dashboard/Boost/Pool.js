@@ -1,15 +1,14 @@
 import React from "react";
 import { useWeb3React } from "@web3-react/core";
-import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
+// import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import { useContract } from "../../../eth.js";
-// import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../Constant/Contracts.js";
+import { POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
+import { useContract } from "../../../chain/eth.js";
 
 import {ListGroup} from "react-bootstrap";
 import { Table } from 'react-bootstrap';
 
 // import { ethers } from "ethers";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../Contracts.js";
 // import { formatEther } from "@ethersproject/units";
 
 // const chainId = 1137;
@@ -35,13 +34,13 @@ export function PoolInfo() {
   const { account, library } = useWeb3React();
 
   //CONTRACT_MAP["BoostPool"]
-  const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
+  // const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
 
   const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
 
   // const [loading, setLoading] = useState(false);
 
-  const [poolStaked, setPoolstaked] = React.useState();
+  // const [poolStaked, setPoolstaked] = React.useState();
   const [poolMaxStake, setMaxStake] = React.useState();
   const [poolYield, setMaxyield] = React.useState();
   const [startTime, setStartTime] = React.useState();
@@ -239,7 +238,7 @@ export function PoolInfo() {
         <tr key={1}>
         <th scope="row">Total amount staked</th>
             <td>
-            {totalAmountStaked == 0 ? `${totalAmountStaked}`: ""}                
+            {totalAmountStaked === 0 ? `${totalAmountStaked}`: ""}                
                 </td>
         </tr>
 

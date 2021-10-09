@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { useWeb3React } from "@web3-react/core";
-import { injected } from "../../eth.js";
+import { injected } from "../../chain/eth.js";
 
 import {
     Button

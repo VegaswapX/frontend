@@ -2,11 +2,11 @@
 import React from 'react';
 import { useState } from "react";
 import { Row, Col, Card, Form, Button} from 'react-bootstrap';
-import { useWeb3React } from "@web3-react/core";
+// import { useWeb3React } from "@web3-react/core";
 import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import { useContract } from "../../../eth.js";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../Contracts.js";
+import { useContract } from "../../../chain/eth.js";
+import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
 import {parseEther} from "ethers/lib/utils";
 
 import { toast } from 'react-toastify';
@@ -18,8 +18,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const StakeForm = () => {
 
-    const { account, library } = useWeb3React();
-    const [stakeBalance, setStakeBalance] = useState(0)
+    // const { account, library } = useWeb3React();
+    // const [stakeBalance, setStakeBalance] = useState(0)
     //CONTRACT_MAP["BoostPool"]
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
 
@@ -27,20 +27,13 @@ const StakeForm = () => {
 
     // const [loading, setLoading] = useState(false);
 
-    const [vgaallow, setVgaAllowance] = React.useState();
+    // const [vgaallow, setVgaAllowance] = React.useState();
 
     const [stakeAmount, setStakeamount] = React.useState(0);
 
     // const [poolStaked, setPoolstaked] = React.useState()
 
-    const [loading, setLoading] = useState(false);
-
-    const notify = () => 
-    toast("Custom style",{
-        className: 'success',
-        bodyClassName: "grow-font-size",
-        progressClassName: 'fancy-progress-bar'
-    });
+    const [loading, setLoading] = useState(false);    
 
     const stake = async () => {
         console.log("stake " + poolContract);

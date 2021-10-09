@@ -3,8 +3,6 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import {BNBBalance, Vgabalance, USDTBalance} from './Balance.js'
 
-// components
-import StatisticsChartWidget from '../../../components/StatisticsChartWidget';
 
 const Balances = (): React$Element<React$FragmentType> => {
     return (
@@ -22,7 +20,7 @@ const Balances = (): React$Element<React$FragmentType> => {
                     <USDTBalance />
                 </Col>
 
-                <Col lg={6} xl={3}>
+                {/* <Col lg={6} xl={3}>
                     <StatisticsChartWidget
                         description="Staked"
                         title="LP tokens"
@@ -30,7 +28,7 @@ const Balances = (): React$Element<React$FragmentType> => {
                         // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '11.7%' }}
                         colors={['#0acf97']}
                         data={[47, 45, 74, 14, 56, 74, 14, 11, 7, 39, 82]}></StatisticsChartWidget>
-                </Col>
+                </Col> */}
             </Row>
         </React.Fragment>
     );

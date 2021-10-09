@@ -2,8 +2,8 @@
 import React from 'react';
 import Routes from './routes/Routes';
 
-import WrappedWeb3ReactProvider from "./featurs/web3/WrappedWeb3ReactProvider";
-import Web3ConnectionManager from "./featurs/web3/Web3ConnectionManager";
+import WrappedWeb3ReactProvider from "./chain/WrappedWeb3ReactProvider";
+import Web3ConnectionManager from "./chain/Web3ConnectionManager";
 
 
 // setup fake backend

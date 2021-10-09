@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Route } from 'react-router-dom';
+import SwapPage from '../pages/dashboard/Swap';
 import BoostPage from '../pages/dashboard/Boost';
 import BoostPageVGA from '../pages/dashboard/BoostVGA';
 import LiqPage from '../pages/vega/Liq';
@@ -104,7 +105,12 @@ const dashboardRoutes = {
             component: LiqPage,
             route: Route,
         },
-        
+        {
+            path: '/dashboard/swap',
+            name: 'Swap',
+            component: SwapPage,
+            route: Route,
+        },
         {
             path: '/dashboard/tx',
             name: 'Tx',

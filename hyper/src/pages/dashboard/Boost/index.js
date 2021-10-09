@@ -17,7 +17,7 @@ const BoostPage = (): React$Element<React$FragmentType> => {
 
     return (
         <>
-        <h1>Boost Pool</h1>
+        <h1>Boost Pool USDT</h1>
 
 
       <div>

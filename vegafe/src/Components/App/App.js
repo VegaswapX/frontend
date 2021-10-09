@@ -16,12 +16,12 @@ import "../../style/styles.css";
 import { useWeb3React } from "@web3-react/core";
 // import { formatEther } from '@ethersproject/units'
 
-import WrappedWeb3ReactProvider from "../../featurs/web3/WrappedWeb3ReactProvider";
-import { injected } from "../../eth.js";
+import WrappedWeb3ReactProvider from "../../web3/WrappedWeb3ReactProvider";
+import { injected } from "../../web3/eth.js";
 import { Balance, Vgabalance } from "../Balance/Balance.js";
 
 import { PoolStake, PoolInfo } from "../Pools/Pool";
-import Web3ConnectionManager from "../../featurs/web3/Web3ConnectionManager";
+import Web3ConnectionManager from "../../web3/Web3ConnectionManager";
 
 const routes = [
   { path: "/", name: "BoostPools", Component: BoostPools },

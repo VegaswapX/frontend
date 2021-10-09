@@ -1,9 +1,9 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 
-import { network } from "../../connectors/connectors";
-import useEagerConnect from "../../hooks/useEagerConnect";
-import useInactiveListener from "../../hooks/useInactiveListener";
+import { network } from "../connectors/connectors";
+import useEagerConnect from "../hooks/useEagerConnect";
+import useInactiveListener from "../hooks/useInactiveListener";
 
 function Web3ConnectionManager({ children }) {
   const context = useWeb3React();

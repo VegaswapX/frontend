@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { useWeb3React } from "@web3-react/core";
-import { injected } from "../eth.js";
+import { injected } from "../chain/eth.js";
 
 // actions
 import { showRightSidebar } from '../redux/actions';

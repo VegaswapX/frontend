@@ -46,7 +46,7 @@ const AccountLayout = ({ bottomLinks, children }: AccountLayoutProps): React$Ele
                     </Row>
                 </Container>
             </div>
-            <footer className="footer footer-alt">{t('2018 - 2021 © Hyper - Coderthemes.com')}</footer>
+            
         </>
     );
 };

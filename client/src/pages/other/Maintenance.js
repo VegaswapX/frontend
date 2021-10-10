@@ -67,7 +67,7 @@ const Maintenance = (): React$Element<React$FragmentType> => {
                 </Container>
             </div>
 
-            <footer className="footer footer-alt">2018 - 2021 © Hyper - Coderthemes.com</footer>
+            
         </>
     );
 };

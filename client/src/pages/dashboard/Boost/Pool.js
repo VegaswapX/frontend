@@ -30,6 +30,16 @@ function timeConverter(UNIX_timestamp){
   return time;
 }
 
+function statusPool(startTime, endTime){
+  let n = Date.now() /1000;
+  let status = n > startTime;
+  console.log(">> " + status);
+  
+  if (status) {
+    return "open";
+  }
+}
+
 export function PoolInfo() {
   const { account, library } = useWeb3React();
 
@@ -47,30 +57,8 @@ export function PoolInfo() {
   const [endTime, setEndTime] = React.useState();
   const [totalAmountStaked, setTotalAmountStaked] = React.useState();
   const [reward, setReward] = React.useState();
-
-//   const [myArray, dispatchValue] = React.useReducer((myArray, { type, value }) => {
-//     switch (type) {
-//       case "add":
-//         return [...myArray, value];
-//       case "remove":
-//         return myArray.filter((_, index) => index !== value);
-//       default:
-//         return myArray;
-//     }
-//   }, []);
-
-//   const [nameArray, dispatchName] = React.useReducer((nameArray, { type, value }) => {
-//     switch (type) {
-//       case "add":
-//         return [...nameArray, value];
-//       case "remove":
-//         return nameArray.filter((_, index) => index !== value);
-//       default:
-//         return nameArray;
-//     }
-//   }, []);
-
-  // const [loading, setLoading] = useState(false);  
+  const [poolStatus, setPoolstatus] = React.useState();
+  let startTimex;
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -96,7 +84,6 @@ export function PoolInfo() {
       };
     }
   }, [account, library, poolContract]); 
-
   
 
   React.useEffect(() => {
@@ -106,9 +93,9 @@ export function PoolInfo() {
       poolContract.callStatic
         .startTime()
         .then((x) => {
-          if (!stale) {
-            
+          if (!stale) {            
             var formattedTime = timeConverter(x);
+            startTimex = x;
             setStartTime(formattedTime);
           }
         })
@@ -186,6 +173,8 @@ export function PoolInfo() {
           if (!stale) {
             var formattedTime = timeConverter(x);
             setEndTime(formattedTime);
+            let z = statusPool(startTimex, x);         
+            setPoolstatus(z)
           }
         })
         .catch(() => {
@@ -199,7 +188,7 @@ export function PoolInfo() {
         setEndTime(undefined);
       };
     }
-  }, [account, library, poolContract]); 
+  }, [account, library, poolContract, startTimex]); 
 
   React.useEffect(() => {
     if (!!account && !!library) {
@@ -236,6 +225,14 @@ export function PoolInfo() {
             </tr>
         </thead> */}
         <tbody>
+
+        <tr key={0}>
+        <th scope="row">Status</th>
+            <td>
+            {poolStatus}
+                </td>
+        </tr>
+
         <tr key={1}>
         <th scope="row">Total amount staked</th>
             <td>

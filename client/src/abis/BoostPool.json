@@ -1,0 +1,486 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "Deposit",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "stakeAddress",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "stakeAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "stakeTime",
+                "type": "uint256"
+            }
+        ],
+        "name": "StakeAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "stakeAddress",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "lockDays",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "stakeAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "yieldAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "Unstake",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_stakeToken",
+                "type": "address"
+            },
+            {
+                "name": "_yieldToken",
+                "type": "address"
+            },
+            {
+                "name": "_duration",
+                "type": "uint256"
+            },
+            {
+                "name": "_rewardSteps",
+                "type": "uint256[2]"
+            },
+            {
+                "name": "_stakeSteps",
+                "type": "uint256[2]"
+            },
+            {
+                "name": "_maxYield",
+                "type": "uint256"
+            },
+            {
+                "name": "_maxStake",
+                "type": "uint256"
+            },
+            {
+                "name": "_stakeDecimals",
+                "type": "uint256"
+            },
+            {
+                "name": "_yieldDecimals",
+                "type": "uint256"
+            },
+            {
+                "name": "_maxPerStake",
+                "type": "uint256"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "gas": 302213,
+        "inputs": [
+            {
+                "name": "_stakeAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "stake",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "gas": 73827,
+        "inputs": [],
+        "name": "unstake",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "gas": 8311,
+        "inputs": [
+            {
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositOwner",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "gas": 6074,
+        "inputs": [
+            {
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdrawOwner",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "gas": 36291,
+        "inputs": [],
+        "name": "activateStaking",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "gas": 21321,
+        "inputs": [],
+        "name": "deactivateStaking",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "gas": 1268,
+        "inputs": [],
+        "name": "StakeToken",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1298,
+        "inputs": [],
+        "name": "YieldToken",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1328,
+        "inputs": [],
+        "name": "stakeDecimals",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1358,
+        "inputs": [],
+        "name": "yieldDecimals",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1388,
+        "inputs": [],
+        "name": "duration",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1418,
+        "inputs": [],
+        "name": "startTime",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1448,
+        "inputs": [],
+        "name": "endTime",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1478,
+        "inputs": [],
+        "name": "yieldTotal",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1508,
+        "inputs": [],
+        "name": "maxPerStake",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1538,
+        "inputs": [],
+        "name": "maxYield",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1568,
+        "inputs": [],
+        "name": "maxStake",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1598,
+        "inputs": [],
+        "name": "totalAmountStaked",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1628,
+        "inputs": [],
+        "name": "stakingActive",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1658,
+        "inputs": [],
+        "name": "currentStep",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1733,
+        "inputs": [
+            {
+                "name": "arg0",
+                "type": "uint256"
+            }
+        ],
+        "name": "rewardSteps",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1763,
+        "inputs": [
+            {
+                "name": "arg0",
+                "type": "uint256"
+            }
+        ],
+        "name": "stakeSteps",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1748,
+        "inputs": [],
+        "name": "rewardQuote",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1778,
+        "inputs": [],
+        "name": "minPerStake",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1853,
+        "inputs": [
+            {
+                "name": "arg0",
+                "type": "uint256"
+            }
+        ],
+        "name": "staker_addresses",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 1838,
+        "inputs": [],
+        "name": "stakeCount",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "gas": 6813,
+        "inputs": [
+            {
+                "name": "arg0",
+                "type": "address"
+            }
+        ],
+        "name": "stakes",
+        "outputs": [
+            {
+                "name": "stakeAddress",
+                "type": "address"
+            },
+            {
+                "name": "stakeAmount",
+                "type": "uint256"
+            },
+            {
+                "name": "stakeTime",
+                "type": "uint256"
+            },
+            {
+                "name": "yieldAmount",
+                "type": "uint256"
+            },
+            {
+                "name": "isAdded",
+                "type": "bool"
+            },
+            {
+                "name": "staked",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

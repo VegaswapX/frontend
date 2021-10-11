@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { injected } from "../chain/eth.js";
 
 // actions
@@ -20,7 +20,7 @@ import * as layoutConstants from '../constants/layout';
 import {
     Button
   } from "react-bootstrap";
-
+import { setupNetwork } from "../utils/wallet";
 // get the notifications
 
 
@@ -66,10 +66,13 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
     // };
 
     async function connect() {
+        const hasSetup = await setupNetwork()
         try {
           await activate(injected);
-        } catch (ex) {
-          console.log(ex);
+        } catch (error) {
+                if (hasSetup) {
+                    activate(injected)
+            }
         }
       }
     

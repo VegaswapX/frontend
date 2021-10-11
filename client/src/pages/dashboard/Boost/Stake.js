@@ -16,6 +16,29 @@ import 'react-toastify/dist/ReactToastify.css';
 // components
 // import PageTitle from '../components/PageTitle';
 
+function Amounts(props) {
+    console.log("?? " + props.staked)
+    if (props.staked === null) {return "Loading"}
+    return (    
+    <>
+        Staked: {props.staked === 0 ? "0": props.staked}
+    </>
+    )
+}
+
+function ApproveButton(props){
+    console.log("> " + props.allowance)
+    if (props.allowance === 0) {
+        <Button variant="primary" onClick={props.approve}>
+            Approve
+        </Button>    
+    }        
+    return (        
+        <Button variant="secondary">
+            Approved
+        </Button> 
+    )
+}
 
 const StakeForm = () => {
     const { account, library } = useWeb3React();
@@ -51,6 +74,8 @@ const StakeForm = () => {
                 console.log("?? allowance: " + x);
                 x = x / 10 ** 18;
                 setAllowance(x);
+              } else {
+                  console.log("...")
               }
             })
             .catch(() => {
@@ -74,10 +99,10 @@ const StakeForm = () => {
             .stakes(account)
             .then((x) => {
               if (!stale) {
-                console.log("?? stakes: " + x + " " + account); 
-                console.log("stake amount: " + x[1]); 
-                setMyStake(x[1]/10**18);    
-                setMyReward(x[3]/10**18);
+                // console.log("?? stakes: " + x + " " + account); 
+                console.log("!! stakes: " + x);
+                setMyStake(x[1]);
+                // setMyReward(x[3]);
               }
             })
             .catch(() => {
@@ -101,9 +126,10 @@ const StakeForm = () => {
     
         try {
           // let approveAmount = 10000 * 10**18;
-          let stakeAmountS = parseEther(stakeAmount);
+        //   let stakeAmountS = parseEther(stakeAmount);
         //   let stakeAmountDec = stakeAmount * 10**18;
-          await poolContract.stake(stakeAmountS);
+            console.log("!!! stakeAmount " + stakeAmount);
+          await poolContract.stake(stakeAmount);
           // await depositLpToken(vegaContract, lpContract, account, amount);
           // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
           // tokenBalance.refetch();
@@ -179,16 +205,9 @@ const StakeForm = () => {
               </span> */}
 
                 <Form>
-
-                    {mystake === 0 ? 
                   <>
-                  {allowance > 0 ? 
-                    <Button variant="secondary">
-                    Approved
-                    </Button> :
-                    <Button variant="primary" onClick={approve}>
-                        Approve
-                    </Button>}
+                  {<ApproveButton allowance={allowance} approve={approve}/>
+                  }
 
                     <Form.Group className="mb-3">
                     <Form.Label htmlFor="exampleEmail2">Amount: </Form.Label>
@@ -197,18 +216,20 @@ const StakeForm = () => {
                         value={stakeAmount}
                         onChange={e => setStakeamount(e.target.value)}
                     />
-                    {/* <Form.Text>Amount to stake</Form.Text> */}
+                    
                     </Form.Group>
                     <Button variant="primary" onClick={stake}>
                         Stake
                     </Button> 
-                    </>
-                    :
-                    <p>Staked amount: {mystake} USDT
+                    </>                
+                    
+                    {/* <Form.Text>Amount to stake</Form.Text> */}
+                                        
+                    {/* Staked amount: {mystake.toLocaleString()} USDT */}
                     <br />
-                    Reward amount: {myreward} VGA
-                    <br />
-                    </p>}
+                    <Amounts staked={mystake}/>
+                    {/* Reward amount: {myreward === null ? 0 : myreward} VGA */}
+                    
                 </Form>
             </Card.Body>
         </Card>

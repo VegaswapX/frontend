@@ -12,7 +12,7 @@ import {
   Card,
 } from "react-bootstrap";
 import "../../style/styles.css";
-
+import { setupNetwork } from "../../utils/wallet"
 import { useWeb3React } from "@web3-react/core";
 // import { formatEther } from '@ethersproject/units'
 
@@ -115,11 +115,15 @@ function About() {
 }
 
 function InnerApp() {
-  const { account, activate, deactivate } = useWeb3React();
+  const { account, activate, deactivate, library } = useWeb3React();
 
   async function connect() {
     try {
-      await activate(injected);
+      const hasSetup = await setupNetwork()
+      console.log('hasSetup', hasSetup)
+      if (hasSetup) {
+        activate(injected)
+      }
     } catch (ex) {
       console.log(ex);
     }

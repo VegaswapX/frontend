@@ -6,8 +6,8 @@ import { Row, Col, Card, Form, Button} from 'react-bootstrap';
 // import { useWeb3React } from "@web3-react/core";
 import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import { useContract } from "../../../chain/eth.js";
 import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
+import { useContract } from "../../../chain/eth.js";
 import {parseEther} from "ethers/lib/utils";
 
 import { toast } from 'react-toastify';
@@ -101,7 +101,7 @@ const StakeForm = () => {
               if (!stale) {
                 // console.log("?? stakes: " + x + " " + account); 
                 console.log("!! stakes: " + x);
-                setMyStake(x[1]);
+                // setMyStake(x[1]);
                 // setMyReward(x[3]);
               }
             })
@@ -218,6 +218,7 @@ const StakeForm = () => {
                     />
                     
                     </Form.Group>
+
                     <Button variant="primary" onClick={stake}>
                         Stake
                     </Button> 

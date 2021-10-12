@@ -14,7 +14,6 @@ import ThemeCustomizer from '../../components/ThemeCustomizer';
 // https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52
 const Topbar = React.lazy(() => import('../Topbar'));
 const Navbar = React.lazy(() => import('./Navbar'));
-const Footer = React.lazy(() => import('../Footer'));
 const RightSidebar = React.lazy(() => import('../RightSidebar'));
 
 const loading = () => <div className="text-center"></div>;
@@ -73,9 +72,9 @@ const HorizontalLayout = ({ children }: HorizontalLayoutProps, state: Horizontal
                         </Container>
                     </div>
 
-                    <Suspense fallback={loading()}>
-                        <Footer />
-                    </Suspense>
+                    {/* <Suspense fallback={loading()}>
+                       
+                    </Suspense> */}
 
                     <Suspense fallback={loading()}>
                         <RightSidebar>

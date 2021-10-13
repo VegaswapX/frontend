@@ -68,7 +68,7 @@ const DetachedLayout = ({ children }: VerticalLayoutProps, state: VerticalLayout
                     isMenuOpened={isMenuOpened}
                     openLeftMenuCallBack={openMenu}
                     navCssClasses="topnav-navbar topnav-navbar-dark"
-                    topbarDark={true}
+                    topbarDark={true}                    
                 />
             </Suspense>
             <Container fluid>
@@ -79,11 +79,11 @@ const DetachedLayout = ({ children }: VerticalLayoutProps, state: VerticalLayout
                             isCondensed={isCondensed}
                             isLight={isLight}
                             hideLogo={true}
-                            hideUserProfile={false}
+                            hideUserProfile={true}
                         />
                     </Suspense>
 
-                    <div className="content-page">
+                    <div className="content-page" style={{marginTop: "20px"}}>
                         <div className="content">
                             <Suspense fallback={loading()}>{children}</Suspense>
                         </div>

@@ -15,15 +15,6 @@ import TxPage from '../pages/vega/Tx';
 // dashboard
 
 // pages
-const Profile = React.lazy(() => import('../pages/profile'));
-const ErrorPageNotFoundAlt = React.lazy(() => import('../pages/error/PageNotFoundAlt'));
-// - other
-const Invoice = React.lazy(() => import('../pages/other/Invoice'));
-const FAQ = React.lazy(() => import('../pages/other/FAQ'));
-const Pricing = React.lazy(() => import('../pages/other/Pricing'));
-const Starter = React.lazy(() => import('../pages/other/Starter'));
-const PreLoader = React.lazy(() => import('../pages/other/PreLoader/'));
-const Timeline = React.lazy(() => import('../pages/other/Timeline'));
 
 // uikit
 const Accordions = React.lazy(() => import('../pages/uikit/Accordions'));
@@ -57,8 +48,6 @@ const Ratings = React.lazy(() => import('../pages/uikit/Ratings'));
 const Dripicons = React.lazy(() => import('../pages/uikit/Dripicons'));
 const MDIIcons = React.lazy(() => import('../pages/uikit/MDIIcons'));
 const Unicons = React.lazy(() => import('../pages/uikit/Unicons'));
-
-
 
 // charts
 const ApexChart = React.lazy(() => import('../pages/charts/Apex'));
@@ -124,63 +113,6 @@ const dashboardRoutes = {
 
 
 
-// pages
-const pageRoutes = {
-    path: '/pages',
-    name: 'Pages',
-    icon: 'uil-copy-alt',
-    header: 'Custom',
-    children: [
-        {
-            path: '/pages/profile',
-            name: 'Profile',
-            component: Profile,
-            route: Route,
-        },        
-        {
-            path: '/pages/invoice',
-            name: 'Invoice',
-            component: Invoice,
-            route: Route,
-        },
-        {
-            path: '/pages/faq',
-            name: 'FAQ',
-            component: FAQ,
-            route: Route,
-        },
-        {
-            path: '/pages/pricing',
-            name: 'Pricing',
-            component: Pricing,
-            route: Route,
-        },
-        {
-            path: '/pages/error-404-alt',
-            name: 'Error - 404-alt',
-            component: ErrorPageNotFoundAlt,
-            route: Route,
-        },
-        {
-            path: '/pages/starter',
-            name: 'Starter Page',
-            component: Starter,
-            route: Route,
-        },
-        {
-            path: '/pages/preloader',
-            name: 'Starter Page',
-            component: PreLoader,
-            route: Route,
-        },
-        {
-            path: '/pages/timeline',
-            name: 'Timeline',
-            component: Timeline,
-            route: Route,
-        },
-    ],
-};
 
 // ui
 const uiRoutes = {
@@ -449,7 +381,7 @@ const flattenRoutes = (routes) => {
 
 
 // All routes
-const authProtectedRoutes = [rootRoute, dashboardRoutes, pageRoutes, uiRoutes];
+const authProtectedRoutes = [rootRoute, dashboardRoutes, uiRoutes];
 const publicRoutes = [];
 
 const authProtectedFlattenRoutes = flattenRoutes([...authProtectedRoutes]);

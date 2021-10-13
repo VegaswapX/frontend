@@ -111,7 +111,7 @@ const LeftSidebar = ({ isCondensed, isLight, hideLogo, hideUserProfile }: LeftSi
                 )}
 
                 {!isCondensed && (
-                    <SimpleBar style={{ maxHeight: '100%' }} timeout={500} scrollbarMaxSize={320}>
+                    <SimpleBar style={{ maxHeight: '100%' }} timeout={500} scrollbarMaxSize={320} style={{marginTop: "10px"}}>
                         <SideBarContent
                             menuClickHandler={() => {}}
                             isLight={isLight}

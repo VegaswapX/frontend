@@ -12,16 +12,25 @@ const RPC_URLS = {
   [CHAINS.BSCTESTNET]: TESTNET || "",
 };
 
-export const injected = new InjectedConnector({
-  supportedChainIds: Object.values(CHAINS),
-});
+// export const injected = new InjectedConnector({
+//   supportedChainIds: Object.values(CHAINS),
+// });
+
+export const injected = new InjectedConnector({ supportedChainIds: [1337] });
 
 // export const network = new NetworkConnector({
 //   urls: Object.fromEntries(Object.values(CHAINS).map(i => [i, RPC_URLS[i]])),
 //   defaultChainId: CHAINS.RINKEBY,
 // });
 
+// export const network = new NetworkConnector({
+//   urls: Object.fromEntries(Object.values(CHAINS).map(i => [i, RPC_URLS[i]])),
+//   defaultChainId: CHAINS.BSCTESTNET
+// });
+
 export const network = new NetworkConnector({
-  urls: Object.fromEntries(Object.values(CHAINS).map(i => [i, RPC_URLS[i]])),
-  defaultChainId: CHAINS.BSCTESTNET
+  urls: {
+    1337: 'http://localhost:8545',
+  },
+  defaultChainId: 1337,
 });

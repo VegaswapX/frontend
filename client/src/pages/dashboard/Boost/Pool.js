@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
@@ -51,37 +51,37 @@ export function PoolInfo() {
   // const [loading, setLoading] = useState(false);
 
   // const [poolStaked, setPoolstaked] = React.useState();
-  const [poolMaxStake, setMaxStake] = React.useState();
-  const [poolYield, setMaxyield] = React.useState();
-  const [startTime, setStartTime] = React.useState();
-  const [endTime, setEndTime] = React.useState();
-  const [totalAmountStaked, setTotalAmountStaked] = React.useState();
-  const [reward, setReward] = React.useState();
-  const [poolStatus, setPoolstatus] = React.useState();
+  const [poolMaxStake, setMaxStake] = useState();
+  const [poolYield, setMaxyield] = useState();
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
+  const [totalAmountStaked, setTotalAmountStaked] = useState(0);
+  const [reward, setReward] = useState();
+  const [poolStatus, setPoolstatus] = useState();
   let startTimex;
 
-  React.useEffect(() => {
-    if (!!account && !!library) {
+  useEffect(() => {
       let stale = false;
-
-      poolContract.callStatic
-        .maxYield()
-        .then((x) => {
-          if (!stale) {
-            x = x / 10 ** 18;
-            setMaxyield(x);
+      async function getMaxYield() {
+          if (!!account && !!library) {
+              try {
+                  let x = await poolContract.callStatic.maxYield()
+                          if (!stale) {
+                              x = x / 10 ** 18;
+                              setMaxyield(x);
+                          }
+              } catch (e) {
+                  console.log(e)
+                  if (!stale) {
+                      setMaxyield(null);
+                  }
+              }
           }
-        })
-        .catch(() => {
-          if (!stale) {
-            setMaxyield(null);
-          }
-        });
+      }
 
-      return () => {
-        stale = true;
+      getMaxYield()
+    if (!!account && !!library) {
         setMaxyield(undefined);
-      };
     }
   }, [account, library, poolContract]); 
   
@@ -115,18 +115,17 @@ export function PoolInfo() {
   React.useEffect(() => {
     if (!!account && !!library) {
       let stale = false;
-
       poolContract.callStatic
-        .totalAmountStaked()
+        .stakes(account)
         .then((x) => {
           if (!stale) {
-            console.log("totalAmountStaked " + x/10**18)
             // setTotalAmountStaked(x/10**18);
             // setTotalAmountStaked(x/10**18);
-            setTotalAmountStaked(x/10**18);
+            setTotalAmountStaked(x[1]/10**18);
           }
         })
-        .catch(() => {
+        .catch((e) => {
+            console.log(e)
           if (!stale) {
             setTotalAmountStaked(null);
           }

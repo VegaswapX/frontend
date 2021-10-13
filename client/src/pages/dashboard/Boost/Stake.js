@@ -17,7 +17,6 @@ import 'react-toastify/dist/ReactToastify.css';
 // import PageTitle from '../components/PageTitle';
 
 function Amounts(props) {
-    console.log("?? " + props.staked)
     if (props.staked === null) {return "Loading"}
     return (    
     <>
@@ -27,7 +26,6 @@ function Amounts(props) {
 }
 
 function ApproveButton(props){
-    console.log("> " + props.allowance)
     if (props.allowance === 0) {
         <Button variant="primary" onClick={props.approve}>
             Approve
@@ -71,7 +69,6 @@ const StakeForm = () => {
             .allowance(account, poolContract.address)
             .then((x) => {
               if (!stale) {
-                console.log("?? allowance: " + x);
                 x = x / 10 ** 18;
                 setAllowance(x);
               } else {
@@ -101,7 +98,7 @@ const StakeForm = () => {
               if (!stale) {
                 // console.log("?? stakes: " + x + " " + account); 
                 console.log("!! stakes: " + x);
-                setMyStake(x[1]);
+                // setMyStake(x[1]);
                 // setMyReward(x[3]);
               }
             })
@@ -129,7 +126,7 @@ const StakeForm = () => {
         //   let stakeAmountS = parseEther(stakeAmount);
         //   let stakeAmountDec = stakeAmount * 10**18;
             console.log("!!! stakeAmount " + stakeAmount);
-          await poolContract.stake(stakeAmount);
+          await poolContract.stake(1000);
           // await depositLpToken(vegaContract, lpContract, account, amount);
           // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
           // tokenBalance.refetch();

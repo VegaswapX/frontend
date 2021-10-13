@@ -25,12 +25,15 @@ function Amounts(props) {
     )
 }
 
-function ApproveButton(props){
-    if (props.allowance === 0) {
-        <Button variant="primary" onClick={props.approve}>
-            Approve
-        </Button>    
-    }        
+function ApproveButton({allowance, approve}){
+    console.log(allowance)
+    if (allowance === 0) {
+        return (
+            <Button variant="primary" onClick={() => approve()}>
+                Approve
+            </Button>
+        )
+    }
     return (        
         <Button variant="secondary">
             Approved
@@ -57,7 +60,7 @@ const StakeForm = () => {
     // const [poolStaked, setPoolstaked] = React.useState()
 
     const [loading, setLoading] = useState(false); 
-    const [allowance, setAllowance] = useState(false); 
+    const [allowance, setAllowance] = useState(0);
     const [mystake, setMyStake] = useState(false); 
     const [myreward, setMyReward] = useState(false); 
     

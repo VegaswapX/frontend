@@ -3,6 +3,7 @@ import React from 'react';
 import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Row, Col, Card, Form, Button} from 'react-bootstrap';
+import { ethers } from "ethers";
 // import { useWeb3React } from "@web3-react/core";
 import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
@@ -21,32 +22,21 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const StakeForm = () => {
     const { account, library } = useWeb3React();
-
-    // const { account, library } = useWeb3React();
-    // const [stakeBalance, setStakeBalance] = useState(0)
-    //CONTRACT_MAP["BoostPool"]
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
-
     const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
-
-    // const [loading, setLoading] = useState(false);
-
-    // const [vgaallow, setVgaAllowance] = React.useState();
-
     const [stakeAmount, setStakeamount] = React.useState(0);
-
-    // const [poolStaked, setPoolstaked] = React.useState()
-
+    const [stakedAmount, setStakedAmount] = React.useState(0);
     const [loading, setLoading] = useState(false); 
     const [allowance, setAllowance] = useState(0);
-    const [myreward, setMyReward] = useState(false);
-    
+
     React.useEffect(() => {
         async function callStaticFunction() {
             if (!!account && !!library) {
                 let x = await vegaContract.callStatic.allowance(account, poolContract.address)
-                x = x / 10 ** 18;
+                x = ethers.utils.formatEther(x)
                 setAllowance(x);
+                const stakedAmount = await poolContract.callStatic.stakes(account)
+                setStakedAmount(stakedAmount[1])
             }
         }
 
@@ -56,19 +46,9 @@ const StakeForm = () => {
 
     const stake = async () => {
         console.log("stake " + poolContract);
-    
         setLoading(true);
-    
         try {
-          // let approveAmount = 10000 * 10**18;
-        //   let stakeAmountS = parseEther(stakeAmount);
-        //   let stakeAmountDec = stakeAmount * 10**18;
-            console.log("!!! stakeAmount " + stakeAmount);
-          await poolContract.stake(1000);
-          // await depositLpToken(vegaContract, lpContract, account, amount);
-          // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
-          // tokenBalance.refetch();
-          // lpBalance.refetch();
+          await poolContract.stake(stakeAmount);
           toast("Staking successful",{
             className: 'success',
             bodyClassName: "grow-font-size",
@@ -76,7 +56,6 @@ const StakeForm = () => {
             });
 
         } catch (error) {
-          console.log("error " + { error });
           toast("Staking error " + error.message,{
             className: 'success',
             bodyClassName: "grow-font-size",
@@ -132,17 +111,9 @@ const StakeForm = () => {
         <Card>
             <Card.Body>
                 <h4 className="mb-3 header-title">Stake</h4>
-
-            {/* <span>allowance: 
-                {allowance === null
-              ? "Error"
-              : `${allowance}`}
-              </span> */}
-
                 <Form>
-                  <>
                     <Form.Group className="mb-3">
-                    <Form.Label htmlFor="exampleEmail2">Amount: </Form.Label>
+                    <Form.Label htmlFor="exampleEmail2" column sm={2}>Amount: </Form.Label>
                     <input
                         type="text"
                         value={stakeAmount}
@@ -151,18 +122,11 @@ const StakeForm = () => {
                     
                     </Form.Group>
 
-                    <Button variant="primary" onClick={stake} className="m-1">
+                    <Button variant="primary" onClick={stake} className="m-1" disabled={stakedAmount > 0}>
                         Stake
                     </Button>
                     <ApproveButton allowance={allowance} approve={approve}/>
-                  </>
-
-                    {/* <Form.Text>Amount to stake</Form.Text> */}
-
-                    {/* Staked amount: {mystake.toLocaleString()} USDT */}
-                    <StakeInfo />
-                    {/* Reward amount: {myreward === null ? 0 : myreward} VGA */}
-
+                    <StakeInfo staked={stakedAmount} />
                 </Form>
             </Card.Body>
         </Card>

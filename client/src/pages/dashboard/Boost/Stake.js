@@ -7,39 +7,17 @@ import { Row, Col, Card, Form, Button} from 'react-bootstrap';
 import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
 import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
+import ApproveButton from "../../../components/Buttons/ApproveButton";
 import { useContract } from "../../../chain/eth.js";
 import {parseEther} from "ethers/lib/utils";
-
+import StakeInfo from "./StakeInfo";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // components
 // import PageTitle from '../components/PageTitle';
 
-function Amounts(props) {
-    if (props.staked === null) {return "Loading"}
-    return (    
-    <>
-        Staked: {props.staked === 0 ? "0": props.staked}
-    </>
-    )
-}
 
-function ApproveButton({allowance, approve}){
-    console.log(allowance)
-    if (allowance === 0) {
-        return (
-            <Button variant="primary" onClick={() => approve()}>
-                Approve
-            </Button>
-        )
-    }
-    return (        
-        <Button variant="secondary">
-            Approved
-        </Button> 
-    )
-}
 
 const StakeForm = () => {
     const { account, library } = useWeb3React();
@@ -61,8 +39,7 @@ const StakeForm = () => {
 
     const [loading, setLoading] = useState(false); 
     const [allowance, setAllowance] = useState(0);
-    const [mystake, setMyStake] = useState(false); 
-    const [myreward, setMyReward] = useState(false); 
+    const [myreward, setMyReward] = useState(false);
     
     React.useEffect(() => {
         async function callStaticFunction() {
@@ -75,33 +52,6 @@ const StakeForm = () => {
 
         callStaticFunction();
       }, [account, library, vegaContract, poolContract]);
-
-      React.useEffect(() => {
-        if (!!account && !!library) {
-          let stale = false;
-    
-          poolContract.callStatic
-            .stakes(account)
-            .then((x) => {
-              if (!stale) {
-                // console.log("?? stakes: " + x + " " + account); 
-                console.log("!! stakes: " + x);
-                // setMyStake(x[1]);
-                // setMyReward(x[3]);
-              }
-            })
-            .catch(() => {
-              if (!stale) {
-                setMyStake(null);
-              }
-            });
-    
-          return () => {
-            stale = true;
-            setMyStake(undefined);
-          };
-        }
-      }, [account, library, poolContract]);
 
 
     const stake = async () => {
@@ -191,9 +141,6 @@ const StakeForm = () => {
 
                 <Form>
                   <>
-                  {<ApproveButton allowance={allowance} approve={approve}/>
-                  }
-
                     <Form.Group className="mb-3">
                     <Form.Label htmlFor="exampleEmail2">Amount: </Form.Label>
                     <input
@@ -204,18 +151,18 @@ const StakeForm = () => {
                     
                     </Form.Group>
 
-                    <Button variant="primary" onClick={stake}>
+                    <Button variant="primary" onClick={stake} className="m-1">
                         Stake
-                    </Button> 
-                    </>                
-                    
+                    </Button>
+                    <ApproveButton allowance={allowance} approve={approve}/>
+                  </>
+
                     {/* <Form.Text>Amount to stake</Form.Text> */}
-                                        
+
                     {/* Staked amount: {mystake.toLocaleString()} USDT */}
-                    <br />
-                    <Amounts staked={mystake}/>
+                    <StakeInfo />
                     {/* Reward amount: {myreward === null ? 0 : myreward} VGA */}
-                    
+
                 </Form>
             </Card.Body>
         </Card>

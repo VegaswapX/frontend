@@ -30,7 +30,7 @@ export const injected = new InjectedConnector({ supportedChainIds: [1337] });
 
 export const network = new NetworkConnector({
   urls: {
-    1337: 'http://localhost:8545',
+    1337: 'http://127.0.0.1:8545',
   },
-  defaultChainId: 1337,
+  defaultChainId: 1,
 });

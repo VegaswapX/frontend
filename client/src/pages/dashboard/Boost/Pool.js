@@ -66,10 +66,10 @@ export function PoolInfo() {
           if (!!account && !!library) {
               try {
                   let x = await poolContract.callStatic.maxYield()
-                          if (!stale) {
-                              x = x / 10 ** 18;
-                              setMaxyield(x);
-                          }
+                  if (!stale) {
+                      x = x / 10 ** 18;
+                      setMaxyield(x);
+                  }
               } catch (e) {
                   console.log(e)
                   if (!stale) {

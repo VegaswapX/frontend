@@ -29,13 +29,12 @@ import './assets/scss/Creative-Dark.scss';
 // configure fake backend
 configureFakeBackend();
 
-type AppProps = {};
 
 /**
  * Main app component
  */
-const InnerApp = (props: AppProps): React$Element<any> => {
-    return <Routes></Routes>;
+const InnerApp = () => {
+    return <Routes/>;
 };
 
 function App() {

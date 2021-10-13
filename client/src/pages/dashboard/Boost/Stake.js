@@ -65,30 +65,15 @@ const StakeForm = () => {
     const [myreward, setMyReward] = useState(false); 
     
     React.useEffect(() => {
-        if (!!account && !!library) {
-          let stale = false;
-    
-          vegaContract.callStatic
-            .allowance(account, poolContract.address)
-            .then((x) => {
-              if (!stale) {
+        async function callStaticFunction() {
+            if (!!account && !!library) {
+                let x = await vegaContract.callStatic.allowance(account, poolContract.address)
                 x = x / 10 ** 18;
                 setAllowance(x);
-              } else {
-                  console.log("...")
-              }
-            })
-            .catch(() => {
-              if (!stale) {
-                setAllowance(null);
-              }
-            });
-    
-          return () => {
-            stale = true;
-            setAllowance(undefined);
-          };
+            }
         }
+
+        callStaticFunction();
       }, [account, library, vegaContract, poolContract]);
 
       React.useEffect(() => {

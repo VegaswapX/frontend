@@ -68,10 +68,10 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
     async function connect() {
           await activate(injected, async (error: Error) => {
               if (error instanceof UnsupportedChainIdError) {
-                  const hasSetup = await setupNetwork()
-                  if (hasSetup) {
-                      activate(injected)
-                  }
+                  // const hasSetup = await setupNetwork()
+                  // if (hasSetup) {
+                  //     activate(injected)
+                  // }
               }
           });
       }

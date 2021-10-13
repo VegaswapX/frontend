@@ -69,6 +69,30 @@ const StakeForm = () => {
         }
     };
 
+    const unStake = async () => {
+        setLoading(true);
+        try {
+            await poolContract.unstake();
+            toast("Staking successful",{
+                className: 'success',
+                bodyClassName: "grow-font-size",
+                progressClassName: 'fancy-progress-bar'
+            });
+
+        } catch (error) {
+            toast("Staking error " + error.message,{
+                className: 'success',
+                bodyClassName: "grow-font-size",
+                progressClassName: 'fancy-progress-bar'
+            });
+            // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+        } finally {
+            setLoading(false);
+            console.log("stake done");
+
+        }
+    };
+
     const approve = async () => {
         console.log("approve " + loading);
 
@@ -124,6 +148,9 @@ const StakeForm = () => {
 
                     <Button variant="primary" onClick={stake} className="m-1" disabled={stakedAmount > 0}>
                         Stake
+                    </Button>
+                    <Button variant="primary" onClick={unStake} className="m-1" disabled={stakedAmount <= 0}>
+                        Unstake
                     </Button>
                     <ApproveButton allowance={allowance} approve={approve}/>
                     <StakeInfo staked={stakedAmount} />

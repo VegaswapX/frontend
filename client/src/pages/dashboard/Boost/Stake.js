@@ -143,6 +143,7 @@ const StakeForm = () => {
                         type="text"
                         value={stakeAmount}
                         onChange={e => setStakeamount(e.target.value)}
+                        className="stakeInput" 
                     />
                     
                     </Form.Group>

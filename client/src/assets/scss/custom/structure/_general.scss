@@ -11,9 +11,17 @@ body {
   overflow-x: hidden;
 }
 
+.stakeInput {
+  background-color: #cfcece;
+  padding: 8px 8px;
+  margin: 5px 0;
+  font-size: 14pt;
+}
+
 // Fix event bubbling on iOS devices
 @supports (-webkit-overflow-scrolling: touch) {
   body {
     cursor: pointer;
   }
 }
+

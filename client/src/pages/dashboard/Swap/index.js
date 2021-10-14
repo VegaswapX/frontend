@@ -88,6 +88,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                         type="text"
                         value={amount}
                         onChange={e => setAmount(e.target.value)}
+                        className="" 
                     />
                     
                     </Form.Group>

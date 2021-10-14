@@ -1,4 +1,3 @@
-import Web3 from "web3";
 import { useMemo } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { useWeb3React } from "@web3-react/core";

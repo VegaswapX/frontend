@@ -20,7 +20,6 @@ import * as layoutConstants from '../constants/layout';
 import {
     Button
   } from "react-bootstrap";
-import { setupNetwork } from "../utils/wallet";
 // get the notifications
 
 

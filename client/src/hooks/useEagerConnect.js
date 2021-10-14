@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 
-import { injected } from "../connectors/connectors";
+import { injected } from "../chain/connectors";
 
 const useEagerConnect = () => {
   const { activate, active } = useWeb3React();

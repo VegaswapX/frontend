@@ -34,6 +34,7 @@ const StakeForm = () => {
             if (!!account && !!library) {
                 let x = await vegaContract.callStatic.allowance(account, poolContract.address)
                 x = ethers.utils.formatEther(x)
+                console.log("allownace " + x);
                 setAllowance(x);
                 const stakedAmount = await poolContract.callStatic.stakes(account)
                 setStakedAmount(stakedAmount[1])
@@ -152,7 +153,7 @@ const StakeForm = () => {
                     <Button variant="primary" onClick={unStake} className="m-1" disabled={stakedAmount <= 0}>
                         Unstake
                     </Button>
-                    {/* <ApproveButton allowance={allowance} approve={approve}/> */}
+                    <ApproveButton allowance={allowance} approve={approve}/>
                     <StakeInfo staked={stakedAmount} />
                 </Form>
             </Card.Body>

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
+import VEGA_CONTRACT_ABI from "../../../abis/VegaToken.json";
 import { POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
+import { VEGA_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
 import { useContract } from "../../../chain/eth.js";
-
-import {ListGroup} from "react-bootstrap";
+import { ethers } from "ethers";
 import { Table } from 'react-bootstrap';
 
 // import { ethers } from "ethers";
@@ -32,11 +33,13 @@ function timeConverter(UNIX_timestamp){
 
 function statusPool(startTime, endTime){
   let n = Date.now() /1000;
-  let status = n > startTime;
-  console.log(">> " + status);
+  let isopen = n > startTime;
+  console.log(">> " + isopen + " " + startTime);
   
-  if (status) {
+  if (isopen) {
     return "open";
+  } else {
+    return "not open";
   }
 }
 
@@ -44,8 +47,8 @@ export function PoolInfo() {
   const { account, library } = useWeb3React();
 
   //CONTRACT_MAP["BoostPool"]
-  // const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
 
+  const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
   const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
 
   // const [loading, setLoading] = useState(false);
@@ -58,6 +61,7 @@ export function PoolInfo() {
   const [totalAmountStaked, setTotalAmountStaked] = useState(0);
   const [reward, setReward] = useState();
   const [poolStatus, setPoolstatus] = useState();
+  const [vgaPoolbalance, setVgapoolBalance] = useState();
   let startTimex;
 
   useEffect(() => {
@@ -172,7 +176,7 @@ export function PoolInfo() {
           if (!stale) {
             var formattedTime = timeConverter(x);
             setEndTime(formattedTime);
-            let z = statusPool(startTimex, x);         
+            let z = statusPool(startTime, x);         
             setPoolstatus(z)
           }
         })
@@ -212,6 +216,32 @@ export function PoolInfo() {
       };
     }
   }, [account, library, poolContract]); 
+
+  React.useEffect(() => {
+    if (!!account && !!library) {
+      let stale = false;
+
+      vegaContract.callStatic
+        .balanceOf(poolContract.address)
+        .then((x) => {
+          if (!stale) {
+            console.log(x)
+            x = ethers.utils.formatEther(x);
+            setVgapoolBalance(x);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setVgapoolBalance(null);
+          }
+        });
+
+      return () => {
+        stale = true;
+        setVgapoolBalance(undefined);
+      };
+    }
+  }, [account, library, poolContract, vegaContract]); 
 
 
   return (
@@ -303,34 +333,17 @@ export function PoolInfo() {
           </td>
         </tr>
 
+        <tr key={9}>
+            <th scope="row">VGA Balance in the pool</th>
+          <td>{" "}   
+          {vgaPoolbalance}
+          
+          </td>
+        </tr>
 
-                       
         </tbody>
     </Table>
-
-
-                    {/* {myArray.map((item, index) => (
-                        <tr key={index}>
-                            <td>{nameArray[index]}</td>
-                            <td>{item}</td>
-                            </tr>
-                    ))} */}
-
-      <ListGroup>
-        {/* loading={loading} */}
-        <ListGroup.Item>
-          VGA Balance in the pool
-        </ListGroup.Item>
-
-        <ListGroup.Item>
-          VGA Balance in the pool
-        </ListGroup.Item>
-               
-        <ListGroup.Item>
-          Total distribution
-        </ListGroup.Item>
-                
-      </ListGroup>
+      
     </>
   );
 }

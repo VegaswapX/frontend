@@ -152,7 +152,7 @@ const StakeForm = () => {
                     <Button variant="primary" onClick={unStake} className="m-1" disabled={stakedAmount <= 0}>
                         Unstake
                     </Button>
-                    <ApproveButton allowance={allowance} approve={approve}/>
+                    {/* <ApproveButton allowance={allowance} approve={approve}/> */}
                     <StakeInfo staked={stakedAmount} />
                 </Form>
             </Card.Body>

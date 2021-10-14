@@ -6,10 +6,9 @@ const MENU_ITEMS = [
         { key: 'pool1', label: 'USDT', url:  '/dashboard/boost' , parentKey: 'boost' },
         { key: 'pool2', label: 'VGA', url:  '/dashboard/boostvga' , parentKey: 'boost' }
     ]
-    }
-
-    // { key: 'swap', label: 'Swap', isTitle: false, icon: 'uil-exchange', url: '/dashboard/swap' },
-    // { key: 'liq', label: 'Swap', isTitle: false, icon: 'uil-favourite', url: '/dashboard/liq' },
+    },
+    { key: 'swap', label: 'Swap', isTitle: false, icon: 'uil-exchange', url: '/dashboard/swap' },
+    { key: 'liq', label: 'Liquidity', isTitle: false, icon: 'uil-layer-group', url: '/dashboard/liq' },
 
     // { key: 'liq', label: 'Liquidity', isTitle: false, icon: 'uil-layer-group', url: '/dashboard/liq' },
 

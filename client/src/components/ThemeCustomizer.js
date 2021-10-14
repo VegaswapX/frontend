@@ -53,14 +53,15 @@ const ThemeCustomizer = (state: ThemeCustomizerState): React$Element<any> => {
         var layout = e ? e.currentTarget.value : 'default';
 
         switch (layout) {
-            case 'topnav':
-                dispatch(changeLayout(layoutConstants.LAYOUT_HORIZONTAL));
-                break;
+            // case 'topnav':
+            //     dispatch(changeLayout(layoutConstants.LAYOUT_HORIZONTAL));
+            //     break;
             case 'detached':
                 dispatch(changeLayout(layoutConstants.LAYOUT_DETACHED));
                 break;
             default:
-                dispatch(changeLayout(layoutConstants.LAYOUT_VERTICAL));
+                dispatch(changeLayout(layoutConstants.LAYOUT_DETACHED));
+                // dispatch(changeLayout(layoutConstants.LAYOUT_VERTICAL));
                 break;
         }
     };

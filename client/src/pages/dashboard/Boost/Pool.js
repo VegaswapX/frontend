@@ -94,9 +94,9 @@ export function PoolInfo() {
         .startTime()
         .then((x) => {
           if (!stale) {            
-            var formattedTime = timeConverter(x);
-            startTimex = x;
-            setStartTime(formattedTime);
+            // var formattedTime = timeConverter(x);
+            // startTimex = x;
+            setStartTime(x);
           }
         })
         .catch(() => {
@@ -274,8 +274,8 @@ export function PoolInfo() {
                         <td>{" "}
             {startTime === null
               ? "Error"
-              : startTime
-              ? `${startTime}`
+              : timeConverter(startTime)
+              ? `${timeConverter(startTime)}`
               : ""}</td>
         </tr>
 

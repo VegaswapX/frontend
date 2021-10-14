@@ -2,7 +2,7 @@ import React from 'react'
 
 function StakeInfo({staked}) {
     return (
-        <label className="col-form-label-sm m-3">{`Staked: ${staked}`}</label>
+        <label className="stakeAmount col-form-label-sm m-3">{`Staked: ${staked}`}</label>
     )
 }
 

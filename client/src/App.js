@@ -7,7 +7,7 @@ import Web3ConnectionManager from "./chain/Web3ConnectionManager";
 
 
 // setup fake backend
-import { configureFakeBackend } from './helpers';
+// import { configureFakeBackend } from './helpers';
 
 // Themes
 
@@ -27,7 +27,7 @@ import { configureFakeBackend } from './helpers';
 import './assets/scss/Creative-Dark.scss';
 
 // configure fake backend
-configureFakeBackend();
+// configureFakeBackend();
 
 
 /**

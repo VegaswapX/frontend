@@ -51,15 +51,15 @@ function manageBodyClass(cssClass, action = 'toggle') {
 function* changeLayout({ payload: layout }) {
     try {
         yield call(changeBodyAttribute, 'data-layout', layout);
-        if (layout === layoutConstants.LAYOUT_VERTICAL) {
-            yield put(changeLeftSidebarThemeAction(layoutConstants.LEFT_SIDEBAR_THEME_DEFAULT));
-            yield put(changeSidebarTypeAction(layoutConstants.LEFT_SIDEBAR_TYPE_FIXED));
-        }
+        // if (layout === layoutConstants.LAYOUT_VERTICAL) {
+        //     yield put(changeLeftSidebarThemeAction(layoutConstants.LEFT_SIDEBAR_THEME_DEFAULT));
+        //     yield put(changeSidebarTypeAction(layoutConstants.LEFT_SIDEBAR_TYPE_FIXED));
+        // }
 
-        if (layout === layoutConstants.LAYOUT_HORIZONTAL) {
-            yield put(changeLeftSidebarThemeAction(layoutConstants.LEFT_SIDEBAR_THEME_DEFAULT));
-            yield put(changeSidebarTypeAction(layoutConstants.LEFT_SIDEBAR_TYPE_FIXED));
-        }
+        // if (layout === layoutConstants.LAYOUT_HORIZONTAL) {
+        //     yield put(changeLeftSidebarThemeAction(layoutConstants.LEFT_SIDEBAR_THEME_DEFAULT));
+        //     yield put(changeSidebarTypeAction(layoutConstants.LEFT_SIDEBAR_TYPE_FIXED));
+        // }
 
         if (layout === layoutConstants.LAYOUT_DETACHED) {
             yield put(changeLayoutWidthAction(layoutConstants.LAYOUT_WIDTH_FLUID));

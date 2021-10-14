@@ -18,6 +18,10 @@ body {
   font-size: 14pt;
 }
 
+.stakeAmount {
+  font-size: 16pt;
+}
+
 // Fix event bubbling on iOS devices
 @supports (-webkit-overflow-scrolling: touch) {
   body {

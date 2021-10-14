@@ -132,34 +132,51 @@ const StakeForm = () => {
         }
     };
 
-    return (
-        <Card>
-            <Card.Body>
-                <h4 className="mb-3 header-title">Stake</h4>
-                <Form>
-                    <Form.Group className="mb-3">
-                    <Form.Label htmlFor="exampleEmail2" column sm={2}>Amount: </Form.Label>
-                    <input
-                        type="text"
-                        value={stakeAmount}
-                        onChange={e => setStakeamount(e.target.value)}
-                        className="stakeInput" 
-                    />
-                    
-                    </Form.Group>
+    if (stakedAmount == 0 ) {
+        return (
+            <Card>
 
-                    <Button variant="primary" onClick={stake} className="m-1" disabled={stakedAmount > 0}>
-                        Stake
-                    </Button>
-                    <Button variant="primary" onClick={unStake} className="m-1" disabled={stakedAmount <= 0}>
-                        Unstake
-                    </Button>
-                    <ApproveButton allowance={allowance} approve={approve}/>
-                    <StakeInfo staked={stakedAmount} />
-                </Form>
+            <Card.Body>
+             <h4 className="mb-3 header-title">Stake</h4>
+
+            <Form>
+             <Form.Group className="mb-3">
+             <Form.Label htmlFor="exampleEmail2" column sm={2}>Amount: </Form.Label>
+             
+            <input
+                 type="text"
+                 value={stakeAmount}
+                 onChange={e => setStakeamount(e.target.value)}
+                 className="stakeInput" 
+             />
+            
+             </Form.Group>
+
+             <Button variant="primary" onClick={stake} className="m-1" disabled={stakedAmount > 0}>
+                 Stake
+             </Button>
+        
+             <ApproveButton allowance={allowance} approve={approve}/>            
+         </Form>
             </Card.Body>
         </Card>
-    );
+        )
+    } else {
+        return (
+            <Card>
+            <Card.Body>
+                
+            <h4 className="mb-3 header-title">Staked</h4>
+            <StakeInfo staked={stakedAmount} />
+
+            <Button variant="primary" onClick={unStake} className="m-1" disabled={stakedAmount <= 0}>
+                Harvest
+            </Button>
+                
+            </Card.Body>
+        </Card>)
+    }
+
 };
 
 

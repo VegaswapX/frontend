@@ -12,6 +12,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Card } from 'react-bootstrap';
 import {PoolInfo} from './Pool.js';
 
+export function createBoostPage() {
+  return BoostPage;
+}
+
 const BoostPage = () => {
   return (
       <>

@@ -2,10 +2,11 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import SwapPage from '../pages/dashboard/Swap';
-import BoostPage from '../pages/dashboard/Boost';
+import BoostPage, {createBoostPage} from '../pages/dashboard/Boost';
 import BoostPageVGA from '../pages/dashboard/BoostVGA';
 import LiqPage from '../pages/vega/Liq';
 import TxPage from '../pages/vega/Tx';
+import {createBootstrapComponent} from "react-bootstrap/ThemeProvider";
 
 // import Route from './Route';
 
@@ -81,13 +82,13 @@ const dashboardRoutes = {
         {
             path: '/dashboard/boost',
             name: 'Boost',
-            component: BoostPage,
+            component: createBoostPage(),
             route: Route,
         },
         {
             path: '/dashboard/boostvga',
             name: 'Boost',
-            component: BoostPageVGA,
+            component: createBoostPage(),
             route: Route,
         },
         {

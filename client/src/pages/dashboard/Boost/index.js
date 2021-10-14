@@ -12,48 +12,44 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Card } from 'react-bootstrap';
 import {PoolInfo} from './Pool.js';
 
-export function createBoostPage() {
-  return BoostPage;
-}
+const createBoostPoolPage = ({poolName}) => {
+  return () => {
+    return (
+        <>
+          <h1>Boost Pool {poolName}</h1>
+          <div>
+            <ToastContainer
+                progressClassName="toastProgress"
+                bodyClassName="toastBody"
+            />
+          </div>
 
-const BoostPage = () => {
-  return (
-      <>
-        <h1>Boost Pool USDT</h1>
+          <Balances />
+          <Row>
+            <Col lg={7}>
+              <Stake />
+            </Col>
 
-        <div>
-          <ToastContainer
-              progressClassName="toastProgress"
-              bodyClassName="toastBody"
-          />
-        </div>
+            <Col lg={5}>
+              {/* <CampaignsChart /> */}
 
-        <Balances />
+              <Card className={classNames('border', [`border-primary`])}>
+                <Card.Body>
+                  <Card.Title as="h5">Pool Info</Card.Title>
+                  <Card.Text>
+                    <PoolInfo />
 
-        <Row>
-
-          <Col lg={7}>
-            <Stake />
-          </Col>
-
-          <Col lg={5}>
-            {/* <CampaignsChart /> */}
-
-            <Card className={classNames('border', [`border-primary`])}>
-              <Card.Body>
-                <Card.Title as="h5">Pool Info</Card.Title>
-                <Card.Text>
-                  <PoolInfo />
-
-                </Card.Text>
-                {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-      </>
-  );
+                  </Card.Text>
+                  {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </>
+    );
+  }
 };
 
-export default BoostPage;
+export {
+  createBoostPoolPage
+}

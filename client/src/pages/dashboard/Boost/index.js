@@ -12,47 +12,44 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Card } from 'react-bootstrap';
 import {PoolInfo} from './Pool.js';
 
-const BoostPage = (): React$Element<React$FragmentType> => {
-    
-
-    return (
-        <>
+const BoostPage = () => {
+  return (
+      <>
         <h1>Boost Pool USDT</h1>
 
+        <div>
+          <ToastContainer
+              progressClassName="toastProgress"
+              bodyClassName="toastBody"
+          />
+        </div>
 
-      <div>
-        <ToastContainer
-            progressClassName="toastProgress"
-            bodyClassName="toastBody"
-        />
-      </div>
+        <Balances />
 
-            <Balances />
+        <Row>
 
-            <Row>
-                
-                <Col lg={7}>
-                <Stake />
-                </Col>
+          <Col lg={7}>
+            <Stake />
+          </Col>
 
-                <Col lg={5}>
-                    {/* <CampaignsChart /> */}                    
+          <Col lg={5}>
+            {/* <CampaignsChart /> */}
 
-                    <Card className={classNames('border', [`border-primary`])}>
-                        <Card.Body>
-                            <Card.Title as="h5">Pool Info</Card.Title>
-                            <Card.Text>
-                                <PoolInfo />
-                                
-                            </Card.Text>
-                            {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
-                        </Card.Body>
-                        </Card>
-                </Col>
-            </Row>
-            
-        </>
-    );
+            <Card className={classNames('border', [`border-primary`])}>
+              <Card.Body>
+                <Card.Title as="h5">Pool Info</Card.Title>
+                <Card.Text>
+                  <PoolInfo />
+
+                </Card.Text>
+                {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+      </>
+  );
 };
 
 export default BoostPage;

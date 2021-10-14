@@ -69,6 +69,8 @@ const rootRoute = {
     route: Route,
 };
 
+// TODO: Generate routes based on list of tokens
+
 // dashboards
 const dashboardRoutes = {
     path: '/dashboard',

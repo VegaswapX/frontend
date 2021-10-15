@@ -1,9 +1,11 @@
 // @flow
-import React from 'react';
+import React, {useReducer} from 'react';
 import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Row, Col, Card, Form, Button} from 'react-bootstrap';
 import { ethers } from "ethers";
+import {changeAllowanceAmount, changeStakeAmount} from '../../../redux/poolinfo/actions'
+
 // import { useWeb3React } from "@web3-react/core";
 import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
@@ -14,6 +16,7 @@ import {parseEther} from "ethers/lib/utils";
 import StakeInfo from "./StakeInfo";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import poolReducer, {INIT_STATE} from "../../../redux/poolinfo/reducers";
 
 // components
 // import PageTitle from '../components/PageTitle';
@@ -25,19 +28,16 @@ const StakeForm = () => {
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
     const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
     const [stakeAmount, setStakeamount] = React.useState(0);
-    const [stakedAmount, setStakedAmount] = React.useState(0);
-    const [loading, setLoading] = useState(false); 
-    const [allowance, setAllowance] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
 
     React.useEffect(() => {
         async function callStaticFunction() {
             if (!!account && !!library) {
                 let x = await vegaContract.callStatic.allowance(account, poolContract.address)
-                x = ethers.utils.formatEther(x)
-                console.log("allownace " + x);
-                setAllowance(x);
+                dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
                 const stakedAmount = await poolContract.callStatic.stakes(account)
-                setStakedAmount(stakedAmount[1])
+                dispatch(changeStakeAmount(stakedAmount[1]))
             }
         }
 
@@ -50,6 +50,7 @@ const StakeForm = () => {
         setLoading(true);
         try {
           await poolContract.stake(stakeAmount);
+          dispatch(changeStakeAmount(stakeAmount))
           toast("Staking successful",{
             className: 'success',
             bodyClassName: "grow-font-size",
@@ -95,16 +96,14 @@ const StakeForm = () => {
     };
 
     const approve = async () => {
-        console.log("approve " + loading);
-
         setLoading(true);
 
         try {
             //TODO
             let approveAmount = parseEther("10000");
             // let approveAmount = 1000 * 10**18;
-            console.log("approveAmount " + approveAmount);
             await vegaContract.approve(POOL_TOKEN_ADDRESS, approveAmount);
+            dispatch(changeAllowanceAmount(approveAmount))
             // await depositLpToken(vegaContract, lpContract, account, amount);
             // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
             // tokenBalance.refetch();
@@ -132,7 +131,7 @@ const StakeForm = () => {
         }
     };
 
-    if (stakedAmount == 0 ) {
+    if (reducerState.stakeAmount <= 0 ) {
         return (
             <Card>
 
@@ -152,11 +151,11 @@ const StakeForm = () => {
             
              </Form.Group>
 
-             <Button variant="primary" onClick={stake} className="m-1" disabled={stakedAmount > 0}>
+             <Button variant="primary" onClick={stake} className="m-1" disabled={reducerState.stakeAmount > 0 || reducerState.allowance <= 0}>
                  Stake
              </Button>
         
-             <ApproveButton allowance={allowance} approve={approve}/>            
+             <ApproveButton allowance={reducerState.allowance} approve={approve}/>
          </Form>
             </Card.Body>
         </Card>
@@ -167,9 +166,9 @@ const StakeForm = () => {
             <Card.Body>
                 
             <h4 className="mb-3 header-title">Staked</h4>
-            <StakeInfo staked={stakedAmount} />
+            <StakeInfo staked={reducerState.stakeAmount} />
 
-            <Button variant="primary" onClick={unStake} className="m-1" disabled={stakedAmount <= 0}>
+            <Button variant="primary" onClick={unStake} className="m-1" disabled={reducerState.stakeAmount <= 0}>
                 Harvest
             </Button>
                 

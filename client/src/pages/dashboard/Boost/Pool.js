@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useReducer} from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
@@ -8,7 +8,8 @@ import { VEGA_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
 import { useContract } from "../../../chain/eth.js";
 import { ethers } from "ethers";
 import { Table } from 'react-bootstrap';
-
+import poolReducer, {INIT_STATE} from '../../../redux/poolinfo/reducers'
+import { changeStakeAmount } from '../../../redux/poolinfo/actions'
 // import { ethers } from "ethers";
 // import { formatEther } from "@ethersproject/units";
 
@@ -50,6 +51,7 @@ export function PoolInfo() {
 
   const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
   const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
+  const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
 
   // const [loading, setLoading] = useState(false);
 
@@ -61,7 +63,6 @@ export function PoolInfo() {
   const [totalAmountStaked, setTotalAmountStaked] = useState(0);
   const [reward, setReward] = useState();
   const [poolStatus, setPoolstatus] = useState();
-  const [vgaPoolbalance, setVgapoolBalance] = useState();
   let startTimex;
 
   useEffect(() => {
@@ -218,30 +219,21 @@ export function PoolInfo() {
   }, [account, library, poolContract]); 
 
   React.useEffect(() => {
-    if (!!account && !!library) {
-      let stale = false;
-
-      vegaContract.callStatic
-        .balanceOf(poolContract.address)
-        .then((x) => {
-          if (!stale) {
-            console.log(x)
-            x = ethers.utils.formatEther(x);
-            setVgapoolBalance(x);
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setVgapoolBalance(null);
-          }
-        });
-
-      return () => {
-        stale = true;
-        setVgapoolBalance(undefined);
-      };
+    async function getStakeAmount() {
+      try {
+        let amount = await vegaContract.callStatic.balanceOf(poolContract.address)
+        amount = ethers.utils.formatEther(amount);
+        dispatch(changeStakeAmount(amount))
+      } catch (e) {
+        dispatch(changeStakeAmount(null))
+      }
     }
-  }, [account, library, poolContract, vegaContract]); 
+    if (!!account && !!library) {
+      getStakeAmount()
+    }
+
+    getStakeAmount()
+  }, [account, library, poolContract, vegaContract]);
 
 
   return (
@@ -336,7 +328,7 @@ export function PoolInfo() {
         <tr key={9}>
             <th scope="row">VGA Balance in the pool</th>
           <td>{" "}   
-          {vgaPoolbalance}
+          {reducerState.stakeAmount}
           
           </td>
         </tr>

@@ -4,23 +4,22 @@ import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Row, Col, Card, Form, Button} from 'react-bootstrap';
 import { ethers } from "ethers";
-import {changeAllowanceAmount, changeStakeAmount} from '../../../redux/poolinfo/actions'
+import {changeAllowanceAmount, changeStakeAmount} from '../../redux/poolinfo/actions'
 
 // import { useWeb3React } from "@web3-react/core";
-import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import ApproveButton from "../../../components/Buttons/ApproveButton";
-import { useContract } from "../../../chain/eth.js";
+import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
+import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../chain/Contracts.js";
+import ApproveButton from "../../components/Buttons/ApproveButton";
+import { useContract } from "../../chain/eth.js";
 import {parseEther} from "ethers/lib/utils";
 import StakeInfo from "./StakeInfo";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import poolReducer, {INIT_STATE} from "../../../redux/poolinfo/reducers";
+import poolReducer, {INIT_STATE} from "../../redux/poolinfo/reducers";
 
 // components
 // import PageTitle from '../components/PageTitle';
-
 
 
 const StakeForm = () => {
@@ -34,10 +33,16 @@ const StakeForm = () => {
     React.useEffect(() => {
         async function callStaticFunction() {
             if (!!account && !!library) {
-                let x = await vegaContract.callStatic.allowance(account, poolContract.address)
-                dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
-                const stakedAmount = await poolContract.callStatic.stakes(account)
-                dispatch(changeStakeAmount(stakedAmount[1]))
+                if (vegaContract){
+                    console.log("contract available " + vegaContract.address);
+                    // let x = await vegaContract.callStatic.allowance(account, poolContract.address)
+                    // dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
+
+                } else {
+                    console.log("contract not available");
+                }
+                // const stakedAmount = await poolContract.callStatic.stakes(account)
+                // dispatch(changeStakeAmount(stakedAmount[1]))
             }
         }
 

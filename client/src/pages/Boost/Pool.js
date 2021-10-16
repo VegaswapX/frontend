@@ -1,15 +1,15 @@
 import React, {useState, useEffect, useReducer} from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import VEGA_CONTRACT_ABI from "../../../abis/VegaToken.json";
-import { POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import { VEGA_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import { useContract } from "../../../chain/eth.js";
+import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import VEGA_CONTRACT_ABI from "../../abis/VegaToken.json";
+import { POOL_TOKEN_ADDRESS } from "../../chain/Contracts.js";
+import { VEGA_TOKEN_ADDRESS } from "../../chain/Contracts.js";
+import { useContract } from "../../chain/eth.js";
 import { ethers } from "ethers";
 import { Table } from 'react-bootstrap';
-import poolReducer, {INIT_STATE} from '../../../redux/poolinfo/reducers'
-import { changeStakeAmount } from '../../../redux/poolinfo/actions'
+import poolReducer, {INIT_STATE} from '../../redux/poolinfo/reducers'
+import { changeStakeAmount } from '../../redux/poolinfo/actions'
 // import { ethers } from "ethers";
 // import { formatEther } from "@ethersproject/units";
 

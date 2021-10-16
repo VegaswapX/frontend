@@ -35,14 +35,16 @@ const StakeForm = () => {
             if (!!account && !!library) {
                 if (vegaContract){
                     console.log("contract available " + vegaContract.address);
-                    // let x = await vegaContract.callStatic.allowance(account, poolContract.address)
-                    // dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
+                    let x = await vegaContract.callStatic.allowance(account, poolContract.address)
+                    console.log("allowance " + x);
+                    dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
 
                 } else {
                     console.log("contract not available");
                 }
-                // const stakedAmount = await poolContract.callStatic.stakes(account)
-                // dispatch(changeStakeAmount(stakedAmount[1]))
+                const stakedAmount = await poolContract.callStatic.stakes(account)
+                let z = ethers.utils.formatEther(stakedAmount[1].toString());
+                dispatch(changeStakeAmount(z));
             }
         }
 
@@ -51,16 +53,29 @@ const StakeForm = () => {
 
 
     const stake = async () => {
-        console.log("stake " + poolContract);
         setLoading(true);
+        // let stakeAmountDEC = stakeAmount * 10**18;
+        var stakeAmountDEC = ethers.BigNumber.from(stakeAmount).pow(18);
+
+        console.log("stake " + stakeAmountDEC);
+        let minAmount = 1 * 10**18;
         try {
-          await poolContract.stake(stakeAmount);
-          dispatch(changeStakeAmount(stakeAmount))
-          toast("Staking successful",{
-            className: 'success',
-            bodyClassName: "grow-font-size",
-            progressClassName: 'fancy-progress-bar'
-            });
+            //TODO check maximum
+          if(stakeAmountDEC >= 0){
+            await poolContract.stake(stakeAmountDEC);
+            dispatch(changeStakeAmount(stakeAmountDEC))
+            toast("Staking successful",{
+                className: 'success',
+                bodyClassName: "grow-font-size",
+                progressClassName: 'fancy-progress-bar'
+                });
+        } else {
+            toast("Minimum amount is " + minAmount,{
+                className: 'success',
+                bodyClassName: "grow-font-size",
+                progressClassName: 'fancy-progress-bar'
+                });
+        }
 
         } catch (error) {
           toast("Staking error " + error.message,{
@@ -136,7 +151,9 @@ const StakeForm = () => {
         }
     };
 
-    if (reducerState.stakeAmount === 0 ) {
+    console.log("reducerState.stakeAmount " + reducerState.stakeAmount );
+
+    if (reducerState.stakeAmount < 1 ) {
         return (
             <Card>
 

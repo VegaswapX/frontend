@@ -10,14 +10,7 @@ import { ethers } from "ethers";
 import { Table } from 'react-bootstrap';
 import poolReducer, {INIT_STATE} from '../../redux/poolinfo/reducers'
 import { changeStakeAmount } from '../../redux/poolinfo/actions'
-// import { ethers } from "ethers";
-// import { formatEther } from "@ethersproject/units";
 
-// const chainId = 1137;
-// const records = [
-//     { id: 1, username: '@mdo' },
-//     { id: 2, username: '@fat' }
-// ];
 
 function timeConverter(UNIX_timestamp){
   var a = new Date(UNIX_timestamp * 1000);
@@ -123,10 +116,13 @@ export function PoolInfo() {
       poolContract.callStatic
         .stakes(account)
         .then((x) => {
-          if (!stale) {
-            // setTotalAmountStaked(x/10**18);
-            // setTotalAmountStaked(x/10**18);
-            setTotalAmountStaked(x[1]/10**18);
+          if (!stale) {            
+            // let s = x[1]/10**18;
+            // let z = ethers.utils.formatEther(s);
+            console.log(x[1].toString());
+            let z = ethers.utils.formatEther(x[1].toString());
+
+            setTotalAmountStaked(z.toString());
           }
         })
         .catch((e) => {

@@ -5,9 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 // import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import FACTORY_ABI from "../../../abis/Factory.json";
+import FACTORY_ABI from "../../abis/Factory.json";
 // import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import { useContract } from "../../../chain/eth.js";
+import { useContract } from "../../chain/eth.js";
 
 function SwapButton(props){
     return (

@@ -1,8 +1,7 @@
 /* @flow */
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import classNames from 'classnames';
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { injected } from "../chain/eth.js";
 
@@ -33,7 +32,7 @@ type TopbarProps = {
 const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: TopbarProps): React$Element<any> => {
     const dispatch = useDispatch();
 
-    const [isopen, setIsopen] = useState(false);
+    // const [isopen, setIsopen] = useState(false);
 
     const { account, activate, deactivate } = useWeb3React();
 
@@ -48,7 +47,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
      * Toggle the leftmenu when having mobile screen
      */
     const handleLeftMenuCallBack = () => {
-        setIsopen((prevState) => !prevState);
+        // setIsopen((prevState) => !prevState);
         if (openLeftMenuCallBack) openLeftMenuCallBack();
     };
 

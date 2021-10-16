@@ -4,19 +4,19 @@ import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Row, Col, Card, Form, Button} from 'react-bootstrap';
 import { ethers } from "ethers";
-import {changeAllowanceAmount, changeStakeAmount} from '../../../redux/poolinfo/actions'
+import {changeAllowanceAmount, changeStakeAmount} from '../../redux/poolinfo/actions'
 
 // import { useWeb3React } from "@web3-react/core";
-import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import ApproveButton from "../../../components/Buttons/ApproveButton";
-import { useContract } from "../../../chain/eth.js";
+import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
+import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../chain/Contracts.js";
+import ApproveButton from "../../components/Buttons/ApproveButton";
+import { useContract } from "../../chain/eth.js";
 import {parseEther} from "ethers/lib/utils";
 import StakeInfo from "./StakeInfo";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import poolReducer, {INIT_STATE} from "../../../redux/poolinfo/reducers";
+import poolReducer, {INIT_STATE} from "../../redux/poolinfo/reducers";
 
 // components
 // import PageTitle from '../components/PageTitle';
@@ -131,7 +131,7 @@ const StakeForm = () => {
         }
     };
 
-    if (reducerState.stakeAmount <= 0 ) {
+    if (reducerState.stakeAmount === 0 ) {
         return (
             <Card>
 
@@ -160,7 +160,10 @@ const StakeForm = () => {
             </Card.Body>
         </Card>
         )
-    } else {
+    } else if (loading) {
+        return (<> Loading</>)
+    }
+    else {
         return (
             <Card>
             <Card.Body>

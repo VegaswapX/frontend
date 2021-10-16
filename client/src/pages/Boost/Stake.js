@@ -22,7 +22,6 @@ import poolReducer, {INIT_STATE} from "../../redux/poolinfo/reducers";
 // import PageTitle from '../components/PageTitle';
 
 
-
 const StakeForm = () => {
     const { account, library } = useWeb3React();
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
@@ -34,10 +33,16 @@ const StakeForm = () => {
     React.useEffect(() => {
         async function callStaticFunction() {
             if (!!account && !!library) {
-                let x = await vegaContract.callStatic.allowance(account, poolContract.address)
-                dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
-                const stakedAmount = await poolContract.callStatic.stakes(account)
-                dispatch(changeStakeAmount(stakedAmount[1]))
+                if (vegaContract){
+                    console.log("contract available " + vegaContract.address);
+                    // let x = await vegaContract.callStatic.allowance(account, poolContract.address)
+                    // dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
+
+                } else {
+                    console.log("contract not available");
+                }
+                // const stakedAmount = await poolContract.callStatic.stakes(account)
+                // dispatch(changeStakeAmount(stakedAmount[1]))
             }
         }
 

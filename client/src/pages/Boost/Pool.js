@@ -121,7 +121,6 @@ export function PoolInfo() {
             // let z = ethers.utils.formatEther(s);
             console.log(x[1].toString());
             let z = ethers.utils.formatEther(x[1].toString());
-
             setTotalAmountStaked(z.toString());
           }
         })

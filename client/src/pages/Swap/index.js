@@ -14,18 +14,11 @@ import { ethers } from "ethers";
 function SwapButton(props){
     return (
     <Button variant="primary" onClick={props.swapIn}>
-            SwapIn
+            Swap
         </Button>    
     )        
 }
 
-function SwapOutButton(props){
-    return (
-    <Button variant="primary" onClick={props.swapIn}>
-            SwapOut
-        </Button>    
-    )        
-}
 
 const config = {
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -162,7 +155,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                 <Col lg={7}>                    
 
                     <Form.Group className="mb-3">
-                    <Form.Label htmlFor="">BNB VGA</Form.Label>
+                    
                     <div style={{backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "200px"}}>
                     <span style={{marginLeft: "30px"}}>BNB</span>
                     <input
@@ -184,7 +177,6 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     </Form.Group>
 
                     <SwapButton swapIn={swapIn}></SwapButton>
-                    <SwapOutButton swapIn={swapOut}></SwapOutButton>
 
                     {/* <br />
                     pairslength: {pairslength !== null ? pairslength : "NA"} */}

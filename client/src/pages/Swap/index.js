@@ -164,7 +164,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     <Form.Group className="mb-3">
                     <Form.Label htmlFor="">BNB VGA</Form.Label>
                     <div style={{backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "200px"}}>
-                    <span style={{marginLeft: "30px"}}>VGA</span>
+                    <span style={{marginLeft: "30px"}}>BNB</span>
                     <input
                         type="text"
                         value={amount}
@@ -173,7 +173,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                         style={{fontSize: "20px", borderRadius: "10px", backgroundColor: "rgb(19,20,25)", color: "white", marginTop: "20px",  marginLeft: "30px", border: "0px", width: "100px"}}
                     />
                     <br/>
-                    <div style={{marginLeft: "30px", marginTop: "10px"}}>BNB
+                    <div style={{marginLeft: "30px", marginTop: "10px"}}>VGA
                     <span style={{marginLeft: "30px", fontSize: "20px", color: "white"}}>
                     {amountOut !== null ? amountOut : "NA"}
                     </span>
@@ -186,8 +186,8 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     <SwapButton swapIn={swapIn}></SwapButton>
                     <SwapOutButton swapIn={swapOut}></SwapOutButton>
 
-                    <br />
-                    pairslength: {pairslength !== null ? pairslength : "NA"}
+                    {/* <br />
+                    pairslength: {pairslength !== null ? pairslength : "NA"} */}
                     <br />
                     
                 </Col>

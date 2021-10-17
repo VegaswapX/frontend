@@ -11,6 +11,14 @@ import ROUTER_ABI from "../../abis/Router.json";
 import { useContract } from "../../chain/eth.js";
 import { ethers } from "ethers";
 
+import { client, clientPCS } from '../../apollo/client'
+import {
+	// GLOBAL_DATA,
+	// ETH_PRICE,
+	ALL_TOKENS, FACTORY_PAIRS
+} from '../../apollo/queries'
+
+
 function SwapButton(props){
     return (
     <Button variant="primary" onClick={props.swapIn}>
@@ -30,6 +38,59 @@ const config = {
 
 let WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
+
+
+async function getAllTokensOnUniswap() {
+	try {
+		let allFound = false
+		let skipCount = 0
+		let tokens = []
+		while (!allFound) {
+			let result = await client.query({
+				query: ALL_TOKENS,
+				variables: {
+					skip: skipCount,
+				},
+				fetchPolicy: 'cache-first',
+			})
+			tokens = tokens.concat(result?.data?.tokens)
+      allFound = true;
+			// if (result?.data?.tokens?.length < TOKENS_TO_FETCH || tokens.length > TOKENS_TO_FETCH) {
+			// 	allFound = true
+			// }
+			// skipCount = skipCount += TOKENS_TO_FETCH
+		}
+		return tokens
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+async function someData() {
+	try {
+		let allFound = false
+		
+		let tokens = []
+		while (!allFound) {
+			let result = await clientPCS.query({
+				query: FACTORY_PAIRS,
+				variables: {					
+				},
+				fetchPolicy: 'cache-first',
+			})
+			
+      console.log("totalPairs " + result.data.factory.totalPairs);
+      console.log("totalTokens " + result.data.factory.totalTokens);
+      return result;
+      allFound = true;
+		}
+		return tokens
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+
 
 
 const PageSwap = (): React$Element<React$FragmentType> => {
@@ -137,6 +198,29 @@ const PageSwap = (): React$Element<React$FragmentType> => {
           
         }
       }, [account, library, routerContract]);      
+
+      useEffect(() => {
+        async function fetchData() {
+          // let globalData = await getGlobalData(ethPrice, oldEthPrice)
+          // globalData && update(globalData)
+
+          let d= await someData();
+          console.log(">> " + d);
+      
+          // let allTokens = await getAllTokensOnUniswap()
+          // let t = allTokens[0];
+          // console.log("allTokens " + t.id);
+          // for (let key in t) {
+          //   console.log(key, t[key]);
+          // }
+          // updateAllTokensInUniswap(allTokens)
+        }
+        // if (!data && ethPrice && oldEthPrice) {
+        //   fetchData()
+        // }
+        fetchData();
+      }, [])
+      
 
     // function swapIn() {
     //     console.log("swap in " + amount);    

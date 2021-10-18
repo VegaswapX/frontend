@@ -3,7 +3,7 @@ import React from 'react';
 import Routes from './routes/Routes';
 
 import WrappedWeb3ReactProvider from "./chain/WrappedWeb3ReactProvider";
-import Web3ConnectionManager from "./chain/Web3ConnectionManager";
+// import Web3ConnectionManager from "./chain/Web3ConnectionManager";
 
 
 // setup fake backend
@@ -40,9 +40,9 @@ const InnerApp = () => {
 function App() {
     return (
       <WrappedWeb3ReactProvider>
-        <Web3ConnectionManager>
+        {/* <Web3ConnectionManager> */}
           <InnerApp />
-        </Web3ConnectionManager>
+        {/* </Web3ConnectionManager> */}
       </WrappedWeb3ReactProvider>
     );
   }

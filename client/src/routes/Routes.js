@@ -9,7 +9,7 @@ import VerticalLayout from '../layouts/Vertical';
 import DetachedLayout from '../layouts/Detached';
 import HorizontalLayout from '../layouts/Horizontal/';
 
-import { authProtectedFlattenRoutes } from './index';
+import { allFlattenRoutes } from './index';
 
 const Routes = (props) => {
     const { layout, user } = useSelector((state) => ({
@@ -26,11 +26,11 @@ const Routes = (props) => {
                 break;
             case layoutConstants.LAYOUT_DETACHED:
                 layoutCls = DetachedLayout;
-                break;
-            default:
-                layoutCls = VerticalLayout;
-                break;
+                break;            
         }
+        // layoutCls = HorizontalLayout;
+
+        console.log("layout used " + layout.layoutType);
         return layoutCls;
     };
 
@@ -59,10 +59,10 @@ const Routes = (props) => {
                     </DefaultLayout>
                 </Route> */}
 
-                <Route path={authProtectedFlattenRoutes.map((r) => r['path'])}>
+                <Route path={allFlattenRoutes.map((r) => r['path'])}>
                     <Layout {...props} layout={layout} user={user}>
                         <Switch>
-                            {authProtectedFlattenRoutes.map((route, index) => {
+                            {allFlattenRoutes.map((route, index) => {
                                 return (
                                     !route.children && (
                                         <route.route

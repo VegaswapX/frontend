@@ -22,7 +22,7 @@ import {
 
 function SwapButton(props){
     return (
-    <Button variant="primary" onClick={props.swapIn}>
+    <Button variant="primary" onClick={props.swapIn}  style={{width: "180px", fontSize: "20pt"}}>
             Swap
         </Button>    
     )        
@@ -121,7 +121,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
     async function setAmountOut(amount){
 
         let am = parseInt(amount);
-        // let am = ethers.utils.formatWei(amount.toString());
+        // let am = ethers.utils.formatEth(amount.toString());
         // let am = parseFloat(amount);
         // am = am * 10**18;
         console.log(">>> " + am);    
@@ -134,31 +134,12 @@ const PageSwap = (): React$Element<React$FragmentType> => {
         setAmountout(z.toString());
     }
 
-    //function swapTokensForExactTokens(amountOut,amountInMax,path,to,deadline)
-    // async function swapTokens(amountOutMin, to, deadline){
-
-    // }
-    
-    
-
-    // async function swapTokens(amountOutMin, to, deadline){
-
-    //   const tx = await routerContract.swap(
-    //     amountOutMin,
-    //     [WBNB, VGA],
-    //     to,
-    //     deadline,
-    //     {value: amount, gasPrice: 10e9}
-    //   );
-    //   console.log('Transaction Submitted, heres the hashcode '+ tx.hash)
-    //   let receipt = await tx.wait();
-    //   console.log(receipt);
-    //   return receipt;
-    // }
 
     async function swapIn(){
       console.log(amount);
       console.log(amountOut);
+
+      //1%
 
       let slip = Math.floor(amountOut * 990 / 1000);
       let amountOutMin = amountOut - slip;
@@ -245,27 +226,39 @@ const PageSwap = (): React$Element<React$FragmentType> => {
 
     return (
         <>
-        <h1>Swap VGA</h1>
+        {/* <h1>Swap VGA</h1> */}
             <Row>
                 <Col lg={7}>                    
+                  <div style={{height: "400px", width: "400px", backgroundColor: "#1c1f27", color: "white"}}>
+                    
+                  <Form.Group className="mb-3">
 
-                    <Form.Group className="mb-3">
+                    <h1>Swap</h1>
                     
                     <div style={{backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "200px"}}>
-                    <span style={{marginLeft: "30px"}}>BNB</span>
+                    
+
                     <input
                         type="text"
                         value={amount}
                         onChange={e => setAmountOut(e.target.value)}
                         className="" 
-                        style={{fontSize: "20px", borderRadius: "10px", backgroundColor: "rgb(19,20,25)", color: "white", marginTop: "20px",  marginLeft: "30px", border: "0px", width: "100px"}}
+                        style={{fontSize: "22px", borderRadius: "10px", backgroundColor: "rgb(19,20,25)", color: "white", marginTop: "20px",  marginLeft: "30px", border: "0px", width: "100px"}}
                     />
+
+                    <span style={{marginLeft: "10px", fontSize: "22px"}}>BNB</span>
+
                     <br/>
-                    <div style={{marginLeft: "30px", marginTop: "10px"}}>VGA
-                    <span style={{marginLeft: "30px", fontSize: "20px", color: "white"}}>
+
+                    <div style={{marginLeft: "30px", marginTop: "10px"}}>
+                      
+                    <span style={{marginLeft: "3px", width: "100px", fontSize: "22px", color: "white"}}>
                     {amountOut !== null ? amountOut : "NA"}
                     </span>
+
+                    <span style={{marginLeft: "90px", textAlign: "right", fontSize: "22px"}}>VGA</span>
                     </div>
+
                     </div>
 
                                        
@@ -273,10 +266,8 @@ const PageSwap = (): React$Element<React$FragmentType> => {
 
                     <SwapButton swapIn={swapIn}></SwapButton>
 
-                    {/* <br />
-                    pairslength: {pairslength !== null ? pairslength : "NA"} */}
-                    <br />
-                    
+                  </div>
+                                        
                 </Col>
             </Row>
         </>

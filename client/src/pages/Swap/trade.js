@@ -17,3 +17,13 @@ export async function swapETH(routerContract, amount, amountOutMin, to, deadline
       return receipt;
 
 }
+
+//function swapTokensForExactTokens(amountOut,amountInMax,path,to,deadline)
+  // async function swapTokens(amountOutMin, to, deadline){
+
+  // }
+
+//function addLiquidity(VGA, BNB){
+//const tx = await routerContract.addLiquidity(
+//[WBNB, VGA],
+//}

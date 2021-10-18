@@ -1,6 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import SwapPage from '../pages/Swap';
 import {createBoostPoolPage} from '../pages/Boost';
 import LiqPage from '../pages/vega/Liq';
@@ -86,9 +85,8 @@ const flattenRoutes = (routes) => {
 };
 
 
-// All routes
-const authProtectedRoutes = [rootRoute, dashboardRoutes];
+const allRoutes = [rootRoute, dashboardRoutes];
 
-const authProtectedFlattenRoutes = flattenRoutes([...authProtectedRoutes]);
+const allFlattenRoutes = flattenRoutes([...allRoutes]);
 
-export { authProtectedRoutes, authProtectedFlattenRoutes };
+export { allRoutes, allFlattenRoutes };

@@ -12,6 +12,7 @@ import { showRightSidebar } from '../redux/actions';
 import logoSmDark from '../assets/images/logo_sm_dark.png';
 import logoSmLight from '../assets/images/logo_sm.png';
 import logo from '../assets/images/logo-light.png';
+import vlogo from '../assets/images/logo_black.jpeg'
 
 //constants
 import * as layoutConstants from '../constants/layout';
@@ -22,14 +23,84 @@ import {
 // get the notifications
 
 
-type TopbarProps = {
-    hideLogo?: boolean,
-    navCssClasses?: string,
-    openLeftMenuCallBack?: () => void,
-    topbarDark?: boolean,
-};
 
-const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: TopbarProps): React$Element<any> => {
+const AccountConnect = () => {
+
+    const { account, activate, deactivate } = useWeb3React();
+
+    async function connect() {
+        await activate(injected, async (error) => {
+            if (error instanceof UnsupportedChainIdError) {
+                console.log("error UnsupportedChainIdError");
+                // const hasSetup = await setupNetwork()
+                // if (hasSetup) {
+                //     activate(injected)
+                // }
+            }
+        });
+    }
+  
+    async function disconnect() {
+        console.log("disconnect")
+      try {
+        deactivate();
+      } catch (ex) {
+        console.log(ex);
+      }
+    }
+
+    function connectButton () {         
+      if (account) {
+          console.log("account" + account);
+          return (<Button onClick={disconnect} variant="info" style={{marginTop: "22%"}}>
+          Disconnect
+          </Button>) 
+      }
+      else {        
+          return (<Button onClick={connect} variant="primary" style={{marginTop: "22%"}}>
+          Connect
+          </Button>)
+          }
+   }
+
+   return connectButton();   
+
+}
+
+const AccountInfo = () => {
+
+    const { account, activate, deactivate } = useWeb3React();
+
+    function accInfo() {
+        if (account){
+           return ( 
+           <div style={{marginTop: "18%", marginRight: "10px", fontSize: "18px"}}>
+            Account: <b>{account.substring(0, 3)}..{account.substring(account.length-3, account.length)}</b>
+            </div>)
+        } else {
+            return <span></span>
+        }
+    }
+
+    return accInfo();    
+}
+
+const AccountManage = () => {
+
+    return (
+        <span>                                
+          <li className="">
+            <AccountInfo />
+          </li>
+          <li className="">
+            <AccountConnect />                            
+          </li>
+        </span>
+    )
+}
+
+
+const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) => {
     const dispatch = useDispatch();
 
     // const [isopen, setIsopen] = useState(false);
@@ -63,24 +134,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
     //     connect();
     // };
 
-    async function connect() {
-          await activate(injected, async (error: Error) => {
-              if (error instanceof UnsupportedChainIdError) {
-                  // const hasSetup = await setupNetwork()
-                  // if (hasSetup) {
-                  //     activate(injected)
-                  // }
-              }
-          });
-      }
     
-      async function disconnect() {
-        try {
-          deactivate();
-        } catch (ex) {
-          console.log(ex);
-        }
-      }
 
     return (
         <React.Fragment>
@@ -88,12 +142,10 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                 <div className={containerCssClasses}>
                     {!hideLogo && (
                         <Link to="/" className="topnav-logo">
-                            <span className="topnav-logo-lg">
-                                <img src={logo} alt="logo" height="16" />
-                            </span>
-                            <span className="topnav-logo-sm">
-                                <img src={topbarDark ? logoSmLight : logoSmDark} alt="logo" height="16" />
-                            </span>
+                            <span className="">
+                                <img src={vlogo} alt="logo" height="50" style={{marginTop: "10px"}}/>
+                                <span style={{color: "white", marginLeft: "20px", marginTop: "10px", fontSize: "20px"}}>Vegaswap</span>
+                            </span>                            
                         </Link>
                     )}
 
@@ -112,36 +164,16 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }: T
                         {/* <li className="dropdown notification-list">
                             <NotificationDropdown notifications={Notifications} />
                         </li> */}
-                        <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
-                        {account ? (
-                                <div style={{marginTop: "23px", marginRight: "10px"}}>
-                                Account: <b>{account}</b>
-                                </div>
-                            ) : (
-                                <span></span>
-                            )}    
+                        {/* <li className="dropdown notification-list topbar-dropdown d-none d-lg-block"> */}
+
+                        <li className="">
+                            
+                        </li>
+                        
+                        <li className="">
+                            <AccountManage />
                         </li>
 
-                        <li className="dropdown notification-list d-lg-block">
-                            {/* <button
-                                className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
-                                onClick={handleConnect}>
-                                    connect                                
-                            </button> */}
-
-            
-                        <span>
-                            {account ?
-                                (<Button onClick={disconnect} variant="info" style={{marginTop: "15px"}}>
-                                    Disconnect
-                                </Button>)
-                                :
-                                (<Button onClick={connect} variant="primary" style={{marginTop: "15px"}}>
-                                    Connect
-                                </Button>)
-                            }
-                        </span>
-                        </li>
                         {/* <li className="dropdown notification-list d-none d-sm-inline-block">
                             <AppsDropdown />
                         </li> */}

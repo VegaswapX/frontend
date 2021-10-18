@@ -28,11 +28,14 @@ const AccountConnect = () => {
 
     const { account, activate, deactivate } = useWeb3React();
 
+    const [networkOk, setNetworkOk] = React.useState();
+
     async function connect() {
         await activate(injected, async (error) => {
             if (error instanceof UnsupportedChainIdError) {
                 console.log("error UnsupportedChainIdError");
                 alert("error UnsupportedChainIdError");
+                setNetworkOk(false);
                 // const hasSetup = await setupNetwork()
                 // if (hasSetup) {
                 //     activate(injected)
@@ -52,10 +55,16 @@ const AccountConnect = () => {
 
     function connectButton () {         
       if (account) {
-          console.log("account" + account);
-          return (<Button onClick={disconnect} variant="info" style={{marginTop: "22%"}}>
-          Disconnect
-          </Button>) 
+          if (networkOk){
+            console.log("account" + account);
+            return (<Button onClick={disconnect} variant="info" style={{marginTop: "22%"}}>
+            Disconnect
+            </Button>) 
+          } else {            
+            return (<Button onClick={disconnect} variant="danger" style={{marginTop: "22%"}}>
+            Wrong network
+            </Button>) 
+          }
       }
       else {        
           return (<Button onClick={connect} variant="primary" style={{marginTop: "22%"}}>

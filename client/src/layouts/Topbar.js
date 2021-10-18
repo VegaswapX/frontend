@@ -32,6 +32,7 @@ const AccountConnect = () => {
         await activate(injected, async (error) => {
             if (error instanceof UnsupportedChainIdError) {
                 console.log("error UnsupportedChainIdError");
+                alert("error UnsupportedChainIdError");
                 // const hasSetup = await setupNetwork()
                 // if (hasSetup) {
                 //     activate(injected)

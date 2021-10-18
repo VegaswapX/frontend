@@ -1,23 +1,16 @@
 import React, {useState, useEffect, useReducer} from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import VEGA_CONTRACT_ABI from "../../../abis/VegaToken.json";
-import { POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import { VEGA_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import { useContract } from "../../../chain/eth.js";
+import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import VEGA_CONTRACT_ABI from "../../abis/VegaToken.json";
+import { POOL_TOKEN_ADDRESS } from "../../chain/Contracts.js";
+import { VEGA_TOKEN_ADDRESS } from "../../chain/Contracts.js";
+import { useContract } from "../../chain/eth.js";
 import { ethers } from "ethers";
 import { Table } from 'react-bootstrap';
-import poolReducer, {INIT_STATE} from '../../../redux/poolinfo/reducers'
-import { changeStakeAmount } from '../../../redux/poolinfo/actions'
-// import { ethers } from "ethers";
-// import { formatEther } from "@ethersproject/units";
+import poolReducer, {INIT_STATE} from '../../redux/poolinfo/reducers'
+import { changeStakeAmount } from '../../redux/poolinfo/actions'
 
-// const chainId = 1137;
-// const records = [
-//     { id: 1, username: '@mdo' },
-//     { id: 2, username: '@fat' }
-// ];
 
 function timeConverter(UNIX_timestamp){
   var a = new Date(UNIX_timestamp * 1000);
@@ -123,10 +116,12 @@ export function PoolInfo() {
       poolContract.callStatic
         .stakes(account)
         .then((x) => {
-          if (!stale) {
-            // setTotalAmountStaked(x/10**18);
-            // setTotalAmountStaked(x/10**18);
-            setTotalAmountStaked(x[1]/10**18);
+          if (!stale) {            
+            // let s = x[1]/10**18;
+            // let z = ethers.utils.formatEther(s);
+            console.log(x[1].toString());
+            let z = ethers.utils.formatEther(x[1].toString());
+            setTotalAmountStaked(z.toString());
           }
         })
         .catch((e) => {
@@ -192,7 +187,7 @@ export function PoolInfo() {
         setEndTime(undefined);
       };
     }
-  }, [account, library, poolContract, startTimex]); 
+  }, [account, library, startTime, poolContract, startTimex]); 
 
   React.useEffect(() => {
     if (!!account && !!library) {

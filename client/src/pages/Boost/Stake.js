@@ -4,26 +4,25 @@ import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Row, Col, Card, Form, Button} from 'react-bootstrap';
 import { ethers } from "ethers";
-import {changeAllowanceAmount, changeStakeAmount} from '../../../redux/poolinfo/actions'
+import {changeAllowanceAmount, changeStakeAmount} from '../../redux/poolinfo/actions'
 
 // import { useWeb3React } from "@web3-react/core";
-import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import ApproveButton from "../../../components/Buttons/ApproveButton";
-import { useContract } from "../../../chain/eth.js";
+import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
+import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../chain/Contracts.js";
+import ApproveButton from "../../components/Buttons/ApproveButton";
+import { useContract } from "../../chain/eth.js";
 import {parseEther} from "ethers/lib/utils";
 import StakeInfo from "./StakeInfo";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import poolReducer, {INIT_STATE} from "../../../redux/poolinfo/reducers";
+import poolReducer, {INIT_STATE} from "../../redux/poolinfo/reducers";
 
 // components
 // import PageTitle from '../components/PageTitle';
 
-
-
-const StakeForm = (pool) => {
+const StakeForm = ({pool}) => {
+    console.log(`pool`, pool);
     const { account, library } = useWeb3React();
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
     const poolContract = useContract(pool.address, pool.abi, true);
@@ -34,10 +33,18 @@ const StakeForm = (pool) => {
     React.useEffect(() => {
         async function callStaticFunction() {
             if (!!account && !!library) {
-                let x = await vegaContract.callStatic.allowance(account, poolContract.address)
-                dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
+                if (vegaContract){
+                    console.log("contract available " + vegaContract.address);
+                    let x = await vegaContract.callStatic.allowance(account, poolContract.address)
+                    console.log("allowance " + x);
+                    dispatch(changeAllowanceAmount(ethers.utils.formatEther(x.toString())));
+
+                } else {
+                    console.log("contract not available");
+                }
                 const stakedAmount = await poolContract.callStatic.stakes(account)
-                dispatch(changeStakeAmount(stakedAmount[1]))
+                let z = ethers.utils.formatEther(stakedAmount[1].toString());
+                dispatch(changeStakeAmount(z));
             }
         }
 
@@ -46,16 +53,29 @@ const StakeForm = (pool) => {
 
 
     const stake = async () => {
-        console.log("stake " + poolContract);
         setLoading(true);
+        // let stakeAmountDEC = stakeAmount * 10**18;
+        var stakeAmountDEC = ethers.BigNumber.from(stakeAmount).pow(18);
+
+        console.log("stake " + stakeAmountDEC);
+        let minAmount = 1 * 10**18;
         try {
-          await poolContract.stake(stakeAmount);
-          dispatch(changeStakeAmount(stakeAmount))
-          toast("Staking successful",{
-            className: 'success',
-            bodyClassName: "grow-font-size",
-            progressClassName: 'fancy-progress-bar'
-            });
+            //TODO check maximum
+          if(stakeAmountDEC >= 0){
+            await poolContract.stake(stakeAmountDEC);
+            dispatch(changeStakeAmount(stakeAmountDEC))
+            toast("Staking successful",{
+                className: 'success',
+                bodyClassName: "grow-font-size",
+                progressClassName: 'fancy-progress-bar'
+                });
+        } else {
+            toast("Minimum amount is " + minAmount,{
+                className: 'success',
+                bodyClassName: "grow-font-size",
+                progressClassName: 'fancy-progress-bar'
+                });
+        }
 
         } catch (error) {
           toast("Staking error " + error.message,{
@@ -130,7 +150,9 @@ const StakeForm = (pool) => {
         }
     };
 
-    if (reducerState.stakeAmount <= 0 ) {
+    console.log("reducerState.stakeAmount " + reducerState.stakeAmount );
+
+    if (reducerState.stakeAmount < 1 ) {
         return (
             <Card>
 
@@ -159,7 +181,10 @@ const StakeForm = (pool) => {
             </Card.Body>
         </Card>
         )
-    } else {
+    } else if (loading) {
+        return (<> Loading</>)
+    }
+    else {
         return (
             <Card>
             <Card.Body>
@@ -178,13 +203,13 @@ const StakeForm = (pool) => {
 };
 
 
-const Stake = (): React$Element<React$FragmentType> => {
+const Stake = ({pool}): React$Element<React$FragmentType> => {
     return (
         <React.Fragment>            
 
             <Row>
                 <Col lg={8}>
-                    <StakeForm />
+                    <StakeForm pool={pool}/>
                 </Col>
 
                 {/* <Col lg={6}>

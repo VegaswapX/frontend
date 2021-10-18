@@ -23,10 +23,10 @@ import poolReducer, {INIT_STATE} from "../../../redux/poolinfo/reducers";
 
 
 
-const StakeForm = () => {
+const StakeForm = (pool) => {
     const { account, library } = useWeb3React();
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
-    const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
+    const poolContract = useContract(pool.address, pool.abi, true);
     const [stakeAmount, setStakeamount] = React.useState(0);
     const [loading, setLoading] = useState(false);
     const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
@@ -67,7 +67,6 @@ const StakeForm = () => {
         } finally {
           setLoading(false);
           console.log("stake done");
-          
         }
     };
 

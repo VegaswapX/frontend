@@ -37,13 +37,14 @@ function statusPool(startTime, endTime){
   }
 }
 
-export function PoolInfo() {
+export function PoolInfo({pool}) {
   const { account, library } = useWeb3React();
+  console.log(`account`, library);
 
   //CONTRACT_MAP["BoostPool"]
 
   const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
-  const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
+  const poolContract = useContract(POOL_TOKEN_ADDRESS, pool.abi, true);
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
 
   // const [loading, setLoading] = useState(false);

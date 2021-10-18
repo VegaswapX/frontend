@@ -49,7 +49,7 @@ const createBoostPoolPage = ({poolName, stakeToken, yieldToken, poolAddress}) =>
                 <Card.Body>
                   <Card.Title as="h5">Pool Info</Card.Title>
                   <Card.Text>
-                    <PoolInfo />
+                    <PoolInfo pool={pool}/>
 
                   </Card.Text>
                   {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}

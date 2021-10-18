@@ -12,7 +12,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Card } from 'react-bootstrap';
 import {PoolInfo} from './Pool.js';
 
-const createBoostPoolPage = ({poolName}) => {
+import POOL_CONTRACT_ABI from "./../../abis/BoostPool.json";
+
+// move to config file
+const pools = {
+  "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd": {
+    address: "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd",
+    abi: POOL_CONTRACT_ABI,
+  }
+}
+
+const createBoostPoolPage = ({poolName, stakeToken, yieldToken, poolAddress}) => {
+  const pool = pools[poolAddress];
+
   return () => {
     return (
         <>
@@ -27,7 +39,7 @@ const createBoostPoolPage = ({poolName}) => {
           <Balances />
           <Row>
             <Col lg={7}>
-              <Stake />
+              <Stake pool={pool} />
             </Col>
 
             <Col lg={5}>

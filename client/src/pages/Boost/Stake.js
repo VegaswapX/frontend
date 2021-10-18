@@ -21,11 +21,11 @@ import poolReducer, {INIT_STATE} from "../../redux/poolinfo/reducers";
 // components
 // import PageTitle from '../components/PageTitle';
 
-
-const StakeForm = () => {
+const StakeForm = ({pool}) => {
+    console.log(`pool`, pool);
     const { account, library } = useWeb3React();
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
-    const poolContract = useContract(POOL_TOKEN_ADDRESS, POOL_CONTRACT_ABI, true);
+    const poolContract = useContract(pool.address, pool.abi, true);
     const [stakeAmount, setStakeamount] = React.useState(0);
     const [loading, setLoading] = useState(false);
     const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
@@ -87,7 +87,6 @@ const StakeForm = () => {
         } finally {
           setLoading(false);
           console.log("stake done");
-          
         }
     };
 
@@ -204,13 +203,13 @@ const StakeForm = () => {
 };
 
 
-const Stake = (): React$Element<React$FragmentType> => {
+const Stake = ({pool}): React$Element<React$FragmentType> => {
     return (
         <React.Fragment>            
 
             <Row>
                 <Col lg={8}>
-                    <StakeForm />
+                    <StakeForm pool={pool}/>
                 </Col>
 
                 {/* <Col lg={6}>

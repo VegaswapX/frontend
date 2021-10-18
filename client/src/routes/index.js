@@ -31,13 +31,19 @@ const dashboardRoutes = {
         {
             path: '/boost',
             name: 'Boost',
-            component: createBoostPoolPage({poolName: "USDT"}),
+            component: createBoostPoolPage({
+                poolName: "USDT",
+                poolAddress: "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd"
+            }),
             route: Route,
         },
         {
             path: '/boostvga',
             name: 'Boost',
-            component: createBoostPoolPage({poolName: "VGA"}),
+            component: createBoostPoolPage({
+                poolName: "VGA",
+                poolAddress: "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd"
+            }),
             route: Route,
         },
         {

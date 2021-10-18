@@ -10,6 +10,7 @@ import ROUTER_ABI from "../../abis/Router.json";
 // import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
 import { useContract } from "../../chain/eth.js";
 import { ethers } from "ethers";
+import {swapETH} from './trade.js';
 
 import { client, clientPCS } from '../../apollo/client'
 import {
@@ -28,17 +29,18 @@ function SwapButton(props){
 }
 
 
-const config = {
-  wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-  usdt: '0x55d398326f99059ff775485246999027b3197955',
-  pancakeSwapRouter: '0x10ed43c718714eb63d5aa57b78b54704e256024e',
-  vga: '0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d',
-  slippage: 12,
-}
+// const config = {
+//   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+//   usdt: '0x55d398326f99059ff775485246999027b3197955',
+//   pancakeSwapRouter: '0x10ed43c718714eb63d5aa57b78b54704e256024e',
+//   vga: '0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d',
+//   slippage: 12,
+// }
 
 let WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
-
+const FACTORY_ADDRESS = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73";
+const PCS_ROUTER_ADDRESS = '0x10ed43c718714eb63d5aa57b78b54704e256024e';
 
 async function getAllTokensOnUniswap() {
 	try {
@@ -103,8 +105,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
     const [pairslength, setPairslength] = React.useState(0);    
 
     // const ROUTER = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
-    const FACTORY_ADDRESS = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73";
-    const PCS_ROUTER_ADDRESS = '0x10ed43c718714eb63d5aa57b78b54704e256024e';
+    
     
     const factoryContract = useContract(FACTORY_ADDRESS, FACTORY_ABI, true);
     const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
@@ -124,6 +125,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
         // let am = parseFloat(amount);
         // am = am * 10**18;
         console.log(">>> " + am);    
+        console.log(">>> " + am / 10**18);    
         // let pm = parseInt(amountOut);        
         setAmount(am.toString());
         // setAmount(amount);
@@ -132,20 +134,27 @@ const PageSwap = (): React$Element<React$FragmentType> => {
         setAmountout(z.toString());
     }
 
-    async function swapETH(amountOutMin, to, deadline){
+    //function swapTokensForExactTokens(amountOut,amountInMax,path,to,deadline)
+    // async function swapTokens(amountOutMin, to, deadline){
 
-      const tx = await routerContract.swapExactETHForTokens(
-        amountOutMin,
-        [WBNB, VGA],
-        to,
-        deadline,
-        {value: amount, gasPrice: 10e9}
-      );
-      console.log('Transaction Submitted, heres the hashcode '+ tx.hash)
-      let receipt = await tx.wait();
-      console.log(receipt);
-      return receipt;
-    }
+    // }
+    
+    
+
+    // async function swapTokens(amountOutMin, to, deadline){
+
+    //   const tx = await routerContract.swap(
+    //     amountOutMin,
+    //     [WBNB, VGA],
+    //     to,
+    //     deadline,
+    //     {value: amount, gasPrice: 10e9}
+    //   );
+    //   console.log('Transaction Submitted, heres the hashcode '+ tx.hash)
+    //   let receipt = await tx.wait();
+    //   console.log(receipt);
+    //   return receipt;
+    // }
 
     async function swapIn(){
       console.log(amount);
@@ -157,8 +166,8 @@ const PageSwap = (): React$Element<React$FragmentType> => {
       const to = account;
       const deadline = Math.floor(Date.now() / 1000) + 60 * 10; //10min
       console.log(amountOutMin,[WBNB, VGA],to,deadline);
-      // let receipt = await swapETH(amountOutMin, to, deadline);
-      // console.log("tx " + receipt);
+      let receipt = await swapETH(routerContract, amount, amountOutMin, to, deadline);
+      console.log("tx " + receipt);
     }
 
     useEffect(() => {

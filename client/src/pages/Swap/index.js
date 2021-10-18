@@ -98,6 +98,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
     const { account, library } = useWeb3React();
     
     const [amount, setAmount] = React.useState(0);
+    const [amountDec, setAmountDec] = React.useState(0);
     const [amountOut, setAmountout] = React.useState(0);
     const [pairslength, setPairslength] = React.useState(0);    
 
@@ -116,47 +117,48 @@ const PageSwap = (): React$Element<React$FragmentType> => {
       }
     }
 
-    async function setAmountPrice(amount){
+    async function setAmountOut(amount){
+
         let am = parseInt(amount);
-        let pm = parseInt(amountOut);        
+        // let am = ethers.utils.formatWei(amount.toString());
+        // let am = parseFloat(amount);
+        // am = am * 10**18;
+        console.log(">>> " + am);    
+        // let pm = parseInt(amountOut);        
         setAmount(am.toString());
-        let v= am * pm;        
-        setAmount(amount);
-        let z = await getPrice(amount);        
+        // setAmount(amount);
+        // setAmountDec(am);
+        let z = await getPrice(am);        
         setAmountout(z.toString());
+    }
+
+    async function swapETH(amountOutMin, to, deadline){
+
+      const tx = await routerContract.swapExactETHForTokens(
+        amountOutMin,
+        [WBNB, VGA],
+        to,
+        deadline,
+        {value: amount, gasPrice: 10e9}
+      );
+      console.log('Transaction Submitted, heres the hashcode '+ tx.hash)
+      let receipt = await tx.wait();
+      console.log(receipt);
+      return receipt;
     }
 
     async function swapIn(){
       console.log(amount);
       console.log(amountOut);
 
-      // const amountIn = 1000;      
-      // console.log(amounts[1])
-      // slippage = 2;
-      // let z = amounts[1].div(slippage);
-      // console.log("? " + z + " " + amounts[1]);
-      // let slip = 7787;
-      // amountOutMin = amounts[1] - slip;
-      // let z = amounts[1].div(slippage);
-      let slip = 1000;
-      let amountOutMin = amountOut - slip; //slipapge set here 
+      let slip = Math.floor(amountOut * 990 / 1000);
+      let amountOutMin = amountOut - slip;
       console.log('Calculated Amounts out: ' + amountOutMin);
       const to = account;
       const deadline = Math.floor(Date.now() / 1000) + 60 * 10; //10min
-      console.log(amountOutMin,
-        [WBNB, VGA],
-        to,
-        deadline);
-      const tx = await routerContract.swapExactETHForTokens(
-          amountOutMin,
-          [WBNB, VGA],
-          to,
-          deadline,
-          {value: amount, gasPrice: 10e9}
-      );
-      console.log('Transaction Submitted, heres the hashcode '+ tx.hash)
-      let receipt = await tx.wait();
-      console.log(receipt);
+      console.log(amountOutMin,[WBNB, VGA],to,deadline);
+      // let receipt = await swapETH(amountOutMin, to, deadline);
+      // console.log("tx " + receipt);
     }
 
     useEffect(() => {
@@ -245,7 +247,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     <input
                         type="text"
                         value={amount}
-                        onChange={e => setAmountPrice(e.target.value)}
+                        onChange={e => setAmountOut(e.target.value)}
                         className="" 
                         style={{fontSize: "20px", borderRadius: "10px", backgroundColor: "rgb(19,20,25)", color: "white", marginTop: "20px",  marginLeft: "30px", border: "0px", width: "100px"}}
                     />

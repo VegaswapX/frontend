@@ -2,6 +2,8 @@
 let WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
 
+//TODO: update this function
+// Dealing with float number
 export async function swapETH(routerContract, amount, amountOutMin, to, deadline){
 
       const tx = await routerContract.swapExactETHForTokens(

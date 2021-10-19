@@ -26,11 +26,14 @@ const Routes = (props) => {
                 break;
             case layoutConstants.LAYOUT_DETACHED:
                 layoutCls = DetachedLayout;
-                break;            
+                break;
+            default:
+                layoutCls = VerticalLayout
+
         }
         // layoutCls = HorizontalLayout;
 
-        console.log("layout used " + layout.layoutType);
+        // console.log("layout used " + layout.layoutType);
         return layoutCls;
     };
 

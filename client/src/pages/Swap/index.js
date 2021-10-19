@@ -1,6 +1,6 @@
 // @flow
-import React, {useEffect} from 'react';
-import { Row, Col, Button, Form} from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import { Row, Col, Button, Modal, Form } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
@@ -11,14 +11,19 @@ import ROUTER_ABI from "../../abis/Router.json";
 import { useContract } from "../../chain/eth.js";
 import { ethers } from "ethers";
 import {swapETH} from './trade.js';
+// import { useTable } from "react-table";
+import Tokentable from "./tokentable.js";
 
-import { client, clientPCS } from '../../apollo/client'
+
+import { clientPCS } from '../../apollo/client'
 import {
 	// GLOBAL_DATA,
 	// ETH_PRICE,
-	ALL_TOKENS, FACTORY_PAIRS
+	// ALL_TOKENS, FACTORY_PAIRS
+	FACTORY_PAIRS
 } from '../../apollo/queries'
 
+// import Tokens from './Tokens';
 
 function SwapButton(props){
     return (
@@ -42,31 +47,31 @@ let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
 const FACTORY_ADDRESS = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73";
 const PCS_ROUTER_ADDRESS = '0x10ed43c718714eb63d5aa57b78b54704e256024e';
 
-async function getAllTokensOnUniswap() {
-	try {
-		let allFound = false
-		let skipCount = 0
-		let tokens = []
-		while (!allFound) {
-			let result = await client.query({
-				query: ALL_TOKENS,
-				variables: {
-					skip: skipCount,
-				},
-				fetchPolicy: 'cache-first',
-			})
-			tokens = tokens.concat(result?.data?.tokens)
-      allFound = true;
-			// if (result?.data?.tokens?.length < TOKENS_TO_FETCH || tokens.length > TOKENS_TO_FETCH) {
-			// 	allFound = true
-			// }
-			// skipCount = skipCount += TOKENS_TO_FETCH
-		}
-		return tokens
-	} catch (e) {
-		console.log(e)
-	}
-}
+// async function getAllTokensOnUniswap() {
+// 	try {
+// 		let allFound = false
+// 		let skipCount = 0
+// 		let tokens = []
+// 		while (!allFound) {
+// 			let result = await client.query({
+// 				query: ALL_TOKENS,
+// 				variables: {
+// 					skip: skipCount,
+// 				},
+// 				fetchPolicy: 'cache-first',
+// 			})
+// 			tokens = tokens.concat(result?.data?.tokens)
+//       allFound = true;
+// 			// if (result?.data?.tokens?.length < TOKENS_TO_FETCH || tokens.length > TOKENS_TO_FETCH) {
+// 			// 	allFound = true
+// 			// }
+// 			// skipCount = skipCount += TOKENS_TO_FETCH
+// 		}
+// 		return tokens
+// 	} catch (e) {
+// 		console.log(e)
+// 	}
+// }
 
 async function someData() {
 	try {
@@ -84,7 +89,6 @@ async function someData() {
       console.log("totalPairs " + result.data.factory.totalPairs);
       console.log("totalTokens " + result.data.factory.totalTokens);
       return result;
-      allFound = true;
 		}
 		return tokens
 	} catch (e) {
@@ -93,45 +97,102 @@ async function someData() {
 }
 
 
+const CurrencySelect = (props) => {
+    const [modal, setModal] = useState(false);
+    const [size] = useState(null);
+    const [className] = useState(null);
+    const [scroll] = useState(null);
+
+    // const currency = "test";
+    /**
+     * Show/hide the modal
+     */
+    const toggle = () => {
+        setModal(!modal);
+    };
+
+    return (
+        <span>          
+              {/* <div className="button-list"> */}
+                  <Button style={{backgroundColor:"black"}} onClick={toggle}>
+                      {props.currency}
+                  </Button>
+
+                  
+                  
+              {/* </div> */}
+
+              <Modal show={modal} onHide={toggle} dialogClassName={className} size={size} scrollable={scroll}>
+                  <Modal.Header onHide={toggle} closeButton>
+                      <h4 className="modal-title">Select a token</h4>
+                  </Modal.Header>
+                  <Modal.Body>
+
+                      <Tokentable />                                            
+                      
+                  </Modal.Body>
+                  <Modal.Footer>
+                      <Button variant="light" onClick={toggle}>
+                          Close
+                      </Button>{' '}                      
+                  </Modal.Footer>
+              </Modal>
+          
+        </span>
+    );
+};
 
 
-const PageSwap = (): React$Element<React$FragmentType> => {
+const PageSwap = () => {
 
     const { account, library } = useWeb3React();
     
-    const [amount, setAmount] = React.useState(0);
-    const [amountDec, setAmountDec] = React.useState(0);
-    const [amountOut, setAmountout] = React.useState(0);
-    const [pairslength, setPairslength] = React.useState(0);    
+    const [amount] = React.useState(0);
+    const [amountOut] = React.useState(0);
+    const [setPairslength] = React.useState(0);    
 
     // const ROUTER = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
-    
-    
+        
     const factoryContract = useContract(FACTORY_ADDRESS, FACTORY_ABI, true);
     const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
     async function getPrice(amount){      
-      if (amount > 0){
+      if (amount > 0 && routerContract){
         let x = await routerContract.callStatic
               .getAmountsOut(amount, [WBNB, VGA]);                      
         return x[1];   
+      } else {
+        return 0;
       }
     }
 
-    async function setAmountOut(amount){
+    async function setAmountOut(amountStr){
 
-        let am = parseInt(amount);
-        // let am = ethers.utils.formatEth(amount.toString());
-        // let am = parseFloat(amount);
-        // am = am * 10**18;
-        console.log(">>> " + am);    
-        console.log(">>> " + am / 10**18);    
-        // let pm = parseInt(amountOut);        
-        setAmount(am.toString());
-        // setAmount(amount);
-        // setAmountDec(am);
-        let z = await getPrice(am);        
-        setAmountout(z.toString());
+        // let am = parseInt(amount);
+        // let x = ethers.utils.parseUnits('0.01', 'ether');
+        try {
+          let x = ethers.utils.parseUnits(amountStr, 'ether');
+          console.log("?? " + x);
+
+          console.log(">>> " + amountStr);    
+          let am = parseFloat(amountStr);
+          // const b = ethers.utils.parseUnits(am, 18)
+
+          // let am = ethers.utils.formatEth(amount.toString());
+          // let am = parseFloat(amount);
+          // am = am * 10**18;
+          // console.log(">>> " + b);    
+          console.log(">>> " + am);    
+          // console.log(">>> " + am / 10**18);    
+          // let pm = parseInt(amountOut);        
+          // setAmount(am.toString());
+          // setAmount(amount);
+          // setAmountDec(am);
+          // let z = await getPrice(am);        
+          // setAmountout(z.toString());
+        } catch {
+            console.log("error")
+        }
     }
 
 
@@ -177,7 +238,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
             setPairslength(undefined);
           };
         }
-      }, [account, library, factoryContract]);
+      }, [account, library, factoryContract, setPairslength]);
 
       useEffect(() => {
 
@@ -189,7 +250,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
           })()
           
         }
-      }, [account, library, routerContract]);      
+      }, [account, library, routerContract, amount]);      
 
       useEffect(() => {
         async function fetchData() {
@@ -218,9 +279,9 @@ const PageSwap = (): React$Element<React$FragmentType> => {
     //     console.log("swap in " + amount);    
     // }
 
-    function swapOut() {
-        console.log("swap out " + amount);    
-    }
+    // function swapOut() {
+    //     console.log("swap out " + amount);    
+    // }
 
     // price = router.functions.getAmountsIn(qty, route).call()[0]
 
@@ -233,20 +294,23 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     
                   <Form.Group className="mb-3">
 
-                    <h1>Swap</h1>
+                    <h1>Swap</h1>                    
                     
                     <div style={{backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "200px"}}>
                     
-
                     <input
                         type="text"
                         value={amount}
                         onChange={e => setAmountOut(e.target.value)}
                         className="" 
+                        step="0.01"
                         style={{fontSize: "22px", borderRadius: "10px", backgroundColor: "rgb(19,20,25)", color: "white", marginTop: "20px",  marginLeft: "30px", border: "0px", width: "100px"}}
                     />
 
-                    <span style={{marginLeft: "10px", fontSize: "22px"}}>BNB</span>
+                    {/* <span style={{marginLeft: "10px", fontSize: "22px"}}> */}
+                    <span style={{fontSize: "22px"}}>
+                    <CurrencySelect currency={"BNB"}/>
+                    </span>
 
                     <br/>
 
@@ -256,7 +320,9 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     {amountOut !== null ? amountOut : "NA"}
                     </span>
 
-                    <span style={{marginLeft: "90px", textAlign: "right", fontSize: "22px"}}>VGA</span>
+                    <span style={{marginLeft: "80px", textAlign: "right", fontSize: "22px"}}>
+                    <CurrencySelect currency={"VGA"}/>
+                    </span>
                     </div>
 
                     </div>
@@ -265,6 +331,8 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     </Form.Group>
 
                     <SwapButton swapIn={swapIn}></SwapButton>
+
+                    
 
                   </div>
                                         

@@ -1,5 +1,5 @@
 /* @flow */
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
@@ -9,9 +9,6 @@ import { injected } from "../chain/eth.js";
 import { showRightSidebar } from '../redux/actions';
 
 // components
-import logoSmDark from '../assets/images/logo_sm_dark.png';
-import logoSmLight from '../assets/images/logo_sm.png';
-import logo from '../assets/images/logo-light.png';
 import vlogo from '../assets/images/logo_black.jpeg'
 
 //constants
@@ -24,12 +21,26 @@ import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 
 // get the notifications
 
-
-
 const AccountConnect = ({ connect }) => {
 
-    const { account, activate, deactivate } = useWeb3React();
+    const { account, deactivate } = useWeb3React();
 
+    // async function connect() {
+    //     await activate(injected, async (error) => {
+    //         if (error instanceof UnsupportedChainIdError) {
+    //             console.log("error UnsupportedChainIdError");
+    //             alert("error UnsupportedChainIdError");
+    //             setNetworkOk(false);
+    //             // const hasSetup = await setupNetwork()
+    //             // if (hasSetup) {
+    //             //     activate(injected)
+    //             // }
+    //         } else {
+    //             setNetworkOk(true);
+    //         }
+    //     });
+    // }
+  
     async function disconnect() {
         console.log("disconnect")
       try {
@@ -111,8 +122,6 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
     const dispatch = useDispatch();
 
     // const [isopen, setIsopen] = useState(false);
-
-    const { account, activate, deactivate } = useWeb3React();
 
     const navbarCssClasses = navCssClasses || '';
     const containerCssClasses = !hideLogo ? 'container-fluid' : '';

@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { FACTORY_ADDRESS, BUNDLE_ID } from '../constants'
+// import { FACTORY_ADDRESS, BUNDLE_ID } from '../constants'
 
 export const ALL_TOKENS = gql`
   query tokens($skip: Int!) {

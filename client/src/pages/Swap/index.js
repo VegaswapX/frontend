@@ -1,5 +1,4 @@
-// @flow
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, createContext, useContext, useMemo} from 'react';
 import { Row, Col, Button, Modal, Form } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import { useWeb3React } from "@web3-react/core";
@@ -33,6 +32,15 @@ function SwapButton(props){
     )        
 }
 
+// const CurrencyContext = createContext('Default Value');
+
+const Context = createContext('Default Value');
+
+
+const UserContext = createContext({
+  userName: '',
+  setUserName: () => {},
+});
 
 // const config = {
 //   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -103,6 +111,11 @@ const CurrencySelect = (props) => {
     const [className] = useState(null);
     const [scroll] = useState(null);
 
+    // const currencySelectValue = CurrencyContext(Context);
+    // console.log(currencySelectValue);
+
+    let value = useContext(Context);
+
     // const currency = "test";
     /**
      * Show/hide the modal
@@ -111,22 +124,38 @@ const CurrencySelect = (props) => {
         setModal(!modal);
     };
 
+    const changeVal = () => {
+      value = "XXXX";
+    }
+
+    const { userName, setUserName } = useContext(UserContext);
+    const changeHandler = event => setUserName(event.target.value);
+
     return (
         <span>          
               {/* <div className="button-list"> */}
                   <Button style={{backgroundColor:"black"}} onClick={toggle}>
                       {props.currency}
                   </Button>
-
                   
                   
-              {/* </div> */}
-
               <Modal show={modal} onHide={toggle} dialogClassName={className} size={size} scrollable={scroll}>
                   <Modal.Header onHide={toggle} closeButton>
                       <h4 className="modal-title">Select a token</h4>
                   </Modal.Header>
                   <Modal.Body>
+
+                  {/* <span> {{currencySelectValue}}</span> */}
+                  <span>{value}</span>
+                  <input
+                    type="text"
+                    value={userName}
+                    onChange={changeHandler}
+                  />
+
+                  <Button variant="light" onClick={changeVal}>
+                          Change
+                      </Button>{' '} 
 
                       <Tokentable />                                            
                       
@@ -283,7 +312,17 @@ const PageSwap = () => {
     //     console.log("swap out " + amount);    
     // }
 
-    // price = router.functions.getAmountsIn(qty, route).call()[0]
+
+    const currencySelect = 'BNB';
+
+    // const value = 'BNB';
+
+    const [userName, setUserName] = useState('John Smith');
+
+    const value = useMemo(
+      () => ({ userName, setUserName }), 
+      [userName]
+    );
 
     return (
         <>
@@ -309,7 +348,12 @@ const PageSwap = () => {
 
                     {/* <span style={{marginLeft: "10px", fontSize: "22px"}}> */}
                     <span style={{fontSize: "22px"}}>
-                    <CurrencySelect currency={"BNB"}/>
+                      {/* <Context.Provider currencySelect={value} value={value}> */}
+                        <UserContext.Provider value={value}>
+                        <CurrencySelect currency={currencySelect}/>
+                        </UserContext.Provider>
+                       {/* </Context.Provider> */}
+                       {userName !== null ? userName : ""}
                     </span>
 
                     <br/>
@@ -321,7 +365,9 @@ const PageSwap = () => {
                     </span>
 
                     <span style={{marginLeft: "80px", textAlign: "right", fontSize: "22px"}}>
-                    <CurrencySelect currency={"VGA"}/>
+                    {/* <Context.Provider currencySelect={currencySelect}>
+                      <CurrencySelect currency={"VGA"}/>
+                      </Context.Provider> */}
                     </span>
                     </div>
 

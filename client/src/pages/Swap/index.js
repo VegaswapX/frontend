@@ -1,16 +1,18 @@
 // @flow
 import { useWeb3React } from "@web3-react/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
+import _ from "underscore";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 // import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
 import FACTORY_ABI from "../../abis/Factory.json";
 import ROUTER_ABI from "../../abis/Router.json";
 // import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useContract } from "../../chain/eth.js";
-import { swapETH } from "./trade.js";
+import { default as contracts } from "../../constants/contracts";
+import { getAmountsOut, swapExactETHForTokens } from "./trade.js";
 
 import { client, clientPCS } from "../../apollo/client";
 import {
@@ -19,14 +21,6 @@ import {
   ALL_TOKENS,
   FACTORY_PAIRS,
 } from "../../apollo/queries";
-
-function SwapButton(props) {
-  return (
-    <Button variant="primary" onClick={props.swapIn} style={{ width: "180px", fontSize: "20pt" }}>
-      Swap
-    </Button>
-  );
-}
 
 // const config = {
 //   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -90,42 +84,88 @@ async function someData() {
   }
 }
 
+function toUnit256(amount, token) {
+  return BigNumber.from(Math.round(amount * 1000000)).mul(BigNumber.from(10).pow(token.decimals - 6));
+}
+
+function toFloatNumber(amount, token) {
+  // check token decimals
+  const y = amount.div(BigNumber.from(10).pow(12));
+  const floatNumber = y.toNumber() / Math.pow(10, 6);
+  return floatNumber;
+}
+
+const defaultTokenPath = ["WBNB", "VGA"];
+const defaultSlippage = 0.5 / 100;
+
 const PageSwap = (): React$Element<React$FragmentType> => {
   const { account, library } = useWeb3React();
 
+  const chainId = 56;
+
+  // TODO: Set token0, token1 properly
+
+  // TODO: Clean all this
   const [amount, setAmount] = React.useState(0);
   const [amountDec, setAmountDec] = React.useState(0);
   const [amountOut, setAmountout] = React.useState(0);
   const [pairslength, setPairslength] = React.useState(0);
 
-  // const ROUTER = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
+  const token0 = contracts[chainId][defaultTokenPath[0]];
+  const token1 = contracts[chainId][defaultTokenPath[1]];
 
+  const [token0Input, setToken0Input] = useState(0);
+  const [token1Input, setToken1Input] = useState(0);
+
+  // const ROUTER = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
   const factoryContract = useContract(FACTORY_ADDRESS, FACTORY_ABI, true);
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
-  async function getPrice(amount) {
+  async function getRate(amount, path) {
     if (amount > 0) {
       let x = await routerContract.callStatic
-        .getAmountsOut(amount, [WBNB, VGA]);
+        .getAmountsOut(amount, path);
       return x[1];
     }
   }
 
-  async function setAmountOut(amount) {
-    let am = parseInt(amount);
-    // let am = ethers.utils.formatEth(amount.toString());
-    // let am = parseFloat(amount);
-    // am = am * 10**18;
-    console.log(">>> " + am);
-    console.log(">>> " + am / 10 ** 18);
-    // let pm = parseInt(amountOut);
-    setAmount(am.toString());
-    // setAmount(amount);
-    // setAmountDec(am);
-    let z = await getPrice(am);
-    setAmountout(z.toString());
+  const debounceHandleChange = _.debounce(async (amountText) => {
+    console.log(`amountText`, amountText);
+    // setToken0Input(amountText);
+    console.log(`Running debounce`);
+    let amount;
+    try {
+      amount = parseFloat(amountText); // why parseInt
+    } catch (e) {
+      console.log("Cannot parse float", amountText);
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      return;
+    }
+
+    console.log(`amount`, amount);
+
+    let etherAmount = toUnit256(amount, token0);
+    console.log(`etherAmount`, etherAmount.toString());
+    const outAmount = await getAmountsOut(routerContract, etherAmount, [token0, token1]);
+    const outAmountFloat = toFloatNumber(outAmount, token1);
+    console.log(`outAmount`, outAmountFloat);
+    setToken1Input(outAmountFloat.toFixed(2));
+    // convert back to float
+  }, 500);
+
+  function handleChange(e) {
+    const amountText = e.target.value;
+    console.log(`amountText`, amountText);
+    setToken0Input(amountText);
+    debounceHandleChange(amountText);
   }
 
+  async function swap() {
+  }
+
+  // TODO: Clean this up
   async function swapIn() {
     console.log(amount);
     console.log(amountOut);
@@ -138,7 +178,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
     const to = account;
     const deadline = Math.floor(Date.now() / 1000) + 60 * 10; // 10min
     console.log(amountOutMin, [WBNB, VGA], to, deadline);
-    let receipt = await swapETH(routerContract, amount, amountOutMin, to, deadline);
+    let receipt = await swapExactETHForTokens(routerContract, amount, amountOutMin, to, deadline);
     console.log("tx " + receipt);
   }
 
@@ -173,7 +213,7 @@ const PageSwap = (): React$Element<React$FragmentType> => {
   useEffect(() => {
     if (!!account && !!library) {
       (async () => {
-        let pricef = await getPrice(amount, routerContract);
+        let pricef = await getRate(amount, routerContract);
         console.log("price: " + pricef);
         // setPrice(pricef);
       })();
@@ -224,8 +264,8 @@ const PageSwap = (): React$Element<React$FragmentType> => {
               <div style={{ backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "200px" }}>
                 <input
                   type="text"
-                  value={amount}
-                  onChange={e => setAmountOut(e.target.value)}
+                  value={token0Input}
+                  onChange={handleChange}
                   className=""
                   style={{
                     fontSize: "22px",
@@ -238,14 +278,13 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     width: "100px",
                   }}
                 />
-
                 <span style={{ marginLeft: "10px", fontSize: "22px" }}>BNB</span>
 
                 <br />
 
                 <div style={{ marginLeft: "30px", marginTop: "10px" }}>
                   <span style={{ marginLeft: "3px", width: "100px", fontSize: "22px", color: "white" }}>
-                    {amountOut !== null ? amountOut : "NA"}
+                    {token1Input}
                   </span>
 
                   <span style={{ marginLeft: "90px", textAlign: "right", fontSize: "22px" }}>VGA</span>
@@ -253,7 +292,9 @@ const PageSwap = (): React$Element<React$FragmentType> => {
               </div>
             </Form.Group>
 
-            <SwapButton swapIn={swapIn}></SwapButton>
+            <Button variant="primary" onClick={() => swapIn()} style={{ width: "180px", fontSize: "20pt" }}>
+              Swap
+            </Button>
           </div>
         </Col>
       </Row>

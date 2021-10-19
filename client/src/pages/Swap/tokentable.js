@@ -1,11 +1,16 @@
 import { useTable } from "react-table";
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useContext } from "react";
 // import axios from 'axios';
 // import xdata from "./data";
 import tokens from "./Tokens";
+import {UserContext, ModalContext} from './index'
 
 
 function Table({ columns, data }) {
+
+  const { userName, setUserName } = useContext(UserContext);
+  // const { xmodal, xsetModal } = useContext(ModalContext);
+
   // Use the useTable Hook to send the columns and data to build the table
   const {
     getTableProps, // table props from react-table
@@ -21,6 +26,8 @@ function Table({ columns, data }) {
   function rowClick(row){
     // console.log(row.original.contract)
     console.log(row.original.name)
+    setUserName(row.original.name)
+    // xsetModal(false)
   }
 
   /* 
@@ -78,14 +85,12 @@ function Table({ columns, data }) {
 
 function Tokentable() {
 
-  /* 
-    - Columns is a simple array right now, but it will contain some logic later on. It is recommended by react-table to memoize the columns data    
-  */
+  
+  
   const columns = useMemo(
     () => [
       {
         Header: "Token",
-        // First group columns
         columns: [
           {
             Header: "Name",
@@ -104,20 +109,6 @@ function Tokentable() {
     ],
     []
   );
-
-//   const [data, setData] = useState([]);
-
-  // Using useEffect to call the API once mounted and set the data
-  useEffect(() => {
-    (async () => {
-    //   const result = await axios("https://api.tvmaze.com/search/shows?q=snow");
-    //   setData(xdata);
-    })();
-  }, []);
-
-  // console.log(tokens);
-
-
   
 
   return (

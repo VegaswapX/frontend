@@ -1,3 +1,6 @@
+//TODO
+//set logo
+
 import React, {useEffect, useState, createContext, useContext, useMemo} from 'react';
 import { Row, Col, Button, Modal, Form } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,21 +9,14 @@ import { useWeb3React } from "@web3-react/core";
 // import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
 import FACTORY_ABI from "../../abis/Factory.json";
 import ROUTER_ABI from "../../abis/Router.json";
-// import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
 import { useContract } from "../../chain/eth.js";
 import { ethers } from "ethers";
 import {swapETH} from './trade.js';
 // import { useTable } from "react-table";
 import Tokentable from "./tokentable.js";
+import {someData} from './graphinfo'
 
-
-import { clientPCS } from '../../apollo/client'
-import {
-	// GLOBAL_DATA,
-	// ETH_PRICE,
-	// ALL_TOKENS, FACTORY_PAIRS
-	FACTORY_PAIRS
-} from '../../apollo/queries'
+import {WBNB, VGA, FACTORY_ADDRESS, PCS_ROUTER_ADDRESS} from './addr'
 
 // import Tokens from './Tokens';
 
@@ -34,75 +30,16 @@ function SwapButton(props){
 
 // const CurrencyContext = createContext('Default Value');
 
-const Context = createContext('Default Value');
 
-
-const UserContext = createContext({
+export const UserContext = createContext({
   userName: '',
   setUserName: () => {},
 });
 
-// const config = {
-//   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-//   usdt: '0x55d398326f99059ff775485246999027b3197955',
-//   pancakeSwapRouter: '0x10ed43c718714eb63d5aa57b78b54704e256024e',
-//   vga: '0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d',
-//   slippage: 12,
-// }
-
-let WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
-const FACTORY_ADDRESS = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73";
-const PCS_ROUTER_ADDRESS = '0x10ed43c718714eb63d5aa57b78b54704e256024e';
-
-// async function getAllTokensOnUniswap() {
-// 	try {
-// 		let allFound = false
-// 		let skipCount = 0
-// 		let tokens = []
-// 		while (!allFound) {
-// 			let result = await client.query({
-// 				query: ALL_TOKENS,
-// 				variables: {
-// 					skip: skipCount,
-// 				},
-// 				fetchPolicy: 'cache-first',
-// 			})
-// 			tokens = tokens.concat(result?.data?.tokens)
-//       allFound = true;
-// 			// if (result?.data?.tokens?.length < TOKENS_TO_FETCH || tokens.length > TOKENS_TO_FETCH) {
-// 			// 	allFound = true
-// 			// }
-// 			// skipCount = skipCount += TOKENS_TO_FETCH
-// 		}
-// 		return tokens
-// 	} catch (e) {
-// 		console.log(e)
-// 	}
-// }
-
-async function someData() {
-	try {
-		let allFound = false
-		
-		let tokens = []
-		while (!allFound) {
-			let result = await clientPCS.query({
-				query: FACTORY_PAIRS,
-				variables: {					
-				},
-				fetchPolicy: 'cache-first',
-			})
-			
-      console.log("totalPairs " + result.data.factory.totalPairs);
-      console.log("totalTokens " + result.data.factory.totalTokens);
-      return result;
-		}
-		return tokens
-	} catch (e) {
-		console.log(e)
-	}
-}
+export const ModalContext = createContext({
+  xmodal: "1",
+  xsetModal: () => {},
+});
 
 
 const CurrencySelect = (props) => {
@@ -111,25 +48,33 @@ const CurrencySelect = (props) => {
     const [className] = useState(null);
     const [scroll] = useState(null);
 
-    // const currencySelectValue = CurrencyContext(Context);
-    // console.log(currencySelectValue);
+    // const { xmodal, xsetModal } = useContext(ModalContext);
+    const { userName, setUserName } = useContext(UserContext);
 
-    let value = useContext(Context);
+    // const currencySelectValue = CurrencyContext(Context);
+    // console.log(currencySelectValue);    
 
     // const currency = "test";
     /**
      * Show/hide the modal
      */
     const toggle = () => {
+        // console.log(">>??? " + modal);
+        // if (modal == "false"){
+        //   console.log("?? " + modal);
+        //   setModal("true");
+        // } else {          
+        //   setModal("true");
+        //   console.log("?? " + modal);
+        // }
         setModal(!modal);
+        // xsetModal(!xmodal);
+        // xsetModal("2");
+        // console.log(modal);
+        // console.log(xmodal);
+        // setUserName("ZZZZ")
     };
 
-    const changeVal = () => {
-      value = "XXXX";
-    }
-
-    const { userName, setUserName } = useContext(UserContext);
-    const changeHandler = event => setUserName(event.target.value);
 
     return (
         <span>          
@@ -145,17 +90,8 @@ const CurrencySelect = (props) => {
                   </Modal.Header>
                   <Modal.Body>
 
-                  {/* <span> {{currencySelectValue}}</span> */}
-                  <span>{value}</span>
-                  <input
-                    type="text"
-                    value={userName}
-                    onChange={changeHandler}
-                  />
-
-                  <Button variant="light" onClick={changeVal}>
-                          Change
-                      </Button>{' '} 
+                  {/* <span> {{currencySelectValue}}</span> */}                  
+                                  
 
                       <Tokentable />                                            
                       
@@ -290,11 +226,7 @@ const PageSwap = () => {
           console.log(">> " + d);
       
           // let allTokens = await getAllTokensOnUniswap()
-          // let t = allTokens[0];
-          // console.log("allTokens " + t.id);
-          // for (let key in t) {
-          //   console.log(key, t[key]);
-          // }
+         
           // updateAllTokensInUniswap(allTokens)
         }
         // if (!data && ethPrice && oldEthPrice) {
@@ -313,20 +245,27 @@ const PageSwap = () => {
     // }
 
 
-    const currencySelect = 'BNB';
+    // const currencySelect = 'BNB';
 
     // const value = 'BNB';
 
-    const [userName, setUserName] = useState('John Smith');
+    const [userName, setUserName] = useState('BNB');
+
+    const { xmodal, xsetModal } = useContext(ModalContext);
 
     const value = useMemo(
       () => ({ userName, setUserName }), 
       [userName]
     );
 
+    // const mvalue = useMemo(
+    //   () => ({ xmodal, xsetModal }), 
+    //   [xmodal]
+    // );
+
     return (
         <>
-        {/* <h1>Swap VGA</h1> */}
+        
             <Row>
                 <Col lg={7}>                    
                   <div style={{height: "400px", width: "400px", backgroundColor: "#1c1f27", color: "white"}}>
@@ -349,11 +288,13 @@ const PageSwap = () => {
                     {/* <span style={{marginLeft: "10px", fontSize: "22px"}}> */}
                     <span style={{fontSize: "22px"}}>
                       {/* <Context.Provider currencySelect={value} value={value}> */}
+                        <ModalContext.Provider mvalue={false}>
                         <UserContext.Provider value={value}>
-                        <CurrencySelect currency={currencySelect}/>
+                        <CurrencySelect currency={userName}/>
                         </UserContext.Provider>
+                        </ModalContext.Provider>
                        {/* </Context.Provider> */}
-                       {userName !== null ? userName : ""}
+                       {/* {userName !== null ? userName : ""} */}
                     </span>
 
                     <br/>

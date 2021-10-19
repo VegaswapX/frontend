@@ -20,6 +20,7 @@ import * as layoutConstants from '../constants/layout';
 import {
     Button
   } from "react-bootstrap";
+import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 
 // get the notifications
 
@@ -93,6 +94,7 @@ const AccountManage = () => {
     if (networkStatus) {
       return (
           <>
+              <NetworkSwitchButton />
               <AccountInfo />
               <AccountConnect connect={connect} />
           </>

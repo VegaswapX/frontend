@@ -28,7 +28,7 @@ const AccountConnect = () => {
 
     const { account, activate, deactivate } = useWeb3React();
 
-    const [networkOk, setNetworkOk] = React.useState();
+    const [networkOk, setNetworkOk] = React.useState();    
 
     async function connect() {
         await activate(injected, async (error) => {
@@ -40,6 +40,8 @@ const AccountConnect = () => {
                 // if (hasSetup) {
                 //     activate(injected)
                 // }
+            } else {
+                setNetworkOk(true);
             }
         });
     }
@@ -55,15 +57,14 @@ const AccountConnect = () => {
 
     function connectButton () {         
       if (account) {
-          if (networkOk){
-            console.log("account" + account);
-            return (<Button onClick={disconnect} variant="info" style={{marginTop: "22%"}}>
-            Disconnect
-            </Button>) 
-          } else {            
+          if (!networkOk){            
             return (<Button onClick={disconnect} variant="danger" style={{marginTop: "22%"}}>
             Wrong network
             </Button>) 
+          } else {            
+            return (<Button onClick={disconnect} variant="info" style={{marginTop: "22%"}}>
+            Disconnect
+            </Button>)             
           }
       }
       else {        

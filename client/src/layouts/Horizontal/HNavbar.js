@@ -1,19 +1,9 @@
 // @flow
 import React from 'react';
-import AppMenu from './Menu';
-import { Collapse } from 'react-bootstrap';
-import classNames from 'classnames';
 
-import { getMenuItems } from '../../helpers/menu';
 
-type NavbarProps = {
-    isMenuOpened?: boolean,
-};
-
-const HNavbar = (props: NavbarProps): React$Element<React$FragmentType> => {
+const HNavbar = (props) => {
     // change the inputTheme value to light for creative theme
-    const inputTheme = 'dark';
-
     return (
         <React.Fragment>
             <div className="topnav">

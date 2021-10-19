@@ -8,8 +8,8 @@ import {changeAllowanceAmount, changeStakeAmount} from '../../redux/poolinfo/act
 
 // import { useWeb3React } from "@web3-react/core";
 import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
-import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
-import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS, getContract } from "../../chain/Contracts.js";
+// import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../chain/Contracts.js";
 import ApproveButton from "../../components/Buttons/ApproveButton";
 import { useContract } from "../../chain/eth.js";
 import {parseEther} from "ethers/lib/utils";
@@ -24,9 +24,6 @@ import poolReducer, {INIT_STATE} from "../../redux/poolinfo/reducers";
 const StakeForm = ({pool}) => {
     console.log(`pool`, pool);
     const { account, library } = useWeb3React();
-
-    const vega_address = getContract("VegaToken");
-
 
     const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
     const poolContract = useContract(pool.address, pool.abi, true);

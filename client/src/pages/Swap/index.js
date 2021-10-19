@@ -1,26 +1,22 @@
 // @flow
 import { useWeb3React } from "@web3-react/core";
+import { BigNumber, ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "underscore";
-// import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-// import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
 import FACTORY_ABI from "../../abis/Factory.json";
 import ROUTER_ABI from "../../abis/Router.json";
-// import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
-import { BigNumber, ethers } from "ethers";
 import { useContract } from "../../chain/eth.js";
 import { default as contracts } from "../../constants/contracts";
 import { getAmountsOut, swapExactETHForTokens } from "./trade.js";
-
-import { client, clientPCS } from "../../apollo/client";
-import {
-  // GLOBAL_DATA,
-  // ETH_PRICE,
-  ALL_TOKENS,
-  FACTORY_PAIRS,
-} from "../../apollo/queries";
+// import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
+// import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
+// import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
+import { clientPCS } from "../../apollo/client";
+import { FACTORY_PAIRS } from "../../apollo/queries";
+// import { useTable } from "react-table";
+import Tokentable from "./tokentable.js";
 
 // const config = {
 //   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -35,31 +31,31 @@ let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
 const FACTORY_ADDRESS = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73";
 const PCS_ROUTER_ADDRESS = "0x10ed43c718714eb63d5aa57b78b54704e256024e";
 
-async function getAllTokensOnUniswap() {
-  try {
-    let allFound = false;
-    let skipCount = 0;
-    let tokens = [];
-    while (!allFound) {
-      let result = await client.query({
-        query: ALL_TOKENS,
-        variables: {
-          skip: skipCount,
-        },
-        fetchPolicy: "cache-first",
-      });
-      tokens = tokens.concat(result?.data?.tokens);
-      allFound = true;
-      // if (result?.data?.tokens?.length < TOKENS_TO_FETCH || tokens.length > TOKENS_TO_FETCH) {
-      // 	allFound = true
-      // }
-      // skipCount = skipCount += TOKENS_TO_FETCH
-    }
-    return tokens;
-  } catch (e) {
-    console.log(e);
-  }
-}
+// async function getAllTokensOnUniswap() {
+// 	try {
+// 		let allFound = false
+// 		let skipCount = 0
+// 		let tokens = []
+// 		while (!allFound) {
+// 			let result = await client.query({
+// 				query: ALL_TOKENS,
+// 				variables: {
+// 					skip: skipCount,
+// 				},
+// 				fetchPolicy: 'cache-first',
+// 			})
+// 			tokens = tokens.concat(result?.data?.tokens)
+//       allFound = true;
+// 			// if (result?.data?.tokens?.length < TOKENS_TO_FETCH || tokens.length > TOKENS_TO_FETCH) {
+// 			// 	allFound = true
+// 			// }
+// 			// skipCount = skipCount += TOKENS_TO_FETCH
+// 		}
+// 		return tokens
+// 	} catch (e) {
+// 		console.log(e)
+// 	}
+// }
 
 async function someData() {
   try {
@@ -76,7 +72,6 @@ async function someData() {
       console.log("totalPairs " + result.data.factory.totalPairs);
       console.log("totalTokens " + result.data.factory.totalTokens);
       return result;
-      allFound = true;
     }
     return tokens;
   } catch (e) {
@@ -91,9 +86,49 @@ function toUnit256(amount, token) {
 function toFloatNumber(amount, token) {
   // check token decimals
   const y = amount.div(BigNumber.from(10).pow(12));
-  const floatNumber = y.toNumber() / Math.pow(10, 6);
-  return floatNumber;
+  return y.toNumber() / Math.pow(10, 6);
 }
+
+const CurrencySelect = (props) => {
+  const [modal, setModal] = useState(false);
+  const [size] = useState(null);
+  const [className] = useState(null);
+  const [scroll] = useState(null);
+
+  // const currency = "test";
+  /**
+   * Show/hide the modal
+   */
+  const toggle = () => {
+    setModal(!modal);
+  };
+
+  return (
+    <span>
+      {/* <div className="button-list"> */}
+      <Button style={{ backgroundColor: "black" }} onClick={toggle}>
+        {props.currency}
+      </Button>
+
+      {/* </div> */}
+
+      <Modal show={modal} onHide={toggle} dialogClassName={className} size={size} scrollable={scroll}>
+        <Modal.Header onHide={toggle} closeButton>
+          <h4 className="modal-title">Select a token</h4>
+        </Modal.Header>
+        <Modal.Body>
+          <Tokentable />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={toggle}>
+            Close
+          </Button>
+          {" "}
+        </Modal.Footer>
+      </Modal>
+    </span>
+  );
+};
 
 const defaultTokenPath = ["WBNB", "VGA"];
 const defaultSlippage = 0.5 / 100;
@@ -278,8 +313,12 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     width: "100px",
                   }}
                 />
-                <span style={{ marginLeft: "10px", fontSize: "22px" }}>BNB</span>
+                {/*<span style={{ marginLeft: "10px", fontSize: "22px" }}>BNB</span>*/}
 
+                {/* <span style={{marginLeft: "10px", fontSize: "22px"}}> */}
+                <span style={{ fontSize: "22px" }}>
+                  <CurrencySelect currency={"BNB"} />
+                </span>
                 <br />
 
                 <div style={{ marginLeft: "30px", marginTop: "10px" }}>
@@ -287,7 +326,8 @@ const PageSwap = (): React$Element<React$FragmentType> => {
                     {token1Input}
                   </span>
 
-                  <span style={{ marginLeft: "90px", textAlign: "right", fontSize: "22px" }}>VGA</span>
+                  {/*<span style={{ marginLeft: "90px", textAlign: "right", fontSize: "22px" }}>VGA</span>*/}
+                  <CurrencySelect currency={"VGA"} />
                 </div>
               </div>
             </Form.Group>

@@ -1,5 +1,5 @@
 /* @flow */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
@@ -20,27 +20,15 @@ import * as layoutConstants from '../constants/layout';
 import {
     Button
   } from "react-bootstrap";
+
 // get the notifications
 
 
 
-const AccountConnect = () => {
+const AccountConnect = ({ connect }) => {
 
     const { account, activate, deactivate } = useWeb3React();
 
-    async function connect() {
-        await activate(injected, async (error) => {
-            if (error instanceof UnsupportedChainIdError) {
-                console.log("error UnsupportedChainIdError");
-                alert("error UnsupportedChainIdError");
-                // const hasSetup = await setupNetwork()
-                // if (hasSetup) {
-                //     activate(injected)
-                // }
-            }
-        });
-    }
-  
     async function disconnect() {
         console.log("disconnect")
       try {
@@ -53,12 +41,12 @@ const AccountConnect = () => {
     function connectButton () {         
       if (account) {
           console.log("account" + account);
-          return (<Button onClick={disconnect} variant="info" style={{marginTop: "22%"}}>
+          return (<Button onClick={disconnect} variant="info">
           Disconnect
           </Button>) 
       }
       else {        
-          return (<Button onClick={connect} variant="primary" style={{marginTop: "22%"}}>
+          return (<Button onClick={connect} variant="primary">
           Connect
           </Button>)
           }
@@ -70,16 +58,16 @@ const AccountConnect = () => {
 
 const AccountInfo = () => {
 
-    const { account, activate, deactivate } = useWeb3React();
+    const { account } = useWeb3React();
 
     function accInfo() {
         if (account){
            return ( 
-           <div style={{marginTop: "18%", marginRight: "10px", fontSize: "18px"}}>
+           <div style={{fontSize: "18px", marginRight: "16px"}}>
             Account: <b>{account.substring(0, 3)}..{account.substring(account.length-3, account.length)}</b>
             </div>)
         } else {
-            return <span></span>
+            return <span/>
         }
     }
 
@@ -87,17 +75,33 @@ const AccountInfo = () => {
 }
 
 const AccountManage = () => {
+    const [networkStatus, setNetworkStatus] = useState(true)
+    const { activate } = useWeb3React()
 
-    return (
-        <span>                                
-          <li className="">
-            <AccountInfo />
-          </li>
-          <li className="">
-            <AccountConnect />                            
-          </li>
-        </span>
-    )
+    async function connect() {
+        await activate(injected, async (error) => {
+            if (error instanceof UnsupportedChainIdError) {
+                setNetworkStatus()
+                // const hasSetup = await setupNetwork()
+                // if (hasSetup) {
+                //     activate(injected)
+                // }
+            }
+        });
+    }
+
+    if (networkStatus) {
+      return (
+          <>
+              <AccountInfo />
+              <AccountConnect connect={connect} />
+          </>
+      )
+    } else {
+        return (
+            <Button variant={"danger"} disabled>Wrong Network</Button>
+        )
+    }
 }
 
 
@@ -140,7 +144,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
     return (
         <React.Fragment>
             <div className={`navbar-custom ${navbarCssClasses}`}>
-                <div className={containerCssClasses}>
+                <div className={`${containerCssClasses} h-100 d-flex justify-content-between`}>
                     {!hideLogo && (
                         <Link to="/" className="topnav-logo">
                             <span className="">
@@ -150,7 +154,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
                         </Link>
                     )}
 
-                    <ul className="list-unstyled topbar-menu float-end mb-0">
+                    <ul className="list-unstyled topbar-menu float-end mb-0 d-flex align-items-center">
                         {/* <li className="notification-list topbar-dropdown d-xl-none">
                             <SearchDropdown />
                         </li>
@@ -167,24 +171,22 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
                         </li> */}
                         {/* <li className="dropdown notification-list topbar-dropdown d-none d-lg-block"> */}
 
-                        <li className="">
-                            
-                        </li>
+                        {/*<li className="">*/}
+                        {/*    */}
+                        {/*</li>*/}
                         
-                        <li className="">
-                            <AccountManage />
-                        </li>
+                        <AccountManage />
 
                         {/* <li className="dropdown notification-list d-none d-sm-inline-block">
                             <AppsDropdown />
                         </li> */}
-                        <li className="notification-list">
-                            <button
-                                className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
-                                onClick={handleRightSideBar}>
-                                <i className="dripicons-gear noti-icon"></i>
-                            </button>
-                        </li>
+                        <Button
+                            className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
+                            size="lg"
+                            variant={"outline-light"}
+                            onClick={handleRightSideBar}>
+                            <i className="dripicons-gear noti-icon" />
+                        </Button>
                         {/* <li className="dropdown notification-list">
                             <ProfileDropdown
                                 profilePic={profilePic}

@@ -1,5 +1,3 @@
-
-
 const Contracts = {
   56: {
     PCS_ROUTER: {
@@ -18,6 +16,7 @@ const Contracts = {
     WBNB: {
       address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       symbol: "BNB",
+      isNative: true,
       decimals: 18,
     }
   }

@@ -1,36 +1,19 @@
-//TODO
-//set logo
+// TODO
+// set logo
 
-import React, { useState, createContext, useMemo } from "react";
-import { Row, Col, Button, Modal, Form } from "react-bootstrap";
-import "react-toastify/dist/ReactToastify.css";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
+import React, { createContext, useMemo, useState } from "react";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
-import { useContract } from "../../chain/eth.js";
 import { default as contracts } from "../../chain/Contractsdef";
-import { getAmountsOut, swapExactETHForTokens } from "./trade.js";
+import { useContract } from "../../chain/eth.js";
+import { PCS_ROUTER_ADDRESS, VGA, WBNB } from "./addr";
 import Tokentable from "./tokentable.js";
-
-import { WBNB, VGA, PCS_ROUTER_ADDRESS } from "./addr";
-
-const defaultTokenPath = ["WBNB", "VGA"];
-
-// import Tokens from './Tokens';
-
-function SwapButton(props) {
-  return (
-    <Button
-      variant="primary"
-      onClick={props.swapIn}
-      style={{ width: "180px", fontSize: "20pt" }}
-    >
-      Swap
-    </Button>
-  );
-}
+import * as trade from "./trade.js";
 
 // const CurrencyContext = createContext('Default Value');
 
@@ -76,18 +59,6 @@ export const CurrencyContext = createContext({
 // 		console.log(e)
 // 	}
 // }
-
-function toUnit256(amount, token) {
-  return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(token.decimals - 6)
-  );
-}
-
-function toFloatNumber(amount, token) {
-  // check token decimals
-  const y = amount.div(BigNumber.from(10).pow(12));
-  return y.toNumber() / Math.pow(10, 6);
-}
 
 const CurrencySelect = (props) => {
   const [modal, setModal] = useState(false);
@@ -146,131 +117,93 @@ const CurrencySelect = (props) => {
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>{" "}
+          </Button>
+          {" "}
         </Modal.Footer>
       </Modal>
     </span>
   );
 };
 
-
-// const defaultSlippage = 0.5 / 100;
+const defaultSlippage = 0.5 / 100;
+const defaultTokenPath = ["WBNB", "VGA"];
 
 const PageSwap = () => {
   const { account } = useWeb3React();
-
-  const chainId = 56;
-
   // TODO: Set token0, token1 properly
-
-  // TODO: Clean all this
-  const [amount] = React.useState(0);
-  const [amountOut] = React.useState(0);
-
-  const token0 = contracts[chainId][defaultTokenPath[0]];
-  const token1 = contracts[chainId][defaultTokenPath[1]];
-
-  const [token0Input, setToken0Input] = useState(0);
-  const [token1Input, setToken1Input] = useState(0);
-
+  const chainId = 56; // whole app need to double check on account connection
+  let token0, token1;
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
-  // async function getRate(amount, path) {
-  //   if (amount > 0) {
-  //     let x = await routerContract.callStatic.getAmountsOut(amount, path);
-  //     return x[1];
-  //   }
-  // }
+  const [slippage, setSlippage] = useState(defaultSlippage);
+  const [token0Input, setToken0Input] = useState(0);
+  const [token1Input, setToken1Input] = useState(0);
+  const [currencyName, setcurrencyName] = useState("BNB");
+  const value = useMemo(
+    () => ({ currencyName, setcurrencyName }),
+    [currencyName],
+  );
 
-  const debounceHandleChange = _.debounce(async (amountText) => {
-    console.log(`amountText`, amountText);
-    // setToken0Input(amountText);
-    console.log(`Running debounce`);
-    let amount;
-    try {
-      amount = parseFloat(amountText); // why parseInt
-    } catch (e) {
-      console.log("Cannot parse float", amountText);
-    }
+  const debounceOnChange = useMemo(() =>
+    _.debounce(async (e) => {
+      console.log(`running debounce`);
+      await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
+    }, 500), [routerContract]);
 
-    // function swapIn() {
-    //     console.log("swap in " + amount);
-    // }
-    if (isNaN(amount) || amount <= 0) {
+  if (chainId !== 56) {
+    return <></>;
+  }
+
+  token0 = contracts[chainId][defaultTokenPath[0]];
+  token1 = contracts[chainId][defaultTokenPath[1]];
+
+  // TODO: Clean all this
+  async function setOutputAmountText(routerContract, e) {
+    if (routerContract === null) {
+      console.log("You don't connect to bsc mainnet");
       return;
     }
 
-    console.log(`amount`, amount);
+    const amountText = e.target.value;
+    const token0AmountEther = trade.convertTextToUnint256(amountText, token0);
+    if (token0AmountEther === null) {
+      return;
+    }
 
-    let etherAmount = toUnit256(amount, token0);
-    console.log(`etherAmount`, etherAmount.toString());
-    const outAmount = await getAmountsOut(routerContract, etherAmount, [
+    const outAmount = await trade.getAmountsOut(routerContract, token0AmountEther, [
       token0,
       token1,
     ]);
-    const outAmountFloat = toFloatNumber(outAmount, token1);
-    console.log(`outAmount`, outAmountFloat);
-    setToken1Input(outAmountFloat.toFixed(2));
-    // convert back to float
-  }, 500);
+    const outAmountText = trade.toFloatNumber(outAmount, token1);
+    setToken1Input(outAmountText.toFixed(2));
+  }
 
   function handleChange(e) {
     const amountText = e.target.value;
-    console.log(`amountText`, amountText);
     setToken0Input(amountText);
-    debounceHandleChange(amountText);
+    debounceOnChange(e);
   }
 
-  // TODO: Clean this up
-  async function swapIn() {
-    console.log(amount);
-    console.log(amountOut);
+  // Rewrite swap that supports both ETH->Token and Token->Token
+  // float number should work properly
+  async function swap() {
+    if (routerContract === null) {
+      console.log("You don't connect to bsc mainnet");
+      return;
+    }
 
-    // 1%
-
-    let slip = Math.floor((amountOut * 990) / 1000);
-    let amountOutMin = amountOut - slip;
-    console.log("Calculated Amounts out: " + amountOutMin);
-    const to = account;
-    const deadline = Math.floor(Date.now() / 1000) + 60 * 10; // 10min
-    console.log(amountOutMin, [WBNB, VGA], to, deadline);
-    let receipt = await swapExactETHForTokens(
-      routerContract, 
-      amount,
-      amountOutMin,
-      to,
-      deadline
-    );
-    console.log("tx " + receipt);
+    const amountIn = trade.convertTextToUnint256(token0Input, token0);
+    console.log(`token0AmountEther: ${amountIn}`);
+    const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
+      token0,
+      token1,
+    ]);
+    // calculate slippage
+    const amountOutMin = amountOut.mul(Math.round((1 - slippage) * 1000)).div(1000);
+    const tx = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
   }
-
-  // useEffect(() => {
-  //   if (!!account && !!library) {
-  //     (async () => {
-  //       let pricef = await getRate(amount, routerContract);
-  //       console.log("price: " + pricef);
-  //       // setPrice(pricef);
-  //     })();
-  //   }
-  // }, [account, library, routerContract, amount, getRate]);
-
-  // const currencySelect = 'BNB';
-
-  // const value = 'BNB';
-
-  const [currencyName, setcurrencyName] = useState("BNB");
 
   // const { xmodal, xsetModal } = useContext(ModalContext);
-
-  const value = useMemo(
-    () => ({ currencyName, setcurrencyName }),
-    [currencyName]
-  );
-
-  // const mvalue = useMemo(
-  //   () => ({ xmodal, xsetModal }),
-  //   [xmodal]
-  // );
 
   return (
     <>
@@ -286,7 +219,6 @@ const PageSwap = () => {
           >
             <Form.Group className="mb-3">
               <h1>Swap</h1>
-
               <div
                 style={{
                   backgroundColor: "rgb(19,20,25)",
@@ -295,18 +227,9 @@ const PageSwap = () => {
                   width: "280px",
                 }}
               >
-                {/* 
-  //TODO fix
-  //               <input
-  //                 value={}
-  //                 
-  //               />
-  //                   {token1Input} */}
-
                 <input
                   type="text"
                   value={token0Input}
-                  // onChange={e => setAmountOut(e.target.value)}
                   onChange={handleChange}
                   className=""
                   step="0.01"
@@ -352,15 +275,23 @@ const PageSwap = () => {
                       fontSize: "22px",
                     }}
                   >
-                    {/* <Context.Provider currencySelect={currencySelect}>
-                      <CurrencySelect currency={"VGA"}/>
-                      </Context.Provider> */}
+                    {
+                      // <Context.Provider currencySelect={currencySelect}>
+                      //   <CurrencySelect currency={"VGA"} />
+                      // </Context.Provider>
+                    }
                   </span>
                 </div>
               </div>
             </Form.Group>
 
-            <SwapButton swapIn={swapIn}></SwapButton>
+            <Button
+              variant="primary"
+              onClick={swap}
+              style={{ width: "180px", fontSize: "20pt" }}
+            >
+              Swap
+            </Button>
           </div>
         </Col>
       </Row>

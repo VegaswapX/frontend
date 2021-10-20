@@ -1,21 +1,91 @@
-let WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
+// utils
+import { BigNumber, ethers } from "ethers";
+
+const GAS_PRICE = {
+  default: "5",
+  fast: "6",
+};
+
+const GAS_PRICE_GWEI = {
+  default: ethers.utils.parseUnits(GAS_PRICE.default, "gwei").toString(),
+  fas: ethers.utils.parseUnits(GAS_PRICE.fast, "gwei").toString(),
+};
+
+// TODO: Return user set gasPrice
+function getGasPrice() {
+  return GAS_PRICE_GWEI.default;
+}
+
+export function toUint256(amount, token) {
+  return BigNumber.from(Math.round(amount * 1000000)).mul(
+    BigNumber.from(10).pow(token.decimals - 6),
+  );
+}
+
+export function toFloatNumber(amount, token) {
+  // check token decimals
+  const y = amount.div(BigNumber.from(10).pow(12));
+  return y.toNumber() / Math.pow(10, 6);
+}
+
+export function convertTextToUnint256(s, token) {
+  let amount;
+  try {
+    amount = parseFloat(s); // why parseInt
+  } catch (e) {
+    console.log("Cannot parse float", s);
+  }
+
+  if (isNaN(amount) || amount <= 0) {
+    return null;
+  }
+
+  return toUint256(amount, token);
+}
+
+function defaultDeadline() {
+  return Math.floor(Date.now() / 1000) + 60 * 10; // 1 minutes
+}
+
+const defaultOptions = {};
+
+// check native token here
+export async function swap(
+  routerContract,
+  amountIn,
+  amountOutMin,
+  tokenPath,
+  to,
+  deadline = defaultDeadline(),
+) {
+  const [token0, token1] = tokenPath;
+  const addressPath = [token0.address, token1.address];
+
+  if (!!token0.isNative) {
+    return await swapExactETHForTokens(routerContract, amountIn, amountOutMin, addressPath, to, deadline);
+  }
+
+  // swap from Tokens to tokens
+}
 
 // TODO: update this function
 // Dealing with float number
-export async function swapExactETHForTokens(
+async function swapExactETHForTokens(
   routerContract,
-  amount,
+  amountIn,
   amountOutMin,
+  addressPath,
   to,
-  deadline
+  deadline,
 ) {
+  const gasPrice = getGasPrice();
+
   const tx = await routerContract.swapExactETHForTokens(
     amountOutMin,
-    [WBNB, VGA],
+    addressPath,
     to,
     deadline,
-    { value: amount, gasPrice: 10e9 }
+    { ...defaultOptions, value: amountIn, gasPrice },
   );
   console.log("Transaction Submitted. txhash " + tx.hash);
   let receipt = await tx.wait();

@@ -1,9 +1,9 @@
+import React, { useContext, useMemo } from "react";
 import { useTable } from "react-table";
-import React, { useMemo, useContext } from "react";
 // import axios from 'axios';
 // import xdata from "./data";
-import tokens from "./Tokens";
 import { CurrencyContext } from "./index";
+import tokens from "./Tokens";
 
 function Table({ columns, data }) {
   const { setcurrencyName } = useContext(CurrencyContext);
@@ -28,13 +28,14 @@ function Table({ columns, data }) {
     // xsetModal(false)
   }
 
-  /* 
+  /*
     Render the UI for your table
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
     <table {...getTableProps()}>
-      {/* <thead>
+      {
+        /* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -42,7 +43,8 @@ function Table({ columns, data }) {
             ))}
           </tr>
         ))}
-      </thead> */}
+      </thead> */
+      }
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
@@ -65,9 +67,7 @@ function Table({ columns, data }) {
                     </td>
                   );
                 } else {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
+                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                 }
               })}
             </tr>
@@ -101,7 +101,7 @@ function Tokentable() {
         ],
       },
     ],
-    []
+    [],
   );
 
   return (

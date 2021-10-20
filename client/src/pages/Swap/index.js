@@ -18,6 +18,8 @@ import { WBNB, VGA, PCS_ROUTER_ADDRESS } from "./addr";
 
 const defaultTokenPath = ["WBNB", "VGA"];
 
+const chainId = 56;
+
 // import Tokens from './Tokens';
 
 function SwapButton(props) {
@@ -100,25 +102,9 @@ const CurrencySelect = (props) => {
   // const currencySelectValue = CurrencyContext(Context);
   // console.log(currencySelectValue);
 
-  // const currency = "test";
-  /**
-   * Show/hide the modal
-   */
+  
   const toggle = () => {
-    // console.log(">>??? " + modal);
-    // if (modal == "false"){
-    //   console.log("?? " + modal);
-    //   setModal("true");
-    // } else {
-    //   setModal("true");
-    //   console.log("?? " + modal);
-    // }
     setModal(!modal);
-    // xsetModal(!xmodal);
-    // xsetModal("2");
-    // console.log(modal);
-    // console.log(xmodal);
-    // setcurrencyName("ZZZZ")
   };
 
   return (
@@ -159,8 +145,6 @@ const CurrencySelect = (props) => {
 const PageSwap = () => {
   const { account } = useWeb3React();
 
-  const chainId = 56;
-
   // TODO: Set token0, token1 properly
 
   // TODO: Clean all this
@@ -188,14 +172,11 @@ const PageSwap = () => {
     console.log(`Running debounce`);
     let amount;
     try {
-      amount = parseFloat(amountText); // why parseInt
+      amount = parseFloat(amountText);
     } catch (e) {
       console.log("Cannot parse float", amountText);
     }
-
-    // function swapIn() {
-    //     console.log("swap in " + amount);
-    // }
+    
     if (isNaN(amount) || amount <= 0) {
       return;
     }
@@ -244,20 +225,6 @@ const PageSwap = () => {
     console.log("tx " + receipt);
   }
 
-  // useEffect(() => {
-  //   if (!!account && !!library) {
-  //     (async () => {
-  //       let pricef = await getRate(amount, routerContract);
-  //       console.log("price: " + pricef);
-  //       // setPrice(pricef);
-  //     })();
-  //   }
-  // }, [account, library, routerContract, amount, getRate]);
-
-  // const currencySelect = 'BNB';
-
-  // const value = 'BNB';
-
   const [currencyName, setcurrencyName] = useState("BNB");
 
   // const { xmodal, xsetModal } = useContext(ModalContext);
@@ -267,10 +234,6 @@ const PageSwap = () => {
     [currencyName]
   );
 
-  // const mvalue = useMemo(
-  //   () => ({ xmodal, xsetModal }),
-  //   [xmodal]
-  // );
 
   return (
     <>

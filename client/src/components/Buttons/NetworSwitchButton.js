@@ -23,7 +23,7 @@ const NetworkSwitchButton = () => {
             case 56:
                 return "BSC Mainnet";                        
             default:
-                return "Not connected"
+                return "Not supported"
         }    
     }
 
@@ -32,7 +32,8 @@ const NetworkSwitchButton = () => {
         <><Button variant={"outline-primary"} className="me-3" onClick={handleShow}>                    
                     <h4>{chainEl()}</h4>
                     {/* <NetworkSelectModal show={show} onHide={handleClose} /> */}
-                    </Button></>
+                    </Button>
+        </>
     )        
     
 }

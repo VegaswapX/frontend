@@ -3,30 +3,28 @@ import React, { useMemo, useContext } from "react";
 // import axios from 'axios';
 // import xdata from "./data";
 import tokens from "./Tokens";
-import {CurrencyContext} from './index'
-
+import { CurrencyContext } from "./index";
 
 function Table({ columns, data }) {
-
   const { setcurrencyName } = useContext(CurrencyContext);
   // const { xmodal, xsetModal } = useContext(ModalContext);
 
   // Use the useTable Hook to send the columns and data to build the table
   const {
-    getTableProps, 
+    getTableProps,
     getTableBodyProps,
     // headerGroups, // headerGroups, if your table has groupings
-    rows, 
-    prepareRow 
+    rows,
+    prepareRow,
   } = useTable({
     columns,
-    data
+    data,
   });
 
-  function rowClick(row){
+  function rowClick(row) {
     // console.log(row.original.contract)
-    console.log(row.original.name)
-    setcurrencyName(row.original.name)
+    console.log(row.original.name);
+    setcurrencyName(row.original.name);
     // xsetModal(false)
   }
 
@@ -49,27 +47,29 @@ function Table({ columns, data }) {
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            
-            <tr style={{height: "50px"}} {...row.getRowProps()} onClick={() => {
-              rowClick(row);
-              
-            }}>
-              {row.cells.map(cell => {                
-                if (cell.column.Header === "Image"){
+            <tr
+              style={{ height: "50px" }}
+              {...row.getRowProps()}
+              onClick={() => {
+                rowClick(row);
+              }}
+            >
+              {row.cells.map((cell) => {
+                if (cell.column.Header === "Image") {
                   return (
-                    <td style={{marginLeft: "30px", padding: "10px"}} {...cell.getCellProps()}>
-                    <img
-                      src={cell.value}
-                      width={40}
-                      alt=">>"
-                    />
-                    </td>)
-                }
-                else {
-                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                    <td
+                      style={{ marginLeft: "30px", padding: "10px" }}
+                      {...cell.getCellProps()}
+                    >
+                      <img src={cell.value} width={40} alt=">>" />
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
                 }
               })}
-              
             </tr>
           );
         })}
@@ -78,16 +78,9 @@ function Table({ columns, data }) {
   );
 }
 
-
-
-  
-
 // import Table from "./Table";
 
 function Tokentable() {
-
-  
-  
   const columns = useMemo(
     () => [
       {
@@ -95,7 +88,7 @@ function Tokentable() {
         columns: [
           {
             Header: "Name",
-            accessor: "name"
+            accessor: "name",
           },
           // {
           //   Header: "Contract",
@@ -103,14 +96,13 @@ function Tokentable() {
           // },
           {
             Header: "Image",
-            accessor: "image"
-          },          
-        ]
-      }
+            accessor: "image",
+          },
+        ],
+      },
     ],
     []
   );
-  
 
   return (
     <div className="App">

@@ -3,13 +3,19 @@ let VGA = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
 
 // TODO: update this function
 // Dealing with float number
-export async function swapExactETHForTokens(routerContract, amount, amountOutMin, to, deadline) {
+export async function swapExactETHForTokens(
+  routerContract,
+  amount,
+  amountOutMin,
+  to,
+  deadline
+) {
   const tx = await routerContract.swapExactETHForTokens(
     amountOutMin,
     [WBNB, VGA],
     to,
     deadline,
-    { value: amount, gasPrice: 10e9 },
+    { value: amount, gasPrice: 10e9 }
   );
   console.log("Transaction Submitted. txhash " + tx.hash);
   let receipt = await tx.wait();
@@ -19,17 +25,18 @@ export async function swapExactETHForTokens(routerContract, amount, amountOutMin
 
 const failedGetAmountsOutReturn = null;
 export async function getAmountsOut(routerContract, amount, path) {
-  if (amount <= 0 ) {
+  if (amount <= 0) {
     return failedGetAmountsOutReturn;
   }
 
   const addressPath = [path[0].address, path[1].address];
 
   let x = await routerContract.callStatic
-      .getAmountsOut(amount, addressPath).catch(e => {
-        console.log("Failed to run getAmountsOut", e)
-        return failedGetAmountsOutReturn
-      });
+    .getAmountsOut(amount, addressPath)
+    .catch((e) => {
+      console.log("Failed to run getAmountsOut", e);
+      return failedGetAmountsOutReturn;
+    });
   return x[1];
 }
 

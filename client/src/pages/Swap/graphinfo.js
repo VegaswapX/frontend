@@ -1,36 +1,32 @@
-
-import { clientPCS } from '../../apollo/client'
+import { clientPCS } from "../../apollo/client";
 import {
-    // GLOBAL_DATA,
-	// ETH_PRICE,
-	// ALL_TOKENS, FACTORY_PAIRS
-	FACTORY_PAIRS
-} from '../../apollo/queries'
-
+  // GLOBAL_DATA,
+  // ETH_PRICE,
+  // ALL_TOKENS, FACTORY_PAIRS
+  FACTORY_PAIRS,
+} from "../../apollo/queries";
 
 export async function someData() {
-	try {
-		let allFound = false
-		
-		let tokens = []
-		while (!allFound) {
-			let result = await clientPCS.query({
-				query: FACTORY_PAIRS,
-				variables: {					
-				},
-				fetchPolicy: 'cache-first',
-			})
-			
+  try {
+    let allFound = false;
+
+    let tokens = [];
+    while (!allFound) {
+      let result = await clientPCS.query({
+        query: FACTORY_PAIRS,
+        variables: {},
+        fetchPolicy: "cache-first",
+      });
+
       console.log("totalPairs " + result.data.factory.totalPairs);
       console.log("totalTokens " + result.data.factory.totalTokens);
       return result;
-		}
-		return tokens
-	} catch (e) {
-		console.log(e)
-	}
+    }
+    return tokens;
+  } catch (e) {
+    console.log(e);
+  }
 }
-
 
 // async function getAllTokensOnUniswap() {
 // 	try {

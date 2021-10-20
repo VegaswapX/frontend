@@ -268,13 +268,13 @@ const PageSwap = () => {
         
             <Row>
                 <Col lg={7}>                    
-                  <div style={{height: "400px", width: "400px", backgroundColor: "#1c1f27", color: "white"}}>
+                  <div style={{height: "400px", width: "450px", backgroundColor: "#1c1f27", color: "white"}}>
                     
                   <Form.Group className="mb-3">
 
                     <h1>Swap</h1>                    
                     
-                    <div style={{backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "200px"}}>
+                    <div style={{backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "280px"}}>
                     
                     <input
                         type="text"

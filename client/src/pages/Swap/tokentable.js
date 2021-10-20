@@ -50,13 +50,14 @@ function Table({ columns, data }) {
           prepareRow(row);
           return (
             
-            <tr {...row.getRowProps()} onClick={() => {
+            <tr style={{height: "50px"}} {...row.getRowProps()} onClick={() => {
               rowClick(row);
+              
             }}>
               {row.cells.map(cell => {                
                 if (cell.column.Header === "Image"){
                   return (
-                    <td {...cell.getCellProps()}>
+                    <td style={{marginLeft: "30px", padding: "10px"}} {...cell.getCellProps()}>
                     <img
                       src={cell.value}
                       width={40}

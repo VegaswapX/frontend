@@ -178,63 +178,18 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
                             </Nav.Link>
                             <Nav.Link href="/boost"><i className="dripicons-rocket"></i> Farming</Nav.Link>
                             <Nav.Link href="/liq"><i className="uil-layer-group"></i> Liquidity</Nav.Link>
+
                             
                         </Nav>
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
 
-                    {/* {!hideLogo && (
-                        <>
-                        <Link to="/" className="topnav-logo">
-                            <span className="">
-                                <img src={vlogo} alt="logo" height="50" style={{marginTop: "10px"}}/>
-                                <span style={{color: "white", marginLeft: "10px", marginTop: "30px", fontSize: "20px"}}>Vegaswap</span>
-                            </span>                            
-                        </Link>
-                        </>
-                    )}
-
-                    <Navbar bg="black" expand="lg">
-                        <Container>
-                            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                            <Navbar.Collapse id="basic-navbar-nav">
-                            <Nav className="ml-auto">
-                                <Nav.Link href="#home" style={{fontSize:"20px"}}>Farming</Nav.Link>
-                                <Nav.Link href="#link" style={{fontSize:"20px"}}>Swap</Nav.Link>
-                                <Nav.Link href="#link" style={{fontSize:"20px"}}>Liquidity</Nav.Link>
-                            </Nav>
-                            </Navbar.Collapse>
-                        </Container>
-                        </Navbar> */}
-
+                   
                     <ul className="list-unstyled topbar-menu float-end mb-0 d-flex align-items-center">
-                        <li className="notification-list topbar-dropdown d-xl-none">
-                            {/* <SearchDropdown /> */}
-                            <h2>XZZZ</h2>
-                        </li>
 
-                        <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
-                            {/* <AccountInfo /> */}
-                        </li>
-                                              
-                        <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
-                            {/* <LanguageDropdown /> */}
-                        </li>
-                        {/* <li className="dropdown notification-list">
-                            <NotificationDropdown notifications={Notifications} />
-                        </li> */}
-                        {/* <li className="dropdown notification-list topbar-dropdown d-none d-lg-block"> */}
-
-                        {/*<li className="">*/}
-                        {/*    */}
-                        {/*</li>
-                        
                         <AccountManage />
-
-                        {/* <li className="dropdown notification-list d-none d-sm-inline-block">
-                            <AppsDropdown />
-                        </li> */}
+                        
                         <Button
                             className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
                             size="lg"
@@ -242,37 +197,10 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
                             onClick={handleRightSideBar}>
                             <i className="dripicons-gear noti-icon" />
                         </Button>
-                        {/* <li className="dropdown notification-list">
-                            <ProfileDropdown
-                                profilePic={profilePic}
-                                menuItems={ProfileMenus}
-                                username={account}
-                                userTitle={'Connect'}
-                            />
-                        </li> */}
+                        
                     </ul>
 
-                    {/* toggle for vertical layout */}
-                    {/* {layoutType === layoutConstants.LAYOUT_VERTICAL && (
-                        <button className="button-menu-mobile open-left disable-btn" onClick={handleLeftMenuCallBack}>
-                            <i className="mdi mdi-menu" />
-                        </button>
-                    )} */}
-
-                    {/* toggle for horizontal layout */}
-                    {/* {layoutType === layoutConstants.LAYOUT_HORIZONTAL && (
-                        <Link
-                            to="#"
-                            className={classNames('navbar-toggle', { open: isopen })}
-                            onClick={handleLeftMenuCallBack}>
-                            <div className="lines">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </Link>
-                    )} */}
-
+                    
                     {/* toggle for detached layout */}
                     {layoutType === layoutConstants.LAYOUT_DETACHED && (
                         <Link to="#" className="button-menu-mobile disable-btn" onClick={handleLeftMenuCallBack}>
@@ -283,7 +211,6 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
                             </div>
                         </Link>
                     )}
-                    {/* <TopbarSearch items={SearchResults} /> */}
                 </div>
             </div>
         </React.Fragment>

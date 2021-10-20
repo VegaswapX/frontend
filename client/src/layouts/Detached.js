@@ -73,7 +73,7 @@ const DetachedLayout = ({ children }: VerticalLayoutProps, state: VerticalLayout
             </Suspense>
             <Container fluid>
                 <div className="wrapper">
-                    <Suspense fallback={loading()}>
+                    {/* <Suspense fallback={loading()}>
                         <LeftSidebar
                             isMenuOpened={isMenuOpened}
                             isCondensed={isCondensed}
@@ -81,7 +81,7 @@ const DetachedLayout = ({ children }: VerticalLayoutProps, state: VerticalLayout
                             hideLogo={true}
                             hideUserProfile={true}
                         />
-                    </Suspense>
+                    </Suspense> */}
 
                     <div className="content-page" style={{marginTop: "20px"}}>
                         <div className="content">
@@ -96,7 +96,7 @@ const DetachedLayout = ({ children }: VerticalLayoutProps, state: VerticalLayout
             </Container>
             <Suspense fallback={loading()}>
                 <RightSidebar>
-                    <ThemeCustomizer />
+                    {/* <ThemeCustomizer /> */}
                 </RightSidebar>
             </Suspense>
         </>

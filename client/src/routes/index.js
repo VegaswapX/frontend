@@ -5,6 +5,8 @@ import {createBoostPoolPage} from '../pages/Boost';
 import LiqPage from '../pages/vega/Liq';
 import TxPage from '../pages/vega/Tx';
 
+import {POOL1, POOL2} from "../chain/Contracts.js";
+
 // import Route from './Route';
 
 // lazy load all the views
@@ -18,8 +20,6 @@ const rootRoute = {
     route: Route,
 };
 
-// TODO: Generate routes based on list of tokens
-
 // dashboards
 const dashboardRoutes = {
     path: '/dashboard',
@@ -32,7 +32,7 @@ const dashboardRoutes = {
             name: 'Boost',
             component: createBoostPoolPage({
                 poolName: "USDT",
-                poolAddress: "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd"
+                poolAddress: POOL1
             }),
             route: Route,
         },
@@ -41,7 +41,7 @@ const dashboardRoutes = {
             name: 'Boost',
             component: createBoostPoolPage({
                 poolName: "VGA",
-                poolAddress: "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd"
+                poolAddress: POOL2
             }),
             route: Route,
         },

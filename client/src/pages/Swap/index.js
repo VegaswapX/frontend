@@ -14,7 +14,6 @@ import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS, VGA, WBNB } from "./addr";
 import Tokentable from "./tokentable.js";
 import * as trade from "./trade.js";
-
 // const CurrencyContext = createContext('Default Value');
 
 export const CurrencyContext = createContext({
@@ -71,25 +70,8 @@ const CurrencySelect = (props) => {
   // const currencySelectValue = CurrencyContext(Context);
   // console.log(currencySelectValue);
 
-  // const currency = "test";
-  /**
-   * Show/hide the modal
-   */
   const toggle = () => {
-    // console.log(">>??? " + modal);
-    // if (modal == "false"){
-    //   console.log("?? " + modal);
-    //   setModal("true");
-    // } else {
-    //   setModal("true");
-    //   console.log("?? " + modal);
-    // }
     setModal(!modal);
-    // xsetModal(!xmodal);
-    // xsetModal("2");
-    // console.log(modal);
-    // console.log(xmodal);
-    // setcurrencyName("ZZZZ")
   };
 
   return (

@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
 import { useContract } from "../../chain/eth.js";
-import { default as contracts } from "../../constants/contracts";
+import { default as contracts } from "../../chain/Contractsdef";
 import { getAmountsOut, swapExactETHForTokens } from "./trade.js";
 // import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
@@ -177,7 +177,6 @@ const PageSwap = () => {
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
 
-  // const ROUTER = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
   async function getRate(amount, path) {
@@ -188,31 +187,6 @@ const PageSwap = () => {
     }
   }
   
-
-  // useEffect(() => {
-
-  //   if (!!account && !!library) {
-  //     (async () => {
-  //       let pricef = await getPrice(amount, routerContract);
-  //       console.log("price: " + pricef);
-  //       // setPrice(pricef);                        
-  //     })()
-      
-  //   }
-  // }, [account, library, routerContract, amount]);      
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     // let globalData = await getGlobalData(ethPrice, oldEthPrice)
-  //     // globalData && update(globalData)
-
-  //     let d= await someData();
-  //     console.log(">> " + d);
-  
-  //     // let allTokens = await getAllTokensOnUniswap()
-    
-  //   fetchData();
-  // }, [])
 
   const debounceHandleChange = _.debounce(async (amountText) => {
     console.log(`amountText`, amountText);
@@ -250,9 +224,6 @@ const PageSwap = () => {
     debounceHandleChange(amountText);
   }
 
-  async function swap() {
-  }
-
   // TODO: Clean this up
   async function swapIn() {
     console.log(amount);
@@ -279,7 +250,7 @@ const PageSwap = () => {
         // setPrice(pricef);
       })();
     }
-  }, [account, library, routerContract]);
+  }, [account, library, routerContract, amount, getRate]);
 
 
     // const currencySelect = 'BNB';
@@ -339,7 +310,6 @@ const PageSwap = () => {
                           <CurrencySelect currency={currencyName}/>
                         </CurrencyContext.Provider>
                         {/* </ModalContext.Provider> */}
-                       
                        
                     </span>
 

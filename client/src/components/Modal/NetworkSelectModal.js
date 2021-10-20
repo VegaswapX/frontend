@@ -6,7 +6,7 @@ import {useWeb3React} from "@web3-react/core";
 import styled from 'styled-components'
 
 import { NetworkButton } from "../Buttons";
-import {switchNetworkToBSC, SwitchNetworkToBSC, switchNetworkToBSCTestNet} from "../../utils/wallet"
+import {switchNetworkToBSC, switchNetworkToBSCTestNet} from "../../chain/wallet"
 
 const NetworkImage = styled.img`
   width: 36px;

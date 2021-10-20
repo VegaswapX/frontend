@@ -5,18 +5,23 @@ import React, {useEffect, useState, createContext, useMemo} from 'react';
 import { Row, Col, Button, Modal, Form } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import { useWeb3React } from "@web3-react/core";
-// import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-// import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
-import FACTORY_ABI from "../../abis/Factory.json";
+import { BigNumber } from "ethers";
+import "react-toastify/dist/ReactToastify.css";
+import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
 import { useContract } from "../../chain/eth.js";
-import { ethers } from "ethers";
-import {swapETH} from './trade.js';
+import { default as contracts } from "../../constants/contracts";
+import { getAmountsOut, swapExactETHForTokens } from "./trade.js";
+// import { VEGA_TOKEN_ADDRESS, POOL_TOKEN_ADDRESS } from "../../../chain/Contracts.js";
+// import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
+// import POOL_CONTRACT_ABI from "../../../abis/BoostPool.json";
+// import { clientPCS } from "../../apollo/client";
+// import { FACTORY_PAIRS } from "../../apollo/queries";
 // import { useTable } from "react-table";
 import Tokentable from "./tokentable.js";
-import {someData} from './graphinfo'
+// import {someData} from './graphinfo'
 
-import {WBNB, VGA, FACTORY_ADDRESS, PCS_ROUTER_ADDRESS} from './addr'
+import {WBNB, VGA, PCS_ROUTER_ADDRESS} from './addr'
 
 // import Tokens from './Tokens';
 
@@ -40,7 +45,52 @@ export const CurrencyContext = createContext({
 //   xmodal: "1",
 //   xsetModal: () => {},
 // });
+// const config = {
+//   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+//   usdt: '0x55d398326f99059ff775485246999027b3197955',
+//   pancakeSwapRouter: '0x10ed43c718714eb63d5aa57b78b54704e256024e',
+//   vga: '0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d',
+//   slippage: 12,
+// }
 
+
+// async function getAllTokensOnUniswap() {
+// 	try {
+// 		let allFound = false
+// 		let skipCount = 0
+// 		let tokens = []
+// 		while (!allFound) {
+// 			let result = await client.query({
+// 				query: ALL_TOKENS,
+// 				variables: {
+// 					skip: skipCount,
+// 				},
+// 				fetchPolicy: 'cache-first',
+// 			})
+// 			tokens = tokens.concat(result?.data?.tokens)
+//       allFound = true;
+// 			// if (result?.data?.tokens?.length < TOKENS_TO_FETCH || tokens.length > TOKENS_TO_FETCH) {
+// 			// 	allFound = true
+// 			// }
+// 			// skipCount = skipCount += TOKENS_TO_FETCH
+// 		}
+// 		return tokens
+// 	} catch (e) {
+// 		console.log(e)
+// 	}
+// }
+
+
+
+function toUnit256(amount, token) {
+  return BigNumber.from(Math.round(amount * 1000000)).mul(BigNumber.from(10).pow(token.decimals - 6));
+}
+
+function toFloatNumber(amount, token) {
+  // check token decimals
+  const y = amount.div(BigNumber.from(10).pow(12));
+  return y.toNumber() / Math.pow(10, 6);
+}
 
 const CurrencySelect = (props) => {
     const [modal, setModal] = useState(false);
@@ -104,144 +154,132 @@ const CurrencySelect = (props) => {
           
         </span>
     );
-};
+}
 
+const defaultTokenPath = ["WBNB", "VGA"];
+// const defaultSlippage = 0.5 / 100;
 
 const PageSwap = () => {
+  const { account, library } = useWeb3React();
 
-    const { account, library } = useWeb3React();
-    
-    const [amount] = React.useState(0);
-    const [amountOut] = React.useState(0);
-    const [setPairslength] = React.useState(0);    
+  const chainId = 56;
 
-    // const ROUTER = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
-        
-    const factoryContract = useContract(FACTORY_ADDRESS, FACTORY_ABI, true);
-    const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
+  // TODO: Set token0, token1 properly
 
-    async function getPrice(amount){      
-      if (amount > 0 && routerContract){
-        let x = await routerContract.callStatic
-              .getAmountsOut(amount, [WBNB, VGA]);                      
-        return x[1];   
-      } else {
-        return 0;
-      }
+  // TODO: Clean all this
+  const [amount] = React.useState(0);
+  const [amountOut] = React.useState(0);
+  
+
+  const token0 = contracts[chainId][defaultTokenPath[0]];
+  const token1 = contracts[chainId][defaultTokenPath[1]];
+
+  const [token0Input, setToken0Input] = useState(0);
+  const [token1Input, setToken1Input] = useState(0);
+
+  // const ROUTER = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
+  const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
+
+  async function getRate(amount, path) {
+    if (amount > 0) {
+      let x = await routerContract.callStatic
+        .getAmountsOut(amount, path);
+      return x[1];
     }
+  }
+  
 
-    async function setAmountOut(amountStr){
+  // useEffect(() => {
 
-        // let am = parseInt(amount);
-        // let x = ethers.utils.parseUnits('0.01', 'ether');
-        try {
-          let x = ethers.utils.parseUnits(amountStr, 'ether');
-          console.log("?? " + x);
-
-          console.log(">>> " + amountStr);    
-          let am = parseFloat(amountStr);
-          // const b = ethers.utils.parseUnits(am, 18)
-
-          // let am = ethers.utils.formatEth(amount.toString());
-          // let am = parseFloat(amount);
-          // am = am * 10**18;
-          // console.log(">>> " + b);    
-          console.log(">>> " + am);    
-          // console.log(">>> " + am / 10**18);    
-          // let pm = parseInt(amountOut);        
-          // setAmount(am.toString());
-          // setAmount(amount);
-          // setAmountDec(am);
-          // let z = await getPrice(am);        
-          // setAmountout(z.toString());
-        } catch {
-            console.log("error")
-        }
-    }
-
-
-    async function swapIn(){
-      console.log(amount);
-      console.log(amountOut);
-
-      //1%
-
-      let slip = Math.floor(amountOut * 990 / 1000);
-      let amountOutMin = amountOut - slip;
-      console.log('Calculated Amounts out: ' + amountOutMin);
-      const to = account;
-      const deadline = Math.floor(Date.now() / 1000) + 60 * 10; //10min
-      console.log(amountOutMin,[WBNB, VGA],to,deadline);
-      let receipt = await swapETH(routerContract, amount, amountOutMin, to, deadline);
-      console.log("tx " + receipt);
-    }
-
-    useEffect(() => {
-        if (!!account && !!library) {
-          let stale = false;
-    
-          factoryContract.callStatic
-            .allPairsLength()
-            .then((x) => {
-              if (!stale) {
-                console.log("allPairsLength: " + x);
-                setPairslength(x.toString());
-              } else {
-                  console.log("...")
-              }
-            })
-            .catch(() => {
-              if (!stale) {
-                setPairslength(null);
-              }
-            });
-    
-          return () => {
-            stale = true;
-            console.log("...")
-            setPairslength(undefined);
-          };
-        }
-      }, [account, library, factoryContract, setPairslength]);
-
-      useEffect(() => {
-
-        if (!!account && !!library) {
-          (async () => {
-            let pricef = await getPrice(amount, routerContract);
-            console.log("price: " + pricef);
-            // setPrice(pricef);                        
-          })()
-          
-        }
-      }, [account, library, routerContract, amount]);      
-
-      useEffect(() => {
-        async function fetchData() {
-          // let globalData = await getGlobalData(ethPrice, oldEthPrice)
-          // globalData && update(globalData)
-
-          let d= await someData();
-          console.log(">> " + d);
+  //   if (!!account && !!library) {
+  //     (async () => {
+  //       let pricef = await getPrice(amount, routerContract);
+  //       console.log("price: " + pricef);
+  //       // setPrice(pricef);                        
+  //     })()
       
-          // let allTokens = await getAllTokensOnUniswap()
-         
-          // updateAllTokensInUniswap(allTokens)
-        }
-        // if (!data && ethPrice && oldEthPrice) {
-        //   fetchData()
-        // }
-        fetchData();
-      }, [])
-      
+  //   }
+  // }, [account, library, routerContract, amount]);      
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     // let globalData = await getGlobalData(ethPrice, oldEthPrice)
+  //     // globalData && update(globalData)
+
+  //     let d= await someData();
+  //     console.log(">> " + d);
+  
+  //     // let allTokens = await getAllTokensOnUniswap()
+    
+  //   fetchData();
+  // }, [])
+
+  const debounceHandleChange = _.debounce(async (amountText) => {
+    console.log(`amountText`, amountText);
+    // setToken0Input(amountText);
+    console.log(`Running debounce`);
+    let amount;
+    try {
+      amount = parseFloat(amountText); // why parseInt
+    } catch (e) {
+      console.log("Cannot parse float", amountText);
+    }
 
     // function swapIn() {
     //     console.log("swap in " + amount);    
     // }
+    if (isNaN(amount) || amount <= 0) {
+      return;
+    }
 
-    // function swapOut() {
-    //     console.log("swap out " + amount);    
-    // }
+    console.log(`amount`, amount);
+
+    let etherAmount = toUnit256(amount, token0);
+    console.log(`etherAmount`, etherAmount.toString());
+    const outAmount = await getAmountsOut(routerContract, etherAmount, [token0, token1]);
+    const outAmountFloat = toFloatNumber(outAmount, token1);
+    console.log(`outAmount`, outAmountFloat);
+    setToken1Input(outAmountFloat.toFixed(2));
+    // convert back to float
+  }, 500);
+
+  function handleChange(e) {
+    const amountText = e.target.value;
+    console.log(`amountText`, amountText);
+    setToken0Input(amountText);
+    debounceHandleChange(amountText);
+  }
+
+  async function swap() {
+  }
+
+  // TODO: Clean this up
+  async function swapIn() {
+    console.log(amount);
+    console.log(amountOut);
+
+    // 1%
+
+    let slip = Math.floor(amountOut * 990 / 1000);
+    let amountOutMin = amountOut - slip;
+    console.log("Calculated Amounts out: " + amountOutMin);
+    const to = account;
+    const deadline = Math.floor(Date.now() / 1000) + 60 * 10; // 10min
+    console.log(amountOutMin, [WBNB, VGA], to, deadline);
+    let receipt = await swapExactETHForTokens(routerContract, amount, amountOutMin, to, deadline);
+    console.log("tx " + receipt);
+  }
+  
+
+  useEffect(() => {
+    if (!!account && !!library) {
+      (async () => {
+        let pricef = await getRate(amount, routerContract);
+        console.log("price: " + pricef);
+        // setPrice(pricef);
+      })();
+    }
+  }, [account, library, routerContract]);
 
 
     // const currencySelect = 'BNB';
@@ -274,11 +312,20 @@ const PageSwap = () => {
                     <h1>Swap</h1>                    
                     
                     <div style={{backgroundColor: "rgb(19,20,25)", borderRadius: "10px", height: "120px", width: "280px"}}>
-                    
+                          
+  {/* 
+  //TODO fix
+  //               <input
+  //                 value={}
+  //                 
+  //               />
+  //                   {token1Input} */}
+
                     <input
                         type="text"
-                        value={amount}
-                        onChange={e => setAmountOut(e.target.value)}
+                        value={token0Input}
+                        // onChange={e => setAmountOut(e.target.value)}
+                        onChange={handleChange}
                         className="" 
                         step="0.01"
                         style={{fontSize: "22px", borderRadius: "10px", backgroundColor: "rgb(19,20,25)", color: "white", marginTop: "20px",  marginLeft: "30px", border: "0px", width: "100px"}}
@@ -289,7 +336,7 @@ const PageSwap = () => {
                       
                         {/* <ModalContext.Provider mvalue={false}> */}
                         <CurrencyContext.Provider value={value}>
-                        <CurrencySelect currency={currencyName}/>
+                          <CurrencySelect currency={currencyName}/>
                         </CurrencyContext.Provider>
                         {/* </ModalContext.Provider> */}
                        
@@ -325,7 +372,8 @@ const PageSwap = () => {
                 </Col>
             </Row>
         </>
-    );
+    );    
+  
 };
 
 export default PageSwap;

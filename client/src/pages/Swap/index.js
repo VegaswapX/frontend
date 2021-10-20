@@ -1,7 +1,7 @@
 //TODO
 //set logo
 
-import React, {useEffect, useState, createContext, useContext, useMemo} from 'react';
+import React, {useEffect, useState, createContext, useMemo} from 'react';
 import { Row, Col, Button, Modal, Form } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import { useWeb3React } from "@web3-react/core";
@@ -31,15 +31,15 @@ function SwapButton(props){
 // const CurrencyContext = createContext('Default Value');
 
 
-export const UserContext = createContext({
-  userName: '',
-  setUserName: () => {},
+export const CurrencyContext = createContext({
+  currencyName: '',
+  setcurrencyName: () => {},
 });
 
-export const ModalContext = createContext({
-  xmodal: "1",
-  xsetModal: () => {},
-});
+// export const ModalContext = createContext({
+//   xmodal: "1",
+//   xsetModal: () => {},
+// });
 
 
 const CurrencySelect = (props) => {
@@ -49,7 +49,6 @@ const CurrencySelect = (props) => {
     const [scroll] = useState(null);
 
     // const { xmodal, xsetModal } = useContext(ModalContext);
-    const { userName, setUserName } = useContext(UserContext);
 
     // const currencySelectValue = CurrencyContext(Context);
     // console.log(currencySelectValue);    
@@ -72,7 +71,7 @@ const CurrencySelect = (props) => {
         // xsetModal("2");
         // console.log(modal);
         // console.log(xmodal);
-        // setUserName("ZZZZ")
+        // setcurrencyName("ZZZZ")
     };
 
 
@@ -249,13 +248,13 @@ const PageSwap = () => {
 
     // const value = 'BNB';
 
-    const [userName, setUserName] = useState('BNB');
+    const [currencyName, setcurrencyName] = useState('BNB');
 
-    const { xmodal, xsetModal } = useContext(ModalContext);
+    // const { xmodal, xsetModal } = useContext(ModalContext);
 
     const value = useMemo(
-      () => ({ userName, setUserName }), 
-      [userName]
+      () => ({ currencyName, setcurrencyName }), 
+      [currencyName]
     );
 
     // const mvalue = useMemo(
@@ -287,14 +286,14 @@ const PageSwap = () => {
 
                     {/* <span style={{marginLeft: "10px", fontSize: "22px"}}> */}
                     <span style={{fontSize: "22px"}}>
-                      {/* <Context.Provider currencySelect={value} value={value}> */}
-                        <ModalContext.Provider mvalue={false}>
-                        <UserContext.Provider value={value}>
-                        <CurrencySelect currency={userName}/>
-                        </UserContext.Provider>
-                        </ModalContext.Provider>
-                       {/* </Context.Provider> */}
-                       {/* {userName !== null ? userName : ""} */}
+                      
+                        {/* <ModalContext.Provider mvalue={false}> */}
+                        <CurrencyContext.Provider value={value}>
+                        <CurrencySelect currency={currencyName}/>
+                        </CurrencyContext.Provider>
+                        {/* </ModalContext.Provider> */}
+                       
+                       
                     </span>
 
                     <br/>

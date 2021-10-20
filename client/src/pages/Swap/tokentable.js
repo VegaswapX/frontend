@@ -3,21 +3,21 @@ import React, { useMemo, useContext } from "react";
 // import axios from 'axios';
 // import xdata from "./data";
 import tokens from "./Tokens";
-import {UserContext, ModalContext} from './index'
+import {CurrencyContext} from './index'
 
 
 function Table({ columns, data }) {
 
-  const { userName, setUserName } = useContext(UserContext);
+  const { setcurrencyName } = useContext(CurrencyContext);
   // const { xmodal, xsetModal } = useContext(ModalContext);
 
   // Use the useTable Hook to send the columns and data to build the table
   const {
-    getTableProps, // table props from react-table
-    getTableBodyProps, // table body props from react-table
+    getTableProps, 
+    getTableBodyProps,
     // headerGroups, // headerGroups, if your table has groupings
-    rows, // rows for the table based on the data passed
-    prepareRow // Prepare the row (this function needs to be called for each row before getting the row props)
+    rows, 
+    prepareRow 
   } = useTable({
     columns,
     data
@@ -26,7 +26,7 @@ function Table({ columns, data }) {
   function rowClick(row){
     // console.log(row.original.contract)
     console.log(row.original.name)
-    setUserName(row.original.name)
+    setcurrencyName(row.original.name)
     // xsetModal(false)
   }
 

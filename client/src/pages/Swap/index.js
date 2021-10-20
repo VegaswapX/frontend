@@ -102,7 +102,6 @@ const CurrencySelect = (props) => {
   // const currencySelectValue = CurrencyContext(Context);
   // console.log(currencySelectValue);
 
-  
   const toggle = () => {
     setModal(!modal);
   };
@@ -138,7 +137,6 @@ const CurrencySelect = (props) => {
     </span>
   );
 };
-
 
 // const defaultSlippage = 0.5 / 100;
 
@@ -176,7 +174,7 @@ const PageSwap = () => {
     } catch (e) {
       console.log("Cannot parse float", amountText);
     }
-    
+
     if (isNaN(amount) || amount <= 0) {
       return;
     }
@@ -216,7 +214,7 @@ const PageSwap = () => {
     const deadline = Math.floor(Date.now() / 1000) + 60 * 10; // 10min
     console.log(amountOutMin, [WBNB, VGA], to, deadline);
     let receipt = await swapExactETHForTokens(
-      routerContract, 
+      routerContract,
       amount,
       amountOutMin,
       to,
@@ -233,7 +231,6 @@ const PageSwap = () => {
     () => ({ currencyName, setcurrencyName }),
     [currencyName]
   );
-
 
   return (
     <>

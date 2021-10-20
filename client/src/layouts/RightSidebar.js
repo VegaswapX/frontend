@@ -8,16 +8,11 @@ import SimpleBar from 'simplebar-react';
 // actions
 import { hideRightSidebar } from '../redux/actions';
 
-type RightSideBarProps = {
-    hideRightSidebar?: () => void,
-    title?: string,
-    children?: any,
-};
 
-const RightSideBar = (props: RightSideBarProps): React$Element<React$FragmentType> => {
+const RightSideBar = (props) => {
     const dispatch = useDispatch();
 
-    const rightBarNodeRef: any = useRef(null);
+    const rightBarNodeRef = useRef(null);
 
     RightSideBar.defaultProps = {
         title: 'Settings',
@@ -29,7 +24,7 @@ const RightSideBar = (props: RightSideBarProps): React$Element<React$FragmentTyp
     /**
      * Handles the close
      */
-    const handleClose = (e: any) => {
+    const handleClose = (e) => {
         e.preventDefault();
         dispatch(hideRightSidebar());
     };
@@ -37,7 +32,7 @@ const RightSideBar = (props: RightSideBarProps): React$Element<React$FragmentTyp
     /**
      * Handle the click anywhere in doc
      */
-    const handleOtherClick = (e: any) => {
+    const handleOtherClick = (e) => {
         if (rightBarNodeRef && rightBarNodeRef.current && rightBarNodeRef.current.contains(e.target)) return;
         // else hide the right sidebar
         else dispatch(hideRightSidebar());

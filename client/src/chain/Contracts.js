@@ -22,6 +22,9 @@ export const VEGA_TOKEN_ADDRESS = "0xDe6D2D63b10c088263B55154638746bD1057312F";
 export const POOL_TOKEN_ADDRESS = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
 export const BSC_USDT = "0xDe6D2D63b10c088263B55154638746bD1057312F";
 
+export const POOL1 = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
+export const POOL2 = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
+
 export function getContract(name){
 
     console.log(">>> getContract " + name);

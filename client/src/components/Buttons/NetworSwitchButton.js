@@ -14,7 +14,6 @@ const NetworkSwitchButton = () => {
     const handleClose = () => setShow(false)
 
     function chainEl(){
-        console.log("?? " + chainId)
         switch(chainId){
             case 1337:
                 return "Localhost"                    

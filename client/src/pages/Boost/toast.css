@@ -1,14 +1,14 @@
 .Toastify__toast--warning {
-  background: #FFE8BC !important;
+  background: #ffe8bc !important;
 }
 .Toastify__toast--error {
-  background: #FCA7A9 !important;
+  background: #fca7a9 !important;
 }
 .toastBody {
   font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
-  color: #10171D; /* #10171D */
+  color: #10171d; /* #10171D */
   font-size: 0.875rem !important;
 }
 .toastProgress {
-  background: #333F48 !important;
+  background: #333f48 !important;
 }

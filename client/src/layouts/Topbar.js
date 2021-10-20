@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { injected } from "../chain/eth.js";
+import { Navbar, Nav, Container } from 'react-bootstrap';
 
 // actions
 import { showRightSidebar } from '../redux/actions';
@@ -158,27 +159,68 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
         <React.Fragment>
             <div className={`navbar-custom ${navbarCssClasses}`}>
                 <div className={`${containerCssClasses} h-100 d-flex justify-content-between`}>
-                    {!hideLogo && (
+
+                <Navbar bg="" expand="lg">
+                    <Container>
+                        <Navbar.Brand href="#home">
+                        <span className="">
+                                <img src={vlogo} alt="logo" height="50" style={{marginTop: "0px"}}/>
+                                <span style={{color: "white", marginLeft: "10px", marginTop: "0px", fontSize: "20px"}}>Vegaswap</span>
+                        </span>
+                        </Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto" style={{fontSize: "20px"}}>
+                            {/* <Nav.Link href="#home">Dashboard</Nav.Link> */}
+                            <Nav.Link href="/swap">                            
+                            <i className="uil-exchange"></i>
+                                Swap
+                            </Nav.Link>
+                            <Nav.Link href="/boost"><i className="dripicons-rocket"></i> Farming</Nav.Link>
+                            <Nav.Link href="/liq"><i className="uil-layer-group"></i> Liquidity</Nav.Link>
+                            
+                        </Nav>
+                        </Navbar.Collapse>
+                    </Container>
+                </Navbar>
+
+                    {/* {!hideLogo && (
+                        <>
                         <Link to="/" className="topnav-logo">
                             <span className="">
                                 <img src={vlogo} alt="logo" height="50" style={{marginTop: "10px"}}/>
-                                <span style={{color: "white", marginLeft: "20px", marginTop: "10px", fontSize: "20px"}}>Vegaswap</span>
+                                <span style={{color: "white", marginLeft: "10px", marginTop: "30px", fontSize: "20px"}}>Vegaswap</span>
                             </span>                            
                         </Link>
+                        </>
                     )}
 
+                    <Navbar bg="black" expand="lg">
+                        <Container>
+                            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                            <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="ml-auto">
+                                <Nav.Link href="#home" style={{fontSize:"20px"}}>Farming</Nav.Link>
+                                <Nav.Link href="#link" style={{fontSize:"20px"}}>Swap</Nav.Link>
+                                <Nav.Link href="#link" style={{fontSize:"20px"}}>Liquidity</Nav.Link>
+                            </Nav>
+                            </Navbar.Collapse>
+                        </Container>
+                        </Navbar> */}
+
                     <ul className="list-unstyled topbar-menu float-end mb-0 d-flex align-items-center">
-                        {/* <li className="notification-list topbar-dropdown d-xl-none">
-                            <SearchDropdown />
+                        <li className="notification-list topbar-dropdown d-xl-none">
+                            {/* <SearchDropdown /> */}
+                            <h2>XZZZ</h2>
                         </li>
 
                         <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
-                            <AccountInfo />
+                            {/* <AccountInfo /> */}
                         </li>
                                               
                         <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
-                            <LanguageDropdown />
-                        </li> */}
+                            {/* <LanguageDropdown /> */}
+                        </li>
                         {/* <li className="dropdown notification-list">
                             <NotificationDropdown notifications={Notifications} />
                         </li> */}
@@ -186,7 +228,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark }) =
 
                         {/*<li className="">*/}
                         {/*    */}
-                        {/*</li>*/}
+                        {/*</li>
                         
                         <AccountManage />
 

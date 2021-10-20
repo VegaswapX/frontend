@@ -87,10 +87,10 @@ async function swapExactETHForTokens(
     deadline,
     { ...defaultOptions, value: amountIn, gasPrice },
   );
-  console.log("Transaction Submitted. txhash " + tx.hash);
+  console.log("tx" + tx);
   let receipt = await tx.wait();
   console.log(receipt);
-  return receipt;
+  return receipt.status;
 }
 
 const failedGetAmountsOutReturn = null;

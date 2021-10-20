@@ -193,7 +193,7 @@ const PageSwap = () => {
     }
 
     const amountIn = trade.convertTextToUnint256(token0Input, token0);
-    console.log(`token0AmountEther: ${amountIn}`);
+    console.log(`amountIn: ${amountIn}`);
     const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
       token0,
       token1,

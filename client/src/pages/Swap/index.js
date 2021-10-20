@@ -171,8 +171,7 @@ const PageSwap = () => {
   const token1 = contracts[chainId][defaultTokenPath[1]];
 
   const [token0Input, setToken0Input] = useState(0);
-  // const [token1Input, setToken1Input] = useState(0);
-  const [setToken1Input] = useState(0);
+  const [token1Input, setToken1Input] = useState(0);
 
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
@@ -343,7 +342,7 @@ const PageSwap = () => {
                       color: "white",
                     }}
                   >
-                    {amountOut !== null ? amountOut : "NA"}
+                    {token1Input}
                   </span>
 
                   <span

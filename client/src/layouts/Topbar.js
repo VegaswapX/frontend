@@ -90,6 +90,8 @@ const AccountManage = () => {
     const [networkStatus, setNetworkStatus] = useState(true)
     const { activate } = useWeb3React()
 
+    console.log("networkStatus " + networkStatus);
+
     async function connect() {
         await activate(injected, async (error) => {
             if (error instanceof UnsupportedChainIdError) {
@@ -106,7 +108,7 @@ const AccountManage = () => {
       return (
           <>
               <NetworkSwitchButton />
-              <AccountInfo />
+              <AccountInfo />              
               <AccountConnect connect={connect} />
           </>
       )

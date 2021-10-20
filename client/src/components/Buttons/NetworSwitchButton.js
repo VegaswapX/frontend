@@ -7,14 +7,34 @@ const NetworkSwitchButton = () => {
     const { chainId } = useWeb3React()
     const [show, setShow] = useState(false)
 
-    const handleShow = () => setShow(true)
+    const handleShow = () => {
+        console.log("handleShow")
+        setShow(true)
+    }
     const handleClose = () => setShow(false)
 
-    return <>
-        {chainId === 1337 ? <Button variant={"outline-primary"} className="me-3" onClick={handleShow}>Localhost</Button>
-        : chainId === 97 ? <Button variant={"outline-primary"}>BSC Testnet</Button> : <></>}
-        <NetworkSelectModal show={show} onHide={handleClose} />
-    </>
+    function chainEl(){
+        console.log("?? " + chainId)
+        switch(chainId){
+            case 1337:
+                return "Localhost"                    
+            case 97:
+                return "BSC Testnet";
+            case 56:
+                return "BSC Mainnet";                        
+            default:
+                return "Not connected"
+        }    
+    }
+
+    
+    return (
+        <><Button variant={"outline-primary"} className="me-3" onClick={handleShow}>                    
+                    <h4>{chainEl()}</h4>
+                    {/* <NetworkSelectModal show={show} onHide={handleClose} /> */}
+                    </Button></>
+    )        
+    
 }
 
 export default NetworkSwitchButton

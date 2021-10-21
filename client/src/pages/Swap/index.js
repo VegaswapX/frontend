@@ -128,6 +128,8 @@ function TokenInputUI(value, currencyName, token0Input, handleChange) {
         value={token0Input}
         style={{
           textAlign: "right",
+          fontFamily: "Consolas",
+          fontSize: "1.3rem"
         }}
         onChange={handleChange}
     />

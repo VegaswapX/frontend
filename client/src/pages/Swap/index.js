@@ -206,25 +206,26 @@ const PageSwap = () => {
   // Rewrite swap that supports both ETH->Token and Token->Token
   // float number should work properly
   async function swap() {
-    if (routerContract === null) {
-      console.log("You don't connect to bsc mainnet");
-      return;
-    }
-
-    const amountIn = trade.convertTextToUnint256(token0Input, token0);
-    console.log(`amountIn: ${amountIn}`);
-    const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
-      token0,
-      token1,
-    ]);
-    // calculate slippage
-    const amountOutMin = amountOut.mul(Math.round((1 - slippage) * 1000)).div(1000);
-    const status = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
-    if (status === 1) {
-      // Toast
-    } else {
-      // Toast
-    }
+    console.log(`slippage`, slippage);
+    // if (routerContract === null) {
+    //   console.log("You don't connect to bsc mainnet");
+    //   return;
+    // }
+    //
+    // const amountIn = trade.convertTextToUnint256(token0Input, token0);
+    // console.log(`amountIn: ${amountIn}`);
+    // const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
+    //   token0,
+    //   token1,
+    // ]);
+    // // calculate slippage
+    // const amountOutMin = amountOut.mul(Math.round((1 - slippage) * 1000)).div(1000);
+    // const status = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
+    // if (status === 1) {
+    //   // Toast
+    // } else {
+    //   // Toast
+    // }
   }
 
   return (
@@ -276,8 +277,9 @@ const PageSwap = () => {
                 Slippage
               </h5>
               {slippageRadios.map((radio, idx) => {
-                console.log(radio.value);
-                console.log(slippage);
+                console.log("slippage", slippage);
+                console.log(`radio.value`, radio.value);
+                console.log(slippage === radio.value);
                 return (
                     <ToggleButton
                         key={idx}
@@ -286,7 +288,9 @@ const PageSwap = () => {
                         name="radio"
                         value={radio.value}
                         checked={slippage === radio.value}
-                        onChange={(e) => setSlippage(e.currentTarget.value)}
+                        onChange={(e) => {
+                          setSlippage(parseFloat(e.currentTarget.value));
+                        }}
                     >
                       {radio.name}
                     </ToggleButton>

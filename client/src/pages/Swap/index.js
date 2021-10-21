@@ -277,9 +277,6 @@ const PageSwap = () => {
                 Slippage
               </h5>
               {slippageRadios.map((radio, idx) => {
-                console.log("slippage", slippage);
-                console.log(`radio.value`, radio.value);
-                console.log(slippage === radio.value);
                 return (
                     <ToggleButton
                         key={idx}

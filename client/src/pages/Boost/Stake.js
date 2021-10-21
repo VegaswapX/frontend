@@ -219,7 +219,7 @@ const StakeForm = ({ pool }) => {
   }
 };
 
-const Stake = ({ pool }): React$Element<React$FragmentType> => {
+const Stake = ({ pool }) => {
   return (
     <React.Fragment>
       <Row>

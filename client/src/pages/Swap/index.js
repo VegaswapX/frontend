@@ -70,6 +70,7 @@ const CurrencySelect = (props) => {
   // const currencySelectValue = CurrencyContext(Context);
   // console.log(currencySelectValue);
 
+  
   const toggle = () => {
     setModal(!modal);
   };
@@ -190,7 +191,9 @@ const PageSwap = () => {
   return (
     <>
       <Row>
-        <Col lg={7}>
+        <Col lg={4}>
+        </Col>
+        <Col lg={8}>
           <div
             style={{
               height: "400px",

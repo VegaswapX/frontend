@@ -32,7 +32,7 @@ const NetworkSwitchButton = () => {
     if (supportedChains.includes(chainId)){
         return (
             <><Button variant={"outline-primary"} className="me-3" onClick={handleShow}>                    
-                        <h4>{chainEl()}</h4>
+                        <h5>{chainEl()}</h5>
                         {/* <NetworkSelectModal show={show} onHide={handleClose} /> */}
                         </Button>
             </>

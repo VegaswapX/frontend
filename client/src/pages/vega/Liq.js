@@ -6,8 +6,7 @@ import { Row, Col } from 'react-bootstrap';
 import PageTitle from '../../components/PageTitle';
 
 
-
-const LiqPage = (): React$Element<React$FragmentType> => {
+const LiqPage = () => {
     return (
         <React.Fragment>
             <PageTitle

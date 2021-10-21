@@ -1,94 +1,96 @@
 // @flow
-import React, { Suspense, useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import React, { Suspense, useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 
 // actions
-import { changeLayout } from '../../redux/actions';
-import * as layoutConstants from '../../constants/layout';
+import { changeLayout } from "../../redux/actions";
+import * as layoutConstants from "../../constants/layout";
 
 // components
-import ThemeCustomizer from '../../components/ThemeCustomizer';
+import ThemeCustomizer from "../../components/ThemeCustomizer";
 
 // code splitting and lazy loading
 // https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52
-const Topbar = React.lazy(() => import('../Topbar'));
-const Navbar = React.lazy(() => import('./Navbar'));
-const HNavbar = React.lazy(() => import('./HNavbar'));
-const RightSidebar = React.lazy(() => import('../RightSidebar'));
+const Topbar = React.lazy(() => import("../Topbar"));
+const Navbar = React.lazy(() => import("./Navbar"));
+const HNavbar = React.lazy(() => import("./HNavbar"));
+const RightSidebar = React.lazy(() => import("../RightSidebar"));
 
 const loading = () => <div className="text-center"></div>;
 
 type HorizontalLayoutProps = {
-    children?: any,
+  children?: any,
 };
 
 type HorizontalLayoutState = {
-    isMenuOpened: boolean,
+  isMenuOpened: boolean,
 };
 
-const HorizontalLayout = ({ children }: HorizontalLayoutProps, state: HorizontalLayoutState): React$Element<any> => {
-    const dispatch = useDispatch();
+const HorizontalLayout = (
+  { children }: HorizontalLayoutProps,
+  state: HorizontalLayoutState
+): React$Element<any> => {
+  const dispatch = useDispatch();
 
-    const [isMenuOpened, setIsMenuOpened] = useState(false);
+  const [isMenuOpened, setIsMenuOpened] = useState(false);
 
-    /**
-     * Open the menu when having mobile screen
-     */
-    const openMenu = () => {
-        setIsMenuOpened(!isMenuOpened);
-        if (document.body) {
-            if (isMenuOpened) {
-                document.body.classList.remove('sidebar-enable');
-            } else {
-                document.body.classList.add('sidebar-enable');
-            }
-        }
-    };
+  /**
+   * Open the menu when having mobile screen
+   */
+  const openMenu = () => {
+    setIsMenuOpened(!isMenuOpened);
+    if (document.body) {
+      if (isMenuOpened) {
+        document.body.classList.remove("sidebar-enable");
+      } else {
+        document.body.classList.add("sidebar-enable");
+      }
+    }
+  };
 
-    useEffect(() => {
-        dispatch(changeLayout(layoutConstants.LAYOUT_HORIZONTAL));
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(changeLayout(layoutConstants.LAYOUT_HORIZONTAL));
+  }, [dispatch]);
 
-    return (
-        <>
-            <div className="wrapper">
-                <div className="content-page">
-                    <div className="content">
-                        <Suspense fallback={loading()}>
-                            <Topbar
-                                isMenuOpened={isMenuOpened}
-                                openLeftMenuCallBack={openMenu}
-                                navCssClasses="topnav-navbar"
-                                topbarDark={false}
-                            />
-                        </Suspense>
+  return (
+    <>
+      <div className="wrapper">
+        <div className="content-page">
+          <div className="content">
+            <Suspense fallback={loading()}>
+              <Topbar
+                isMenuOpened={isMenuOpened}
+                openLeftMenuCallBack={openMenu}
+                navCssClasses="topnav-navbar"
+                topbarDark={false}
+              />
+            </Suspense>
 
-                        <Suspense fallback={loading()}>
-                            <Navbar isMenuOpened={isMenuOpened} />
-                        </Suspense>
+            <Suspense fallback={loading()}>
+              <Navbar isMenuOpened={isMenuOpened} />
+            </Suspense>
 
-                        
-                        <HNavbar />
+            <HNavbar />
 
-                        <Container fluid>
-                            <Suspense fallback={loading()}>{children}</Suspense>
-                        </Container>
-                    </div>
+            <Container fluid>
+              <Suspense fallback={loading()}>{children}</Suspense>
+            </Container>
+          </div>
 
-                    {/* <Suspense fallback={loading()}>
+          {/* <Suspense fallback={loading()}>
                        
                     </Suspense> */}
 
-                    <Suspense fallback={loading()}>
-                        <RightSidebar>
-                            <ThemeCustomizer />
-                        </RightSidebar>
-                    </Suspense>
-                </div>
-            </div>
-        </>
-    );
+          <Suspense fallback={loading()}>
+            <RightSidebar>
+              <ThemeCustomizer />
+            </RightSidebar>
+          </Suspense>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default HorizontalLayout;

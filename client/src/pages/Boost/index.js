@@ -42,11 +42,9 @@ const createBoostPoolPage = ({
           />
         </div>
 
-        <Balances />
+        {/* <Balances /> */}
         <Row>
-          <Col lg={7}>
-            {/* <Stake pool={pool} /> */}
-          </Col>
+          
 
           <Col lg={5}>
             <Card className={classNames("border", [`border-primary`])}>
@@ -58,6 +56,10 @@ const createBoostPoolPage = ({
                 {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
               </Card.Body>
             </Card>
+          </Col>
+
+          <Col lg={7}>
+            {/* <Stake pool={pool} /> */}
           </Col>
         </Row>
       </>

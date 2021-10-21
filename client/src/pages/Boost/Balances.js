@@ -1,12 +1,12 @@
 // @flow
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { BNBBalance, Vgabalance, USDTBalance } from "./Balance.js";
+import { BNBBalance, Vgabalance, USDTBalance, Lpbalance } from "./Balance.js";
 
 const Balances = () => {
   return (
     <React.Fragment>
-      <Row>
+      <Row style={{marginTop: "30px"}}>
         <Col lg={6} xl={3}>
           <BNBBalance />
         </Col>
@@ -16,6 +16,9 @@ const Balances = () => {
         </Col>
         <Col lg={6} xl={3}>
           <USDTBalance />
+        </Col>
+        <Col lg={6} xl={3}>
+          <Lpbalance />
         </Col>
       </Row>
     </React.Fragment>

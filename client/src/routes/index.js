@@ -6,6 +6,7 @@ import LiqPage from '../pages/vega/Liq';
 import TxPage from '../pages/vega/Tx';
 
 import {POOL1, POOL2} from "../chain/Contracts.js";
+import {DashboardPage} from "../pages/Dashboard";
 
 // import Route from './Route';
 
@@ -26,7 +27,14 @@ const dashboardRoutes = {
     name: 'Dashboards',
     icon: 'uil-home-alt',
     header: 'Navigation',
-    children: [            
+    children: [ 
+          
+        {
+            path: '/dashboard',
+            name: 'Dashboard',
+            component: DashboardPage,
+            route: Route,
+        },         
         {
             path: '/boost',
             name: 'Boost',

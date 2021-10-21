@@ -3,8 +3,8 @@
 
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "ethers";
-import React, { createContext, useMemo, useState } from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import React, { createContext, useEffect, useMemo, useState } from "react";
+import { Button, ButtonGroup, Col, Form, FormControl, InputGroup, Modal, Row, ToggleButton } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "underscore";
@@ -77,7 +77,7 @@ const CurrencySelect = (props) => {
   return (
     <span>
       {/* <div className="button-list"> */}
-      <Button style={{ backgroundColor: "black" }} onClick={toggle}>
+      <Button size="lg" style={{ backgroundColor: "black" }} onClick={toggle}>
         {props.currency}
       </Button>
 
@@ -109,15 +109,38 @@ const CurrencySelect = (props) => {
 
 const defaultSlippage = 0.5 / 100;
 const defaultTokenPath = ["WBNB", "VGA"];
+const defaultState = {
+  loading: false,
+  currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
+};
+
+function TokenInputUI(value, currencyName, token0Input, handleChange) {
+  return <InputGroup className="mb-3">
+    <CurrencyContext.Provider value={value}>
+      <CurrencySelect currency={currencyName}/>
+    </CurrencyContext.Provider>
+    <FormControl
+        size="lg"
+        type="number"
+        placeholder="Input amount"
+        aria-label="Input amount"
+        aria-describedby="token0Input"
+        value={token0Input}
+        style={{
+          textAlign: "right",
+        }}
+        onChange={handleChange}
+    />
+  </InputGroup>;
+}
 
 const PageSwap = () => {
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   // TODO: Set token0, token1 properly
-  const chainId = 56; // whole app need to double check on account connection
   let token0, token1;
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
-  const [slippage, setSlippage] = useState(defaultSlippage);
+  const [state, setState] = useState(defaultState);
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
   const [currencyName, setcurrencyName] = useState("BNB");
@@ -126,11 +149,24 @@ const PageSwap = () => {
     [currencyName],
   );
 
+  // ui
+  const [slippage, setSlippage] = useState(defaultSlippage);
+
+  const slippageRadios = [
+    { name: "0.3%", value: 0.3 / 100 },
+    { name: "0.5%", value: 0.5 / 100 },
+    { name: "1%", value: 1 / 100 },
+  ];
+
   const debounceOnChange = useMemo(() =>
     _.debounce(async (e) => {
       console.log(`running debounce`);
       await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
     }, 500), [routerContract]);
+
+  // useEffect(() => {
+  //   if (chainId === 56) {}
+  // }, [account, chainId])
 
   if (chainId !== 56) {
     return <></>;
@@ -189,112 +225,83 @@ const PageSwap = () => {
     }
   }
 
-  // const { xmodal, xsetModal } = useContext(ModalContext);
-
   return (
     <>
       <Row>
         <Col lg={12}>
           <div
-            style={{
-              height: "400px",
-              width: "450px",
-              backgroundColor: "#1c1f27",
-              color: "white",
-              margin: "0 auto",
-              marginTop: "2rem",
-              padding: "10px",
-              boxShadow:
-                "rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px",
-              borderRadius: "24px",
-            }}
+              style={{
+                height: "400px",
+                width: "450px",
+                backgroundColor: "#1c1f27",
+                color: "white",
+                margin: "0 auto",
+                marginTop: "2rem",
+                padding: "10px",
+                boxShadow:
+                    "rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px",
+                borderRadius: "24px",
+                border: "1px solid #000",
+              }}
           >
             <Form.Group className="mb-3">
               <h1
-                style={{
-                  "textAlign": "center",
-                }}
+                  style={{
+                    "textAlign": "center",
+                  }}
               >
                 Swap
               </h1>
-              <div
-                className={"swap-main"}
-                style={{
-                  backgroundColor: "rgb(19,20,25)",
-                  height: "120px",
-                  width: "280px",
-                  margin: "0 auto",
-                  background: "rgb(25, 27, 31)",
-                }}
-              >
-                <input
-                  type="text"
-                  value={token0Input}
-                  onChange={handleChange}
-                  className=""
-                  step="0.01"
-                  style={{
-                    fontSize: "22px",
-                    borderRadius: "10px",
-                    backgroundColor: "rgb(19,20,25)",
-                    color: "white",
-                    marginTop: "20px",
-                    marginLeft: "30px",
-                    border: "0px",
-                    width: "100px",
-                  }}
-                />
-
-                {/* <span style={{marginLeft: "10px", fontSize: "22px"}}> */}
-                <span style={{ fontSize: "22px" }}>
-                  {/* <ModalContext.Provider mvalue={false}> */}
-                  <CurrencyContext.Provider value={value}>
-                    <CurrencySelect currency={currencyName} />
-                  </CurrencyContext.Provider>
-                  {/* </ModalContext.Provider> */}
-                </span>
-
-                <br />
-
-                <div style={{ marginLeft: "30px", marginTop: "10px" }}>
-                  <span
-                    style={{
-                      marginLeft: "3px",
-                      width: "100px",
-                      fontSize: "22px",
-                      color: "white",
-                    }}
-                  >
-                    {token1Input}
-                  </span>
-
-                  <span
-                    style={{
-                      marginLeft: "80px",
-                      textAlign: "right",
-                      fontSize: "22px",
-                    }}
-                  >
-                    {
-                      // <Context.Provider currencySelect={currencySelect}>
-                      //   <CurrencySelect currency={"VGA"} />
-                      // </Context.Provider>
-                    }
-                  </span>
+              <div className={"swapMain"}>
+                <div className={"swapInput"}>
+                  {TokenInputUI(value, currencyName, token0Input, handleChange)}
+                  {TokenInputUI(value, "VGA", token1Input, () => {})}
                 </div>
               </div>
             </Form.Group>
 
+            <ButtonGroup
+                className={"expertOptions"}
+                style={{
+                  margin: "10px 0",
+                }}
+            >
+              <h5
+                  style={{
+                    marginRight: "5px",
+                  }}
+              >
+                Slippage
+              </h5>
+              {slippageRadios.map((radio, idx) => {
+                console.log(radio.value);
+                console.log(slippage);
+                return (
+                    <ToggleButton
+                        key={idx}
+                        id={`radio-${idx}`}
+                        type="radio"
+                        name="radio"
+                        value={radio.value}
+                        checked={slippage === radio.value}
+                        onChange={(e) => setSlippage(e.currentTarget.value)}
+                    >
+                      {radio.name}
+                    </ToggleButton>
+                );
+              })}
+            </ButtonGroup>
+
             <div
-              className={"buttons"}
-              style={{
-                textAlign: "center",
-              }}
+                className={"buttons"}
+                style={{
+                  textAlign: "center",
+                }}
             >
               <Button
-                variant="primary"
-                onClick={swap}
-                style={{ width: "100%", fontSize: "1.2em" }}
+                  variant="primary"
+                  onClick={swap}
+                  style={{width: "100%", fontSize: "1.2em"}}
               >
                 Swap
               </Button>

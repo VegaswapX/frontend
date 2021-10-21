@@ -70,7 +70,6 @@ const CurrencySelect = (props) => {
   // const currencySelectValue = CurrencyContext(Context);
   // console.log(currencySelectValue);
 
-  
   const toggle = () => {
     setModal(!modal);
   };
@@ -140,7 +139,6 @@ const PageSwap = () => {
   token0 = contracts[chainId][defaultTokenPath[0]];
   token1 = contracts[chainId][defaultTokenPath[1]];
 
-  // TODO: Clean all this
   async function setOutputAmountText(routerContract, e) {
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
@@ -183,7 +181,12 @@ const PageSwap = () => {
     ]);
     // calculate slippage
     const amountOutMin = amountOut.mul(Math.round((1 - slippage) * 1000)).div(1000);
-    const tx = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
+    const status = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
+    if (status === 1) {
+      // Toast
+    } else {
+      // Toast
+    }
   }
 
   // const { xmodal, xsetModal } = useContext(ModalContext);
@@ -191,25 +194,37 @@ const PageSwap = () => {
   return (
     <>
       <Row>
-        <Col lg={4}>
-        </Col>
-        <Col lg={8}>
+        <Col lg={12}>
           <div
             style={{
               height: "400px",
               width: "450px",
               backgroundColor: "#1c1f27",
               color: "white",
+              margin: "0 auto",
+              marginTop: "2rem",
+              padding: "10px",
+              boxShadow:
+                "rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px",
+              borderRadius: "24px",
             }}
           >
             <Form.Group className="mb-3">
-              <h1>Swap</h1>
+              <h1
+                style={{
+                  "textAlign": "center",
+                }}
+              >
+                Swap
+              </h1>
               <div
+                className={"swap-main"}
                 style={{
                   backgroundColor: "rgb(19,20,25)",
-                  borderRadius: "10px",
                   height: "120px",
                   width: "280px",
+                  margin: "0 auto",
+                  background: "rgb(25, 27, 31)",
                 }}
               >
                 <input
@@ -270,13 +285,20 @@ const PageSwap = () => {
               </div>
             </Form.Group>
 
-            <Button
-              variant="primary"
-              onClick={swap}
-              style={{ width: "180px", fontSize: "20pt" }}
+            <div
+              className={"buttons"}
+              style={{
+                textAlign: "center",
+              }}
             >
-              Swap
-            </Button>
+              <Button
+                variant="primary"
+                onClick={swap}
+                style={{ width: "100%", fontSize: "1.2em" }}
+              >
+                Swap
+              </Button>
+            </div>
           </div>
         </Col>
       </Row>

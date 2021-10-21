@@ -1,39 +1,35 @@
 import React, {useState} from 'react'
 import {useWeb3React} from "@web3-react/core";
 import {Button} from "react-bootstrap";
-import NetworkSelectModal from "../Modal/NetworkSelectModal";
+// import NetworkSelectModal from "../Modal/NetworkSelectModal";
+import {supportedChains, LOCAL_NET, BSC_TESTNET, BSC_MAINNET} from "../../chain/eth.js"
 
 const NetworkSwitchButton = () => {
     const { chainId } = useWeb3React()
-    const [show, setShow] = useState(false)
+    const [setShow] = useState(false)
 
     const handleShow = () => {
         console.log("handleShow")
         setShow(true)
     }
-    const handleClose = () => setShow(false)
+    // const handleClose = () => setShow(false)
 
-    const TESTNET = 1337;
-    const BSC_MAIN = 56;
-    const BSC_TEST = 97;
-    const supportedNets = [BSC_MAIN, BSC_TEST, TESTNET];
+    
 
     function chainEl(){
         switch(chainId){
-            case TESTNET:
+            case LOCAL_NET:
                 return "Localhost"                    
-            case BSC_TEST:
+            case BSC_TESTNET:
                 return "BSC Testnet";
-            case BSC_MAIN:
+            case BSC_MAINNET:
                 return "BSC Mainnet";                        
             default:
                 return "Not supported"
         }    
     }
 
-    console.log(">> " + chainId);
-
-    if (supportedNets.includes(chainId)){
+    if (supportedChains.includes(chainId)){
         return (
             <><Button variant={"outline-primary"} className="me-3" onClick={handleShow}>                    
                         <h4>{chainEl()}</h4>

@@ -5,10 +5,11 @@ import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 // import { NetworkConnector } from "@web3-react/network-connector";
 
-const BSC_MAINNET = 56;
-const BSC_TESTNET = 97;
-const LCOAL_NET = 1337
-const supportedChains = [BSC_MAINNET, BSC_TESTNET, LCOAL_NET]
+export const BSC_MAINNET = 56;
+export const BSC_TESTNET = 97;
+export const LOCAL_NET = 1337
+export const supportedChains = [BSC_MAINNET, BSC_TESTNET, LOCAL_NET]
+
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
@@ -28,10 +29,17 @@ export function getContract(address, ABI, library, account) {
 }
 
 export const useContract = (address, ABI, withSignerIfPossible = true) => {
+  console.log("useContract " + address);
   const { account, library } = useWeb3React();
 
   return useMemo(() => {
-    if (!address || !ABI || !library) return null;
+    if (!address || !ABI || !library) {
+      console.log("cant load contract")
+      console.log("address " + address);
+      console.log("library " + library);
+      return null;
+    }
+    
     try {
       return getContract(
         address,

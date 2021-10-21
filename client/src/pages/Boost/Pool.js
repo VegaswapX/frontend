@@ -72,7 +72,7 @@ export function PoolInfo({ pool }) {
   const [poolStatus, setPoolstatus] = useState();
   let startTimex;
 
-  const contractLoaded = false;
+  // const contractLoaded = false;
 
   //functions
   async function getMaxYield() {
@@ -153,6 +153,9 @@ export function PoolInfo({ pool }) {
       setTotalAmountStaked(undefined);
     };
   }, [account, library, poolContract]);
+
+  //loadContract
+  //
 
   useEffect(() => {
     let stale = false;

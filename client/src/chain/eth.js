@@ -29,7 +29,7 @@ export function getContract(address, ABI, library, account) {
 }
 
 export const useContract = (address, ABI, withSignerIfPossible = true) => {
-  console.log("useContract " + address);
+  // console.log("useContract " + address);
   const { account, library } = useWeb3React();
 
   return useMemo(() => {

@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 import { useContract } from "../../chain/eth.js";
-import { VEGA_TOKEN_ADDRESS, BSC_USDT } from "../../chain/Contracts.js";
+import { VEGA_TOKEN_ADDRESS, LP_TOKEN_ADDRESS, BSC_USDT } from "../../chain/Contracts.js";
 import { formatEther } from "@ethersproject/units";
 import StatisticsChartWidget from "../../components/StatisticsChartWidget";
 
@@ -22,8 +22,7 @@ export const formatCurrency = (balance) => {
 export function Vgabalance() {
   const { account, library, chainId } = useWeb3React();
 
-  // console.log(">> " + chainId + " " + contractMap[chainId]["VEGA_TOKEN"]);
-  //CONTRACT_MAP["BoostPool"]
+  console.log(">> " + chainId + " " + VEGA_TOKEN_ADDRESS);
 
   const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
   //const vegaContract = useContract(contractMap[chainId]["VEGA_TOKEN"], VEGA_CONTRACT_ABI, true);
@@ -90,7 +89,7 @@ export function Lpbalance() {
   // console.log(">> " + chainId + " " + contractMap[chainId]["VEGA_TOKEN"]);
   //CONTRACT_MAP["BoostPool"]
 
-  const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
+  const vegaContract = useContract(LP_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
   //const vegaContract = useContract(contractMap[chainId]["VEGA_TOKEN"], VEGA_CONTRACT_ABI, true);
 
   // const [loading, setLoading] = useState(false);

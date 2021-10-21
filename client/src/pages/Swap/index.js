@@ -166,10 +166,6 @@ const PageSwap = () => {
       await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
     }, 500), [routerContract]);
 
-  // useEffect(() => {
-  //   if (chainId === 56) {}
-  // }, [account, chainId])
-
   if (chainId !== 56) {
     return <></>;
   }

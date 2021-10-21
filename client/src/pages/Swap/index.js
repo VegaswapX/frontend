@@ -207,25 +207,25 @@ const PageSwap = () => {
   // float number should work properly
   async function swap() {
     console.log(`slippage`, slippage);
-    // if (routerContract === null) {
-    //   console.log("You don't connect to bsc mainnet");
-    //   return;
-    // }
-    //
-    // const amountIn = trade.convertTextToUnint256(token0Input, token0);
-    // console.log(`amountIn: ${amountIn}`);
-    // const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
-    //   token0,
-    //   token1,
-    // ]);
-    // // calculate slippage
-    // const amountOutMin = amountOut.mul(Math.round((1 - slippage) * 1000)).div(1000);
-    // const status = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
-    // if (status === 1) {
-    //   // Toast
-    // } else {
-    //   // Toast
-    // }
+    if (routerContract === null) {
+      console.log("You don't connect to bsc mainnet");
+      return;
+    }
+
+    const amountIn = trade.convertTextToUnint256(token0Input, token0);
+    console.log(`amountIn: ${amountIn}`);
+    const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
+      token0,
+      token1,
+    ]);
+    // calculate slippage
+    const amountOutMin = amountOut.mul(Math.round((1 - slippage) * 1000)).div(1000);
+    const status = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
+    if (status === 1) {
+      // Toast
+    } else {
+      // Toast
+    }
   }
 
   return (

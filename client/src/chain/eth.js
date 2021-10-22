@@ -1,10 +1,10 @@
-import { NetworkConnector } from "@web3-react/network-connector";
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
-import { InjectedConnector } from '@web3-react/injected-connector';
+import { Web3Provider } from "@ethersproject/providers";
+import { Web3ReactProvider } from "@web3-react/core";
 
 export const BSC_MAINNET = 56;
 export const BSC_TESTNET = 97;
@@ -71,6 +71,34 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
   }, [address, ABI, library, withSignerIfPossible, account]);
 };
 
+const useEagerConnect = () => {
+  const { activate, active } = useWeb3React();
+
+  const [tried, setTried] = useState(false);
+
+  useEffect(() => {
+    injected.isAuthorized().then((isAuthorized) => {
+      if (isAuthorized) {
+        activate(injected, undefined, true).catch(() => {
+          setTried(true);
+        });
+      } else {
+        setTried(true);
+      }
+    });
+  }, [activate]); // intentionally only running on mount (make sure it's only mounted once :))
+
+  // if the connection worked, wait until we get confirmation of that to flip the flag
+  useEffect(() => {
+    if (!tried && active) {
+      setTried(true);
+    }
+  }, [tried, active]);
+
+  return tried;
+};
+
+
 
 export const injected = new InjectedConnector({
   supportedChainIds: supportedChains,  
@@ -85,6 +113,84 @@ export const getEthereum = async () => {
   return window.ethereum;
 };
 
+const useInactiveListener = (suppress = false) => {
+  const { active, error, activate } = useWeb3React();
+
+  useEffect(() => {
+    const { ethereum } = window;
+    if (error){
+      console.log("> error " + error);
+    }
+    if (ethereum && ethereum.on && !active && !error && !suppress) {
+      const handleConnect = () => {
+        console.log("Handling 'connect' event");
+        activate(injected);
+      };
+      const handleChainChanged = (chainId) => {
+        console.log("Handling 'chainChanged' event with payload", chainId);
+        if (chainId in supportedChains){
+          activate(injected);
+        } else {
+          alert("chain not supported");
+        }
+      };
+      const handleAccountsChanged = (accounts) => {
+        console.log("Handling 'accountsChanged' event with payload", accounts);
+        if (accounts.length > 0) {
+          activate(injected);
+        }
+      };
+
+      ethereum.on("connect", handleConnect);
+      ethereum.on("chainChanged", handleChainChanged);
+      ethereum.on("accountsChanged", handleAccountsChanged);      
+
+      return () => {
+        if (ethereum.removeListener) {
+          ethereum.removeListener("connect", handleConnect);
+          ethereum.removeListener("chainChanged", handleChainChanged);
+          ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        }
+      };
+    }
+  }, [active, error, suppress, activate]);
+};
+
+export function Web3ConnectionManager({ children }) {
+  const context = useWeb3React();
+  const { connector, activate, active } = context;
+
+  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+  const triedEager = useEagerConnect();
+
+  //bug?
+  useEffect(() => {
+    if (triedEager && !active) {
+      activate(network);
+    }
+  }, [triedEager, active, connector, activate]);
+
+  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager);
+
+  return children;
+}
+
+
+function getLibrary(provider) {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
+}
+
+export function WrappedWeb3ReactProvider({ children }) {
+  return (
+    <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
+  );
+}
+
+
+
 // Array of available nodes to connect to
 
 
@@ -94,9 +200,6 @@ export const getEthereum = async () => {
 //   BSC_MAINNET: process.env.REACT_APP_RPC_URL_MAINNET,
 // };
 
-// export const injected = new InjectedConnector({
-//   supportedChainIds: Object.values<number>(CHAINS),
-// });
 
 // export const network = new NetworkConnector({
 //   urls: Object.fromEntries(
@@ -119,11 +222,6 @@ export const getEthereum = async () => {
 //   [CHAINS.BSCTESTNET]: TESTNET || "",
 // };
 
-// export const injected = new InjectedConnector({
-//   supportedChainIds: Object.values(CHAINS),
-// });
-
-// export const injected = new InjectedConnector({ supportedChainIds: [1337] });
 
 // export const network = new NetworkConnector({
 //   urls: Object.fromEntries(Object.values(CHAINS).map(i => [i, RPC_URLS[i]])),

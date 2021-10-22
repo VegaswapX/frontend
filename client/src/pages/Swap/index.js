@@ -5,11 +5,10 @@ import { useWeb3React } from "@web3-react/core";
 // import { BigNumber } from "ethers";
 import React, { createContext, useMemo, useState } from "react";
 import { Button, ButtonGroup, Col, Form, FormControl, InputGroup, Modal, Row, ToggleButton } from "react-bootstrap";
-import "react-toastify/dist/ReactToastify.css";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
-import { default as contracts } from "../../chain/Contractsdef";
+import { Chains, Contracts } from "../../chain/constants";
 import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 import Tokentable from "./tokentable.js";
@@ -108,14 +107,12 @@ const CurrencySelect = (props) => {
   );
 };
 
-const defaultSlippage = 0.5 / 100;
-const defaultTokenPath = ["WBNB", "VGA"];
-const defaultState = {
-  loading: false,
-  currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
-};
 
-function TokenInputUI(value, currencyName, token0Input, handleChange) {
+
+
+function TokenInputUI(value, currencyName, token0Input, handleChange, opts = { disabled: false }) {
+  const { disabled } = opts;
+
   return (
     <div style={{background: "#22262c", height: "70px", borderRadius: "10px", width: "100%", padding: "5px"}}>
   <InputGroup className="mb-3">
@@ -130,10 +127,11 @@ function TokenInputUI(value, currencyName, token0Input, handleChange) {
     <FormControl
         size="lg"
         type="number"
-        placeholder="Input amount"
-        aria-label="Input amount"
+        placeholder="Amount"
+        aria-label="Amount"
         aria-describedby="token0Input"
         value={token0Input}
+        disabled={disabled}
         style={{
           textAlign: "left",
           fontFamily: "Helvetica",
@@ -150,9 +148,28 @@ function TokenInputUI(value, currencyName, token0Input, handleChange) {
   </div>);
 }
 
+
+const defaultSlippage = 0.5 / 100;
+const defaultTokenPath = ["WBNB", "VGA"];
+const defaultState = {
+  loading: false,
+  currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
+};
+
+const swapButtonStates = {
+  wrongNetwork: {
+    disabled: true,
+    text: "Connect to BSC network",
+  },
+  correctNetwork: {
+    disabled: false,
+    text: "Swap",
+  },
+};
+
 const PageSwap = () => {
   const { account, chainId } = useWeb3React();
-  // TODO: Set token0, token1 properly
+
   let token0, token1;
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
@@ -180,12 +197,18 @@ const PageSwap = () => {
       await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
     }, 500), [routerContract]);
 
-  if (chainId !== 56) {
-    return <></>;
+  let swapButtonState, tokenInputDisabled;
+  if (chainId === Chains.BSC_MAINNET.chainId) {
+    token0 = Contracts[chainId][defaultTokenPath[0]];
+    token1 = Contracts[chainId][defaultTokenPath[1]];
+    swapButtonState = swapButtonStates["correctNetwork"];
+    tokenInputDisabled = false;
+  } else {
+    token0 = null;
+    token1 = null;
+    swapButtonState = swapButtonStates["wrongNetwork"];
+    tokenInputDisabled = true;
   }
-
-  token0 = contracts[chainId][defaultTokenPath[0]];
-  token1 = contracts[chainId][defaultTokenPath[1]];
 
   async function setOutputAmountText(routerContract, e) {
     if (routerContract === null) {
@@ -196,6 +219,7 @@ const PageSwap = () => {
     const amountText = e.target.value;
     const token0AmountEther = trade.convertTextToUnint256(amountText, token0);
     if (token0AmountEther === null) {
+      setToken1Input(0);
       return;
     }
 
@@ -230,17 +254,27 @@ const PageSwap = () => {
     ]);
     // calculate slippage
     const amountOutMin = amountOut.mul(Math.round((1 - slippage) * 1000)).div(1000);
-    const status = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
+    const [status, statusInfo] = await trade.swap(routerContract, amountIn, amountOutMin, [token0, token1], account);
     if (status === 1) {
-      // Toast
+      const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
+      const msg = <a target="_blank" href={link}>Swap successfully with transction.</a>;
+      toast.success(msg);
     } else {
-      // Toast
+      toast.error(statusInfo.message);
     }
   }
+
+  // DEBUG
+  // const link = `https://bscscan.com/tx/test`;
+  // const msg = <a target="_blank" href={link}>Swap successfully with transction.</a>;
+  // const notify = () => toast(msg);
 
   return (
     <>
       <Row>
+        {/*DEBUG*/}
+        {/*<button onClick={notify}>Notify!</button>*/}
+
         <Col lg={12}>
           <div
               style={{
@@ -259,65 +293,66 @@ const PageSwap = () => {
           >
             <Form.Group className="mb-3">
               <h1
-                  style={{
-                    "textAlign": "center",
-                  }}
+                style={{
+                  "textAlign": "center",
+                }}
               >
                 Swap
               </h1>
               <div className={"swapMain"}>
                 <div className={"swapInput"}>
-                  {TokenInputUI(value, currencyName, token0Input, handleChange)}
+                  {TokenInputUI(value, currencyName, token0Input, handleChange, { disabled: tokenInputDisabled })}
                   <br />
-                  {TokenInputUI(value, "VGA", token1Input, () => {})}
+                  {TokenInputUI(value, "VGA", token1Input, () => {}, { disabled: tokenInputDisabled })}
                 </div>
               </div>
             </Form.Group>
 
             <ButtonGroup
-                className={"expertOptions"}
-                style={{
-                  margin: "10px 0",
-                }}
+              className={"expertOptions"}
+              style={{
+                margin: "10px 0",
+              }}
             >
               <h5
-                  style={{
-                    marginRight: "5px",
-                  }}
+                style={{
+                  marginRight: "5px",
+                }}
               >
                 Slippage
               </h5>
               {slippageRadios.map((radio, idx) => {
                 return (
-                    <ToggleButton
-                        key={idx}
-                        id={`radio-${idx}`}
-                        type="radio"
-                        name="radio"
-                        value={radio.value}
-                        checked={slippage === radio.value}
-                        onChange={(e) => {
-                          setSlippage(parseFloat(e.currentTarget.value));
-                        }}
-                    >
-                      {radio.name}
-                    </ToggleButton>
+                  <ToggleButton
+                    key={idx}
+                    id={`radio-${idx}`}
+                    type="radio"
+                    name="radio"
+                    value={radio.value}
+                    checked={slippage === radio.value}
+                    onChange={(e) => {
+                      setSlippage(parseFloat(e.currentTarget.value));
+                    }}
+                  >
+                    {radio.name}
+                  </ToggleButton>
                 );
               })}
             </ButtonGroup>
 
             <div
-                className={"buttons"}
-                style={{
-                  textAlign: "center",
-                }}
+              className={"buttons"}
+              style={{
+                textAlign: "center",
+              }}
             >
               <Button
-                  variant="primary"
-                  onClick={swap}
-                  style={{width: "100%", fontSize: "1.2em"}}
+                variant="primary"
+                onClick={swap}
+                disabled={swapButtonState.disabled}
+                style={{ width: "100%", fontSize: "1.2em" }}
               >
-                Swap
+                {swapButtonState.text}
               </Button>
             </div>
           </div>

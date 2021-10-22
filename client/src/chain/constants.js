@@ -1,3 +1,9 @@
+const Chains = {
+  BSC_MAINNET: {
+    chainId: 56
+  }
+}
+
 const Contracts = {
   56: {
     PCS_ROUTER: {
@@ -22,4 +28,7 @@ const Contracts = {
   },
 };
 
-export default Contracts;
+export {
+  Contracts,
+  Chains,
+};

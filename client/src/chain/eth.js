@@ -3,12 +3,22 @@ import { useMemo } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
-// import { NetworkConnector } from "@web3-react/network-connector";
+import { NetworkConnector } from "@web3-react/network-connector";
+import { InjectedConnector } from '@web3-react/injected-connector';
 
 export const BSC_MAINNET = 56;
 export const BSC_TESTNET = 97;
 export const LOCAL_NET = 1337
 export const supportedChains = [BSC_MAINNET, BSC_TESTNET, LOCAL_NET]
+
+
+// const CHAINS = {
+//   // ETH_MAINNET: 1,
+//   // ETH_ROPSTEN: 3,
+//   // ETH_RINKEBY: 4,
+//   // ETH_KOVAN: 42,
+//   //BSC_MAINNET: ,
+// };
 
 
 export function getSigner(library, account) {
@@ -68,6 +78,26 @@ export const getEthereum = async () => {
   return window.ethereum;
 };
 
+// Array of available nodes to connect to
+// export const nodes = ["https://data-seed-prebsc-1-s1.binance.org:8545", "https://data-seed-prebsc-2-s1.binance.org:8545"]
+
+
+// const POLLING_INTERVAL = 12000;
+// const RPC_URLS = {
+//   BSC_MAINNET: process.env.REACT_APP_RPC_URL_MAINNET,
+// };
+
+// export const injected = new InjectedConnector({
+//   supportedChainIds: Object.values<number>(CHAINS),
+// });
+
+// export const network = new NetworkConnector({
+//   urls: Object.fromEntries(
+//     Object.values<number>(CHAINS).map(i => [i, RPC_URLS[i]])
+//   ),
+//   defaultChainId: CHAINS.MAINNET,
+//   pollingInterval: POLLING_INTERVAL,
+// });
 
 
 

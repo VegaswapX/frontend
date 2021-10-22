@@ -1,7 +1,9 @@
 // Set of helper functions to facilitate wallet setup
 
-import { BASE_BSC_SCAN_URL } from '../config'
-import { nodes } from './getRpcUrl'
+const BASE_BSCMAIN_SCAN_URL = "https://testnet.bscscan.com"
+const BASE_BSCTEST_SCAN_URL = "https://testnet.bscscan.com"
+
+export const nodes = ["https://data-seed-prebsc-1-s1.binance.org:8545", "https://data-seed-prebsc-2-s1.binance.org:8545"]
 
 /**
  * Prompt the user to add BSC as a network on Metamask, or switch to BSC if the wallet is on a different network
@@ -28,7 +30,7 @@ export const switchNetworkToBSC = async () => {
                             decimals: 18,
                         },
                         rpcUrls: nodes,
-                        blockExplorerUrls: [`${BASE_BSC_SCAN_URL}/`],
+                        blockExplorerUrls: [`${BASE_BSCMAIN_SCAN_URL}/`],
                     },
                 ],
             })
@@ -60,7 +62,7 @@ export const switchNetworkToBSCTestNet = async () => {
                             decimals: 18,
                         },
                         rpcUrls: nodes,
-                        blockExplorerUrls: [`${BASE_BSC_SCAN_URL}/`],
+                        blockExplorerUrls: [`${BASE_BSCTEST_SCAN_URL}/`],
                     },
                 ],
             })

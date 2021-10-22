@@ -20,6 +20,13 @@ export const supportedChains = [BSC_MAINNET, BSC_TESTNET, LOCAL_NET]
 //   //BSC_MAINNET: ,
 // };
 
+export const network = new NetworkConnector({
+  urls: {
+    1337: 'http://127.0.0.1:8545',
+  },
+  defaultChainId: 1,
+});
+
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
@@ -79,7 +86,7 @@ export const getEthereum = async () => {
 };
 
 // Array of available nodes to connect to
-// export const nodes = ["https://data-seed-prebsc-1-s1.binance.org:8545", "https://data-seed-prebsc-2-s1.binance.org:8545"]
+
 
 
 // const POLLING_INTERVAL = 12000;
@@ -128,10 +135,4 @@ export const getEthereum = async () => {
 //   defaultChainId: CHAINS.BSCTESTNET
 // });
 
-export const network = new NetworkConnector({
-  urls: {
-    1337: 'http://127.0.0.1:8545',
-  },
-  defaultChainId: 1,
-});
 

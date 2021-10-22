@@ -63,15 +63,17 @@ const BalanceInfo = (props) => {
                 <Row className="align-items-center">
                     <Col className="col-6">
                         <h5
-                            className={classNames('fw-normal', 'mt-0', 'text-truncate', textClass)}
+                            style={{color: "white"}}
+                            // className={classNames('fw-normal', 'mt-0', 'text-truncate', textClass)}
+                            style={{color: "white", fontSize: "16pt", marginTop: "0px"}}
                             title={props.description}>
-                            {props.title}
+                            {props.title}                            
                         </h5>
 
                         {/* <img src={props.bimg} /> */}                        
 
                         <img src={`${props.bimg}`} alt="currency"></img>
-                        <h4 className="my-2 py-1">{props.stats}</h4>
+                        <h4 className="my-2 py-1" style={{color: "white"}}>{props.stats}</h4>
 
 
                         {props.trend && (

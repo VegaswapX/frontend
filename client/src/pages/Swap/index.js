@@ -247,6 +247,11 @@ const PageSwap = () => {
     }
 
     const amountIn = trade.convertTextToUnint256(token0Input, token0);
+
+    if (amountIn == 0 | amountIn == null){
+      toast.error("Amount is 0");
+      return;      
+    }
     console.log(`amountIn: ${amountIn}`);
     const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
       token0,

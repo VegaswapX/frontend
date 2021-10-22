@@ -64,7 +64,7 @@ export function Vgabalance() {
       <>
         <BalanceInfo
           description="Campaign Sent"
-          title="VGA balance"
+          title="VGA"
           stats={Math.round(vgabal)}
           bimg={
             "https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696"
@@ -129,7 +129,7 @@ export function Lpbalance() {
       <>
         <BalanceInfo
           description="Campaign Sent"
-          title="LP balance"
+          title="LP token"
           stats={Math.round(vgabal)}
           bimg={
             "https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696"
@@ -177,7 +177,7 @@ export function BNBBalance() {
     <>
       <BalanceInfo
         description="Campaign Sent"
-        title="BNB balance"
+        title="BNB"
         stats={Math.round(balance * 10) / 10}
         bimg={
           "https://assets.coingecko.com/coins/images/825/thumb_2x/binance-coin-logo.png?1547034615"
@@ -227,7 +227,7 @@ export function USDTBalance() {
     <>
       <BalanceInfo
         description="Campaign Sent"
-        title="USDT balance"
+        title="USDT"
         stats={Math.round(balance * 10) / 10}
         bimg={
           "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"

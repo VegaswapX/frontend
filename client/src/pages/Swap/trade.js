@@ -70,6 +70,7 @@ export async function swap(
 
 // TODO: update this function
 // Dealing with float number
+const failedTxReturned = [false, null];
 async function swapExactETHForTokens(
   routerContract,
   amountIn,
@@ -80,17 +81,20 @@ async function swapExactETHForTokens(
 ) {
   const gasPrice = getGasPrice();
 
-  const tx = await routerContract.swapExactETHForTokens(
-    amountOutMin,
-    addressPath,
-    to,
-    deadline,
-    { ...defaultOptions, value: amountIn, gasPrice },
-  );
-  console.log("tx" + tx);
-  let receipt = await tx.wait();
-  console.log(receipt);
-  return receipt.status;
+  try {
+    const tx = await routerContract.swapExactETHForTokens(
+        amountOutMin,
+        addressPath,
+        to,
+        deadline,
+        { ...defaultOptions, value: amountIn, gasPrice },
+    );
+    let receipt = await tx.wait();
+    return [receipt.status, receipt];
+  } catch(e) {
+    console.log("Error: swapExactETHForTokens:", e);
+    return [false, e];
+  }
 }
 
 const failedGetAmountsOutReturn = null;

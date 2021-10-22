@@ -4,6 +4,9 @@ import Routes from './routes/Routes';
 
 import {WrappedWeb3ReactProvider, Web3ConnectionManager} from "./chain/eth";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 // setup fake backend
 // import { configureFakeBackend } from './helpers';
@@ -40,6 +43,7 @@ function App() {
     return (
       <WrappedWeb3ReactProvider>
         <Web3ConnectionManager>
+          <ToastContainer/>
           <InnerApp />
         </Web3ConnectionManager>
       </WrappedWeb3ReactProvider>

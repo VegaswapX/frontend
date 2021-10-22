@@ -1,13 +1,13 @@
 /* @flow */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { injected } from "../chain/eth.js";
 import { Navbar, Nav, Container } from "react-bootstrap";
 
 // actions
-import { showRightSidebar } from "../redux/actions";
+// import { showRightSidebar } from "../redux/actions";
 
 // components
 import vlogo from "../assets/images/logo_black.jpeg";
@@ -187,10 +187,9 @@ const VerticalMenu = () => {
 const Topbar = ({
   hideLogo,
   navCssClasses,
-  openLeftMenuCallBack,
-  topbarDark,
+  openLeftMenuCallBack,  
 }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   // const [isopen, setIsopen] = useState(false);
 
@@ -212,9 +211,9 @@ const Topbar = ({
   /**
    * Toggles the right sidebar
    */
-  const handleRightSideBar = () => {
-    dispatch(showRightSidebar());
-  };
+  // const handleRightSideBar = () => {
+  //   dispatch(showRightSidebar());
+  // };
 
   // const handleConnect = () => {
   //     console.log("connect")

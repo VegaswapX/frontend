@@ -2,8 +2,8 @@
 // set logo
 
 import { useWeb3React } from "@web3-react/core";
-import { BigNumber } from "ethers";
-import React, { createContext, useEffect, useMemo, useState } from "react";
+// import { BigNumber } from "ethers";
+import React, { createContext, useMemo, useState } from "react";
 import { Button, ButtonGroup, Col, Form, FormControl, InputGroup, Modal, Row, ToggleButton } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +11,7 @@ import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
 import { default as contracts } from "../../chain/Contractsdef";
 import { useContract } from "../../chain/eth.js";
-import { PCS_ROUTER_ADDRESS, VGA, WBNB } from "./addr";
+import { PCS_ROUTER_ADDRESS } from "./addr";
 import Tokentable from "./tokentable.js";
 import * as trade from "./trade.js";
 // const CurrencyContext = createContext('Default Value');

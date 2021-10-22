@@ -8,25 +8,25 @@ import { Web3ReactProvider } from "@web3-react/core";
 
 export const BSC_MAINNET = 56;
 export const BSC_TESTNET = 97;
-export const LOCAL_NET = 1337
-export const supportedChains = [BSC_MAINNET, BSC_TESTNET, LOCAL_NET]
+export const LOCAL_NET = 1337;
+// ETH_MAINNET: 1,
+// ETH_ROPSTEN: 3,
+// ETH_RINKEBY: 4,
+// ETH_KOVAN: 42,
+export const supportedChains = [BSC_MAINNET, BSC_TESTNET, LOCAL_NET];
 
+// const TESTNET="https://data-seed-prebsc-1-s1.binance.org:8545"
 
-// const CHAINS = {
-//   // ETH_MAINNET: 1,
-//   // ETH_ROPSTEN: 3,
-//   // ETH_RINKEBY: 4,
-//   // ETH_KOVAN: 42,
-//   //BSC_MAINNET: ,
-// };
+const LOCALNET_URL = 'http://127.0.0.1:8545';
+const BSCMAIN_URL = 'https://data-seed-prebsc-1-s1.binance.org:8545';
 
-export const network = new NetworkConnector({
+export const network = new NetworkConnector({  
   urls: {
-    1337: 'http://127.0.0.1:8545',
+    1337: LOCALNET_URL,
+    97: BSCMAIN_URL
   },
-  defaultChainId: 1,
+  defaultChainId: LOCAL_NET,
 });
-
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
@@ -51,12 +51,12 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
 
   return useMemo(() => {
     if (!address || !ABI || !library) {
-      console.log("cant load contract")
+      console.log("cant load contract");
       console.log("address " + address);
       console.log("library " + library);
       return null;
     }
-    
+
     try {
       return getContract(
         address,
@@ -72,17 +72,24 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
 };
 
 const useEagerConnect = () => {
+  console.log("useEagerConnect");
   const { activate, active } = useWeb3React();
 
   const [tried, setTried] = useState(false);
 
+  function onError(error) {
+    console.log("error ");
+  }
+
   useEffect(() => {
     injected.isAuthorized().then((isAuthorized) => {
       if (isAuthorized) {
-        activate(injected, undefined, true).catch(() => {
+        console.log("activate");
+        activate(injected, onError, true).catch(() => {
           setTried(true);
         });
       } else {
+        console.log("tried activate");
         setTried(true);
       }
     });
@@ -98,10 +105,8 @@ const useEagerConnect = () => {
   return tried;
 };
 
-
-
 export const injected = new InjectedConnector({
-  supportedChainIds: supportedChains,  
+  supportedChainIds: supportedChains,
 });
 
 export const getEthereum = async () => {
@@ -118,7 +123,7 @@ const useInactiveListener = (suppress = false) => {
 
   useEffect(() => {
     const { ethereum } = window;
-    if (error){
+    if (error) {
       console.log("> error " + error);
     }
     if (ethereum && ethereum.on && !active && !error && !suppress) {
@@ -128,7 +133,7 @@ const useInactiveListener = (suppress = false) => {
       };
       const handleChainChanged = (chainId) => {
         console.log("Handling 'chainChanged' event with payload", chainId);
-        if (chainId in supportedChains){
+        if (chainId in supportedChains) {
           activate(injected);
         } else {
           alert("chain not supported");
@@ -143,7 +148,7 @@ const useInactiveListener = (suppress = false) => {
 
       ethereum.on("connect", handleConnect);
       ethereum.on("chainChanged", handleChainChanged);
-      ethereum.on("accountsChanged", handleAccountsChanged);      
+      ethereum.on("accountsChanged", handleAccountsChanged);
 
       return () => {
         if (ethereum.removeListener) {
@@ -163,7 +168,7 @@ export function Web3ConnectionManager({ children }) {
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
 
-  //bug?
+  //network?
   useEffect(() => {
     if (triedEager && !active) {
       activate(network);
@@ -175,7 +180,6 @@ export function Web3ConnectionManager({ children }) {
 
   return children;
 }
-
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider);
@@ -189,17 +193,12 @@ export function WrappedWeb3ReactProvider({ children }) {
   );
 }
 
-
-
 // Array of available nodes to connect to
-
-
 
 // const POLLING_INTERVAL = 12000;
 // const RPC_URLS = {
-//   BSC_MAINNET: process.env.REACT_APP_RPC_URL_MAINNET,
+//   BSC_MAINNET: 
 // };
-
 
 // export const network = new NetworkConnector({
 //   urls: Object.fromEntries(
@@ -211,17 +210,9 @@ export function WrappedWeb3ReactProvider({ children }) {
 
 
 
-// const CHAINS = {
-//   BSCTESTNET: 97
-// };
-
-// const TESTNET="https://data-seed-prebsc-1-s1.binance.org:8545"
-
 // const RPC_URLS = {
-//   // [CHAINS.BSCTESTNET]: process.env.REACT_APP_RPC_URL_LOCAL || "",
-//   [CHAINS.BSCTESTNET]: TESTNET || "",
+//   CHAINS.BSCTESTNET
 // };
-
 
 // export const network = new NetworkConnector({
 //   urls: Object.fromEntries(Object.values(CHAINS).map(i => [i, RPC_URLS[i]])),
@@ -232,5 +223,3 @@ export function WrappedWeb3ReactProvider({ children }) {
 //   urls: Object.fromEntries(Object.values(CHAINS).map(i => [i, RPC_URLS[i]])),
 //   defaultChainId: CHAINS.BSCTESTNET
 // });
-
-

@@ -1,10 +1,10 @@
 const Contracts = {
   56: {
     PCS_ROUTER: {
-      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e"
+      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e",
     },
     PCS_FACTORY: {
-      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e"
+      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e",
     },
 
     // tokens
@@ -18,8 +18,8 @@ const Contracts = {
       symbol: "BNB",
       isNative: true,
       decimals: 18,
-    }
-  }
-}
+    },
+  },
+};
 
 export default Contracts;

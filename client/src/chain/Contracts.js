@@ -11,7 +11,6 @@
 //     }
 // }
 
-
 //BSC testnet
 // export const VEGA_TOKEN_ADDRESS = "0x39BEa11452610a9469fA2584253E16634C9f6c54";
 // export const POOL_TOKEN_ADDRESS = "0x87a2518b122953e857d737F21870C413A9752f0e";
@@ -27,10 +26,8 @@ export const LP_TOKEN_ADDRESS = "0xdA6F484F5fFE2382C20F80dCEdcB860Cea955461";
 export const POOL1 = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
 export const POOL2 = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
 
-export function getContract(name){
-
-    console.log(">>> getContract " + name);
-
+export function getContract(name) {
+  console.log(">>> getContract " + name);
 }
 
 //BSC mainnet

@@ -1,6 +1,6 @@
 // @flow
 import React, { Suspense, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
 // actions

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {useWeb3React} from "@web3-react/core";
 import {Button} from "react-bootstrap";
 // import NetworkSelectModal from "../Modal/NetworkSelectModal";
@@ -6,7 +6,7 @@ import {supportedChains, LOCAL_NET, BSC_TESTNET, BSC_MAINNET} from "../../chain/
 
 const NetworkSwitchButton = () => {
     const { chainId } = useWeb3React()
-    const [setShow] = useState(false)
+    // const [setShow] = useState(false)
 
     const handleShow = () => {
         console.log("handleShow")

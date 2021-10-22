@@ -3,8 +3,6 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import SimpleBar from "simplebar-react";
 
-import { getMenuItems } from "../helpers/menu";
-
 // components
 
 import logoDark from "../assets/images/logo-dark.png";

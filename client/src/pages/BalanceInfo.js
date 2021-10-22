@@ -63,7 +63,6 @@ const BalanceInfo = (props) => {
                 <Row className="align-items-center">
                     <Col className="col-6">
                         <h5
-                            style={{color: "white"}}
                             // className={classNames('fw-normal', 'mt-0', 'text-truncate', textClass)}
                             style={{color: "white", fontSize: "16pt", marginTop: "0px"}}
                             title={props.description}>

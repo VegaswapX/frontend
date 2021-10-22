@@ -70,7 +70,7 @@ export async function swap(
 
 // TODO: update this function
 // Dealing with float number
-const failedTxReturned = [false, null];
+// const failedTxReturned = [false, null];
 async function swapExactETHForTokens(
   routerContract,
   amountIn,

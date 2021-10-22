@@ -151,10 +151,10 @@ function TokenInputUI(value, currencyName, token0Input, handleChange, opts = { d
 
 const defaultSlippage = 0.5 / 100;
 const defaultTokenPath = ["WBNB", "VGA"];
-const defaultState = {
-  loading: false,
-  currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
-};
+// const defaultState = {
+//   loading: false,
+//   currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
+// };
 
 const swapButtonStates = {
   wrongNetwork: {
@@ -173,7 +173,7 @@ const PageSwap = () => {
   let token0, token1;
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
-  const [state, setState] = useState(defaultState);
+  // const [state, setState] = useState(defaultState);
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
   const [currencyName, setcurrencyName] = useState("BNB");

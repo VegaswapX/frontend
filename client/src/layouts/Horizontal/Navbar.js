@@ -4,8 +4,6 @@ import React from "react";
 import { Collapse } from "react-bootstrap";
 import classNames from "classnames";
 
-import { getMenuItems } from "../../helpers/menu";
-
 const Navbar = (props) => {
   // change the inputTheme value to light for creative theme
   const inputTheme = "dark";

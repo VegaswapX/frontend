@@ -1,35 +1,35 @@
 // @flow
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Balances from "./Balances";
+// import Balances from "./Balances";
 // components
 // import PageTitle from '../../components/PageTitle';
-import Stake from "./Stake.js";
+// import Stake from "./Stake.js";
 import classNames from "classnames";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import styled from 'styled-components';
 import { Card } from "react-bootstrap";
-import { PoolInfo } from "./Pool.js";
+// import { PoolInfo } from "./Pool.js";
 
-import POOL_CONTRACT_ABI from "./../../abis/BoostPool.json";
-import { POOL1 } from "../../chain/Contracts";
+// import POOL_CONTRACT_ABI from "./../../abis/BoostPool.json";
+// import { POOL1 } from "../../chain/Contracts";
 
 // move to config file
-const pools = {
-  POOL1: {
-    address: POOL1,
-    abi: POOL_CONTRACT_ABI,
-  },
-};
+// const pools = {
+//   POOL1: {
+//     address: POOL1,
+//     abi: POOL_CONTRACT_ABI,
+//   },
+// };
 
 const createBoostPoolPage = ({
   poolName,
-  stakeToken,
-  yieldToken,
+  // stakeToken,
+  // yieldToken,
   poolAddress,
 }) => {
-  const pool = pools[poolAddress];
+  // const pool = pools[poolAddress];
 
   return () => {
     return (

@@ -77,7 +77,8 @@ const CurrencySelect = (props) => {
   return (
     <span>
       {/* <div className="button-list"> */}
-      <Button size="lg" style={{ backgroundColor: "black" }} onClick={toggle}>
+      
+      <Button size="lg" style={{ backgroundColor: "#1f2125", border: "none", height: "50px" }} onClick={toggle}>
         {props.currency}
       </Button>
 
@@ -115,9 +116,16 @@ const defaultState = {
 };
 
 function TokenInputUI(value, currencyName, token0Input, handleChange) {
-  return <InputGroup className="mb-3">
-    <CurrencyContext.Provider value={value}>
-      <CurrencySelect currency={currencyName}/>
+  return (
+    <div style={{background: "#22262c", height: "70px", borderRadius: "10px", width: "100%", padding: "5px"}}>
+  <InputGroup className="mb-3">
+    <CurrencyContext.Provider value={value} >
+      <div style={{          
+          marginLeft: "5px" ,         
+          marginTop: "5px"          
+        }}>
+      <CurrencySelect currency={currencyName} />
+      </div>
     </CurrencyContext.Provider>
     <FormControl
         size="lg"
@@ -127,13 +135,19 @@ function TokenInputUI(value, currencyName, token0Input, handleChange) {
         aria-describedby="token0Input"
         value={token0Input}
         style={{
-          textAlign: "right",
-          fontFamily: "Consolas",
-          fontSize: "1.3rem"
+          textAlign: "left",
+          fontFamily: "Helvetica",
+          fontSize: "1.3rem",
+          height: "50px",
+          border: "none",
+          marginTop: "5px",
+          marginLeft: "20px",
+          background: "#1f2125",
         }}
         onChange={handleChange}
     />
-  </InputGroup>;
+  </InputGroup>
+  </div>);
 }
 
 const PageSwap = () => {
@@ -231,7 +245,7 @@ const PageSwap = () => {
           <div
               style={{
                 height: "400px",
-                width: "450px",
+                width: "500px",
                 backgroundColor: "#1c1f27",
                 color: "white",
                 margin: "0 auto",
@@ -254,6 +268,7 @@ const PageSwap = () => {
               <div className={"swapMain"}>
                 <div className={"swapInput"}>
                   {TokenInputUI(value, currencyName, token0Input, handleChange)}
+                  <br />
                   {TokenInputUI(value, "VGA", token1Input, () => {})}
                 </div>
               </div>

@@ -158,7 +158,7 @@ const VerticalMenu = () => {
         <Brand />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto vegatopnav" style={{ fontSize: "20px"}}>
+          <Nav className="me-auto vegatopnav" style={{ fontSize: "20px", fontFamily:"Helvetica Neue"}}>
             {/* <Nav.Link href="#home">Dashboard</Nav.Link> */}
             <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
               <i className="uil-home-alt"></i>

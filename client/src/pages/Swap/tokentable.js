@@ -28,12 +28,24 @@ function Table({ columns, data }) {
     // xsetModal(false)
   }
 
+  const getTrProps = (state, rowInfo, instance) => {
+    if (rowInfo) {
+        return {
+            style: {
+                // 'background-color': rowInfo.original.customercomplaints.order_ref === currentOrderId ? '' : 'yellow',
+                'background-color': 'yellow',
+            }
+        }
+    }
+    return {};
+  }
+
   /*
     Render the UI for your table
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
-    <table {...getTableProps()}>
+    <table getTrProps={getTrProps} {...getTableProps() }>
       {
         /* <thead>
         {headerGroups.map(headerGroup => (

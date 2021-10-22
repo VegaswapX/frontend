@@ -10,7 +10,7 @@ const NetworkSwitchButton = () => {
 
     const handleShow = () => {
         console.log("handleShow")
-        setShow(true)
+        // setShow(true)
     }
     // const handleClose = () => setShow(false)
 

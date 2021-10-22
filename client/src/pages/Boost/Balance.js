@@ -5,7 +5,7 @@ import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 import { useContract } from "../../chain/eth.js";
 import { VEGA_TOKEN_ADDRESS, LP_TOKEN_ADDRESS, BSC_USDT } from "../../chain/Contracts.js";
 import { formatEther } from "@ethersproject/units";
-import StatisticsChartWidget from "../../components/StatisticsChartWidget";
+import BalanceInfo from "../BalanceInfo";
 
 export const formatCurrency = (balance) => {
   return balance ? formatEther(balance) : "0";
@@ -62,7 +62,7 @@ export function Vgabalance() {
       {/* <span>VGA Balance {vgabalance}</span> */}
 
       <>
-        <StatisticsChartWidget
+        <BalanceInfo
           description="Campaign Sent"
           title="VGA balance"
           stats={Math.round(vgabal)}
@@ -72,7 +72,7 @@ export function Vgabalance() {
           // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
           colors={["#0acf97"]}
           data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
-        ></StatisticsChartWidget>
+        ></BalanceInfo>
 
         {/* <span>VGA Balance</span>
       
@@ -127,7 +127,7 @@ export function Lpbalance() {
       {/* <span>VGA Balance {vgabalance}</span> */}
 
       <>
-        <StatisticsChartWidget
+        <BalanceInfo
           description="Campaign Sent"
           title="LP balance"
           stats={Math.round(vgabal)}
@@ -137,7 +137,7 @@ export function Lpbalance() {
           // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
           colors={["#0acf97"]}
           data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
-        ></StatisticsChartWidget>
+        ></BalanceInfo>
 
       </>
     </>
@@ -175,7 +175,7 @@ export function BNBBalance() {
 
   return (
     <>
-      <StatisticsChartWidget
+      <BalanceInfo
         description="Campaign Sent"
         title="BNB balance"
         stats={Math.round(balance * 10) / 10}
@@ -185,7 +185,7 @@ export function BNBBalance() {
         // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
         colors={["#727cf5"]}
         data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
-      ></StatisticsChartWidget>
+      ></BalanceInfo>
     </>
   );
 }
@@ -225,7 +225,7 @@ export function USDTBalance() {
 
   return (
     <>
-      <StatisticsChartWidget
+      <BalanceInfo
         description="Campaign Sent"
         title="USDT balance"
         stats={Math.round(balance * 10) / 10}
@@ -234,7 +234,7 @@ export function USDTBalance() {
         }        
         colors={["#727cf5"]}
         data={[12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14]}
-      ></StatisticsChartWidget>
+      ></BalanceInfo>
     </>
   );
 }

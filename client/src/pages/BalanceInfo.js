@@ -4,24 +4,8 @@ import { Row, Col, Card } from 'react-bootstrap';
 import Chart from 'react-apexcharts';
 import classNames from 'classnames';
 
-type StatisticsChartWidgetProps = {
-    colors?: Array<string>,
-    type?: string,
-    name?: string,
-    data?: Array<number>,
-    textClass?: string,
-    bgClass?: string,
-    description?: string,
-    title?: string,
-    stats?: string,
-    trend: {
-        textClass: string,
-        icon: string,
-        value: string,
-    },
-};
 
-const StatisticsChartWidget = (props: StatisticsChartWidgetProps): React$Element<any> => {
+const BalanceInfo = (props) => {
     //  default options
     const options = {
         chart: {
@@ -110,4 +94,4 @@ const StatisticsChartWidget = (props: StatisticsChartWidgetProps): React$Element
     );
 };
 
-export default StatisticsChartWidget;
+export default BalanceInfo;

@@ -46,7 +46,7 @@ export const tokens = [
 ];
 
 export const TokenMap = {
-  USDC: {
+  "USDC": {
     contract: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
     image:
       "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389",
@@ -54,7 +54,7 @@ export const TokenMap = {
     name: "USDC",
     symbol: "USD Coin",
   },
-  VGA: {  
+  "VGA": {  
       contract: "0x4efdfe8ffaff109451fc306e0b529b088597dd8d",
       image:
         "https://assets.coingecko.com/coins/images/18397/large/big_logo.png?1631769696",
@@ -62,13 +62,21 @@ export const TokenMap = {
       name: "Vega Token",
       symbol: "VGA"
   },
-  BNB: {
+  "BNB": {
     contract: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
     image:
       "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png?1547034615",
     dollarvolume: 0,
     name: "Binance Smart Chain BNB",
     symbol: "BNB",
+  },
+  "USDT": {
+    contract: "0x55d398326f99059ff775485246999027b3197955",
+    image:
+      "https://assets.coingecko.com/coins/images/325/large/Tether-logo.png?1598003707",
+    dollarvolume: 0,
+    name: "USDT",
+    symbol: "USDT",
   }
 }
 

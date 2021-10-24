@@ -31,24 +31,27 @@ export const SettingsModal = (props) => {
   }
 
   return (
-    <span>
+    <>
+    <span style={{marginTop: "20px"}}>
       {/* <div className="button-list"> */}
 
-      <Button
+      {/* <Button
         size="lg"
-        style={{ backgroundColor: "#1f2125", border: "none", height: "50px" }}
+        style={{ backgroundColor: "#1f2125", border: "none", height: "50px"}}
         onClick={toggle}
-      >
+        //class="shadow-none"
+      > */}
         <i
           className="dripicons-gear noti-icon"
           style={{
             textAlign: "right",
-            marginLeft: "0px",
-            marginTop: "0px",
-            fontSize: "1.4em",
+            marginLeft: "50px",            
+            fontSize: "2.0em",            
           }}
+          onClick={toggle}
         />
-      </Button>
+    </span>
+      {/* </Button> */}
 
       <Modal
         show={modal}
@@ -117,7 +120,8 @@ export const SettingsModal = (props) => {
           </Button>{" "}
         </Modal.Footer>
       </Modal>
-    </span>
+    {/* </span> */}
+    </>
   );
 };
 

@@ -23,6 +23,12 @@ export function toUint256(amount, token) {
   );
 }
 
+export function toUint256_18(amount) {
+  return BigNumber.from(Math.round(amount * 1000000)).mul(
+    BigNumber.from(10).pow(18 - 6)
+  );
+}
+
 export function toFloatNumber(amount, token) {
   // check token decimals
   const y = amount.div(BigNumber.from(10).pow(12));
@@ -59,12 +65,37 @@ export async function swap(
   to,
   deadline = defaultDeadline()
 ) {
-  const [token0, token1] = tokenPath;
-  const addressPath = [token0.address, token1.address];
+  const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
 
-  if (!!token0.isNative) {
+  console.log("swap " + addressPath);
+
+  //TODO deal with isNative
+  if (!!tokenPath[0].isNative) {
+    console.log("eth for tokens");
+
     return await swapExactETHForTokens(
       routerContract,
+      amountIn,
+      amountOutMin,
+      addressPath,
+      to,
+      deadline
+    );
+  } else if (!!tokenPath[1].isNative) {
+    //needs approve?
+    console.log("Token for ETH");
+    return await swapExactTokensForETH(
+      routerContract,
+      amountIn,
+      amountOutMin,
+      addressPath,
+      to,
+      deadline
+    );
+  } else {
+    console.log("token for token");
+
+    return await swapTokensForExactTokens(routerContract,
       amountIn,
       amountOutMin,
       addressPath,
@@ -88,8 +119,11 @@ async function swapExactETHForTokens(
   deadline
 ) {
   const gasPrice = getGasPrice();
+  console.log("swapExactETHForTokens");
 
   try {
+    const args = [amountOutMin, addressPath, to, deadline];
+    console.log("calling router with " + args);
     const tx = await routerContract.swapExactETHForTokens(
       amountOutMin,
       addressPath,
@@ -105,26 +139,91 @@ async function swapExactETHForTokens(
   }
 }
 
+async function swapExactTokensForETH(
+  routerContract,
+  amountIn,
+  amountOutMin,
+  addressPath,
+  to,
+  deadline
+) {
+  const gasPrice = getGasPrice();
+  console.log("swapExactTokensForETH...");
+
+  //const minBNB = 0.001 * 10**18;
+  //const minBNB = ethers.utils.parseUnits(10000, "wei")
+  const minBNB = toUint256_18(0.001);
+
+  console.log("..." + minBNB);
+
+  try {
+    const args = [amountOutMin, addressPath, to, deadline];
+    console.log("calling router with " + args);
+    const tx = await routerContract.swapExactTokensForETH(
+      amountIn,
+      amountOutMin,
+      addressPath,
+      to,
+      deadline,
+      { ...defaultOptions, gasPrice }
+    );
+    let receipt = await tx.wait();
+    console.log(">> " + receipt);
+    return [receipt.status, receipt];
+  } catch (e) {
+    console.log("Error: swapExactETHForTokens:", e);
+    return [false, e];
+  }
+}
+
 const failedGetAmountsOutReturn = null;
 
-export async function getAmountsOut(routerContract, amount, path) {
+export async function getAmountsOut(routerContract, amount, tokenPath) {
   if (amount <= 0) {
     return failedGetAmountsOutReturn;
   }
+  const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
 
-  const addressPath = [path[0].contract, path[1].contract];
-  
   let x = await routerContract.callStatic
     .getAmountsOut(amount, addressPath)
     .catch((e) => {
       console.log("Failed to run getAmountsOut", e);
       return failedGetAmountsOutReturn;
     });
-  console.log("?? " + x);
   return x[1];
 }
 
-// function swapTokensForExactTokens(amountOut,amountInMax,path,to,deadline)
+async function swapTokensForExactTokens(routerContract,
+  amountIn,
+  amountOutMin,
+  addressPath,
+  to,
+  deadline
+) {
+
+  const gasPrice = getGasPrice();
+  console.log("swapTokensForExactTokens...");
+  const args = [amountIn, amountOutMin, addressPath, to, deadline];
+  console.log("calling router with " + args);
+
+  try {
+    const tx = await routerContract.swapExactTokensForTokens(
+      amountIn,
+      amountOutMin,
+      addressPath,
+      to,
+      deadline,
+      { ...defaultOptions, gasPrice }
+    );
+    let receipt = await tx.wait();
+    console.log(">> " + receipt);
+    return [receipt.status, receipt];
+  } catch (e) {
+    console.log("Error: swapTokensForExactTokens:", e);
+    return [false, e];
+  }
+}
+
 // async function swapTokens(amountOutMin, to, deadline){
 
 // }

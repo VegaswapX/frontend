@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from "react";
 import { useTable } from "react-table";
-import {tokens} from "../../chain/tokens.js";
+import { tokens } from "../../chain/tokens.js";
 import { store } from "../../redux/store";
 
 function Table({ tokenType, columns, data }) {
@@ -19,14 +19,12 @@ function Table({ tokenType, columns, data }) {
   });
 
   function rowClick(row) {
-
     //console.log("rowClick >>>> " + tokenType);
-    if (tokenType == "TokenIn"){
+    if (tokenType == "TokenIn") {
       store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
-    } else if (tokenType == "TokenOut"){
+    } else if (tokenType == "TokenOut") {
       store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
     }
-    
   }
 
   const getTrProps = (state, rowInfo, instance) => {
@@ -80,14 +78,19 @@ function Table({ tokenType, columns, data }) {
                 } else if (cell.column.Header === "Address") {
                   return (
                     // <td {...cell.getCellProps()}>{cell.render("Cell").toString().substring(0,5)}</td>
-                    
+
                     // <td style={{ marginLeft: "50px", padding: "10px" }} {...cell.getCellProps()}><a href={cell.render("Cell")}>Link</a></td>
                     <></>
                   );
                 } else if (cell.column.Header === "Symbol") {
                   return (
                     // <td {...cell.getCellProps()}>{cell.render("Cell").toString().substring(0,5)}</td>
-                    <td style={{ marginLeft: "50px", padding: "10px" }} {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    <td
+                      style={{ marginLeft: "50px", padding: "10px" }}
+                      {...cell.getCellProps()}
+                    >
+                      {cell.render("Cell")}
+                    </td>
                   );
                 }
               })}
@@ -101,14 +104,12 @@ function Table({ tokenType, columns, data }) {
 
 // import Table from "./Table";
 
-function Tokentable({tokenType}) {
-  
+function Tokentable({ tokenType }) {
   const columns = useMemo(
     () => [
       {
         Header: "Token",
         columns: [
-          
           // {
           //   Header: "Contract",
           //   accessor: "contract"
@@ -116,7 +117,7 @@ function Tokentable({tokenType}) {
           {
             Header: "Image",
             accessor: "image",
-          },          
+          },
           {
             Header: "Symbol",
             accessor: "symbol",

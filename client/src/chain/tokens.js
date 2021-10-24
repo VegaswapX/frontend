@@ -62,7 +62,7 @@ export const TokenMap = {
       dollarvolume: 0,
       name: "Vega Token",
       symbol: "VGA",
-      decimals: 18
+      decimals: 18      
   },
   "BNB": {
     contract: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -71,7 +71,8 @@ export const TokenMap = {
     dollarvolume: 0,
     name: "Binance Smart Chain BNB",
     symbol: "BNB",
-    decimals: 18
+    decimals: 18,
+    isNative: true
   },
   "USDT": {
     contract: "0x55d398326f99059ff775485246999027b3197955",

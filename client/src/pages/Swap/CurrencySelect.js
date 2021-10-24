@@ -13,7 +13,6 @@ export const CurrencySelect = (props) => {
     setModal(!modal);
   };
 
-
   return (
     <span>
       {/* <div className="button-list"> */}
@@ -23,7 +22,10 @@ export const CurrencySelect = (props) => {
         style={{ backgroundColor: "#1f2125", border: "none", height: "50px" }}
         onClick={toggle}
       >
-        <img src={props.currency.image} style={{width: "24px", height: "24px", marginRight: "10px"}}/>
+        <img
+          src={props.currency.image}
+          style={{ width: "24px", height: "24px", marginRight: "10px" }}
+        />
         {props.currency.symbol}
       </Button>
 
@@ -38,7 +40,7 @@ export const CurrencySelect = (props) => {
           <h4 className="modal-title">Select a token ({props.tokenType})</h4>
         </Modal.Header>
         <Modal.Body>
-          <Tokentable tokenType={props.tokenType}/>
+          <Tokentable tokenType={props.tokenType} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>

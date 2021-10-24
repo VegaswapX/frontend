@@ -1,12 +1,7 @@
-// TODO
-// set logo
-
 import { useWeb3React } from "@web3-react/core";
-// import { BigNumber } from "ethers";
-import React, { createContext, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Button,
-  ButtonGroup,
   Col,
   Form,
   FormControl,
@@ -25,7 +20,6 @@ import { SettingsModal } from "./SettingsModal.js";
 import * as trade from "./trade.js";
 import { store } from "../../redux/store";
 
-
 function TokenInputUI(
   token0Input,
   tokenType,
@@ -38,7 +32,7 @@ function TokenInputUI(
     let i = store.getState().tokenReducer.tokenIn;
     let o = store.getState().tokenReducer.tokenOut;
     console.log(">> " + i + " " + o);
-  })
+  });
 
   const { disabled } = opts;
 
@@ -53,18 +47,25 @@ function TokenInputUI(
       }}
     >
       <InputGroup className="mb-3">
-        
-          <div
-            style={{
-              marginLeft: "5px",
-              marginTop: "5px",
-            }}
-          >{tokenType=="TokenIn" ? 
-          <CurrencySelect currency={store.getState().tokenReducer.tokenIn} tokenType={tokenType}/> :
-          <CurrencySelect currency={store.getState().tokenReducer.tokenOut} tokenType={tokenType}/>
-        }
-          </div>
-        
+        <div
+          style={{
+            marginLeft: "5px",
+            marginTop: "5px",
+          }}
+        >
+          {tokenType == "TokenIn" ? (
+            <CurrencySelect
+              currency={store.getState().tokenReducer.tokenIn}
+              tokenType={tokenType}
+            />
+          ) : (
+            <CurrencySelect
+              currency={store.getState().tokenReducer.tokenOut}
+              tokenType={tokenType}
+            />
+          )}
+        </div>
+
         <FormControl
           size="lg"
           type="number"
@@ -91,7 +92,6 @@ function TokenInputUI(
 }
 
 //const defaultSlippage = 0.5 / 100;
-const defaultTokenPath = ["WBNB", "VGA"];
 // const defaultState = {
 //   loading: false,
 //   currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
@@ -108,17 +108,15 @@ const swapButtonStates = {
   },
 };
 
-const PageSwap = () => {
+const PageSwapInner = () => {
   const { account, chainId } = useWeb3React();
 
-  
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
-  // const [state, setState] = useState(defaultState);
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
 
-  
+  const [loading, setLoading] = useState(false);
 
   // ui
   // const [slippage, setSlippage] = useState(defaultSlippage);
@@ -140,12 +138,10 @@ const PageSwap = () => {
 
   let swapButtonState, tokenInputDisabled;
   //TODO remove and handle elsewhere
-  if (chainId === Chains.BSC_MAINNET.chainId) {    
+  if (chainId === Chains.BSC_MAINNET.chainId) {
     swapButtonState = swapButtonStates["correctNetwork"];
     tokenInputDisabled = false;
   } else {
-    // token0 = null;
-    // token1 = null;
     swapButtonState = swapButtonStates["wrongNetwork"];
     tokenInputDisabled = true;
   }
@@ -160,8 +156,6 @@ const PageSwap = () => {
 
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;
-    // console.log("token0 " + token0.contract);
-    // console.log("token1 " + token1.contract);
 
     const amountText = e.target.value;
     //console.log("amountText " + amountText);
@@ -195,7 +189,7 @@ const PageSwap = () => {
     console.log(`slippage`, slip);
     console.log(`token0`, token0);
     console.log(`token1`, token1);
-    let executeTrade = false;
+    let executeTrade = true;
 
     if (executeTrade) {
       if (routerContract === null) {
@@ -214,27 +208,40 @@ const PageSwap = () => {
         token0,
         token1,
       ]);
+      console.log("amountOut " + amountOut);
       // calculate slippage
       const amountOutMin = amountOut
         .mul(Math.round((1 - slip) * 1000))
         .div(1000);
-      const [status, statusInfo] = await trade.swap(
-        routerContract,
-        amountIn,
-        amountOutMin,
-        [token0, token1],
-        account
-      );
-      if (status === 1) {
-        const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
-        const msg = (
-          <a target="_blank" href={link}>
-            Swap successfully with transction.
-          </a>
+      console.log("amountOutMin " + amountOutMin);
+
+      //TODO set loading while pending
+      try {
+        setLoading(true);
+        const result = await trade.swap(
+          routerContract,
+          amountIn,
+          amountOutMin,
+          [token0, token1],
+          account
         );
-        toast.success(msg);
-      } else {
-        toast.error(statusInfo.message);
+        const [status, statusInfo] = result;
+        if (status === 1) {
+          const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
+          const msg = (
+            <a target="_blank" href={link}>
+              Swap successful
+            </a>
+          );
+          toast.success(msg);
+          setLoading(false);
+        } else {
+          toast.error(statusInfo.message);
+          setLoading(false);
+        }
+      } catch {
+        toast.error("error with trade");
+        setLoading(false);
       }
     }
   }
@@ -244,12 +251,85 @@ const PageSwap = () => {
   // const msg = <a target="_blank" href={link}>Swap successfully with transction.</a>;
   // const notify = () => toast(msg);
 
+  if (loading) {
+    return (
+      <>
+        <h1 style={{ textAlign: "center" }}>Transaction Pending</h1>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <Form.Group className="mb-3">
+
+          <Row>
+
+      <div class="d-flex justify-content-between">
+        <div>
+          
+        </div>
+        <div>
+        <span style={{ fontSize: "20pt", marginTop: "5px", marginLeft: "50%" }}>Swap</span>
+        </div>
+        <div>
+        <span style={{ marginRight: "10px" }}>
+        <SettingsModal />
+
+        </span>
+        </div>
+        </div>
+                   
+          
+            {/* <Col
+              style={{
+                textAlign: "center",
+                marginLeft: "100px",
+              }}
+            >
+              <span style={{ fontSize: "20pt", marginTop: "5px" }}>Swap</span>
+            </Col>
+            <Col>
+              <SettingsModal />
+            </Col> */}
+          </Row>
+
+          <div className={"swapMain"} style={{ marginTop: "15px"}}>
+            <div className={"swapInput"}>
+              {TokenInputUI(token0Input, "TokenIn", handleChange, {
+                disabled: tokenInputDisabled,
+              })}
+              <br />
+              {TokenInputUI(token1Input, "TokenOut", () => {}, {
+                disabled: tokenInputDisabled,
+              })}
+            </div>
+          </div>
+        </Form.Group>
+
+        <div
+          className={"buttons"}
+          style={{
+            textAlign: "center",
+          }}
+        >
+          <Button
+            variant="primary"
+            onClick={swap}
+            disabled={swapButtonState.disabled}
+            style={{ width: "100%", height: "55px", fontSize: "1.5em" }}
+          >
+            {swapButtonState.text}
+          </Button>
+        </div>
+      </>
+    );
+  }
+};
+
+const PageSwap = () => {
   return (
     <>
       <Row>
-        {/*DEBUG*/}
-        {/*<button onClick={notify}>Notify!</button>*/}
-
         <Col lg={12}>
           <div
             style={{
@@ -266,52 +346,7 @@ const PageSwap = () => {
               border: "1px solid #000",
             }}
           >
-            <Form.Group className="mb-3">
-              <Row>
-                <Col
-                  style={{
-                    textAlign: "center",
-                    marginLeft: "100px",
-                  }}
-                >
-                  <span style={{ fontSize: "20pt" }}>Swap</span>
-                </Col>
-                <Col>
-                  <SettingsModal />
-                </Col>
-              </Row>
-
-              <div className={"swapMain"}>
-                <div className={"swapInput"}>
-                  {TokenInputUI(
-                    token0Input,
-                    "TokenIn",
-                    handleChange,
-                    { disabled: tokenInputDisabled }
-                  )}
-                  <br />
-                  {TokenInputUI(token1Input, "TokenOut", () => {}, {
-                    disabled: tokenInputDisabled,
-                  })}
-                </div>
-              </div>
-            </Form.Group>
-
-            <div
-              className={"buttons"}
-              style={{
-                textAlign: "center",
-              }}
-            >
-              <Button
-                variant="primary"
-                onClick={swap}
-                disabled={swapButtonState.disabled}
-                style={{ width: "100%", height: "55px", fontSize: "1.5em" }}
-              >
-                {swapButtonState.text}
-              </Button>
-            </div>
+            <PageSwapInner />
           </div>
         </Col>
       </Row>

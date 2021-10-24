@@ -21,7 +21,7 @@ import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 
 import { CurrencySelect } from "./CurrencySelect";
-import {SettingsModal} from "./SettingsModal.js";
+import { SettingsModal } from "./SettingsModal.js";
 import * as trade from "./trade.js";
 // const CurrencyContext = createContext('Default Value');
 import { store } from "../../redux/store";
@@ -36,9 +36,18 @@ function TokenInputUI(
   value,
   currencyName,
   token0Input,
+  tokenType,
   handleChange,
   opts = { disabled: false }
 ) {
+  console.log("store state is: " + store.getState());
+
+  store.subscribe(() => {
+    let i = store.getState().tokenReducer.tokenIn;
+    let o = store.getState().tokenReducer.tokenOut;
+    console.log(">> " + i + " " + o);
+  })
+
   const { disabled } = opts;
 
   return (
@@ -52,16 +61,18 @@ function TokenInputUI(
       }}
     >
       <InputGroup className="mb-3">
-        <CurrencyContext.Provider value={value}>
+        
           <div
             style={{
               marginLeft: "5px",
               marginTop: "5px",
             }}
-          >
-            <CurrencySelect currency={currencyName} />
+          >{tokenType=="TokenIn" ? 
+          <CurrencySelect currency={store.getState().tokenReducer.tokenIn} tokenType={tokenType}/> :
+          <CurrencySelect currency={store.getState().tokenReducer.tokenOut} tokenType={tokenType}/>
+        }
           </div>
-        </CurrencyContext.Provider>
+        
         <FormControl
           size="lg"
           type="number"
@@ -87,7 +98,7 @@ function TokenInputUI(
   );
 }
 
-const defaultSlippage = 0.5 / 100;
+//const defaultSlippage = 0.5 / 100;
 const defaultTokenPath = ["WBNB", "VGA"];
 // const defaultState = {
 //   loading: false,
@@ -119,9 +130,6 @@ const PageSwap = () => {
     () => ({ currencyName, setcurrencyName }),
     [currencyName]
   );
-
-  //default
-  //store.dispatch({ type: 'slippage/set3' })
 
   // ui
   // const [slippage, setSlippage] = useState(defaultSlippage);
@@ -182,8 +190,6 @@ const PageSwap = () => {
     setToken0Input(amountText);
     debounceOnChange(e);
   }
-
-  
 
   // Rewrite swap that supports both ETH->Token and Token->Token
   // float number should work properly
@@ -274,10 +280,8 @@ const PageSwap = () => {
                   <span style={{ fontSize: "20pt" }}>Swap</span>
                 </Col>
                 <Col>
-                  
-                  <SettingsModal/>
+                  <SettingsModal />
                 </Col>
-
               </Row>
 
               <div className={"swapMain"}>
@@ -286,18 +290,17 @@ const PageSwap = () => {
                     value,
                     currencyName,
                     token0Input,
+                    "TokenIn",
                     handleChange,
                     { disabled: tokenInputDisabled }
                   )}
                   <br />
-                  {TokenInputUI(value, "VGA", token1Input, () => {}, {
+                  {TokenInputUI(value, "VGA", token1Input, "TokenOut", () => {}, {
                     disabled: tokenInputDisabled,
                   })}
                 </div>
               </div>
             </Form.Group>
-
-            
 
             <div
               className={"buttons"}
@@ -309,7 +312,7 @@ const PageSwap = () => {
                 variant="primary"
                 onClick={swap}
                 disabled={swapButtonState.disabled}
-                style={{ width: "100%", fontSize: "1.2em" }}
+                style={{ width: "100%", height: "55px", fontSize: "1.5em" }}
               >
                 {swapButtonState.text}
               </Button>

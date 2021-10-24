@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
 import { Button, Modal, ButtonGroup } from "react-bootstrap";
-import Tokentable from "./tokentable.js";
 import { store } from "../../redux/store";
 
 export const SettingsModal = (props) => {
@@ -42,13 +40,13 @@ export const SettingsModal = (props) => {
         onClick={toggle}
       >
         <i
-        className="dripicons-gear noti-icon"
-        style={{
+          className="dripicons-gear noti-icon"
+          style={{
             textAlign: "right",
             marginLeft: "0px",
             marginTop: "0px",
             fontSize: "1.4em",
-        }}
+          }}
         />
       </Button>
 
@@ -66,41 +64,34 @@ export const SettingsModal = (props) => {
           <h2>Slippage</h2>
 
           <ButtonGroup
-              className={"expertOptions"}
-              style={{
-                margin: "10px 0",
+            className={"expertOptions"}
+            style={{
+              margin: "10px 0",
+            }}
+          >
+            <Button
+              onClick={(e) => {
+                setSlippageCall(0.003);
               }}
             >
-              <h5
-                style={{
-                  marginRight: "5px",
-                }}
-              >
-                Slippage
-              </h5>
-              <Button
-                onClick={(e) => {
-                  setSlippageCall(0.003);
-                }}
-              >
-                0.3%
-              </Button>
-              <Button
-                onClick={(e) => {
-                  setSlippageCall(0.005);
-                }}
-              >
-                0.5%
-              </Button>
-              <Button
-                onClick={(e) => {
-                  setSlippageCall(0.01);
-                }}
-              >
-                1%
-              </Button>
+              0.3%
+            </Button>
+            <Button
+              onClick={(e) => {
+                setSlippageCall(0.005);
+              }}
+            >
+              0.5%
+            </Button>
+            <Button
+              onClick={(e) => {
+                setSlippageCall(0.01);
+              }}
+            >
+              1%
+            </Button>
 
-              {/* {slippageRadios.map((radio, idx) => {
+            {/* {slippageRadios.map((radio, idx) => {
                 return (
                   <ToggleButton
                     key={idx}
@@ -118,9 +109,7 @@ export const SettingsModal = (props) => {
                   </ToggleButton>
                 );
               })} */}
-            </ButtonGroup>
-
-          
+          </ButtonGroup>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
@@ -131,7 +120,6 @@ export const SettingsModal = (props) => {
     </span>
   );
 };
-
 
 // import React, { useState } from "react";
 // import { Button, Modal } from "react-bootstrap";
@@ -154,7 +142,7 @@ export const SettingsModal = (props) => {
 //   return (
 //     <span>
 //       {/* <div className="button-list"> */}
-      
+
 //       <Button size="lg" style={{ backgroundColor: "#1f2125", border: "none", height: "50px" }} onClick={toggle}>
 //         props.currency
 //       </Button>

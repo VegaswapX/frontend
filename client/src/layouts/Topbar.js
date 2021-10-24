@@ -50,7 +50,7 @@ const AccountConnect = ({ connect }) => {
 
   function connectButton() {
     if (account) {
-      console.log("account" + account);
+      //console.log("account" + account);
       return (
         <Button onClick={disconnect} variant="info">
           Disconnect
@@ -94,7 +94,7 @@ const AccountManage = () => {
   const [networkStatus, setNetworkStatus] = useState(true);
   const { activate } = useWeb3React();
 
-  console.log("networkStatus " + networkStatus);
+  //console.log("networkStatus " + networkStatus);
 
   async function connect() {
     await activate(injected, async (error) => {

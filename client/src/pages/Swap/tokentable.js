@@ -1,11 +1,10 @@
 import React, { useContext, useMemo } from "react";
 import { useTable } from "react-table";
-// import axios from 'axios';
-// import xdata from "./data";
 import { CurrencyContext } from "./index";
 import tokens from "./Tokens";
+import { store } from "../../redux/store";
 
-function Table({ columns, data }) {
+function Table({ tokenType, columns, data }) {
   const { setcurrencyName } = useContext(CurrencyContext);
   // const { xmodal, xsetModal } = useContext(ModalContext);
 
@@ -23,9 +22,15 @@ function Table({ columns, data }) {
 
   function rowClick(row) {
     // console.log(row.original.contract)
-    console.log(row.original.name);
     setcurrencyName(row.original.name);
-    // xsetModal(false)
+
+    //console.log("rowClick >>>> " + tokenType);
+    if (tokenType == "TokenIn"){
+      store.dispatch({ type: "tokenIn/set", value: row.original.name });
+    } else if (tokenType == "TokenOut"){
+      store.dispatch({ type: "tokenOut/set", value: row.original.name });
+    }
+    
   }
 
   const getTrProps = (state, rowInfo, instance) => {
@@ -92,7 +97,8 @@ function Table({ columns, data }) {
 
 // import Table from "./Table";
 
-function Tokentable() {
+function Tokentable({tokenType}) {
+  
   const columns = useMemo(
     () => [
       {
@@ -118,7 +124,7 @@ function Tokentable() {
 
   return (
     <div className="App">
-      <Table columns={columns} data={tokens} />
+      <Table tokenType={tokenType} columns={columns} data={tokens} />
     </div>
   );
 }

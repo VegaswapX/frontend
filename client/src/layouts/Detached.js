@@ -54,30 +54,18 @@ const DetachedLayout = ({ children }, state) => {
       </Suspense>
       <Container fluid>
         <div className="wrapper">
-          {/* <Suspense fallback={loading()}>
-                        <LeftSidebar
-                            isMenuOpened={isMenuOpened}
-                            isCondensed={isCondensed}
-                            isLight={isLight}
-                            hideLogo={true}
-                            hideUserProfile={true}
-                        />
-                    </Suspense> */}
-
+          
           <div className="content-page" style={{ marginTop: "20px" }}>
             <div className="content">
               <Suspense fallback={loading()}>{children}</Suspense>
             </div>
-
-            {/* <Suspense fallback={loading()}>
-                            
-                        </Suspense> */}
+           
           </div>
         </div>
       </Container>
-      <Suspense fallback={loading()}>
-        <RightSidebar>{/* <ThemeCustomizer /> */}</RightSidebar>
-      </Suspense>
+      {/* <Suspense fallback={loading()}>
+        <RightSidebar></RightSidebar>
+      </Suspense> */}
     </>
   );
 };

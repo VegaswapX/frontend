@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import Tokentable from "./tokentable.js";
+import { store } from "../../redux/store";
 
 export const CurrencySelect = (props) => {
   const [modal, setModal] = useState(false);
@@ -8,14 +9,10 @@ export const CurrencySelect = (props) => {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
-  // const { xmodal, xsetModal } = useContext(ModalContext);
-
-  // const currencySelectValue = CurrencyContext(Context);
-  // console.log(currencySelectValue);
-
   const toggle = () => {
     setModal(!modal);
   };
+
 
   return (
     <span>
@@ -37,12 +34,10 @@ export const CurrencySelect = (props) => {
         scrollable={scroll}
       >
         <Modal.Header onHide={toggle} closeButton>
-          <h4 className="modal-title">Select a token</h4>
+          <h4 className="modal-title">Select a token ({props.tokenType})</h4>
         </Modal.Header>
         <Modal.Body>
-          {/* <span> {{currencySelectValue}}</span> */}
-
-          <Tokentable />
+          <Tokentable tokenType={props.tokenType}/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>

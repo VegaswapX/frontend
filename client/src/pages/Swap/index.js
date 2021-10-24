@@ -6,7 +6,6 @@ import { useWeb3React } from "@web3-react/core";
 import React, { createContext, useMemo, useState } from "react";
 import {
   Button,
-  ButtonGroup,
   Col,
   Form,
   FormControl,
@@ -23,14 +22,8 @@ import { PCS_ROUTER_ADDRESS } from "./addr";
 import { CurrencySelect } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import * as trade from "./trade.js";
-// const CurrencyContext = createContext('Default Value');
 import { store } from "../../redux/store";
 
-//TODO remove and put in redux
-export const CurrencyContext = createContext({
-  currencyName: "",
-  setcurrencyName: () => {},
-});
 
 function TokenInputUI(
   value,

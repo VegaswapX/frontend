@@ -23,7 +23,8 @@ export const CurrencySelect = (props) => {
         style={{ backgroundColor: "#1f2125", border: "none", height: "50px" }}
         onClick={toggle}
       >
-        {props.currency}
+        <img src={props.currency.image} style={{width: "24px", height: "24px", marginRight: "10px"}}/>
+        {props.currency.symbol}
       </Button>
 
       <Modal

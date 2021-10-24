@@ -6,6 +6,7 @@ import { useWeb3React } from "@web3-react/core";
 import React, { createContext, useMemo, useState } from "react";
 import {
   Button,
+  ButtonGroup,
   Col,
   Form,
   FormControl,
@@ -26,14 +27,12 @@ import { store } from "../../redux/store";
 
 
 function TokenInputUI(
-  value,
-  currencyName,
   token0Input,
   tokenType,
   handleChange,
   opts = { disabled: false }
 ) {
-  console.log("store state is: " + store.getState());
+  //console.log("store state is: " + store.getState());
 
   store.subscribe(() => {
     let i = store.getState().tokenReducer.tokenIn;
@@ -112,17 +111,14 @@ const swapButtonStates = {
 const PageSwap = () => {
   const { account, chainId } = useWeb3React();
 
-  let token0, token1;
+  
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
 
   // const [state, setState] = useState(defaultState);
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
-  const [currencyName, setcurrencyName] = useState("BNB");
-  const value = useMemo(
-    () => ({ currencyName, setcurrencyName }),
-    [currencyName]
-  );
+
+  
 
   // ui
   // const [slippage, setSlippage] = useState(defaultSlippage);
@@ -144,25 +140,31 @@ const PageSwap = () => {
 
   let swapButtonState, tokenInputDisabled;
   //TODO remove and handle elsewhere
-  if (chainId === Chains.BSC_MAINNET.chainId) {
-    token0 = Contracts[chainId][defaultTokenPath[0]];
-    token1 = Contracts[chainId][defaultTokenPath[1]];
+  if (chainId === Chains.BSC_MAINNET.chainId) {    
     swapButtonState = swapButtonStates["correctNetwork"];
     tokenInputDisabled = false;
   } else {
-    token0 = null;
-    token1 = null;
+    // token0 = null;
+    // token1 = null;
     swapButtonState = swapButtonStates["wrongNetwork"];
     tokenInputDisabled = true;
   }
 
   async function setOutputAmountText(routerContract, e) {
+    console.log("setOutputAmountText " + e);
+
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
       return;
     }
 
+    let token0 = store.getState().tokenReducer.tokenIn;
+    let token1 = store.getState().tokenReducer.tokenOut;
+    // console.log("token0 " + token0.contract);
+    // console.log("token1 " + token1.contract);
+
     const amountText = e.target.value;
+    //console.log("amountText " + amountText);
     const token0AmountEther = trade.convertTextToUnint256(amountText, token0);
     if (token0AmountEther === null) {
       setToken1Input(0);
@@ -188,6 +190,8 @@ const PageSwap = () => {
   // float number should work properly
   async function swap() {
     let slip = store.getState().slippageReducer.value;
+    let token0 = store.getState().tokenReducer.tokenIn;
+    let token1 = store.getState().tokenReducer.tokenOut;
     console.log(`slippage`, slip);
     console.log(`token0`, token0);
     console.log(`token1`, token1);
@@ -280,15 +284,13 @@ const PageSwap = () => {
               <div className={"swapMain"}>
                 <div className={"swapInput"}>
                   {TokenInputUI(
-                    value,
-                    currencyName,
                     token0Input,
                     "TokenIn",
                     handleChange,
                     { disabled: tokenInputDisabled }
                   )}
                   <br />
-                  {TokenInputUI(value, "VGA", token1Input, "TokenOut", () => {}, {
+                  {TokenInputUI(token1Input, "TokenOut", () => {}, {
                     disabled: tokenInputDisabled,
                   })}
                 </div>

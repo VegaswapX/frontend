@@ -51,16 +51,18 @@ export const TokenMap = {
     image:
       "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389",
     dollarvolume: 0,
-    name: "USDC",
-    symbol: "USD Coin",
+    name: "USD Coin",
+    symbol: "USDC",
+    decimals: 18,
   },
   "VGA": {  
-      contract: "0x4efdfe8ffaff109451fc306e0b529b088597dd8d",
+      contract: "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
       image:
         "https://assets.coingecko.com/coins/images/18397/large/big_logo.png?1631769696",
       dollarvolume: 0,
       name: "Vega Token",
-      symbol: "VGA"
+      symbol: "VGA",
+      decimals: 18
   },
   "BNB": {
     contract: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -69,6 +71,7 @@ export const TokenMap = {
     dollarvolume: 0,
     name: "Binance Smart Chain BNB",
     symbol: "BNB",
+    decimals: 18
   },
   "USDT": {
     contract: "0x55d398326f99059ff775485246999027b3197955",
@@ -77,6 +80,7 @@ export const TokenMap = {
     dollarvolume: 0,
     name: "USDT",
     symbol: "USDT",
+    decimals: 18
   }
 }
 

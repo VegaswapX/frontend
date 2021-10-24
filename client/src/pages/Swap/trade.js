@@ -17,6 +17,7 @@ function getGasPrice() {
 }
 
 export function toUint256(amount, token) {
+  console.log("token " + token.decimals);
   return BigNumber.from(Math.round(amount * 1000000)).mul(
     BigNumber.from(10).pow(token.decimals - 6)
   );
@@ -105,19 +106,21 @@ async function swapExactETHForTokens(
 }
 
 const failedGetAmountsOutReturn = null;
+
 export async function getAmountsOut(routerContract, amount, path) {
   if (amount <= 0) {
     return failedGetAmountsOutReturn;
   }
 
-  const addressPath = [path[0].address, path[1].address];
-
+  const addressPath = [path[0].contract, path[1].contract];
+  
   let x = await routerContract.callStatic
     .getAmountsOut(amount, addressPath)
     .catch((e) => {
       console.log("Failed to run getAmountsOut", e);
       return failedGetAmountsOutReturn;
     });
+  console.log("?? " + x);
   return x[1];
 }
 

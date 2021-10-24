@@ -25,7 +25,7 @@ export const CurrencySelectIn = (props) => {
   const [modal, setModal] = useState(false);
   const [size] = useState(null);
   const [className] = useState(null);
-  const [scroll] = useState(null);
+  const [scroll] = useState(null);  
 
   let currency = store.getState().tokenReducer.tokenIn;
 

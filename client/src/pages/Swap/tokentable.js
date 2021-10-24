@@ -4,10 +4,12 @@ import { tokens } from "../../chain/tokens.js";
 import { store } from "../../redux/store";
 
 function Table({ tokenSelect, columns, data }) {
+
   //selecting in or out?
   let selecting = store.getState().uiReducer.tokenSelect;
 
-  const [hoveredRow, setHoveredRow] = useState(null);
+  const [hoveredRow, setHoveredRow] = useState(null)
+
 
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -26,6 +28,7 @@ function Table({ tokenSelect, columns, data }) {
     if (selecting == "tokenIn") {
       store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
     } else if (selecting == "tokenOut") {
+      
       console.log("dispatch >>>> " + row.original.symbol);
       store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
     }
@@ -36,7 +39,7 @@ function Table({ tokenSelect, columns, data }) {
 
   const getTrProps = (state, rowInfo, instance) => {
     console.log("rowInfo" + rowInfo);
-
+    
     // if (rowInfo) {
     //   return {
     //     onMouseEnter: (e) => {
@@ -58,7 +61,7 @@ function Table({ tokenSelect, columns, data }) {
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
-    //getTrProps={getTrProps}
+    //getTrProps={getTrProps} 
     <table {...getTableProps()}>
       {/* <thead>
         {headerGroups.map(headerGroup => (
@@ -77,11 +80,13 @@ function Table({ tokenSelect, columns, data }) {
           //   console.log("enter")
           // }
           return (
-            <tr
+            <tr              
               {...row.getRowProps()}
               onClick={() => {
                 rowClick(row);
-              }}
+              }
+
+            }
             >
               {row.cells.map((cell) => {
                 if (cell.column.Header === "Image") {
@@ -95,14 +100,10 @@ function Table({ tokenSelect, columns, data }) {
                   );
                 } else if (cell.column.Header === "Address") {
                   return (
-                    // <td {...cell.getCellProps()}>{cell.render("Cell").toString().substring(0,5)}</td>
-
-                    // <td style={{ marginLeft: "50px", padding: "10px" }} {...cell.getCellProps()}><a href={cell.render("Cell")}>Link</a></td>
                     <></>
                   );
                 } else if (cell.column.Header === "Symbol") {
                   return (
-                    // <td {...cell.getCellProps()}>{cell.render("Cell").toString().substring(0,5)}</td>
                     <td
                       style={{ marginLeft: "50px", padding: "10px" }}
                       {...cell.getCellProps()}

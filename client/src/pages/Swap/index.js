@@ -36,6 +36,10 @@ function TokenInputUI(
 
   const { disabled } = opts;
 
+  const [loadingAmount, setLoadingAmount] = useState(false);
+
+
+
   return (
     <div
       style={{
@@ -111,6 +115,7 @@ const PageSwapInner = () => {
   const [token1Input, setToken1Input] = useState(0);
 
   const [loading, setLoading] = useState(false);
+  
 
   // ui
   // const [slippage, setSlippage] = useState(defaultSlippage);
@@ -148,6 +153,8 @@ const PageSwapInner = () => {
       return;
     }
 
+    //setLoadingAmount(true);
+
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;
 
@@ -159,13 +166,20 @@ const PageSwapInner = () => {
       return;
     }
 
-    const outAmount = await trade.getAmountsOut(
+    let result = await trade.getAmountsOut(
       routerContract,
       token0AmountEther,
       [token0, token1]
     );
-    const outAmountText = trade.toFloatNumber(outAmount, token1);
-    setToken1Input(outAmountText.toFixed(2));
+    if (!result.error){
+      let outAmount = result.data;
+      const outAmountText = trade.toFloatNumber(outAmount, token1);
+      setToken1Input(outAmountText.toFixed(2));
+      //setLoadingAmount(false);
+    } else {
+      toast.error("Error Pair not available");
+      //setLoadingAmount(false);      
+    }
   }
 
   function handleChange(e) {
@@ -176,6 +190,7 @@ const PageSwapInner = () => {
 
   // Rewrite swap that supports both ETH->Token and Token->Token
   // float number should work properly
+  //TODO handle in tokenui
   async function swap() {
     let slip = store.getState().slippageReducer.value;
     let token0 = store.getState().tokenReducer.tokenIn;
@@ -198,47 +213,63 @@ const PageSwapInner = () => {
         return;
       }
       console.log(`amountIn: ${amountIn}`);
-      const amountOut = await trade.getAmountsOut(routerContract, amountIn, [
+      const result = await trade.getAmountsOut(routerContract, amountIn, [
         token0,
         token1,
       ]);
-      console.log("amountOut " + amountOut);
-      // calculate slippage
-      const amountOutMin = amountOut
-        .mul(Math.round((1 - slip) * 1000))
-        .div(1000);
-      console.log("amountOutMin " + amountOutMin);
+      if (!result.error){
+        let amountOut = result.data;
+        console.log("amountOut " + amountOut);
+        // calculate slippage
+        const amountOutMin = amountOut
+          .mul(Math.round((1 - slip) * 1000))
+          .div(1000);
+        console.log("amountOutMin " + amountOutMin);
 
-      //TODO set loading while pending
-      try {
-        setLoading(true);
-        const result = await trade.swap(
-          routerContract,
-          amountIn,
-          amountOutMin,
-          [token0, token1],
-          account
-        );
-        const [status, statusInfo] = result;
-        if (status === 1) {
-          const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
-          const msg = (
-            <a target="_blank" href={link}>
-              Swap successful
-            </a>
+        //TODO set loading while pending
+        try {
+          setLoading(true);
+          const result = await trade.swap(
+            routerContract,
+            amountIn,
+            amountOutMin,
+            [token0, token1],
+            account
           );
-          toast.success(msg);
-          setLoading(false);
-        } else {
-          toast.error(statusInfo.message);
+          const [status, statusInfo] = result;
+          if (status === 1) {
+            const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
+            const msg = (
+              <a target="_blank" href={link}>
+                Swap successful
+              </a>
+            );
+            toast.success(msg);
+            setLoading(false);
+          } else {
+            toast.error(statusInfo.message);
+            setLoading(false);
+          }
+        } catch {
+          toast.error("error with trade");
           setLoading(false);
         }
-      } catch {
-        toast.error("error with trade");
-        setLoading(false);
-      }
+      } 
+    } else {
+      toast.error("error with trade getting amounts");
     }
   }
+
+  let tokenInput;
+  let tokenOutput;
+  
+  tokenInput = TokenInputUI(token0Input, "tokenIn", handleChange, {
+      disabled: tokenInputDisabled,
+    })
+
+  tokenOutput = TokenInputUI(token1Input, "tokenOut", () => {}, {
+      disabled: tokenInputDisabled,
+    })
 
   // DEBUG
   // const link = `https://bscscan.com/tx/test`;
@@ -279,13 +310,10 @@ const PageSwapInner = () => {
 
           <div className={"swapMain"} style={{ marginTop: "15px" }}>
             <div className={"swapInput"}>
-              {TokenInputUI(token0Input, "tokenIn", handleChange, {
-                disabled: tokenInputDisabled,
-              })}
+              {tokenInput}
               <br />
-              {TokenInputUI(token1Input, "tokenOut", () => {}, {
-                disabled: tokenInputDisabled,
-              })}
+              {tokenOutput}
+              
             </div>
           </div>
         </Form.Group>

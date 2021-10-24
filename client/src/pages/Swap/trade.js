@@ -185,13 +185,19 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
   }
   const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
 
-  let x = await routerContract.callStatic
+  try {
+    let x = await routerContract.callStatic
     .getAmountsOut(amount, addressPath)
     .catch((e) => {
       console.log("Failed to run getAmountsOut", e);
       return failedGetAmountsOutReturn;
     });
-  return x[1];
+    return {data: x[1], error: false};
+  } 
+  catch {
+    console.log("Failed to run getAmountsOut ", addressPath);    
+    return {error: true};
+    }
 }
 
 async function swapTokensForExactTokens(

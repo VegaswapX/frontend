@@ -8,15 +8,17 @@ import rootSaga from './sagas';
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware];
 
-export function configureStore(initialState) {
+function configureStore() {
     let store;
-
-    if (window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']) {
-        store = createStore(reducers, initialState, window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'](applyMiddleware(...middlewares)));
-    } else {
-        store = createStore(reducers, initialState, applyMiddleware(...middlewares));
-    }
+    let initialState = {};
+    // if (window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']) {
+    //     store = createStore(reducers, initialState, window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'](applyMiddleware(...middlewares)));
+    // } else {
+    //     store = createStore(reducers, initialState, applyMiddleware(...middlewares));
+    // }
     store = createStore(reducers, initialState, applyMiddleware(...middlewares));
     sagaMiddleware.run(rootSaga);
     return store;
 }
+
+export let store = configureStore();

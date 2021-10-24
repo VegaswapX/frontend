@@ -30,24 +30,23 @@ function Table({ columns, data }) {
 
   const getTrProps = (state, rowInfo, instance) => {
     if (rowInfo) {
-        return {
-            style: {
-                // 'background-color': rowInfo.original.customercomplaints.order_ref === currentOrderId ? '' : 'yellow',
-                'background-color': 'yellow',
-            }
-        }
+      return {
+        style: {
+          // 'background-color': rowInfo.original.customercomplaints.order_ref === currentOrderId ? '' : 'yellow',
+          "background-color": "yellow",
+        },
+      };
     }
     return {};
-  }
+  };
 
   /*
     Render the UI for your table
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
-    <table getTrProps={getTrProps} {...getTableProps() }>
-      {
-        /* <thead>
+    <table getTrProps={getTrProps} {...getTableProps()}>
+      {/* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -55,8 +54,7 @@ function Table({ columns, data }) {
             ))}
           </tr>
         ))}
-      </thead> */
-      }
+      </thead> */}
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
@@ -79,7 +77,9 @@ function Table({ columns, data }) {
                     </td>
                   );
                 } else {
-                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
                 }
               })}
             </tr>
@@ -113,7 +113,7 @@ function Tokentable() {
         ],
       },
     ],
-    [],
+    []
   );
 
   return (

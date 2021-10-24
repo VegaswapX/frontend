@@ -11,11 +11,8 @@ const INIT_STATE = {
     showRightSidebar: false,
 };
 
-type LayoutAction = { type: string, payload?: string | null };
 
-type State = { showRightSidebar?: boolean, +value?: boolean };
-
-const Layout = (state: State = INIT_STATE, action: LayoutAction): any => {
+const Layout = (state = INIT_STATE, action) => {
     switch (action.type) {
         case LayoutActionTypes.CHANGE_LAYOUT:
             return {

@@ -1,22 +1,17 @@
 const initialState = {
-    value: 0
-  }
-
-function slippage(state = [], action) {
-  switch (action.type) {
-    case 'SET':
-      return state.concat([action.text])
-    default:
-      return state
-  }
+    value: 0.003
 }
+
 
 export default function slippageReducer(state = initialState, action) {
     switch (action.type) {
-      case 'counter/incremented':
-        return { ...state, value: state.value + 1 }
-      case 'counter/decremented':
-        return { ...state, value: state.value - 1 }
+      case 'slippage/set3':
+        //console.log(state.value)
+        return { ...state, value: 0.003 }
+      case 'slippage/set5':
+        return { ...state, value: 0.005 }
+      case 'slippage/set10':
+            return { ...state, value: 0.01 }
       default:
         // If the reducer doesn't care about this action type,
         // return the existing state unchanged

@@ -1,31 +1,36 @@
 const tokens = [
   {
     contract: "0x55d398326f99059ff775485246999027b3197955",
-    image: "https://assets.coingecko.com/coins/images/325/large/Tether-logo.png?1598003707",
+    image:
+      "https://assets.coingecko.com/coins/images/325/large/Tether-logo.png?1598003707",
     dollarvolume: 0,
     name: "USDT",
   },
   {
     contract: "0x4efdfe8ffaff109451fc306e0b529b088597dd8d",
-    image: "https://assets.coingecko.com/coins/images/18397/large/big_logo.png?1631769696",
+    image:
+      "https://assets.coingecko.com/coins/images/18397/large/big_logo.png?1631769696",
     dollarvolume: 0,
     name: "Vega Token",
   },
   {
     contract: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    image: "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png?1547034615",
+    image:
+      "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png?1547034615",
     dollarvolume: 0,
     name: "BNB",
   },
   {
     contract: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
-    image: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389",
+    image:
+      "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389",
     dollarvolume: 0,
     name: "USDC",
   },
   {
     contract: "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-    image: "https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1568947766",
+    image:
+      "https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1568947766",
     dollarvolume: 0,
     name: "BUSD",
   },

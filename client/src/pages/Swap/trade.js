@@ -18,7 +18,7 @@ function getGasPrice() {
 
 export function toUint256(amount, token) {
   return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(token.decimals - 6),
+    BigNumber.from(10).pow(token.decimals - 6)
   );
 }
 
@@ -56,13 +56,20 @@ export async function swap(
   amountOutMin,
   tokenPath,
   to,
-  deadline = defaultDeadline(),
+  deadline = defaultDeadline()
 ) {
   const [token0, token1] = tokenPath;
   const addressPath = [token0.address, token1.address];
 
   if (!!token0.isNative) {
-    return await swapExactETHForTokens(routerContract, amountIn, amountOutMin, addressPath, to, deadline);
+    return await swapExactETHForTokens(
+      routerContract,
+      amountIn,
+      amountOutMin,
+      addressPath,
+      to,
+      deadline
+    );
   }
 
   // swap from Tokens to tokens
@@ -77,21 +84,21 @@ async function swapExactETHForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
 
   try {
     const tx = await routerContract.swapExactETHForTokens(
-        amountOutMin,
-        addressPath,
-        to,
-        deadline,
-        { ...defaultOptions, value: amountIn, gasPrice },
+      amountOutMin,
+      addressPath,
+      to,
+      deadline,
+      { ...defaultOptions, value: amountIn, gasPrice }
     );
     let receipt = await tx.wait();
     return [receipt.status, receipt];
-  } catch(e) {
+  } catch (e) {
     console.log("Error: swapExactETHForTokens:", e);
     return [false, e];
   }

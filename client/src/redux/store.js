@@ -4,10 +4,11 @@ import createSagaMiddleware from 'redux-saga';
 import reducers from './reducers';
 import rootSaga from './sagas';
 
+//TODO remove and fix the result layout issue
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware];
 
-export function configureStore(initialState: {}): any {
+export function configureStore(initialState) {
     let store;
 
     if (window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']) {
@@ -15,6 +16,7 @@ export function configureStore(initialState: {}): any {
     } else {
         store = createStore(reducers, initialState, applyMiddleware(...middlewares));
     }
+    store = createStore(reducers, initialState, applyMiddleware(...middlewares));
     sagaMiddleware.run(rootSaga);
     return store;
 }

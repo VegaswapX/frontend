@@ -14,7 +14,7 @@ import { allFlattenRoutes } from './index';
 const Routes = (props) => {
     const { layout, user } = useSelector((state) => ({
         layout: state.Layout,
-        user: state.Auth.user,
+        //user: state.Auth.user,
     }));
 
     const getLayout = () => {
@@ -63,7 +63,7 @@ const Routes = (props) => {
                 </Route> */}
 
                 <Route path={allFlattenRoutes.map((r) => r['path'])}>
-                    <Layout {...props} layout={layout} user={user}>
+                    <Layout {...props} layout={layout} >
                         <Switch>
                             {allFlattenRoutes.map((route, index) => {
                                 return (

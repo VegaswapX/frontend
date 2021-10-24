@@ -29,6 +29,12 @@ const NetworkSwitchButton = () => {
         }    
     }
 
+    if (chainId == LOCAL_NET){
+        return (
+            <> </>
+        )
+    }
+
     if (supportedChains.includes(chainId)){
         return (
             <><Button variant={"outline-primary"} className="me-3" onClick={handleShow}>                    

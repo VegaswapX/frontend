@@ -1,10 +1,11 @@
 // @flow
 import { combineReducers } from 'redux';
 
-import Auth from './auth/reducers';
 import Layout from './layout/reducers';
+import slippageReducer from './slippage';
 
 export default (combineReducers({
-    Auth,
+    //Auth,
+    slippageReducer,
     Layout,
-}): any);
+}));

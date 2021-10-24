@@ -32,7 +32,7 @@ export const tokens = [
     symbol: "USDC",
   },
   {
-    contract: "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+    contract: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     image:
       "https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1568947766",
     dollarvolume: 0,
@@ -81,6 +81,15 @@ export const TokenMap = {
     dollarvolume: 0,
     name: "USDT",
     symbol: "USDT",
+    decimals: 18
+  },
+  "BUSD": {
+    contract: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    image:
+      "https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1568947766",
+    dollarvolume: 0,
+    name: "Binance USD",
+    symbol: "BUSD",
     decimals: 18
   }
 }

@@ -11,18 +11,18 @@ import {
 import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
-import { Chains, Contracts } from "../../chain/constants";
+import { Chains } from "../../chain/constants";
 import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 
-import { CurrencySelect } from "./CurrencySelect";
+import { CurrencySelectIn, CurrencySelectOut } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import * as trade from "./trade.js";
 import { store } from "../../redux/store";
 
 function TokenInputUI(
   token0Input,
-  tokenType,
+  tokenSelect,
   handleChange,
   opts = { disabled: false }
 ) {
@@ -31,7 +31,7 @@ function TokenInputUI(
   store.subscribe(() => {
     let i = store.getState().tokenReducer.tokenIn;
     let o = store.getState().tokenReducer.tokenOut;
-    console.log(">> " + i + " " + o);
+    console.log(">> tokenin/out " + i + " " + o);
   });
 
   const { disabled } = opts;
@@ -53,16 +53,10 @@ function TokenInputUI(
             marginTop: "5px",
           }}
         >
-          {tokenType == "TokenIn" ? (
-            <CurrencySelect
-              currency={store.getState().tokenReducer.tokenIn}
-              tokenType={tokenType}
-            />
+          {tokenSelect == "tokenIn" ? (
+            <CurrencySelectIn />
           ) : (
-            <CurrencySelect
-              currency={store.getState().tokenReducer.tokenOut}
-              tokenType={tokenType}
-            />
+            <CurrencySelectOut />
           )}
         </div>
 
@@ -261,45 +255,35 @@ const PageSwapInner = () => {
     return (
       <>
         <Form.Group className="mb-3">
-
           <Row>
-
-      <div class="d-flex justify-content-between">
-        <div>
-          
-        </div>
-        <div>
-        <span style={{ fontSize: "20pt", marginTop: "5px", marginLeft: "50%" }}>Swap</span>
-        </div>
-        <div>
-        <span style={{ marginRight: "10px" }}>
-        <SettingsModal />
-
-        </span>
-        </div>
-        </div>
-                   
-          
-            {/* <Col
-              style={{
-                textAlign: "center",
-                marginLeft: "100px",
-              }}
-            >
-              <span style={{ fontSize: "20pt", marginTop: "5px" }}>Swap</span>
-            </Col>
-            <Col>
-              <SettingsModal />
-            </Col> */}
+            <div class="d-flex justify-content-between">
+              <div></div>
+              <div>
+                <span
+                  style={{
+                    fontSize: "20pt",
+                    marginTop: "5px",
+                    marginLeft: "50%",
+                  }}
+                >
+                  Swap
+                </span>
+              </div>
+              <div>
+                <span style={{ marginRight: "10px" }}>
+                  <SettingsModal />
+                </span>
+              </div>
+            </div>
           </Row>
 
-          <div className={"swapMain"} style={{ marginTop: "15px"}}>
+          <div className={"swapMain"} style={{ marginTop: "15px" }}>
             <div className={"swapInput"}>
-              {TokenInputUI(token0Input, "TokenIn", handleChange, {
+              {TokenInputUI(token0Input, "tokenIn", handleChange, {
                 disabled: tokenInputDisabled,
               })}
               <br />
-              {TokenInputUI(token1Input, "TokenOut", () => {}, {
+              {TokenInputUI(token1Input, "tokenOut", () => {}, {
                 disabled: tokenInputDisabled,
               })}
             </div>
@@ -316,7 +300,7 @@ const PageSwapInner = () => {
             variant="primary"
             onClick={swap}
             disabled={swapButtonState.disabled}
-            style={{ width: "100%", height: "55px", fontSize: "1.5em" }}
+            style={{ width: "90%", height: "55px", fontSize: "1.5em" }}
           >
             {swapButtonState.text}
           </Button>
@@ -333,8 +317,8 @@ const PageSwap = () => {
         <Col lg={12}>
           <div
             style={{
-              height: "350px",
-              width: "500px",
+              height: "360px",
+              width: "580px",
               backgroundColor: "#1c1f27",
               color: "white",
               margin: "0 auto",

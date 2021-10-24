@@ -95,7 +95,8 @@ export async function swap(
   } else {
     console.log("token for token");
 
-    return await swapTokensForExactTokens(routerContract,
+    return await swapTokensForExactTokens(
+      routerContract,
       amountIn,
       amountOutMin,
       addressPath,
@@ -193,14 +194,14 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
   return x[1];
 }
 
-async function swapTokensForExactTokens(routerContract,
+async function swapTokensForExactTokens(
+  routerContract,
   amountIn,
   amountOutMin,
   addressPath,
   to,
   deadline
 ) {
-
   const gasPrice = getGasPrice();
   console.log("swapTokensForExactTokens...");
   const args = [amountIn, amountOutMin, addressPath, to, deadline];

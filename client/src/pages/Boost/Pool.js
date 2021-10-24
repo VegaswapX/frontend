@@ -108,27 +108,25 @@ export function PoolInfo({ pool }) {
   }, [account, library, poolContract]);
 
   useEffect(() => {
-    
-      let stale = false;
+    let stale = false;
 
-      poolContract.callStatic
-        .startTime()
-        .then((x) => {
-          if (!stale) {            
-            setStartTime(x);
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setStartTime(null);
-          }
-        });
+    poolContract.callStatic
+      .startTime()
+      .then((x) => {
+        if (!stale) {
+          setStartTime(x);
+        }
+      })
+      .catch(() => {
+        if (!stale) {
+          setStartTime(null);
+        }
+      });
 
-      return () => {
-        stale = true;
-        setStartTime(undefined);
-      };
-    
+    return () => {
+      stale = true;
+      setStartTime(undefined);
+    };
   }, [account, library, poolContract]);
 
   useEffect(() => {
@@ -136,7 +134,7 @@ export function PoolInfo({ pool }) {
     poolContract.callStatic
       .stakes(account)
       .then((x) => {
-        if (!stale) {          
+        if (!stale) {
           let z = ethers.utils.formatEther(x[1].toString());
           setTotalAmountStaked(z.toString());
         }

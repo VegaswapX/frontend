@@ -8,13 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 const DashboardPage = () => {
   return (
-      <React.Fragment>
-          
-          
-          <Balances />
-          
-          
-      </React.Fragment>
+    <React.Fragment>
+      <Balances />
+    </React.Fragment>
   );
 };
 

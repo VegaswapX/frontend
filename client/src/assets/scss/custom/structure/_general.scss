@@ -7,19 +7,38 @@ html {
   min-height: 100%;
 }
 
-body {
-  overflow-x: hidden;
-  background: 
-  linear-gradient( rgba(0,0,0,.65), rgba(0,0,0,.8) ),
-  url("../../../images/grid.jpeg");
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
 
-    
-    // filter:sepia(100%) saturate(50%) brightness(70%);
-    // ;
-  background-size: cover;
+// body {
+// 	background: 
+//     linear-gradient(-45deg, #1d1f27, #0b1c35, #111618, #0d223f),
+//     url("../../../images/grid.jpeg");
+// 	background-size: 400% 400%;
+// 	animation: gradient 15s ease infinite;
+// 	height: 100vh;
+// }
+
+body {
+  //overflow-x: hidden;
+  background: linear-gradient(-45deg, #1d1f27, #0b1c35, #111618, #0d223f);
+  //linear-gradient( rgba(0,0,0,.65), rgba(0,0,0,.8) ),
   
-  // filter: sepia(100%) saturate(50%) brightness(70%);
-  // url("../../../images/bg-pattern-dark.png");
+  //url("../../../images/grid.jpeg");
+
+  background-image: linear-gradient(#0c1018, rgba(15,20,50,.85)), url("../../../images/grid.jpeg");
+  animation: gradient 15s ease infinite;
+    
+  background-size: cover;
 }
 
 .stakeInput {

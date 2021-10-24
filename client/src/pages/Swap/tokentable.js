@@ -1,10 +1,13 @@
-import React, { useContext, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useTable } from "react-table";
 import { tokens } from "../../chain/tokens.js";
 import { store } from "../../redux/store";
 
-function Table({ tokenType, columns, data }) {
-  // const { xmodal, xsetModal } = useContext(ModalContext);
+function Table({ tokenSelect, columns, data }) {
+  //selecting in or out?
+  let selecting = store.getState().uiReducer.tokenSelect;
+
+  const [hoveredRow, setHoveredRow] = useState(null);
 
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -19,23 +22,34 @@ function Table({ tokenType, columns, data }) {
   });
 
   function rowClick(row) {
-    //console.log("rowClick >>>> " + tokenType);
-    if (tokenType == "TokenIn") {
+    console.log("rowClick >>>> " + selecting);
+    if (selecting == "tokenIn") {
       store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
-    } else if (tokenType == "TokenOut") {
+    } else if (selecting == "tokenOut") {
+      console.log("dispatch >>>> " + row.original.symbol);
       store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
     }
+
+    store.dispatch({ type: "ui/togglemodal" });
+    //row.selected = !row.selected;
   }
 
   const getTrProps = (state, rowInfo, instance) => {
-    if (rowInfo) {
-      return {
-        style: {
-          // 'background-color': rowInfo.original.customercomplaints.order_ref === currentOrderId ? '' : 'yellow',
-          "background-color": "yellow",
-        },
-      };
-    }
+    console.log("rowInfo" + rowInfo);
+
+    // if (rowInfo) {
+    //   return {
+    //     onMouseEnter: (e) => {
+    //       console.log("onMouseEnter")
+    //       setHoveredRow(rowInfo.index)
+    //     },
+    //     style: {
+    //       // 'background-color': rowInfo.original.customercomplaints.order_ref === currentOrderId ? '' : 'yellow',
+    //       //"background-color": "yellow",
+    //       background: rowInfo.index === hoveredRow ? '#efefef' : 'white'
+    //     },
+    //   };
+    // }
     return {};
   };
 
@@ -44,7 +58,8 @@ function Table({ tokenType, columns, data }) {
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
-    <table getTrProps={getTrProps} {...getTableProps()}>
+    //getTrProps={getTrProps}
+    <table {...getTableProps()}>
       {/* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -56,10 +71,13 @@ function Table({ tokenType, columns, data }) {
       </thead> */}
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
+          console.log(">> " + row);
           prepareRow(row);
+          // row.onMouseEnter = function(){
+          //   console.log("enter")
+          // }
           return (
             <tr
-              style={{ height: "50px" }}
               {...row.getRowProps()}
               onClick={() => {
                 rowClick(row);
@@ -104,7 +122,7 @@ function Table({ tokenType, columns, data }) {
 
 // import Table from "./Table";
 
-function Tokentable({ tokenType }) {
+function Tokentable({ tokenSelect }) {
   const columns = useMemo(
     () => [
       {
@@ -138,7 +156,7 @@ function Tokentable({ tokenType }) {
 
   return (
     <div className="App">
-      <Table tokenType={tokenType} columns={columns} data={tokens} />
+      <Table tokenSelect={tokenSelect} columns={columns} data={tokens} />
     </div>
   );
 }

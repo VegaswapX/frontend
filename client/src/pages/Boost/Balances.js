@@ -6,7 +6,7 @@ import { BNBBalance, Vgabalance, USDTBalance, Lpbalance } from "./Balance.js";
 const Balances = () => {
   return (
     <React.Fragment>
-      <Row style={{marginTop: "30px"}}>
+      <Row style={{ marginTop: "30px" }}>
         <Col lg={6} xl={3}>
           <BNBBalance />
         </Col>

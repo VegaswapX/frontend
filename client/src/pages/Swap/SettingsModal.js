@@ -32,10 +32,10 @@ export const SettingsModal = (props) => {
 
   return (
     <>
-    <span style={{marginTop: "20px"}}>
-      {/* <div className="button-list"> */}
+      <span style={{ marginTop: "20px" }}>
+        {/* <div className="button-list"> */}
 
-      {/* <Button
+        {/* <Button
         size="lg"
         style={{ backgroundColor: "#1f2125", border: "none", height: "50px"}}
         onClick={toggle}
@@ -45,12 +45,12 @@ export const SettingsModal = (props) => {
           className="dripicons-gear noti-icon"
           style={{
             textAlign: "right",
-            marginLeft: "50px",            
-            fontSize: "2.0em",            
+            marginLeft: "50px",
+            fontSize: "2.0em",
           }}
           onClick={toggle}
         />
-    </span>
+      </span>
       {/* </Button> */}
 
       <Modal
@@ -120,7 +120,7 @@ export const SettingsModal = (props) => {
           </Button>{" "}
         </Modal.Footer>
       </Modal>
-    {/* </span> */}
+      {/* </span> */}
     </>
   );
 };
@@ -137,7 +137,6 @@ export const SettingsModal = (props) => {
 //   // const { xmodal, xsetModal } = useContext(ModalContext);
 
 //   // const currencySelectValue = CurrencyContext(Context);
-//   // console.log(currencySelectValue);
 
 //   const toggle = () => {
 //     setModal(!modal);

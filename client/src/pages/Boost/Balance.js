@@ -3,7 +3,11 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 import { useContract } from "../../chain/eth.js";
-import { VEGA_TOKEN_ADDRESS, LP_TOKEN_ADDRESS, BSC_USDT } from "../../chain/Contracts.js";
+import {
+  VEGA_TOKEN_ADDRESS,
+  LP_TOKEN_ADDRESS,
+  BSC_USDT,
+} from "../../chain/Contracts.js";
 import { formatEther } from "@ethersproject/units";
 import BalanceInfo from "../BalanceInfo";
 
@@ -138,7 +142,6 @@ export function Lpbalance() {
           colors={["#0acf97"]}
           data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
         ></BalanceInfo>
-
       </>
     </>
   );
@@ -231,7 +234,7 @@ export function USDTBalance() {
         stats={Math.round(balance * 10) / 10}
         bimg={
           "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
-        }        
+        }
         colors={["#727cf5"]}
         data={[12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14]}
       ></BalanceInfo>

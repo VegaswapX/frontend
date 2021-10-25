@@ -17,7 +17,7 @@ import {DashboardPage} from "../pages/Dashboard";
 const rootRoute = {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/boost" />,
+    component: () => <Redirect to="/dashboard" />,
     route: Route,
 };
 

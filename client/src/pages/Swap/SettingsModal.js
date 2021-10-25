@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup, Modal } from "react-bootstrap";
 import { store } from "../../redux/store";
 
 export const SettingsModal = (props) => {
@@ -35,12 +35,14 @@ export const SettingsModal = (props) => {
       <span style={{ marginTop: "20px" }}>
         {/* <div className="button-list"> */}
 
-        {/* <Button
+        {
+          /* <Button
         size="lg"
         style={{ backgroundColor: "#1f2125", border: "none", height: "50px"}}
         onClick={toggle}
         //class="shadow-none"
-      > */}
+      > */
+        }
         <i
           className="dripicons-gear noti-icon"
           style={{
@@ -94,7 +96,8 @@ export const SettingsModal = (props) => {
               1%
             </Button>
 
-            {/* {slippageRadios.map((radio, idx) => {
+            {
+              /* {slippageRadios.map((radio, idx) => {
                 return (
                   <ToggleButton
                     key={idx}
@@ -111,13 +114,15 @@ export const SettingsModal = (props) => {
                     {radio.name}
                   </ToggleButton>
                 );
-              })} */}
+              })} */
+            }
           </ButtonGroup>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>{" "}
+          </Button>
+          {" "}
         </Modal.Footer>
       </Modal>
       {/* </span> */}

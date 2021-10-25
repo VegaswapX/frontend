@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import Tokentable from "./tokentable.js";
 import { store } from "../../redux/store";
+import Tokentable from "./tokentable.js";
 
-//TODO one component
+// TODO one component
 
 function CurrencyButton(props) {
   return (
@@ -25,7 +25,7 @@ export const CurrencySelectIn = (props) => {
   const [modal, setModal] = useState(false);
   const [size] = useState(null);
   const [className] = useState(null);
-  const [scroll] = useState(null);  
+  const [scroll] = useState(null);
 
   let currency = store.getState().tokenReducer.tokenIn;
 
@@ -58,7 +58,8 @@ export const CurrencySelectIn = (props) => {
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>{" "}
+          </Button>
+          {" "}
         </Modal.Footer>
       </Modal>
     </span>
@@ -104,7 +105,8 @@ export const CurrencySelectOut = (props) => {
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>{" "}
+          </Button>
+          {" "}
         </Modal.Footer>
       </Modal>
     </span>

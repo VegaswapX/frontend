@@ -4,12 +4,10 @@ import { tokens } from "../../chain/tokens.js";
 import { store } from "../../redux/store";
 
 function Table({ tokenSelect, columns, data }) {
-
-  //selecting in or out?
+  // selecting in or out?
   let selecting = store.getState().uiReducer.tokenSelect;
 
-  const [hoveredRow, setHoveredRow] = useState(null)
-
+  const [hoveredRow, setHoveredRow] = useState(null);
 
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -28,18 +26,17 @@ function Table({ tokenSelect, columns, data }) {
     if (selecting == "tokenIn") {
       store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
     } else if (selecting == "tokenOut") {
-      
       console.log("dispatch >>>> " + row.original.symbol);
       store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
     }
 
     store.dispatch({ type: "ui/togglemodal" });
-    //row.selected = !row.selected;
+    // row.selected = !row.selected;
   }
 
   const getTrProps = (state, rowInfo, instance) => {
     console.log("rowInfo" + rowInfo);
-    
+
     // if (rowInfo) {
     //   return {
     //     onMouseEnter: (e) => {
@@ -61,9 +58,10 @@ function Table({ tokenSelect, columns, data }) {
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
-    //getTrProps={getTrProps} 
+    // getTrProps={getTrProps}
     <table {...getTableProps()}>
-      {/* <thead>
+      {
+        /* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -71,7 +69,8 @@ function Table({ tokenSelect, columns, data }) {
             ))}
           </tr>
         ))}
-      </thead> */}
+      </thead> */
+      }
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           console.log(">> " + row);
@@ -80,13 +79,11 @@ function Table({ tokenSelect, columns, data }) {
           //   console.log("enter")
           // }
           return (
-            <tr              
+            <tr
               {...row.getRowProps()}
               onClick={() => {
                 rowClick(row);
-              }
-
-            }
+              }}
             >
               {row.cells.map((cell) => {
                 if (cell.column.Header === "Image") {
@@ -99,9 +96,7 @@ function Table({ tokenSelect, columns, data }) {
                     </td>
                   );
                 } else if (cell.column.Header === "Address") {
-                  return (
-                    <></>
-                  );
+                  return <></>;
                 } else if (cell.column.Header === "Symbol") {
                   return (
                     <td
@@ -152,7 +147,7 @@ function Tokentable({ tokenSelect }) {
         ],
       },
     ],
-    []
+    [],
   );
 
   return (

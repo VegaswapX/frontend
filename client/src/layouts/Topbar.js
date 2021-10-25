@@ -10,7 +10,8 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 // import { showRightSidebar } from "../redux/actions";
 
 // components
-import vlogo from "../assets/images/logo_black.jpeg";
+// import vlogo from "../assets/images/logo_black.jpeg";
+import vlogo from "../assets/images/Horizontal_White.png";
 
 //constants
 import * as layoutConstants from "../constants/layout";
@@ -132,10 +133,11 @@ const Brand = () => {
     <img
       src={vlogo}
       alt="logo"
-      height="50"
+      width="210"
+      height="110"
       style={{ marginTop: "0px" }}
     />
-    <span
+    {/* <span
       style={{
         color: "white",
         marginLeft: "10px",
@@ -144,7 +146,7 @@ const Brand = () => {
       }}
     >
       Vegaswap
-    </span>
+    </span> */}
   </span>
 </Navbar.Brand>)
 }

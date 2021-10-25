@@ -18,13 +18,18 @@
 //LCOAL
 export const VGA_BNB_POOL_ADDRESS = "";
 export const VEGA_TOKEN_ADDRESS = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
-export const POOL_TOKEN_ADDRESS = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
 export const BSC_USDT = "0x55d398326f99059fF775485246999027B3197955";
 
 export const LP_TOKEN_ADDRESS = "0xdA6F484F5fFE2382C20F80dCEdcB860Cea955461";
 
-export const POOL1 = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
-export const POOL2 = "0x028f1BfCa59382d2e7982aE91b37c4F9261EbbEd";
+//TESTNET
+export const POOL1 = "0x081d2605123B574459A014b963d0ad323D336959";
+export const POOL2 = "0xb804b6C73bFc1A1f528985b1410B61677a4B161A";
+
+export const BPOOLS = [
+  { poolName: "VGA", address: POOL1 },
+  //{poolName: "USDT", poolAddress: POOL2}
+];
 
 export function getContract(name) {
   console.log(">>> getContract " + name);

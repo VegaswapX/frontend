@@ -4,80 +4,66 @@ import { Row, Col } from "react-bootstrap";
 // import Balances from "./Balances";
 // components
 // import PageTitle from '../../components/PageTitle';
-// import Stake from "./Stake.js";
+import Stake from "./Stake.js";
 import classNames from "classnames";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import styled from 'styled-components';
 import { Card } from "react-bootstrap";
-import {POOL1, POOL2} from "../../chain/Contracts.js";
+import { BPOOLS } from "../../chain/Contracts.js";
 
-const poolList = [POOL1, POOL2];
-// import { PoolInfo } from "./Pool.js";
+import { PoolInfo } from "./Pool.js";
 
-// import POOL_CONTRACT_ABI from "./../../abis/BoostPool.json";
-// import { POOL1 } from "../../chain/Contracts";
-
-// move to config file
-// const pools = {
-//   POOL1: {
-//     address: POOL1,
-//     abi: POOL_CONTRACT_ABI,
-//   },
-// };
-
-const createBoostPoolPage = ({
-  poolName,
+function PoolPage({ pool }) {
+  //pool
+  //poolName,
   // stakeToken,
   // yieldToken,
-  poolAddress,
-}) => {
+  //poolAddress,
   // const pool = pools[poolAddress];
 
-  return () => {
-    return (
-      <>
-        <h1>Boost Pool {poolName}</h1>
-        <div>
-          <ToastContainer
-            progressClassName="toastProgress"
-            bodyClassName="toastBody"
-          />
-        </div>
+  console.log(pool.poolName);
 
-        {/* <Balances /> */}
-        <Row>
-          <Col lg={5}>
-            <Card className={classNames("border", [`border-primary`])}>
-              <Card.Body>
-                <Card.Title as="h5">Pool Info</Card.Title>
-                <Card.Text>{/* <PoolInfo pool={pool} /> */}</Card.Text>
-                {/* <button className={classNames('btn', 'btn-sm', [`btn-primary`])}>Button</button> */}
-              </Card.Body>
-            </Card>
-          </Col>
+  return (
+    <>
+      <h2>Pool {pool.poolName}</h2>
 
-          <Col lg={7}>{/* <Stake pool={pool} /> */}</Col>
-        </Row>
-      </>
-    );
-  };
-};
+      <Row>
+        <Col lg={5}>
+          <Card className={classNames("border", [`border-primary`])}>
+            <Card.Body>
+              {/* <Card.Title as="h5">Pool Info</Card.Title> */}
+              <Card.Text>
+                <PoolInfo pool={pool} />
+              </Card.Text>
+              {/* <button className={classNames("btn", "btn-sm", [`btn-primary`])}>
+                Button
+              </button> */}
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col lg={7}>
+          <Stake pool={pool} />
+        </Col>
+      </Row>
+    </>
+  );
+}
 
 const BoostPage = () => {
   return (
-    <React.Fragment>
-      <h1>Pools</h1>
-      {poolList.map((pool) => {
-        return (
-          <p>{pool}</p>
-          )
+    <>
+      {/* <h1>Pools</h1> */}
+      {BPOOLS.map((pool) => {
+        console.log(pool);
+        // <p>{pool.poolName}</p>
+        return <PoolPage pool={pool} />;
       })}
-    </React.Fragment>
+    </>
   );
 };
 
 export { BoostPage };
-
 
 //export { createBoostPoolPage };

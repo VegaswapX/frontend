@@ -1,8 +1,8 @@
 const Chains = {
   BSC_MAINNET: {
-    chainId: 56
-  }
-}
+    chainId: 56,
+  },
+};
 
 const Contracts = {
   56: {
@@ -28,7 +28,4 @@ const Contracts = {
   },
 };
 
-export {
-  Contracts,
-  Chains,
-};
+export { Contracts, Chains };

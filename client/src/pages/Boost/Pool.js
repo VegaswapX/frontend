@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
-// import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
+import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import VEGA_CONTRACT_ABI from "../../abis/VegaToken.json";
-import { POOL_TOKEN_ADDRESS } from "../../chain/Contracts.js";
 import { VEGA_TOKEN_ADDRESS } from "../../chain/Contracts.js";
-import { useContract } from "../../chain/eth.js";
+import { useContract, getContractA, Chains } from "../../chain/eth.js";
+import { Contract } from "@ethersproject/contracts";
 import { ethers } from "ethers";
 import { Table } from "react-bootstrap";
 import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
@@ -51,279 +51,174 @@ function statusPool(startTime, endTime) {
 }
 
 export function PoolInfo({ pool }) {
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
   console.log(`account`, library);
 
   //CONTRACT_MAP["BoostPool"]
 
   const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
-  const poolContract = useContract(POOL_TOKEN_ADDRESS, pool.abi, true);
-  const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
 
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [supported, setSupported] = useState(false);
 
-  // const [poolStaked, setPoolstaked] = React.useState();
-  const [poolMaxStake, setMaxStake] = useState();
-  const [poolYield, setMaxyield] = useState();
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
   const [totalAmountStaked, setTotalAmountStaked] = useState(0);
   const [reward, setReward] = useState();
   const [poolStatus, setPoolstatus] = useState();
-  let startTimex;
+  const [poolMaxStake, setMaxStake] = useState();
+  const [poolYield, setMaxyield] = useState();
 
-  // const contractLoaded = false;
+  console.log(pool.address);
+  console.log(POOL_CONTRACT_ABI);
 
-  //functions
-  async function getMaxYield() {
-    if (!!account && !!library) {
-      try {
-        let x = await poolContract.callStatic.maxYield();
+  //TODO
+
+  async function loadData() {
+    console.log("try load contract");
+
+    poolContract = getContractA(
+      account,
+      library,
+      pool.address,
+      POOL_CONTRACT_ABI
+    );
+    if (poolContract) {
+      poolContract.callStatic.startTime().then((x) => {
+        var formattedTime = timeConverter(x);
+        setStartTime(formattedTime);
+      });
+      poolContract.callStatic.endTime().then((x) => {
+        var formattedTime = timeConverter(x);
+        setEndTime(formattedTime);
+        let z = statusPool(startTime, x);
+        setPoolstatus(z);
+      });
+      poolContract.callStatic.stakes(account).then((x) => {
+        let z = ethers.utils.formatEther(x[1].toString());
+        setTotalAmountStaked(z.toString());
+      });
+      let rewardStep = 0;
+      poolContract.callStatic.rewardSteps(rewardStep).then((x) => {
+        setReward(x.toString());
+      });
+      poolContract.callStatic.maxYield().then((x) => {
         x = x / 10 ** 18;
         setMaxyield(x);
-      } catch (e) {
-        console.log(e);
-        setMaxyield(null);
+      });
+      poolContract.callStatic.maxStake().then((x) => {
+        x = x / 10 ** 18;
+        setMaxStake(x);
+      });
+    }
+  }
+
+  let poolContract;
+  useEffect(() => {
+    //poolContract = useContractA(pool.address, POOL_CONTRACT_ABI, true);
+    console.log(chainId);
+    console.log(chainId === Chains.LOCAL_NET.chainId);
+    if (chainId === Chains.LOCAL_NET.chainId) {
+      try {
+        setLoading(true);
+        loadData();
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to get contract", error);
+        return null;
       }
+    } else {
+      setSupported(false);
     }
-  }
+  }, [account, library]);
 
-  async function getStakeAmount() {
-    try {
-      let amount = await vegaContract.callStatic.balanceOf(
-        poolContract.address
-      );
-      amount = ethers.utils.formatEther(amount);
-      dispatch(changeStakeAmount(amount));
-    } catch (e) {
-      dispatch(changeStakeAmount(null));
+  if (loading) {
+    if (supported) {
+      return <>Loading</>;
+    } else {
+      return <>Chain not supported</>;
     }
-  }
-
-  useEffect(() => {
-    getMaxYield();
-    if (!!account && !!library) {
-      setMaxyield(undefined);
-    }
-  }, [account, library, poolContract]);
-
-  useEffect(() => {
-    let stale = false;
-
-    poolContract.callStatic
-      .startTime()
-      .then((x) => {
-        if (!stale) {
-          setStartTime(x);
-        }
-      })
-      .catch(() => {
-        if (!stale) {
-          setStartTime(null);
-        }
-      });
-
-    return () => {
-      stale = true;
-      setStartTime(undefined);
-    };
-  }, [account, library, poolContract]);
-
-  useEffect(() => {
-    let stale = false;
-    poolContract.callStatic
-      .stakes(account)
-      .then((x) => {
-        if (!stale) {
-          let z = ethers.utils.formatEther(x[1].toString());
-          setTotalAmountStaked(z.toString());
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        if (!stale) {
-          setTotalAmountStaked(null);
-        }
-      });
-
-    return () => {
-      stale = true;
-      setTotalAmountStaked(undefined);
-    };
-  }, [account, library, poolContract]);
-
-  //loadContract
-  //
-
-  useEffect(() => {
-    let stale = false;
-
-    poolContract.callStatic
-      .maxStake()
-      .then((x) => {
-        if (!stale) {
-          setMaxStake(x / 10 ** 18);
-        }
-      })
-      .catch(() => {
-        if (!stale) {
-          setMaxStake(null);
-        }
-      });
-
-    return () => {
-      stale = true;
-      setMaxStake(undefined);
-    };
-  }, [account, library, poolContract]);
-
-  useEffect(() => {
-    let stale = false;
-
-    poolContract.callStatic
-      .endTime()
-      .then((x) => {
-        if (!stale) {
-          var formattedTime = timeConverter(x);
-          setEndTime(formattedTime);
-          let z = statusPool(startTime, x);
-          setPoolstatus(z);
-        }
-      })
-      .catch(() => {
-        if (!stale) {
-          setEndTime(null);
-        }
-      });
-
-    return () => {
-      stale = true;
-      setEndTime(undefined);
-    };
-  }, [account, library, startTime, poolContract, startTimex]);
-
-  useEffect(() => {
-    let stale = false;
-
-    //TODO current reward steps
-    poolContract.callStatic
-      .rewardSteps(0)
-      .then((x) => {
-        if (!stale) {
-          setReward(x);
-        }
-      })
-      .catch(() => {
-        if (!stale) {
-          setReward(null);
-        }
-      });
-
-    return () => {
-      stale = true;
-      setReward(undefined);
-    };
-  }, [account, library, poolContract]);
-
-  useEffect(() => {
-    if (!!account && !!library) {
-      getStakeAmount();
-    }
-
-    getStakeAmount();
-  }, [account, library, poolContract, vegaContract]);
-
-  return (
-    <>
-      <Table className="mb-0" striped>
-        {/* <thead>
-            <tr>
-                <th>#</th>
-                <th>data</th>
+  } else {
+    return (
+      <>
+        <Table className="mb-0" striped>
+          <tbody>
+            <tr key={8}>
+              <th scope="row">Pool name</th>
+              <td>
+                {" "}
+                {
+                  pool === null ? "Error" : pool.poolName
+                  // ? `${pool.address.substring(0, 10)}`
+                  // : ""
+                }
+              </td>
             </tr>
-        </thead> */}
-        <tbody>
-          <tr key={0}>
-            <th scope="row">Status</th>
-            <td>{poolStatus}</td>
-          </tr>
+            <tr key={0}>
+              <th scope="row">Status</th>
+              <td>{poolStatus}</td>
+            </tr>
+            <tr key={8}>
+              <th scope="row">Current reward</th>
+              <td> {reward}</td>
+            </tr>
+            <tr key={8}>
+              <th scope="row">Start time</th>
+              <td> {startTime}</td>
+            </tr>
+            <tr key={8}>
+              <th scope="row">End time</th>
+              <td> {endTime}</td>
+            </tr>
+            <tr key={8}>
+              <th scope="row">totalAmountStaked</th>
+              <td> {totalAmountStaked}</td>
+            </tr>
 
-          <tr key={1}>
-            <th scope="row">Total amount staked</th>
-            <td>{totalAmountStaked !== null ? `${totalAmountStaked}` : "0"}</td>
-          </tr>
+            <tr key={2}>
+              <th scope="row">Max stake</th>
+              <td>
+                {" "}
+                {poolMaxStake === null
+                  ? "Error"
+                  : poolMaxStake
+                  ? `${poolMaxStake}`
+                  : ""}
+              </td>
+            </tr>
 
-          <tr key={2}>
-            <th scope="row">Max stake</th>
-            <td>
-              {" "}
-              {poolMaxStake === null
-                ? "Error"
-                : poolMaxStake
-                ? `${poolMaxStake}`
-                : ""}
-            </td>
-          </tr>
+            <tr key={2}>
+              <th scope="row">Pool yield</th>
+              <td>
+                {" "}
+                {poolYield === null ? "Error" : poolYield ? `${poolYield}` : ""}
+              </td>
+            </tr>
 
-          <tr key={3}>
-            <th scope="row">% staked</th>
-            <td>
-              {" "}
-              {totalAmountStaked / poolMaxStake > -1
-                ? `${totalAmountStaked / poolMaxStake}%`
-                : ""}
-            </td>
-          </tr>
+            <tr key={3}>
+              <th scope="row">% staked</th>
+              <td>
+                {" "}
+                {totalAmountStaked / poolMaxStake > -1
+                  ? `${totalAmountStaked / poolMaxStake}%`
+                  : ""}
+              </td>
+            </tr>
 
-          <tr key={4}>
-            <th scope="row">Reward</th>
-            <td> {reward === null ? "Error" : reward ? `${reward}` : ""}</td>
-          </tr>
-
-          <tr key={5}>
-            <th scope="row">StartTime</th>
-            <td>
-              {" "}
-              {startTime === null
-                ? "Error"
-                : timeConverter(startTime)
-                ? `${timeConverter(startTime)}`
-                : ""}
-            </td>
-          </tr>
-
-          <tr key={6}>
-            <th scope="row">EndTime</th>
-            <td> {endTime === null ? "Error" : endTime ? `${endTime}` : ""}</td>
-          </tr>
-
-          <tr key={7}>
-            <th scope="row">poolYield</th>
-            <td>
-              {" "}
-              {poolYield === null ? "Error" : poolYield ? `${poolYield}` : ""}
-            </td>
-          </tr>
-
-          <tr key={8}>
-            <th scope="row">Pool address</th>
-            <td>
-              {" "}
-              {POOL_TOKEN_ADDRESS === null
-                ? "Error"
-                : POOL_TOKEN_ADDRESS
-                ? `${POOL_TOKEN_ADDRESS.substring(0, 10)}`
-                : ""}
-              ...
-            </td>
-          </tr>
-
-          <tr key={9}>
-            <th scope="row">VGA Balance in the pool</th>
-            <td> {reducerState.stakeAmount}</td>
-          </tr>
-        </tbody>
-      </Table>
-    </>
-  );
+            <tr key={8}>
+              <th scope="row">Pool address</th>
+              <td>
+                {" "}
+                {
+                  pool === null ? "Error" : pool.address
+                  // ? `${pool.address.substring(0, 10)}`
+                  // : ""
+                }
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </>
+    );
+  }
 }

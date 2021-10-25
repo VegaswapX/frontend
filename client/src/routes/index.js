@@ -5,7 +5,7 @@ import {BoostPage} from '../pages/Boost';
 import LiqPage from '../pages/vega/Liq';
 import TxPage from '../pages/vega/Tx';
 
-import {POOL1, POOL2} from "../chain/Contracts.js";
+
 import {DashboardPage} from "../pages/Dashboard";
 
 // import Route from './Route';
@@ -38,22 +38,9 @@ const dashboardRoutes = {
         {
             path: '/boost',
             name: 'Boost',
-            component: BoostPage,
-            // component: createBoostPoolPage({
-            //     poolName: "USDT",
-            //     poolAddress: POOL1
-            // }),
+            component: BoostPage,            
             route: Route,
-        },
-        // {
-        //     path: '/boostvga',
-        //     name: 'Boost',
-        //     component: createBoostPoolPage({
-        //         poolName: "VGA",
-        //         poolAddress: POOL2
-        //     }),
-        //     route: Route,
-        // },
+        },        
         {
             path: '/liq',
             name: 'Liq',

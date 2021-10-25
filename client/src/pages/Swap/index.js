@@ -11,8 +11,7 @@ import {
 import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
-import { Chains } from "../../chain/constants";
-import { useContract } from "../../chain/eth.js";
+import { useContract, Chains } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 
 import { CurrencySelectIn, CurrencySelectOut } from "./CurrencySelect";

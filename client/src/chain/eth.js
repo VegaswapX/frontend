@@ -17,13 +17,13 @@ export const supportedChains = [BSC_MAINNET, BSC_TESTNET, LOCAL_NET];
 
 // const TESTNET="https://data-seed-prebsc-1-s1.binance.org:8545"
 
-const LOCALNET_URL = 'http://127.0.0.1:8545';
-const BSCMAIN_URL = 'https://data-seed-prebsc-1-s1.binance.org:8545';
+const LOCALNET_URL = "http://127.0.0.1:8545";
+const BSCMAIN_URL = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
-export const network = new NetworkConnector({  
+export const network = new NetworkConnector({
   urls: {
     1337: LOCALNET_URL,
-    97: BSCMAIN_URL
+    97: BSCMAIN_URL,
   },
   defaultChainId: LOCAL_NET,
 });
@@ -46,7 +46,7 @@ export function getContract(address, ABI, library, account) {
 }
 
 export const useContract = (address, ABI, withSignerIfPossible = true) => {
-  // console.log("useContract " + address);
+  console.log("useContract " + address);
   const { account, library } = useWeb3React();
 
   return useMemo(() => {
@@ -58,6 +58,7 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
     }
 
     try {
+      console.log("try load contract");
       return getContract(
         address,
         ABI,
@@ -69,6 +70,25 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
       return null;
     }
   }, [address, ABI, library, withSignerIfPossible, account]);
+};
+
+export function getContractA(account, library, address, abi) {
+  let signer = library.getSigner(account).connectUnchecked();
+  return new Contract(address, abi, signer);
+}
+
+export const useContractA = (address, ABI, account, library) => {
+  console.log("useContractA " + address);
+
+  return useMemo(() => {
+    try {
+      console.log("try load contract");
+      return getContract(address, ABI, library, account);
+    } catch (error) {
+      console.error("Failed to get contract", error);
+      return null;
+    }
+  }, [address, ABI, library, account]);
 };
 
 const useEagerConnect = () => {
@@ -193,11 +213,46 @@ export function WrappedWeb3ReactProvider({ children }) {
   );
 }
 
+const Chains = {
+  BSC_MAINNET: {
+    chainId: BSC_MAINNET,
+  },
+  LOCAL_NET: {
+    chainId: LOCAL_NET,
+  },
+};
+
+const Contracts = {
+  56: {
+    PCS_ROUTER: {
+      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+    },
+    PCS_FACTORY: {
+      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+    },
+
+    // tokens
+    VGA: {
+      address: "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
+      symbol: "VGA",
+      decimals: 18,
+    },
+    WBNB: {
+      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      symbol: "BNB",
+      isNative: true,
+      decimals: 18,
+    },
+  },
+};
+
+export { Contracts, Chains };
+
 // Array of available nodes to connect to
 
 // const POLLING_INTERVAL = 12000;
 // const RPC_URLS = {
-//   BSC_MAINNET: 
+//   BSC_MAINNET:
 // };
 
 // export const network = new NetworkConnector({
@@ -207,8 +262,6 @@ export function WrappedWeb3ReactProvider({ children }) {
 //   defaultChainId: CHAINS.MAINNET,
 //   pollingInterval: POLLING_INTERVAL,
 // });
-
-
 
 // const RPC_URLS = {
 //   CHAINS.BSCTESTNET

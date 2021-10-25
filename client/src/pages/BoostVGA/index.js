@@ -10,9 +10,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import styled from 'styled-components';
 import { Card } from "react-bootstrap";
-import { PoolInfo } from "../Boost/Pool.js";
+import { PoolInfo } from "../Boost/PoolInfo.js";
 
-const BoostPageVGA = (): React$Element<React$FragmentType> => {
+const BoostPageVGA = () => {
   return (
     <>
       <h1>Boost Pool VGA</h1>

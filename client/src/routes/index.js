@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import SwapPage from '../pages/Swap';
-import {createBoostPoolPage} from '../pages/Boost';
+import {BoostPage} from '../pages/Boost';
 import LiqPage from '../pages/vega/Liq';
 import TxPage from '../pages/vega/Tx';
 
@@ -38,21 +38,22 @@ const dashboardRoutes = {
         {
             path: '/boost',
             name: 'Boost',
-            component: createBoostPoolPage({
-                poolName: "USDT",
-                poolAddress: POOL1
-            }),
+            component: BoostPage,
+            // component: createBoostPoolPage({
+            //     poolName: "USDT",
+            //     poolAddress: POOL1
+            // }),
             route: Route,
         },
-        {
-            path: '/boostvga',
-            name: 'Boost',
-            component: createBoostPoolPage({
-                poolName: "VGA",
-                poolAddress: POOL2
-            }),
-            route: Route,
-        },
+        // {
+        //     path: '/boostvga',
+        //     name: 'Boost',
+        //     component: createBoostPoolPage({
+        //         poolName: "VGA",
+        //         poolAddress: POOL2
+        //     }),
+        //     route: Route,
+        // },
         {
             path: '/liq',
             name: 'Liq',

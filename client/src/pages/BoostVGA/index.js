@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Balances from "../Boost/Balances";
+import Balances from "../Dashboard/Balances";
 // components
 // import PageTitle from '../../components/PageTitle';
 import Stake from "../Boost/Stake.js";

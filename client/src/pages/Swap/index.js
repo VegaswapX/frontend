@@ -95,6 +95,13 @@ function TokenInputUI(
 //   currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
 // };
 
+// const slippageRadios = [
+//   { name: "0.3%", value: 0.3 / 100 },
+//   { name: "0.5%", value: 0.5 / 100 },
+//   { name: "1%", value: 1 / 100 },
+// ];
+
+
 const swapButtonStates = {
   wrongNetwork: {
     disabled: true,
@@ -102,7 +109,7 @@ const swapButtonStates = {
   },
   correctNetwork: {
     disabled: false,
-    text: "Swap",
+    text: "Submit Swap",
   },
 };
 
@@ -117,14 +124,6 @@ const PageSwapInner = () => {
   const [loading, setLoading] = useState(false);
   
 
-  // ui
-  // const [slippage, setSlippage] = useState(defaultSlippage);
-
-  // const slippageRadios = [
-  //   { name: "0.3%", value: 0.3 / 100 },
-  //   { name: "0.5%", value: 0.5 / 100 },
-  //   { name: "1%", value: 1 / 100 },
-  // ];
 
   const debounceOnChange = useMemo(
     () =>

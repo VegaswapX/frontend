@@ -1,6 +1,6 @@
 export const tokens = [
   {
-    contract: "0x55d398326f99059ff775485246999027b3197955",
+    contract: "0x55d398326f99059fF775485246999027B3197955",
     image:
       "https://assets.coingecko.com/coins/images/325/large/Tether-logo.png?1598003707",
     dollarvolume: 0,

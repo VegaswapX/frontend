@@ -10,6 +10,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import styled from 'styled-components';
 import { Card } from "react-bootstrap";
+import {POOL1, POOL2} from "../../chain/Contracts.js";
+
+const poolList = [POOL1, POOL2];
 // import { PoolInfo } from "./Pool.js";
 
 // import POOL_CONTRACT_ABI from "./../../abis/BoostPool.json";
@@ -61,4 +64,20 @@ const createBoostPoolPage = ({
   };
 };
 
-export { createBoostPoolPage };
+const BoostPage = () => {
+  return (
+    <React.Fragment>
+      <h1>Pools</h1>
+      {poolList.map((pool) => {
+        return (
+          <p>{pool}</p>
+          )
+      })}
+    </React.Fragment>
+  );
+};
+
+export { BoostPage };
+
+
+//export { createBoostPoolPage };

@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import Balances from "../Boost/Balances";
+import Balances from "./Balances";
 // components
 // import PageTitle from '../../components/PageTitle';
 import "react-toastify/dist/ReactToastify.css";

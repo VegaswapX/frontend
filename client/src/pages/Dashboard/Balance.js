@@ -1,4 +1,4 @@
-import React from "react";
+import {React, useState, useEffect} from "react";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
@@ -33,9 +33,9 @@ export function Vgabalance() {
 
   // const [loading, setLoading] = useState(false);
 
-  const [vgabal, setVgaBalance] = React.useState();
+  const [vgabal, setVgaBalance] = useState();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!!account && !!library) {
       let stale = false;
 
@@ -98,9 +98,9 @@ export function Lpbalance() {
 
   // const [loading, setLoading] = useState(false);
 
-  const [vgabal, setVgaBalance] = React.useState();
+  const [vgabal, setVgaBalance] = useState();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!!account && !!library) {
       let stale = false;
 
@@ -150,8 +150,8 @@ export function Lpbalance() {
 export function BNBBalance() {
   const { account, library, chainId } = useWeb3React();
 
-  const [balance, setBalance] = React.useState();
-  React.useEffect(() => {
+  const [balance, setBalance] = useState();
+  useEffect(() => {
     if (!!account && !!library) {
       let stale = false;
 
@@ -196,11 +196,11 @@ export function BNBBalance() {
 export function USDTBalance() {
   const { account, library, chainId } = useWeb3React();
 
-  const [balance, setBalance] = React.useState();
+  const [balance, setBalance] = useState();
 
   const usdtontract = useContract(BSC_USDT, VEGA_CONTRACT_ABI, true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!!account && !!library) {
       let stale = false;
 

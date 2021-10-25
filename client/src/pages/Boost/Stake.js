@@ -31,42 +31,16 @@ const StakeForm = ({ pool }) => {
 
   //const poolContract = useContract(pool.address, pool.abi, true);
   let poolContract, vegaContract;
-  const [stakeAmount, setStakeamount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
-
-  useEffect(() => {
-    console.log(">> " + account);
-    console.log(">> " + library);
-    if (account && library){
-      poolContract = getContractA(
+  vegaContract = getContractA(account, library, VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI);
+  poolContract = getContractA(
       account,
       library,
       pool.address,
       POOL_CONTRACT_ABI
-    );
-
-    vegaContract = getContractA(account, library, VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI);
-    // let x = vegaContract.callStatic.allowance(
-    //   account,
-    //   poolContract.address
-    // );
-    // console.log("allowance " + x);
-     // dispatch(
-    //   changeAllowanceAmount(ethers.utils.formatEther(x.toString()))
-    // );
-    }
-
-    //console.log("contract available " + vegaContract.address);
-    
-   
-  
-    // const stakedAmount = poolContract.callStatic.stakes(account);
-    // let z = ethers.utils.formatEther(stakedAmount[1].toString());
-    // dispatch(changeStakeAmount(z));
-  
-  }, [account, library]);
-  
+  );
+  const [stakeAmount, setStakeamount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
 
   const stake = async () => {
     setLoading(true);
@@ -135,6 +109,7 @@ const StakeForm = ({ pool }) => {
       //TODO
       let approveAmount = parseEther("10000");
       // let approveAmount = 1000 * 10**18;
+      console.log(vegaContract, "vegaContract")
       await vegaContract.approve(pool.address, approveAmount);
       dispatch(changeAllowanceAmount(approveAmount));
       // await depositLpToken(vegaContract, lpContract, account, amount);

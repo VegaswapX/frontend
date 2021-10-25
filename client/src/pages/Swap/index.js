@@ -18,10 +18,10 @@ function TokenInputUI(
   handleChange,
   opts = { disabled: false },
 ) {
-  store.subscribe(() => {
-    let i = store.getState().tokenReducer.tokenIn;
-    let o = store.getState().tokenReducer.tokenOut;
-  });
+  // store.subscribe(() => {
+  //   let i = store.getState().tokenReducer.tokenIn;
+  //   let o = store.getState().tokenReducer.tokenOut;
+  // });
 
   const { disabled } = opts;
 
@@ -44,7 +44,7 @@ function TokenInputUI(
             marginTop: "5px",
           }}
         >
-          {tokenSelect == "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />}
+          {tokenSelect === "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />}
         </div>
 
         <FormControl

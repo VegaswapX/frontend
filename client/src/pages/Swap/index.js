@@ -1,31 +1,24 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useMemo, useState } from "react";
-import {
-  Button,
-  Col,
-  Form,
-  FormControl,
-  InputGroup,
-  Row,
-} from "react-bootstrap";
+import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
-import { useContract, Chains } from "../../chain/eth.js";
+import { Chains, useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 
+import { store } from "../../redux/store";
 import { CurrencySelectIn, CurrencySelectOut } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import * as trade from "./trade.js";
-import { store } from "../../redux/store";
 
 function TokenInputUI(
   token0Input,
   tokenSelect,
   handleChange,
-  opts = { disabled: false }
+  opts = { disabled: false },
 ) {
-  //console.log("store state is: " + store.getState());
+  // console.log("store state is: " + store.getState());
 
   store.subscribe(() => {
     let i = store.getState().tokenReducer.tokenIn;
@@ -36,8 +29,6 @@ function TokenInputUI(
   const { disabled } = opts;
 
   const [loadingAmount, setLoadingAmount] = useState(false);
-
-
 
   return (
     <div
@@ -56,11 +47,7 @@ function TokenInputUI(
             marginTop: "5px",
           }}
         >
-          {tokenSelect == "tokenIn" ? (
-            <CurrencySelectIn />
-          ) : (
-            <CurrencySelectOut />
-          )}
+          {tokenSelect == "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />}
         </div>
 
         <FormControl
@@ -88,7 +75,7 @@ function TokenInputUI(
   );
 }
 
-//const defaultSlippage = 0.5 / 100;
+// const defaultSlippage = 0.5 / 100;
 // const defaultState = {
 //   loading: false,
 //   currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
@@ -99,7 +86,6 @@ function TokenInputUI(
 //   { name: "0.5%", value: 0.5 / 100 },
 //   { name: "1%", value: 1 / 100 },
 // ];
-
 
 const swapButtonStates = {
   wrongNetwork: {
@@ -121,7 +107,6 @@ const PageSwapInner = () => {
   const [token1Input, setToken1Input] = useState(0);
 
   const [loading, setLoading] = useState(false);
-  
 
   const debounceOnChange = useMemo(
     () =>
@@ -129,11 +114,11 @@ const PageSwapInner = () => {
         console.log(`running debounce`);
         await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
       }, 500),
-    [routerContract]
+    [routerContract],
   );
 
   let swapButtonState, tokenInputDisabled;
-  //TODO remove and handle elsewhere
+  // TODO remove and handle elsewhere
   if (chainId === Chains.BSC_MAINNET.chainId) {
     swapButtonState = swapButtonStates["correctNetwork"];
     tokenInputDisabled = false;
@@ -150,13 +135,13 @@ const PageSwapInner = () => {
       return;
     }
 
-    //setLoadingAmount(true);
+    // setLoadingAmount(true);
 
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;
 
     const amountText = e.target.value;
-    //console.log("amountText " + amountText);
+    // console.log("amountText " + amountText);
     const token0AmountEther = trade.convertTextToUnint256(amountText, token0);
     if (token0AmountEther === null) {
       setToken1Input(0);
@@ -166,16 +151,16 @@ const PageSwapInner = () => {
     let result = await trade.getAmountsOut(
       routerContract,
       token0AmountEther,
-      [token0, token1]
+      [token0, token1],
     );
-    if (!result.error){
+    if (!result.error) {
       let outAmount = result.data;
       const outAmountText = trade.toFloatNumber(outAmount, token1);
       setToken1Input(outAmountText.toFixed(2));
-      //setLoadingAmount(false);
+      // setLoadingAmount(false);
     } else {
       toast.error("Error Pair not available");
-      //setLoadingAmount(false);      
+      // setLoadingAmount(false);
     }
   }
 
@@ -187,7 +172,7 @@ const PageSwapInner = () => {
 
   // Rewrite swap that supports both ETH->Token and Token->Token
   // float number should work properly
-  //TODO handle in tokenui
+  // TODO handle in tokenui
   async function swap() {
     let slip = store.getState().slippageReducer.value;
     let token0 = store.getState().tokenReducer.tokenIn;
@@ -195,73 +180,73 @@ const PageSwapInner = () => {
     console.log(`slippage`, slip);
     console.log(`token0`, token0);
     console.log(`token1`, token1);
-    
-      if (routerContract === null) {
-        console.log("You don't connect to bsc mainnet");
-        return;
-      }
 
-      const amountIn = trade.convertTextToUnint256(token0Input, token0);
+    if (routerContract === null) {
+      console.log("You don't connect to bsc mainnet");
+      return;
+    }
 
-      if ((amountIn == 0) | (amountIn == null)) {
-        toast.error("Amount is 0");
-        return;
-      }
-      console.log(`amountIn: ${amountIn}`);
-      const result = await trade.getAmountsOut(routerContract, amountIn, [
-        token0,
-        token1,
-      ]);
-      if (!result.error){
-        let amountOut = result.data;
-        console.log("amountOut " + amountOut);
-        // calculate slippage
-        const amountOutMin = amountOut
-          .mul(Math.round((1 - slip) * 1000))
-          .div(1000);
-        console.log("amountOutMin " + amountOutMin);
+    const amountIn = trade.convertTextToUnint256(token0Input, token0);
 
-        //TODO set loading while pending
-        try {
-          setLoading(true);
-          const result = await trade.swap(
-            routerContract,
-            amountIn,
-            amountOutMin,
-            [token0, token1],
-            account
+    if ((amountIn == 0) | (amountIn == null)) {
+      toast.error("Amount is 0");
+      return;
+    }
+    console.log(`amountIn: ${amountIn}`);
+    const result = await trade.getAmountsOut(routerContract, amountIn, [
+      token0,
+      token1,
+    ]);
+    if (!result.error) {
+      let amountOut = result.data;
+      console.log("amountOut " + amountOut);
+      // calculate slippage
+      const amountOutMin = amountOut
+        .mul(Math.round((1 - slip) * 1000))
+        .div(1000);
+      console.log("amountOutMin " + amountOutMin);
+
+      // TODO set loading while pending
+      try {
+        setLoading(true);
+        const result = await trade.swap(
+          routerContract,
+          amountIn,
+          amountOutMin,
+          [token0, token1],
+          account,
+        );
+        const [status, statusInfo] = result;
+        if (status === 1) {
+          const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
+          const msg = (
+            <a target="_blank" href={link}>
+              Swap successful
+            </a>
           );
-          const [status, statusInfo] = result;
-          if (status === 1) {
-            const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
-            const msg = (
-              <a target="_blank" href={link}>
-                Swap successful
-              </a>
-            );
-            toast.success(msg);
-            setLoading(false);
-          } else {
-            toast.error(statusInfo.message);
-            setLoading(false);
-          }
-        } catch {
-          toast.error("error with trade");
+          toast.success(msg);
+          setLoading(false);
+        } else {
+          toast.error(statusInfo.message);
           setLoading(false);
         }
-      }     
+      } catch {
+        toast.error("error with trade");
+        setLoading(false);
+      }
+    }
   }
 
   let tokenInput;
   let tokenOutput;
-  
+
   tokenInput = TokenInputUI(token0Input, "tokenIn", handleChange, {
-      disabled: tokenInputDisabled,
-    })
+    disabled: tokenInputDisabled,
+  });
 
   tokenOutput = TokenInputUI(token1Input, "tokenOut", () => {}, {
-      disabled: tokenInputDisabled,
-    })
+    disabled: tokenInputDisabled,
+  });
 
   // DEBUG
   // const link = `https://bscscan.com/tx/test`;
@@ -305,7 +290,6 @@ const PageSwapInner = () => {
               {tokenInput}
               <br />
               {tokenOutput}
-              
             </div>
           </div>
         </Form.Group>

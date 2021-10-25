@@ -19,13 +19,13 @@ function getGasPrice() {
 export function toUint256(amount, token) {
   console.log("token " + token.decimals);
   return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(token.decimals - 6)
+    BigNumber.from(10).pow(token.decimals - 6),
   );
 }
 
 export function toUint256_18(amount) {
   return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(18 - 6)
+    BigNumber.from(10).pow(18 - 6),
   );
 }
 
@@ -63,13 +63,13 @@ export async function swap(
   amountOutMin,
   tokenPath,
   to,
-  deadline = defaultDeadline()
+  deadline = defaultDeadline(),
 ) {
   const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
 
   console.log("swap " + addressPath);
 
-  //TODO deal with isNative
+  // TODO deal with isNative
   if (!!tokenPath[0].isNative) {
     console.log("eth for tokens");
 
@@ -79,10 +79,10 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline
+      deadline,
     );
   } else if (!!tokenPath[1].isNative) {
-    //needs approve?
+    // needs approve?
     console.log("Token for ETH");
     return await swapExactTokensForETH(
       routerContract,
@@ -90,7 +90,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline
+      deadline,
     );
   } else {
     console.log("token for token");
@@ -101,7 +101,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline
+      deadline,
     );
   }
 
@@ -117,7 +117,7 @@ async function swapExactETHForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline
+  deadline,
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactETHForTokens");
@@ -130,7 +130,7 @@ async function swapExactETHForTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, value: amountIn, gasPrice }
+      { ...defaultOptions, value: amountIn, gasPrice },
     );
     let receipt = await tx.wait();
     return [receipt.status, receipt];
@@ -146,13 +146,13 @@ async function swapExactTokensForETH(
   amountOutMin,
   addressPath,
   to,
-  deadline
+  deadline,
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactTokensForETH...");
 
-  //const minBNB = 0.001 * 10**18;
-  //const minBNB = ethers.utils.parseUnits(10000, "wei")
+  // const minBNB = 0.001 * 10**18;
+  // const minBNB = ethers.utils.parseUnits(10000, "wei")
   const minBNB = toUint256_18(0.001);
 
   console.log("..." + minBNB);
@@ -166,7 +166,7 @@ async function swapExactTokensForETH(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice }
+      { ...defaultOptions, gasPrice },
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);
@@ -187,17 +187,16 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
 
   try {
     let x = await routerContract.callStatic
-    .getAmountsOut(amount, addressPath)
-    .catch((e) => {
-      console.log("Failed to run getAmountsOut", e);
-      return failedGetAmountsOutReturn;
-    });
-    return {data: x[1], error: false};
-  } 
-  catch {
-    console.log("Failed to run getAmountsOut ", addressPath);    
-    return {error: true};
-    }
+      .getAmountsOut(amount, addressPath)
+      .catch((e) => {
+        console.log("Failed to run getAmountsOut", e);
+        return failedGetAmountsOutReturn;
+      });
+    return { data: x[1], error: false };
+  } catch {
+    console.log("Failed to run getAmountsOut ", addressPath);
+    return { error: true };
+  }
 }
 
 async function swapTokensForExactTokens(
@@ -206,7 +205,7 @@ async function swapTokensForExactTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline
+  deadline,
 ) {
   const gasPrice = getGasPrice();
   console.log("swapTokensForExactTokens...");
@@ -220,7 +219,7 @@ async function swapTokensForExactTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice }
+      { ...defaultOptions, gasPrice },
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);

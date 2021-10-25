@@ -29,7 +29,7 @@ function PoolPage({ pool }) {
       <h2>Pool {pool.poolName}</h2>
 
       <Row>
-        <Col lg={5}>
+        <Col lg={6}>
           <Card className={classNames("border", [`border-primary`])}>
             <Card.Body>
               {/* <Card.Title as="h5">Pool Info</Card.Title> */}
@@ -43,7 +43,7 @@ function PoolPage({ pool }) {
           </Card>
         </Col>
 
-        <Col lg={7}>
+        <Col lg={6}>
           <Stake pool={pool} />
         </Col>
       </Row>

@@ -141,7 +141,7 @@ export function PoolInfo({ pool }) {
   } else {
     return (
       <>
-        <Table className="mb-0" striped>
+        <Table className="mb-0">
           <tbody>
             <tr key={8}>
               <th scope="row">Pool name</th>

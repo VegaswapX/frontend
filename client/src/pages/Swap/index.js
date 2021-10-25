@@ -123,7 +123,6 @@ const PageSwapInner = () => {
   const [loading, setLoading] = useState(false);
   
 
-
   const debounceOnChange = useMemo(
     () =>
       _.debounce(async (e) => {
@@ -196,9 +195,7 @@ const PageSwapInner = () => {
     console.log(`slippage`, slip);
     console.log(`token0`, token0);
     console.log(`token1`, token1);
-    let executeTrade = true;
-
-    if (executeTrade) {
+    
       if (routerContract === null) {
         console.log("You don't connect to bsc mainnet");
         return;
@@ -252,10 +249,7 @@ const PageSwapInner = () => {
           toast.error("error with trade");
           setLoading(false);
         }
-      } 
-    } else {
-      toast.error("error with trade getting amounts");
-    }
+      }     
   }
 
   let tokenInput;

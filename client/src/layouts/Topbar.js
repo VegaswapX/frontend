@@ -22,23 +22,7 @@ import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 // get the notifications
 
 const AccountConnect = ({ connect }) => {
-  const { account, deactivate } = useWeb3React();
-
-  // async function connect() {
-  //     await activate(injected, async (error) => {
-  //         if (error instanceof UnsupportedChainIdError) {
-  //             console.log("error UnsupportedChainIdError");
-  //             alert("error UnsupportedChainIdError");
-  //             setNetworkOk(false);
-  //             // const hasSetup = await setupNetwork()
-  //             // if (hasSetup) {
-  //             //     activate(injected)
-  //             // }
-  //         } else {
-  //             setNetworkOk(true);
-  //         }
-  //     });
-  // }
+  const { account, deactivate } = useWeb3React();  
 
   async function disconnect() {
     console.log("disconnect");

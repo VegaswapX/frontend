@@ -18,12 +18,9 @@ function TokenInputUI(
   handleChange,
   opts = { disabled: false },
 ) {
-  // console.log("store state is: " + store.getState());
-
   store.subscribe(() => {
     let i = store.getState().tokenReducer.tokenIn;
     let o = store.getState().tokenReducer.tokenOut;
-    console.log(">> tokenin/out " + i + " " + o);
   });
 
   const { disabled } = opts;
@@ -134,8 +131,6 @@ const PageSwapInner = () => {
       console.log("You don't connect to bsc mainnet");
       return;
     }
-
-    // setLoadingAmount(true);
 
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;

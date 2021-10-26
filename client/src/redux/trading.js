@@ -1,7 +1,5 @@
-const defaultSlippage = 0.5 / 100;
-
 const initialState = {
-  slippage: defaultSlippage,
+  slippage: 0.5 / 100,
 };
 
 // TODO: Magic number all over the places

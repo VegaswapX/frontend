@@ -13,16 +13,11 @@ import { SettingsModal } from "./SettingsModal.js";
 import * as trade from "./trade.js";
 
 function TokenInputUI(
-  token0Input,
+  tokenInput,
   tokenSelect,
   handleChange,
   opts = { disabled: false },
 ) {
-  // store.subscribe(() => {
-  //   let i = store.getState().tokenReducer.tokenIn;
-  //   let o = store.getState().tokenReducer.tokenOut;
-  // });
-
   const { disabled } = opts;
 
   const [loadingAmount, setLoadingAmount] = useState(false);
@@ -53,7 +48,7 @@ function TokenInputUI(
           placeholder="Amount"
           aria-label="Amount"
           aria-describedby="token0Input"
-          value={token0Input}
+          value={tokenInput}
           disabled={disabled}
           style={{
             textAlign: "left",
@@ -91,7 +86,7 @@ const swapButtonStates = {
   },
   correctNetwork: {
     disabled: false,
-    text: "Submit Swap",
+    text: "Swap",
   },
 };
 
@@ -190,6 +185,8 @@ const PageSwapInner = () => {
       token0,
       token1,
     ]);
+
+    // TODO: didn't the case we have error
     if (!result.error) {
       let amountOut = result.data;
       console.log("amountOut " + amountOut);

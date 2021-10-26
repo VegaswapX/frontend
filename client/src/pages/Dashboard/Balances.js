@@ -14,9 +14,11 @@ const Balances = () => {
         <Col lg={6} xl={3}>
           <Vgabalance />
         </Col>
+
         <Col lg={6} xl={3}>
           <USDTBalance />
         </Col>
+        
         <Col lg={6} xl={3}>
           <Lpbalance />
         </Col>

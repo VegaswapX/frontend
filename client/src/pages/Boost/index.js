@@ -55,16 +55,18 @@ function PoolPage({ pool }) {
 const PoolsList = () => {
   return (
     <>
-      <Table className="mb-0">
+      <Table className="mb-0" style={{width: "80%"}}>
         <tbody>
-          <tr>
+          {/* <tr>
             <th scope="row">Pool name</th>
             <th scope="row">Info</th>
-          </tr>
+          </tr> */}
           {BPOOLS.map((pool) => {
             console.log(pool);
             // <p>{pool.poolName}</p>
             return (
+
+              <>
               <tr key={8}>
                 <td>
                   {" "}
@@ -82,6 +84,10 @@ const PoolsList = () => {
                   </button>
                 </td>
               </tr>
+              <tr>
+                Stake
+              </tr>
+              </>
             );
           })}
         </tbody>

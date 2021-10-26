@@ -11,8 +11,12 @@ import {
 import { formatEther } from "@ethersproject/units";
 import BalanceInfo from "../BalanceInfo";
 
+const BNB_IMG = "https://assets.coingecko.com/coins/images/825/thumb_2x/binance-coin-logo.png?1547034615";
+const VGA_IMG = "https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696";
+const USDT_IMG = "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707";
+
 export const formatCurrency = (balance) => {
-  return balance ? formatEther(balance) : "0";
+  return balance ? formatEther(balance) : "0.01";
 
   //   if(currency === TCurrency.ETHER) {
   //     return balance ? formatEther(balance) : '0';
@@ -23,17 +27,45 @@ export const formatCurrency = (balance) => {
   //   return balance ? formatEther(balance) : '0';
 };
 
+
+function BalanceInfo1({bal, imgsrc, title}){
+
+  return (<>
+    <BalanceInfo
+      description=""
+      title={title}
+      stats={bal}
+      bimg={
+        imgsrc
+      }
+      colors={["#0acf97"]}
+      data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
+    ></BalanceInfo>
+</>)
+}
+
+function BalanceInfo2({bal, imgsrc, title}){
+
+  return (<>
+    <BalanceInfo
+      description=""
+      title={title}
+      stats={bal}
+      bimg={
+        imgsrc
+      }
+      colors={["#727cf5"]}
+      data={[12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14]}
+    ></BalanceInfo>
+</>)
+}
+
 export function Vgabalance() {
   const { account, library, chainId } = useWeb3React();
 
-  console.log(">> " + chainId + " " + VEGA_TOKEN_ADDRESS);
-
   const vegaContract = useContract(VEGA_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
-  //const vegaContract = useContract(contractMap[chainId]["VEGA_TOKEN"], VEGA_CONTRACT_ABI, true);
 
-  // const [loading, setLoading] = useState(false);
-
-  const [vgabal, setVgaBalance] = useState();
+  const [bal, setBalance] = useState();
 
   useEffect(() => {
     if (!!account && !!library) {
@@ -43,62 +75,37 @@ export function Vgabalance() {
         .balanceOf(account)
         .then((x) => {
           if (!stale) {
-            //   let z = ethers.utils.formatEther(x);
             x = x / 10 ** 18;
-            setVgaBalance(x);
+            x = Math.round(x*100)/100;
+            setBalance(x);
           }
         })
         .catch(() => {
           if (!stale) {
-            setVgaBalance(null);
+            setBalance(null);
           }
         });
 
       return () => {
         stale = true;
-        setVgaBalance(undefined);
+        setBalance(undefined);
       };
     }
-  }, [account, library, chainId, vegaContract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, chainId, vegaContract]);
 
   return (
     <>
-      {/* <span>VGA Balance {vgabalance}</span> */}
-
-      <>
-        <BalanceInfo
-          description="Campaign Sent"
-          title="VGA"
-          stats={Math.round(vgabal)}
-          bimg={
-            "https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696"
-          }
-          // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
-          colors={["#0acf97"]}
-          data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
-        ></BalanceInfo>
-
-        {/* <span>VGA Balance</span>
-      
-      <span style={{fontSize: "10pt"}}>{vgabal === null ? "Error" : vgabal ? `${vgabal}` : ""}</span> 
-      */}
-      </>
+     <BalanceInfo2 imgsrc={VGA_IMG} bal={bal} title="VGA"/>          
     </>
   );
 }
 
+
 export function Lpbalance() {
   const { account, library, chainId } = useWeb3React();
-
-  // console.log(">> " + chainId + " " + contractMap[chainId]["VEGA_TOKEN"]);
-  //CONTRACT_MAP["BoostPool"]
-
   const vegaContract = useContract(LP_TOKEN_ADDRESS, VEGA_CONTRACT_ABI, true);
-  //const vegaContract = useContract(contractMap[chainId]["VEGA_TOKEN"], VEGA_CONTRACT_ABI, true);
 
-  // const [loading, setLoading] = useState(false);
-
-  const [vgabal, setVgaBalance] = useState();
+  const [bal, setBalance] = useState();
 
   useEffect(() => {
     if (!!account && !!library) {
@@ -108,49 +115,33 @@ export function Lpbalance() {
         .balanceOf(account)
         .then((x) => {
           if (!stale) {
-            //   let z = ethers.utils.formatEther(x);
             x = x / 10 ** 18;
-            setVgaBalance(x);
+            x = Math.round(x*100)/100;
+            setBalance(x);
           }
         })
         .catch(() => {
           if (!stale) {
-            setVgaBalance(null);
+            setBalance(null);
           }
         });
 
       return () => {
         stale = true;
-        setVgaBalance(undefined);
+        setBalance(undefined);
       };
     }
-  }, [account, library, chainId, vegaContract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, chainId, vegaContract]);
 
   return (
-    <>
-      {/* <span>VGA Balance {vgabalance}</span> */}
-
-      <>
-        <BalanceInfo
-          description="Campaign Sent"
-          title="LP token"
-          stats={Math.round(vgabal)}
-          bimg={
-            "https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696"
-          }
-          // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
-          colors={["#0acf97"]}
-          data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
-        ></BalanceInfo>
-      </>
-    </>
+    <BalanceInfo1 imgsrc={"https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696"} bal={bal} title="LP token"/>    
   );
 }
 
 export function BNBBalance() {
   const { account, library, chainId } = useWeb3React();
 
-  const [balance, setBalance] = useState();
+  const [bal, setBalance] = useState();
   useEffect(() => {
     if (!!account && !!library) {
       let stale = false;
@@ -160,6 +151,7 @@ export function BNBBalance() {
         .then((balance) => {
           if (!stale) {
             let z = ethers.utils.formatEther(balance);
+            z = Math.round(z*100)/100;
             setBalance(z);
           }
         })
@@ -178,17 +170,8 @@ export function BNBBalance() {
 
   return (
     <>
-      <BalanceInfo
-        description="Campaign Sent"
-        title="BNB"
-        stats={Math.round(balance * 10) / 10}
-        bimg={
-          "https://assets.coingecko.com/coins/images/825/thumb_2x/binance-coin-logo.png?1547034615"
-        }
-        // trend={{ textClass: 'text-success', icon: 'mdi mdi-arrow-up-bold', value: '3.27%' }}
-        colors={["#727cf5"]}
-        data={[25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]}
-      ></BalanceInfo>
+      <BalanceInfo1 bal={bal} imgsrc={BNB_IMG} title="BNB"/>
+        
     </>
   );
 }
@@ -196,48 +179,26 @@ export function BNBBalance() {
 export function USDTBalance() {
   const { account, library, chainId } = useWeb3React();
 
-  const [balance, setBalance] = useState();
+  const [bal, setBalance] = useState();
 
   const usdtontract = useContract(BSC_USDT, VEGA_CONTRACT_ABI, true);
 
   useEffect(() => {
     if (!!account && !!library) {
-      let stale = false;
-
+      
       usdtontract.callStatic
         .balanceOf(account)
-        .then((x) => {
-          if (!stale) {
-            //   let z = ethers.utils.formatEther(x);
+        .then((x) => {          
             x = x / 10 ** 18;
+            x = Math.round(x*100)/100;
             setBalance(x);
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBalance(null);
-          }
-        });
-
-      return () => {
-        stale = true;
-        setBalance(undefined);
-      };
+        });      
     }
-  }, [account, library, chainId, usdtontract]); // ensures refresh if referential identity of library doesn't change across chainIds
+  }, [account, library, chainId, usdtontract]);
 
   return (
     <>
-      <BalanceInfo
-        description="Campaign Sent"
-        title="USDT"
-        stats={Math.round(balance * 10) / 10}
-        bimg={
-          "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
-        }
-        colors={["#727cf5"]}
-        data={[12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14]}
-      ></BalanceInfo>
+      <BalanceInfo1 imgsrc={USDT_IMG} bal={bal} title="USDT"/>    
     </>
   );
 }

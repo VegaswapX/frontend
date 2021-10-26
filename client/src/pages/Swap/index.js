@@ -20,8 +20,6 @@ function TokenInputUI(
 ) {
   const { disabled } = opts;
 
-  console.log("?? " + tokenSelect)
-
   //const [loadingAmount, setLoadingAmount] = useState(false);
 
   return (

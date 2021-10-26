@@ -132,6 +132,11 @@ export function PoolInfo({ pool }) {
     return addr.substring(0, 5) + "..." + addr.substring(l - 3, l);
   }
 
+  function addressLink(addr){    
+    const link = `https://bscscan.com/address/${addr}`;
+    return link;
+  }
+
   if (loading) {
     if (supported) {
       return <>Loading</>;
@@ -147,12 +152,16 @@ export function PoolInfo({ pool }) {
               <th scope="row">Pool name</th>
               <td> {pool === null ? "Error" : pool.poolName}</td>
             </tr>
-            <tr key={2}>
+            <tr key={1}>
+              <th scope="row">Description</th>
+              <td> {pool === null ? "Error" : pool.description}</td>
+            </tr>
+            {/* <tr key={2}>
               <th scope="row">Status</th>
               <td>{poolStatus}</td>
-            </tr>
+            </tr> */}
             <tr key={3}>
-              <th scope="row">Current reward</th>
+              <th scope="row">Current reward ({pool.per})</th>
               <td> {reward}</td>
             </tr>
             <tr key={4}>
@@ -203,7 +212,15 @@ export function PoolInfo({ pool }) {
               <td>
                 {" "}
                 {
-                  pool === null ? "Error" : shortenAddress(pool.address)
+                  pool === null ? "Error" : 
+                  <>
+                  {shortenAddress(pool.address)}&nbsp;
+                  <a target="_blank" href={addressLink(pool.address)}>
+                  {/* {shortenAddress(pool.address)} */}
+                  (Block explorer)
+                  </a>
+                  </>
+                  
                   // ? `${pool.address.substring(0, 10)}`
                   // : ""
                 }

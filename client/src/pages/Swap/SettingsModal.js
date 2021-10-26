@@ -29,7 +29,7 @@ export const SettingsModal = (props) => {
     <>
       {/*TODO: Check about this span here*/}
       <span style={{ marginTop: "20px" }}>
-        }
+        
         <i
           className="dripicons-gear noti-icon"
           style={{

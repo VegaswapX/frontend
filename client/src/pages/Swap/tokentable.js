@@ -24,13 +24,14 @@ function Table({ tokenSelect, columns, data }) {
   function rowClick(row) {
     console.log("rowClick >>>> " + selecting);
     if (selecting == "tokenIn") {
+      store.dispatch({ type: "ui/togglemodalTokenIn" });
       store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
     } else if (selecting == "tokenOut") {
       console.log("dispatch >>>> " + row.original.symbol);
+      store.dispatch({ type: "ui/togglemodalTokenOut" });
       store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
     }
 
-    store.dispatch({ type: "ui/togglemodal" });
     // row.selected = !row.selected;
   }
 

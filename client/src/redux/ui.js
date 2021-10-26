@@ -1,5 +1,6 @@
 const initialState = {
-  modal: false,
+  modalTokenIn: false,
+  modalTokenOut: false,
   tokenSelect: "",
   poolInfo: false
 };
@@ -8,11 +9,10 @@ export default function uiReducer(state = initialState, action) {
   console.log("uiReducer " + action.type);
   switch (action.type) {
     // case "ui/showmodal":
-    //   return { ...state, modal: true };
-    // case "ui/hidemodal":
-    //   return { ...state, modal: false };
-    case "ui/togglemodal":
-      return { ...state, modal: !state.modal };     
+    case "ui/togglemodalTokenIn":
+      return { ...state, modalTokenIn: !state.modalTokenIn };     
+    case "ui/togglemodalTokenOut":
+      return { ...state, modalTokenOut: !state.modalTokenOut };     
     case "ui/tokenselectIn":
         return { ...state, tokenSelect: "tokenIn" };          
     case "ui/tokenselectOut":

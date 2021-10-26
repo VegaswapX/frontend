@@ -26,15 +26,17 @@ export const CurrencySelectIn = () => {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
+  console.log("CurrencySelectIn ")
+
   let currency = store.getState().tokenReducer.tokenIn;
-  let modal = store.getState().uiReducer.modal;
+  let modal = store.getState().uiReducer.modalTokenIn;
 
   const toggle = () => {
     if (modal) {
     } else {
       store.dispatch({ type: "ui/tokenselectIn" });
     }
-    store.dispatch({ type: "ui/togglemodal" });
+    store.dispatch({ type: "ui/togglemodalTokenIn" });
   };
 
   return (
@@ -42,7 +44,7 @@ export const CurrencySelectIn = () => {
       <CurrencyButton currency={currency} toggle={toggle} />
 
       <Modal
-        show={store.getState().uiReducer.modal}
+        show={modal}
         onHide={toggle}
         dialogClassName={className}
         size={size}
@@ -65,21 +67,24 @@ export const CurrencySelectIn = () => {
   );
 };
 
-export const CurrencySelectOut = (props) => {
-  const [modal, setModal] = useState(false);
+export const CurrencySelectOut = () => {
   const [size] = useState(null);
   const [className] = useState(null);
   const [scroll] = useState(null);
 
+
+  console.log("CurrencySelectOut ")
+
   let currency = store.getState().tokenReducer.tokenOut;
+  let modal = store.getState().uiReducer.modalTokenOut;
 
   const toggle = () => {
     if (modal) {
     } else {
       store.dispatch({ type: "ui/tokenselectOut" });
     }
-    setModal(!modal);
-    store.dispatch({ type: "ui/togglemodal" });
+    //setModal(!modal);
+    store.dispatch({ type: "ui/togglemodalTokenOut" });
   };
 
   return (
@@ -89,7 +94,7 @@ export const CurrencySelectOut = (props) => {
       <CurrencyButton currency={currency} toggle={toggle} />
 
       <Modal
-        show={store.getState().uiReducer.modal}
+        show={modal}
         onHide={toggle}
         dialogClassName={className}
         size={size}

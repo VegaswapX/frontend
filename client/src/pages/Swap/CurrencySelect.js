@@ -26,7 +26,7 @@ export const CurrencySelectIn = () => {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
-  console.log("CurrencySelectIn ")
+  console.log("CurrencySelectIn ");
 
   let currency = store.getState().tokenReducer.tokenIn;
   let modal = store.getState().uiReducer.modalTokenIn;
@@ -72,8 +72,7 @@ export const CurrencySelectOut = () => {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
-
-  console.log("CurrencySelectOut ")
+  console.log("CurrencySelectOut ");
 
   let currency = store.getState().tokenReducer.tokenOut;
   let modal = store.getState().uiReducer.modalTokenOut;
@@ -83,7 +82,7 @@ export const CurrencySelectOut = () => {
     } else {
       store.dispatch({ type: "ui/tokenselectOut" });
     }
-    //setModal(!modal);
+    // setModal(!modal);
     store.dispatch({ type: "ui/togglemodalTokenOut" });
   };
 

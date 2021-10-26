@@ -1,6 +1,12 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, Modal } from "react-bootstrap";
+import { Button, ButtonGroup, Modal, ToggleButton } from "react-bootstrap";
 import { store } from "../../redux/store";
+
+const slippageRadios = [
+  { name: "0.3%", value: 0.3 / 100 },
+  { name: "0.5%", value: 0.5 / 100 },
+  { name: "1%", value: 1 / 100 },
+];
 
 export const SettingsModal = (props) => {
   const [modal, setModal] = useState(false);
@@ -8,36 +14,21 @@ export const SettingsModal = (props) => {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
+  let currentSlippage = store.getState().tradingReducer.slippage;
+
   const toggle = () => {
     setModal(!modal);
   };
 
-  // TODO Move back this to settings with radios instead doing it manually
-  function setSlippageCall(f) {
-    console.log("setSlippageCall " + f);
-    if (f == 0.003) {
-      store.dispatch({ type: "slippage/set3" });
-    } else if (f == 0.005) {
-      store.dispatch({ type: "slippage/set5" });
-    } else if (f == 0.01) {
-      store.dispatch({ type: "slippage/set10" });
-    }
-    let slip = store.getState().slippageReducer.value;
-    console.log("slip " + slip);
+  function setSlippage(x) {
+    store.dispatch({ type: "swap/setSlippage", payload: x });
+    console.log("setSlippageCall " + x);
   }
 
   return (
     <>
+      {/*TODO: Check about this span here*/}
       <span style={{ marginTop: "20px" }}>
-        {/* <div className="button-list"> */}
-
-        {
-          /* <Button
-        size="lg"
-        style={{ backgroundColor: "#1f2125", border: "none", height: "50px"}}
-        onClick={toggle}
-        //class="shadow-none"
-      > */
         }
         <i
           className="dripicons-gear noti-icon"
@@ -70,48 +61,23 @@ export const SettingsModal = (props) => {
               margin: "10px 0",
             }}
           >
-            <Button
-              onClick={(e) => {
-                setSlippageCall(0.003); // magic number
-              }}
-            >
-              0.3%
-            </Button>
-            <Button
-              onClick={(e) => {
-                setSlippageCall(0.005); // magic number
-              }}
-            >
-              0.5%
-            </Button>
-            <Button
-              onClick={(e) => {
-                setSlippageCall(0.01); // magic number
-              }}
-            >
-              1%
-            </Button>
-
-            {
-              /* {slippageRadios.map((radio, idx) => {
-                return (
-                  <ToggleButton
-                    key={idx}
-                    id={`radio-${idx}`}
-                    type="radio"
-                    name="radio"
-                    value={radio.value}
-                    checked={slippage === radio.value}
-                    onChange={(e) => {
-                      //setSlippage(parseFloat(e.currentTarget.value));
-                      setSlippageCall(parseFloat(e.currentTarget.value));
-                    }}
-                  >
-                    {radio.name}
-                  </ToggleButton>
-                );
-              })} */
-            }
+            {slippageRadios.map((radio, idx) => {
+              return (
+                <ToggleButton
+                  key={idx}
+                  id={`radio-${idx}`}
+                  type="radio"
+                  name="radio"
+                  value={radio.value}
+                  checked={currentSlippage === radio.value}
+                  onChange={(e) => {
+                    setSlippage(radio.value); // no need to parse
+                  }}
+                >
+                  {radio.name}
+                </ToggleButton>
+              );
+            })}
           </ButtonGroup>
         </Modal.Body>
         <Modal.Footer>
@@ -125,56 +91,3 @@ export const SettingsModal = (props) => {
     </>
   );
 };
-
-// import React, { useState } from "react";
-// import { Button, Modal } from "react-bootstrap";
-
-// const SettingsModal = (props) => {
-//   const [modal, setModal] = useState(false);
-//   const [size] = useState(null);
-//   const [className] = useState(null);
-//   const [scroll] = useState(null);
-
-//   // const { xmodal, xsetModal } = useContext(ModalContext);
-
-//   // const currencySelectValue = CurrencyContext(Context);
-
-//   const toggle = () => {
-//     setModal(!modal);
-//   };
-
-//   return (
-//     <span>
-//       {/* <div className="button-list"> */}
-
-//       <Button size="lg" style={{ backgroundColor: "#1f2125", border: "none", height: "50px" }} onClick={toggle}>
-//         props.currency
-//       </Button>
-
-//       <Modal
-//         show={modal}
-//         onHide={toggle}
-//         dialogClassName={className}
-//         size={size}
-//         scrollable={scroll}
-//       >
-//         <Modal.Header onHide={toggle} closeButton>
-//           <h4 className="modal-title">Select a token</h4>
-//         </Modal.Header>
-//         <Modal.Body>
-//           {/* <span> {{currencySelectValue}}</span> */}
-
-//           <h1>Settings</h1>
-//         </Modal.Body>
-//         <Modal.Footer>
-//           <Button variant="light" onClick={toggle}>
-//             Close
-//           </Button>
-//           {" "}
-//         </Modal.Footer>
-//       </Modal>
-//     </span>
-//   );
-// };
-
-// export default SettingsModal;

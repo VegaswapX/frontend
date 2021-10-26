@@ -132,6 +132,7 @@ const PageSwapInner = () => {
       return;
     }
 
+    // TODO: Duplicate code
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;
 
@@ -169,6 +170,7 @@ const PageSwapInner = () => {
   // float number should work properly
   // TODO handle in tokenui
   async function swap() {
+    // TODO: Duplicate code
     let slip = store.getState().slippageReducer.value;
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;
@@ -183,10 +185,6 @@ const PageSwapInner = () => {
 
     const amountIn = trade.convertTextToUnint256(token0Input, token0);
 
-    if ((amountIn == 0) | (amountIn == null)) {
-      toast.error("Amount is 0");
-      return;
-    }
     console.log(`amountIn: ${amountIn}`);
     const result = await trade.getAmountsOut(routerContract, amountIn, [
       token0,

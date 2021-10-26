@@ -67,6 +67,7 @@ function TokenInputUI(
   );
 }
 
+// TODO: Move back slippage settings to settings modal
 // const defaultSlippage = 0.5 / 100;
 // const defaultState = {
 //   loading: false,

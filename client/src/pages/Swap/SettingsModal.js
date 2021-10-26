@@ -8,15 +8,11 @@ export const SettingsModal = (props) => {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
-  // const { xmodal, xsetModal } = useContext(ModalContext);
-
-  // const currencySelectValue = CurrencyContext(Context);
-  // console.log(currencySelectValue);
-
   const toggle = () => {
     setModal(!modal);
   };
 
+  // TODO Move back this to settings with radios instead doing it manually
   function setSlippageCall(f) {
     console.log("setSlippageCall " + f);
     if (f == 0.003) {

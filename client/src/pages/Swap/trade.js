@@ -24,8 +24,10 @@ export function toUint256(amount, token) {
 }
 
 export function toFloatNumber(amount, token) {
+  console.log(`amount`, amount.toString());
   // check token decimals
   const y = amount.div(BigNumber.from(10).pow(12));
+  console.log(`y`, y);
   return y.toNumber() / Math.pow(10, 6);
 }
 
@@ -172,7 +174,8 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
   if (amount <= 0) {
     return failedGetAmountsOutReturn;
   }
-  const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
+  const addressPath = [tokenPath[0].address, tokenPath[1].address];
+  console.log(`addressPath`, addressPath);
 
   try {
     let x = await routerContract.callStatic

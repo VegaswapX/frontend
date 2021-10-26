@@ -1,6 +1,11 @@
+import {Contracts} from "../chain/constant";
+
 const initialState = {
   slippage: 0.5 / 100,
-  tokenPath: [null, null],
+  tokenPath: [
+    Contracts[56].WBNB,
+    Contracts[56].VGA,
+  ],
 };
 
 // TODO: Magic number all over the places

@@ -110,7 +110,7 @@ function PoolRow({ pool }) {
             size={size}
             scrollable={scroll}
           >
-            <Modal.Header onHide={toggle} closeButton>
+            <Modal.Header onHide={toggle}>
               <h4 className="modal-title">Pool Information</h4>
             </Modal.Header>
             <Modal.Body>

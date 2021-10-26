@@ -20,9 +20,6 @@ function TokenInputUI(
 ) {
   const { disabled } = opts;
 
-  console.log("?? " + tokenSelect);
-
-  // const [loadingAmount, setLoadingAmount] = useState(false);
 
   return (
     <div
@@ -69,18 +66,6 @@ function TokenInputUI(
   );
 }
 
-// TODO: Move back slippage settings to settings modal
-// const defaultSlippage = 0.5 / 100;
-// const defaultState = {
-//   loading: false,
-//   currentState: "connect-network", // wrong-network, enter-amount, waiting-for-swapping-results
-// };
-
-// const slippageRadios = [
-//   { name: "0.3%", value: 0.3 / 100 },
-//   { name: "0.5%", value: 0.5 / 100 },
-//   { name: "1%", value: 1 / 100 },
-// ];
 
 const swapButtonStates = {
   wrongNetwork: {

@@ -90,6 +90,7 @@ const swapButtonStates = {
   },
 };
 
+// TODO: Rework on reducer to make this work properly
 const PageSwapInner = () => {
   const { account, chainId } = useWeb3React();
 

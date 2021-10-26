@@ -21,20 +21,19 @@ function CurrencyButton(props) {
   );
 }
 
-export const CurrencySelectIn = (props) => {
-  const [modal, setModal] = useState(false);
+export const CurrencySelectIn = () => {
   const [size] = useState(null);
   const [className] = useState(null);
   const [scroll] = useState(null);
 
   let currency = store.getState().tokenReducer.tokenIn;
+  let modal = store.getState().uiReducer.modal;
 
   const toggle = () => {
     if (modal) {
     } else {
       store.dispatch({ type: "ui/tokenselectIn" });
     }
-    setModal(!modal);
     store.dispatch({ type: "ui/togglemodal" });
   };
 

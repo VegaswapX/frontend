@@ -67,12 +67,8 @@ export async function swap(
 ) {
   const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
 
-  console.log("swap " + addressPath);
-
   // TODO deal with isNative
   if (!!tokenPath[0].isNative) {
-    console.log("eth for tokens");
-
     return await swapExactETHForTokens(
       routerContract,
       amountIn,
@@ -81,21 +77,10 @@ export async function swap(
       to,
       deadline,
     );
-  } else if (!!tokenPath[1].isNative) {
+  }
+  if (!!tokenPath[1].isNative) {
     // needs approve?
-    console.log("Token for ETH");
     return await swapExactTokensForETH(
-      routerContract,
-      amountIn,
-      amountOutMin,
-      addressPath,
-      to,
-      deadline,
-    );
-  } else {
-    console.log("token for token");
-
-    return await swapTokensForExactTokens(
       routerContract,
       amountIn,
       amountOutMin,
@@ -105,7 +90,14 @@ export async function swap(
     );
   }
 
-  // swap from Tokens to tokens
+  return await swapExactTokensForTokens(
+    routerContract,
+    amountIn,
+    amountOutMin,
+    addressPath,
+    to,
+    deadline,
+  );
 }
 
 // TODO: update this function
@@ -140,6 +132,7 @@ async function swapExactETHForTokens(
   }
 }
 
+// TODO: Double check
 async function swapExactTokensForETH(
   routerContract,
   amountIn,
@@ -199,7 +192,8 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
   }
 }
 
-async function swapTokensForExactTokens(
+// TODO: Double check
+async function swapExactTokensForTokens(
   routerContract,
   amountIn,
   amountOutMin,
@@ -229,12 +223,3 @@ async function swapTokensForExactTokens(
     return [false, e];
   }
 }
-
-// async function swapTokens(amountOutMin, to, deadline){
-
-// }
-
-// function addLiquidity(VGA, BNB){
-// const tx = await routerContract.addLiquidity(
-// [WBNB, VGA],
-// }

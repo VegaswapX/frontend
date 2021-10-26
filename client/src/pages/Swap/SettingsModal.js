@@ -28,13 +28,13 @@ export const SettingsModal = (props) => {
   return (
     <>
       <i
-          className="dripicons-gear noti-icon"
-          style={{
-            textAlign: "right",
-            marginLeft: "50px",
-            fontSize: "2.0em",
-          }}
-          onClick={toggle}
+        className="dripicons-gear noti-icon"
+        style={{
+          textAlign: "right",
+          marginLeft: "50px",
+          fontSize: "2.0em",
+        }}
+        onClick={toggle}
       />
 
       <Modal

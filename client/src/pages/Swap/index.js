@@ -21,7 +21,6 @@ function TokenInputUI(
 ) {
   const { disabled } = opts;
 
-
   return (
     <div
       style={{
@@ -66,7 +65,6 @@ function TokenInputUI(
     </div>
   );
 }
-
 
 const swapButtonStates = {
   wrongNetwork: {

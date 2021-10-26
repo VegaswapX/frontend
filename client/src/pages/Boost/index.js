@@ -7,66 +7,13 @@ import { Row, Col, Modal, Button } from "react-bootstrap";
 // import PageTitle from '../../components/PageTitle';
 import Stake from "./Stake.js";
 import classNames from "classnames";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import styled from 'styled-components';
-import { Card } from "react-bootstrap";
 import { BPOOLS } from "../../chain/Contracts.js";
 import { Table } from "react-bootstrap";
 import { store } from "../../redux/store";
 
 import { PoolInfo } from "./Pool.js";
 
-function PoolPage({ pool }) {
-  //pool
-  //poolName,
-  // stakeToken,
-  // yieldToken,
-  //poolAddress,
-  // const pool = pools[poolAddress];
-
-  let modal = store.getState().uiReducer.poolInfo;
-
-  const toggle = () => {
-    console.log("toggle");
-    if (modal) {
-    } else {
-      //store.dispatch({ type: "ui/showpoolinfo" });
-    }
-    store.dispatch({ type: "ui/showpoolinfo" });
-  };
-
-  console.log(pool.poolName);
-
-  return (
-    <>
-      {/* <h2>Pool {pool.poolName}</h2> */}
-
-      <Row style={{ marginTop: "20px" }}>
-        <Col lg={6}>
-          <Card className={classNames("border", [`border-primary`])}>
-            <Card.Body>
-              {/* <Card.Title as="h5">Pool Info</Card.Title> */}
-              <Card.Text>
-                {/* <PoolInfo pool={pool} /> */}
-                {/* <PoolInfoSummary pool={pool} /> */}
-              </Card.Text>
-
-              <button
-                className={classNames("btn", "btn-sm", [`btn-primary`])}
-                onClick={toggle}
-              >
-                Info
-              </button>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col lg={6}>{/* <Stake pool={pool} /> */}</Col>
-      </Row>
-    </>
-  );
-}
 
 function PoolRow({ pool }) {
   let modal = store.getState().uiReducer.poolInfo;
@@ -79,7 +26,6 @@ function PoolRow({ pool }) {
     console.log("toggle");
     if (modal) {
     } else {
-      //store.dispatch({ type: "ui/showpoolinfo" });
     }
     store.dispatch({ type: "ui/showpoolinfo" });
   };
@@ -110,7 +56,7 @@ function PoolRow({ pool }) {
             size={size}
             scrollable={scroll}
           >
-            <Modal.Header onHide={toggle} closeButton>
+            <Modal.Header onHide={toggle}>
               <h4 className="modal-title">Pool Information</h4>
             </Modal.Header>
             <Modal.Body>

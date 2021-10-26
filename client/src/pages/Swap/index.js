@@ -1,11 +1,12 @@
 import { useWeb3React } from "@web3-react/core";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
 import { Chains, useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
+import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 
 import { store } from "../../redux/store";
 import { CurrencySelectIn, CurrencySelectOut } from "./CurrencySelect";
@@ -20,6 +21,66 @@ function TokenInputUI(
 ) {
   const { disabled } = opts;
 
+  const { account, library, chainId } = useWeb3React();
+
+  let currencyIn = store.getState().tokenReducer.tokenIn;
+  let currencyOut = store.getState().tokenReducer.tokenOut;
+
+  console.log("currencyIn.contract " + currencyIn.contract);  
+
+  const tokenContractIn = useContract(currencyIn.contract, VEGA_CONTRACT_ABI, true);
+  const tokenContractOut = useContract(currencyOut.contract, VEGA_CONTRACT_ABI, true);
+
+  const [bal, setBalance] = useState();
+  const [balOut, setBalanceOut] = useState();
+
+  useEffect(() => {
+    if (!!account && !!library) {
+      let stale = false;
+
+      tokenContractIn.callStatic
+        .balanceOf(account)
+        .then((x) => {
+          if (!stale) {
+            x = x / 10 ** 18;
+            x = Math.round(x*100)/100;
+            setBalance(x);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setBalance(null);
+          }
+        });
+
+      return () => {
+        stale = true;
+        setBalance(undefined);
+      };
+    }
+  }, [account, library, chainId, tokenContractIn]);
+
+  useEffect(() => {
+    if (!!account && !!library) {
+      let stale = false;
+
+      tokenContractOut.callStatic
+        .balanceOf(account)
+        .then((x) => {
+          if (!stale) {
+            x = x / 10 ** 18;
+            x = Math.round(x*100)/100;
+            setBalanceOut(x);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setBalanceOut(null);
+          }
+        });
+      
+    }
+  }, [account, library, chainId, tokenContractOut]);
 
   return (
     <div
@@ -39,6 +100,17 @@ function TokenInputUI(
           }}
         >
           {tokenSelect === "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />}
+        </div>
+
+        
+        <div
+          style={{
+            marginLeft: "5px",
+            marginTop: "5px",
+          }}
+        >
+          {/* {tokenSelect === "tokenIn" ? currencyIn.symbol : currencyOut.symbol} */}
+          <p>Balance {tokenSelect === "tokenIn" ? bal : balOut}</p>
         </div>
 
         <FormControl

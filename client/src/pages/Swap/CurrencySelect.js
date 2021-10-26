@@ -117,7 +117,6 @@ export const CurrencySelectOut = () => {
 };
 
 export function CurrencySelector({token}) {
-  console.log(`token`, token);
   const [size] = useState(null);
   const [className] = useState(null);
   const [scroll] = useState(null);

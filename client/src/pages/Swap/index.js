@@ -1,9 +1,10 @@
 import { useWeb3React } from "@web3-react/core";
-import React, { useMemo, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
+import ERC20_ABI from "../../abis/erc20.json";
 import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 import "./style.css";
@@ -13,6 +14,7 @@ import { store } from "../../redux/store";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
 import * as trade from "./trade.js";
+import {useSelector} from "react-redux";
 
 const swapButtonStates = {
   wrongNetwork: {
@@ -30,6 +32,8 @@ const PageSwapInner = () => {
   const { account, chainId } = useWeb3React();
 
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
+  const erc20Contract = useContract(`0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d`, ERC20_ABI, true);
+  const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath );
 
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
@@ -62,29 +66,30 @@ const PageSwapInner = () => {
 
     const amountText = e.target.value;
     const [token0, token1] = store.getState().swapReducer.tokenPath;
-    console.log(`nxqd: amountText`, amountText);
     const token0AmountEther = trade.convertTextToUnint256(amountText, token0);
     if (token0AmountEther === null) {
       setToken1Input(0);
       return;
     }
 
-    console.log(`nxqd: token0AmountEther`, token0AmountEther.toString());
     let result = await trade.getAmountsOut(
       routerContract,
       token0AmountEther,
       [token0, token1],
     );
+
     if (!result.error) {
       const outAmount = result.data;
       const outAmountText = trade.toFloatNumber(outAmount, token1);
-      console.log(`outAmount`, outAmountText);
       setToken1Input(outAmountText.toFixed(2));
       // setLoadingAmount(false);
-    } else {
-      toast.error("Error Pair not available");
-      // setLoadingAmount(false);
     }
+
+    // TODO: Set proper error message, it can be anything
+    // else {
+    //   toast.error("Error Pair not available");
+    //   // setLoadingAmount(false);
+    // }
   }
 
   function handleTokenInputChange(e) {
@@ -158,7 +163,16 @@ const PageSwapInner = () => {
     }
   }
 
-  const [token0, token1] = store.getState().swapReducer.tokenPath;
+  useEffect(async () => {
+    if (erc20Contract === null) {
+      console.log(`User doesn't connect to bsc network`);
+      return;
+    }
+    console.log(`check allowance`);
+    const res = await trade.hasEnoughAllowance(erc20Contract, token1, account);
+
+  }, [erc20Contract, token0, token1, account])
+
   const tokenInputUI = TokenInput(token0Input, token0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
   });

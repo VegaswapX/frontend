@@ -1,5 +1,6 @@
 // utils
 import { BigNumber, ethers } from "ethers";
+import {PCS_ROUTER_ADDRESS} from "./addr";
 
 const GAS_PRICE = {
   default: "5",
@@ -14,6 +15,27 @@ const GAS_PRICE_GWEI = {
 // TODO: Return user set gasPrice
 function getGasPrice() {
   return GAS_PRICE_GWEI.default;
+}
+
+const INFINITE = -1;
+// TODO: Update this to use getContract and multicall
+export async function hasEnoughAllowance(erc20Contract, token, ownerAddress, spenderAddress = PCS_ROUTER_ADDRESS, amount = INFINITE, ) {
+  if (token.isNative) {
+    return true;
+  }
+
+  const res = await erc20Contract.callStatic.allowance(ownerAddress, spenderAddress)
+      .catch((e) => {
+        console.log("Failed to get allowance", e);
+        return false;
+      });
+
+  if (res.toString() === "0") {
+    return false;
+  }
+
+  // check amount to return true
+  console.log(`res`, res);
 }
 
 export function toUint256(amount, token) {
@@ -51,7 +73,6 @@ function defaultDeadline() {
 }
 
 export async function approve() {
-  // check allowance
 }
 
 const defaultOptions = {};
@@ -175,7 +196,6 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
     return failedGetAmountsOutReturn;
   }
   const addressPath = [tokenPath[0].address, tokenPath[1].address];
-  console.log(`addressPath`, addressPath);
 
   try {
     let x = await routerContract.callStatic

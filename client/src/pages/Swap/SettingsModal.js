@@ -27,9 +27,7 @@ export const SettingsModal = (props) => {
 
   return (
     <>
-      {/*TODO: Check about this span here*/}
-      <span style={{ marginTop: "20px" }}>
-        <i
+      <i
           className="dripicons-gear noti-icon"
           style={{
             textAlign: "right",
@@ -37,9 +35,7 @@ export const SettingsModal = (props) => {
             fontSize: "2.0em",
           }}
           onClick={toggle}
-        />
-      </span>
-      {/* </Button> */}
+      />
 
       <Modal
         show={modal}

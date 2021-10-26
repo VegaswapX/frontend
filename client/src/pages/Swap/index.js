@@ -6,6 +6,7 @@ import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
 import { Chains, useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
+import "./style.css";
 
 import { store } from "../../redux/store";
 import { CurrencySelectIn, CurrencySelectOut } from "./CurrencySelect";

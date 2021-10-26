@@ -1,8 +1,7 @@
 // @flow
-import React, { useReducer, useEffect } from "react";
-import { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { Row, Col, Card, Form, Button } from "react-bootstrap";
+import { Button, Card, Form, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
 import {
   changeAllowanceAmount,
@@ -13,23 +12,21 @@ import {
 import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { VEGA_TOKEN_ADDRESS } from "../../chain/Contracts.js";
-import { BPOOLS } from "../../chain/Contracts.js";
 import ApproveButton from "../../components/Buttons/ApproveButton";
-import { useContract, getContractA} from "../../chain/eth.js";
+import { getContractA } from "../../chain/eth.js";
 import { parseEther } from "ethers/lib/utils";
 import StakeInfo from "./StakeInfo";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
-import {Chains} from "../../chain/constant";
+import { PoolInfo } from "./Pool";
 
 // components
 // import PageTitle from '../components/PageTitle';
 
 const StakeForm = ({ pool }) => {
-  console.log(`pool`, pool);
   const { account, library } = useWeb3React();
-
+  const [modalStatus, setModalStatus] = useState(false);
   //const poolContract = useContract(pool.address, pool.abi, true);
   let poolContract, vegaContract;
   vegaContract = getContractA(
@@ -143,46 +140,72 @@ const StakeForm = ({ pool }) => {
     }
   };
 
-  console.log("reducerState.stakeAmount " + reducerState.stakeAmount);
-
   if (reducerState.stakeAmount < 1) {
     return (
-      <Card>
-        <Card.Body>
-          <h4 className="mb-3 header-title">Stake</h4>
+      <>
+        <Card>
+          <Card.Body>
+            <h4 className="mb-3 header-title">Stake</h4>
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="exampleEmail2" column sm={2}>
+                  Amount:{" "}
+                </Form.Label>
 
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="exampleEmail2" column sm={2}>
-                Amount:{" "}
-              </Form.Label>
+                <input
+                  type="text"
+                  value={stakeAmount}
+                  onChange={(e) => setStakeamount(e.target.value)}
+                  className="stakeInput"
+                />
+              </Form.Group>
 
-              <input
-                type="text"
-                value={stakeAmount}
-                onChange={(e) => setStakeamount(e.target.value)}
-                className="stakeInput"
+              <Button
+                variant="primary"
+                onClick={stake}
+                className="m-1"
+                disabled={
+                  reducerState.stakeAmount > 0 || reducerState.allowance <= 0
+                }
+              >
+                Stake
+              </Button>
+
+              <ApproveButton
+                allowance={reducerState.allowance}
+                approve={approve}
               />
-            </Form.Group>
 
-            <Button
-              variant="primary"
-              onClick={stake}
-              className="m-1"
-              disabled={
-                reducerState.stakeAmount > 0 || reducerState.allowance <= 0
-              }
-            >
-              Stake
-            </Button>
-
-            <ApproveButton
-              allowance={reducerState.allowance}
-              approve={approve}
-            />
-          </Form>
-        </Card.Body>
-      </Card>
+              <Button
+                onClick={() => setModalStatus(true)}
+                variant={"primary"}
+                className="ms-1"
+              >
+                Details
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+        <Modal
+          show={modalStatus}
+          onHide={() => setModalStatus(false)}
+          // dialogClassName={className}
+          size={100}
+          scrollable={true}
+        >
+          <Modal.Header onHide={() => setModalStatus(false)}>
+            <h4 className="modal-title">Pool Information</h4>
+          </Modal.Header>
+          <Modal.Body>
+            <PoolInfo pool={pool} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="light" onClick={() => setModalStatus(false)}>
+              Close
+            </Button>{" "}
+          </Modal.Footer>
+        </Modal>
+      </>
     );
   } else if (loading) {
     return <> Loading</>;
@@ -208,18 +231,8 @@ const StakeForm = ({ pool }) => {
 };
 
 const Stake = ({ pool }) => {
-  return (
-    <React.Fragment>
-      <Row>
-        <Col lg={8}>
-          <StakeForm pool={pool} />
-        </Col>
-
-        {/* <Col lg={6}>
-                    <HorizontalForm />
-                </Col> */}
-      </Row>
-    </React.Fragment>
-  );
+  const { account, library } = useWeb3React();
+  if (!account || !library) return <div>Waiting</div>;
+  return <StakeForm pool={pool} />;
 };
 export default Stake;

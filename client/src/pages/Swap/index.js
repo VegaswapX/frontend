@@ -13,16 +13,11 @@ import { SettingsModal } from "./SettingsModal.js";
 import * as trade from "./trade.js";
 
 function TokenInputUI(
-  token0Input,
+  tokenInput,
   tokenSelect,
   handleChange,
   opts = { disabled: false },
 ) {
-  // store.subscribe(() => {
-  //   let i = store.getState().tokenReducer.tokenIn;
-  //   let o = store.getState().tokenReducer.tokenOut;
-  // });
-
   const { disabled } = opts;
 
   const [loadingAmount, setLoadingAmount] = useState(false);
@@ -53,7 +48,7 @@ function TokenInputUI(
           placeholder="Amount"
           aria-label="Amount"
           aria-describedby="token0Input"
-          value={token0Input}
+          value={tokenInput}
           disabled={disabled}
           style={{
             textAlign: "left",
@@ -72,6 +67,7 @@ function TokenInputUI(
   );
 }
 
+// TODO: Move back slippage settings to settings modal
 // const defaultSlippage = 0.5 / 100;
 // const defaultState = {
 //   loading: false,
@@ -91,10 +87,11 @@ const swapButtonStates = {
   },
   correctNetwork: {
     disabled: false,
-    text: "Submit Swap",
+    text: "Swap",
   },
 };
 
+// TODO: Rework on reducer to make this work properly
 const PageSwapInner = () => {
   const { account, chainId } = useWeb3React();
 
@@ -132,6 +129,7 @@ const PageSwapInner = () => {
       return;
     }
 
+    // TODO: Duplicate code
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;
 
@@ -169,6 +167,7 @@ const PageSwapInner = () => {
   // float number should work properly
   // TODO handle in tokenui
   async function swap() {
+    // TODO: Duplicate code
     let slip = store.getState().slippageReducer.value;
     let token0 = store.getState().tokenReducer.tokenIn;
     let token1 = store.getState().tokenReducer.tokenOut;
@@ -183,15 +182,13 @@ const PageSwapInner = () => {
 
     const amountIn = trade.convertTextToUnint256(token0Input, token0);
 
-    if ((amountIn == 0) | (amountIn == null)) {
-      toast.error("Amount is 0");
-      return;
-    }
     console.log(`amountIn: ${amountIn}`);
     const result = await trade.getAmountsOut(routerContract, amountIn, [
       token0,
       token1,
     ]);
+
+    // TODO: didn't the case we have error
     if (!result.error) {
       let amountOut = result.data;
       console.log("amountOut " + amountOut);

@@ -2,6 +2,7 @@ const initialState = {
   value: 0.003,
 };
 
+// TODO: Magic number all over the places
 export default function slippageReducer(state = initialState, action) {
   switch (action.type) {
     case "slippage/set3":

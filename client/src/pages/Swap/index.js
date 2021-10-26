@@ -1,70 +1,18 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useMemo, useState } from "react";
-import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
-import { Chains, useContract } from "../../chain/eth.js";
+import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 import "./style.css";
 
+import { Chains } from "../../chain/constant";
 import { store } from "../../redux/store";
-import { CurrencySelectIn, CurrencySelectOut } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
+import { TokenInputUI } from "./tokenInputUI";
 import * as trade from "./trade.js";
-
-function TokenInputUI(
-  tokenInput,
-  tokenSelect,
-  handleChange,
-  opts = { disabled: false },
-) {
-  const { disabled } = opts;
-
-  return (
-    <div
-      style={{
-        background: "#22262c",
-        height: "70px",
-        borderRadius: "10px",
-        width: "100%",
-        padding: "5px",
-      }}
-    >
-      <InputGroup className="mb-3">
-        <div
-          style={{
-            marginLeft: "5px",
-            marginTop: "5px",
-          }}
-        >
-          {tokenSelect === "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />}
-        </div>
-
-        <FormControl
-          size="lg"
-          type="number"
-          placeholder="Amount"
-          aria-label="Amount"
-          aria-describedby="token0Input"
-          value={tokenInput}
-          disabled={disabled}
-          style={{
-            textAlign: "left",
-            fontFamily: "Helvetica",
-            fontSize: "1.3rem",
-            height: "50px",
-            border: "none",
-            marginTop: "5px",
-            marginLeft: "20px",
-            background: "#1f2125",
-          }}
-          onChange={handleChange}
-        />
-      </InputGroup>
-    </div>
-  );
-}
 
 const swapButtonStates = {
   wrongNetwork: {
@@ -98,7 +46,6 @@ const PageSwapInner = () => {
   );
 
   let swapButtonState, tokenInputDisabled;
-  // TODO remove and handle elsewhere
   if (chainId === Chains.BSC_MAINNET.chainId) {
     swapButtonState = swapButtonStates["correctNetwork"];
     tokenInputDisabled = false;
@@ -108,8 +55,6 @@ const PageSwapInner = () => {
   }
 
   async function setOutputAmountText(routerContract, e) {
-    console.log("setOutputAmountText " + e);
-
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
       return;

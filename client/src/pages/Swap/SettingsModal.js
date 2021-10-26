@@ -14,7 +14,7 @@ export const SettingsModal = (props) => {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
-  let currentSlippage = store.getState().tradingReducer.slippage;
+  let currentSlippage = store.getState().swapReducer.slippage;
 
   const toggle = () => {
     setModal(!modal);

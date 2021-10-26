@@ -1,10 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
-import { Contract } from "@ethersproject/contracts";
-import { useWeb3React } from "@web3-react/core";
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { NetworkConnector } from "@web3-react/network-connector";
-import { Web3Provider } from "@ethersproject/providers";
-import { Web3ReactProvider } from "@web3-react/core";
+import {useEffect, useMemo, useState} from "react";
+import {Contract} from "@ethersproject/contracts";
+import {useWeb3React, Web3ReactProvider} from "@web3-react/core";
+import {InjectedConnector} from "@web3-react/injected-connector";
+import {NetworkConnector} from "@web3-react/network-connector";
+import {Web3Provider} from "@ethersproject/providers";
 
 export const BSC_MAINNET = 56;
 export const BSC_TESTNET = 97;
@@ -212,41 +211,6 @@ export function WrappedWeb3ReactProvider({ children }) {
     <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
   );
 }
-
-const Chains = {
-  BSC_MAINNET: {
-    chainId: BSC_MAINNET,
-  },
-  LOCAL_NET: {
-    chainId: LOCAL_NET,
-  },
-};
-
-const Contracts = {
-  56: {
-    PCS_ROUTER: {
-      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e",
-    },
-    PCS_FACTORY: {
-      address: "0x10ed43c718714eb63d5aa57b78b54704e256024e",
-    },
-
-    // tokens
-    VGA: {
-      address: "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
-      symbol: "VGA",
-      decimals: 18,
-    },
-    WBNB: {
-      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-      symbol: "BNB",
-      isNative: true,
-      decimals: 18,
-    },
-  },
-};
-
-export { Contracts, Chains };
 
 // Array of available nodes to connect to
 

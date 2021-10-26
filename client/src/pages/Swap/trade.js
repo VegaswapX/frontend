@@ -23,12 +23,6 @@ export function toUint256(amount, token) {
   );
 }
 
-export function toUint256_18(amount) {
-  return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(18 - 6),
-  );
-}
-
 export function toFloatNumber(amount, token) {
   // check token decimals
   const y = amount.div(BigNumber.from(10).pow(12));
@@ -54,8 +48,11 @@ function defaultDeadline() {
   return Math.floor(Date.now() / 1000) + 60 * 10; // 1 minutes
 }
 
-const defaultOptions = {};
+export async function approve() {
+  // check allowance
+}
 
+const defaultOptions = {};
 // check native token here
 export async function swap(
   routerContract,
@@ -144,9 +141,9 @@ async function swapExactTokensForETH(
   const gasPrice = getGasPrice();
   console.log("swapExactTokensForETH...");
 
-  // const minBNB = 0.001 * 10**18;
+  const minBNB = 0.001 * 10 ** 18;
   // const minBNB = ethers.utils.parseUnits(10000, "wei")
-  const minBNB = toUint256_18(0.001);
+  // const minBNB = toUint256_18(0.001); // should be removed in production code
 
   console.log("..." + minBNB);
 
@@ -170,8 +167,7 @@ async function swapExactTokensForETH(
   }
 }
 
-const failedGetAmountsOutReturn = null;
-
+const failedGetAmountsOutReturn = { data: null, error: true };
 export async function getAmountsOut(routerContract, amount, tokenPath) {
   if (amount <= 0) {
     return failedGetAmountsOutReturn;
@@ -188,7 +184,7 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
     return { data: x[1], error: false };
   } catch {
     console.log("Failed to run getAmountsOut ", addressPath);
-    return { error: true };
+    return failedGetAmountsOutReturn;
   }
 }
 

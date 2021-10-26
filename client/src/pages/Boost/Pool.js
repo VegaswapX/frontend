@@ -2,9 +2,10 @@ import React, { useState, useEffect, useReducer } from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
-import { getContractA, Chains } from "../../chain/eth.js";
+import { getContractA} from "../../chain/eth.js";
 import { ethers } from "ethers";
 import { Table } from "react-bootstrap";
+import {Chains} from "../../chain/constant";
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);

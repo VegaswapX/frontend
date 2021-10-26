@@ -1,9 +1,9 @@
 //TODO WBNB, VGA init
-import { TokenMap } from "../chain/tokens";
+import { TokenList } from "../chain/tokens";
 
 const initialState = {
-  tokenIn: TokenMap.BNB,
-  tokenOut: TokenMap.VGA,
+  tokenIn: TokenList.BSC.WBNB,
+  tokenOut: TokenList.BSC.VGA,
 };
 
 export default function tokenReducer(state = initialState, action) {
@@ -11,7 +11,7 @@ export default function tokenReducer(state = initialState, action) {
 
   //map to tokens
   try {
-    let token = TokenMap[action.value];
+    let token = TokenList[action.value];
     switch (action.type) {
       case "tokenIn/set":
         return { ...state, tokenIn: token };

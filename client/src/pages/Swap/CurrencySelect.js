@@ -115,3 +115,43 @@ export const CurrencySelectOut = () => {
     </span>
   );
 };
+
+export function CurrencySelector({token}) {
+  console.log(`token`, token);
+  const [size] = useState(null);
+  const [className] = useState(null);
+  const [scroll] = useState(null);
+
+  let modal = store.getState().uiReducer.modalTokenIn;
+
+  const toggle = () => {
+    // TODO: Implement this properly
+  };
+
+  return (
+      <span>
+      <CurrencyButton currency={token} toggle={toggle} />
+
+      <Modal
+          show={modal}
+          onHide={toggle}
+          dialogClassName={className}
+          size={size}
+          scrollable={scroll}
+      >
+        <Modal.Header onHide={toggle} closeButton>
+          <h4 className="modal-title">Select token</h4>
+        </Modal.Header>
+        <Modal.Body>
+          <Tokentable tokenSelect="tokenIn" />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={toggle}>
+            Close
+          </Button>
+          {" "}
+        </Modal.Footer>
+      </Modal>
+    </span>
+  );
+};

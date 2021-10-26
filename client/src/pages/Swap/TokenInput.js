@@ -1,10 +1,10 @@
 import React from "react";
 import { FormControl, InputGroup } from "react-bootstrap";
-import { CurrencySelectIn, CurrencySelectOut } from "./CurrencySelect";
+import {CurrencySelector} from "./CurrencySelect";
 
-export function TokenInputUI(
+export function TokenInput(
   tokenInput,
-  tokenSelect,
+  token,
   handleChange,
   opts = { disabled: false },
 ) {
@@ -27,7 +27,7 @@ export function TokenInputUI(
             marginTop: "5px",
           }}
         >
-          {tokenSelect === "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />}
+          <CurrencySelector token={token} />
         </div>
 
         <FormControl

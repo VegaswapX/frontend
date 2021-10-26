@@ -1,10 +1,10 @@
-import {Contracts} from "../chain/constant";
+import {TokenList} from "../chain/tokens";
 
 const initialState = {
   slippage: 0.5 / 100,
   tokenPath: [
-    Contracts[56].WBNB,
-    Contracts[56].VGA,
+    TokenList.BSC.WBNB,
+    TokenList.BSC.VGA,
   ],
 };
 

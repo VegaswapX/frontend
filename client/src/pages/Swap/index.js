@@ -11,7 +11,7 @@ import "./style.css";
 import { Chains } from "../../chain/constant";
 import { store } from "../../redux/store";
 import { SettingsModal } from "./SettingsModal.js";
-import { TokenInputUI } from "./tokenInputUI";
+import { TokenInput } from "./TokenInput";
 import * as trade from "./trade.js";
 
 const swapButtonStates = {
@@ -158,11 +158,12 @@ const PageSwapInner = () => {
     }
   }
 
-  const tokenInputUI = TokenInputUI(token0Input, "tokenIn", handleTokenInputChange, {
+  const [token0, token1] = store.getState().swapReducer.tokenPath;
+  const tokenInputUI = TokenInput(token0Input, token0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
   });
 
-  const tokenOutputUI = TokenInputUI(token1Input, "tokenOut", () => {}, {
+  const tokenOutputUI = TokenInput(token1Input, token1, () => {}, {
     disabled: tokenInputDisabled,
   });
 

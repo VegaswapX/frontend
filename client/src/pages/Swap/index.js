@@ -18,14 +18,17 @@ import * as trade from "./trade.js";
 
 const swapButtonStates = {
   wrongNetwork: {
+    name: "wrongNetwork",
     disabled: true,
     text: "Connect to BSC network",
   },
   needApprove: {
+    name: "needApprove",
     disabled: false,
     text: "Approve ",
   },
   correctNetwork: {
+    name: "correctNetwork",
     disabled: false,
     text: "Swap",
   },
@@ -33,7 +36,7 @@ const swapButtonStates = {
 
 // TODO: Rework on reducer to make this work properly
 const PageSwapInner = () => {
-  const { account, chainId } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
@@ -61,9 +64,10 @@ const PageSwapInner = () => {
       return;
     }
 
-    console.log(`check allowance for account`, account);
+    console.log(`Running here`);
     // TODO: Change back to token0
-    const res = await trade.hasEnoughAllowance(multiCallContract, token1, account); // always check token0
+    const res = await trade.hasEnoughAllowance(multiCallContract, token0, account); // always check token0
+    console.log(`res allowance`, res);
 
     if (res === true) {
       setSwapButtonState(swapButtonStates["correctNetwork"]);
@@ -71,9 +75,8 @@ const PageSwapInner = () => {
     }
 
     // add approve button
-    console.log(`res`, res);
     setSwapButtonState(swapButtonStates.needApprove);
-  }, [chainId]);
+  }, [chainId, account]);
 
   const tokenInputDisabled = false;
 
@@ -117,6 +120,18 @@ const PageSwapInner = () => {
     debounceOnChange(e);
   }
 
+  // Keep it here to DEBUG later
+  // const approveToken0 = useMemo(async () => {
+  //   return async () => {
+  //   }
+  // }, [account, library])
+
+  async function approveToken0() {
+    const [token0] = store.getState().swapReducer.tokenPath;
+    const res = await trade.approve(account, library, token0);
+    // TODO: Check if approve success or not
+  }
+
   // TODO: Double check this function, because of failed merge from prev commit
   async function swap() {
     let slippage = store.getState().swapReducer.slippage;
@@ -139,12 +154,11 @@ const PageSwapInner = () => {
     ]);
 
     if (result.error === true) {
-      // handle error message properly here
       return;
     }
 
     let amountOut = result.data;
-    console.log("amountOut " + amountOut);
+    // console.log("amountOut " + amountOut);
     // calculate slippage
     const amountOutMin = amountOut
       .mul(Math.round((1 - slippage) * 1000))
@@ -181,18 +195,6 @@ const PageSwapInner = () => {
     }
   }
 
-  useEffect(async () => {
-    console.log(`check allowance for account`, account);
-    const res = await trade.hasEnoughAllowance(multiCallContract, token1, account); // always check token0
-
-    if (res === true) {
-      return;
-    }
-
-    // add approve button
-    console.log(`res`, res);
-  }, [multiCallContract, token0, token1, account]);
-
   const tokenInputUI = TokenInput(token0Input, token0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
   });
@@ -200,11 +202,6 @@ const PageSwapInner = () => {
   const tokenOutputUI = TokenInput(token1Input, token1, () => {}, {
     disabled: tokenInputDisabled,
   });
-
-  // DEBUG
-  // const link = `https://bscscan.com/tx/test`;
-  // const msg = <a target="_blank" href={link}>Swap successfully with transction.</a>;
-  // const notify = () => toast(msg);
 
   if (loading) {
     return (
@@ -253,13 +250,20 @@ const PageSwapInner = () => {
             textAlign: "center",
           }}
         >
+          {/*TODO: Refactor this button later */}
           <Button
             variant="primary"
-            onClick={swap}
+            onClick={function(e) {
+              if (swapButtonState.name === "correctNetwork") {
+                swap();
+              } else if (swapButtonState.name === "needApprove") {
+                approveToken0();
+              }
+            }}
             disabled={swapButtonState.disabled}
             style={{ width: "90%", height: "55px", fontSize: "1.5em" }}
           >
-            {swapButtonState.text}
+            {swapButtonState.name === "needApprove" ? swapButtonState.text + " " + token0.symbol : swapButtonState.text}
           </Button>
         </div>
       </>

@@ -1,6 +1,7 @@
 // utils
 import { BigNumber, ethers } from "ethers";
 import ERC20_ABI from "../../abis/erc20.json";
+import { getContract } from "../../chain/eth";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 
 const GAS_PRICE = {
@@ -18,22 +19,32 @@ function getGasPrice() {
   return GAS_PRICE_GWEI.default;
 }
 
+export async function approve(account, library, token, spenderAddress = PCS_ROUTER_ADDRESS) {
+  const erc20Contract = getContract(token.address, ERC20_ABI, library, account);
+  try {
+    const tx = await erc20Contract.approve(spenderAddress, ethers.constants.MaxUint256);
+    const receipt = await tx.await();
+    console.log(`receipt`, receipt);
+  } catch (e) {
+    console.log(`Cannot approve token: ${token.symbol}`, e);
+    return false;
+  }
+}
+
 async function multiCall(multiCallContract, abi, calls) {
   const itf = new ethers.utils.Interface(abi);
   const callData = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);
   return await multiCallContract.callStatic.aggregate(callData);
 }
 
-const UINT_MAX = BigNumber.from(2).pow(256).sub(1);
 // TODO: Update this to use getContract and multicall
 export async function hasEnoughAllowance(
   multicallContract,
   token,
   ownerAddress,
   spenderAddress = PCS_ROUTER_ADDRESS,
-  amount = UINT_MAX,
+  amount = ethers.constants.MaxUint256,
 ) {
-  console.log(`allowance token`, token);
   if (token.isNative) {
     return true;
   }
@@ -89,9 +100,6 @@ export function convertTextToUnint256(s, token) {
 
 function defaultDeadline() {
   return Math.floor(Date.now() / 1000) + 60 * 10; // 1 minutes
-}
-
-export async function approve() {
 }
 
 const defaultOptions = {};

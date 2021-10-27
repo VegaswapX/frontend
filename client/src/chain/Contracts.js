@@ -12,8 +12,3 @@ export const BPOOLS = [
   { poolName: "USDT-VGA", address: POOL1, description: "Stake USDT and earn VGA. The stake amount will be locked for the specified time. After the expiration the stake token will be returned together with the reward", per: "VGA per USDT"},
   //{poolName: "USDT", poolAddress: POOL2}
 ];
-
-export function getContract(name) {
-  console.log(">>> getContract " + name);
-}
-

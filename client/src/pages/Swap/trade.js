@@ -24,6 +24,7 @@ export async function hasEnoughAllowance(erc20Contract, token, ownerAddress, spe
     return true;
   }
 
+  // TODO: Make this ERC20 contract for each address
   const res = await erc20Contract.callStatic.allowance(ownerAddress, spenderAddress)
       .catch((e) => {
         console.log("Failed to get allowance", e);
@@ -39,17 +40,14 @@ export async function hasEnoughAllowance(erc20Contract, token, ownerAddress, spe
 }
 
 export function toUint256(amount, token) {
-  console.log("token " + token.decimals);
   return BigNumber.from(Math.round(amount * 1000000)).mul(
     BigNumber.from(10).pow(token.decimals - 6),
   );
 }
 
 export function toFloatNumber(amount, token) {
-  console.log(`amount`, amount.toString());
   // check token decimals
   const y = amount.div(BigNumber.from(10).pow(12));
-  console.log(`y`, y);
   return y.toNumber() / Math.pow(10, 6);
 }
 

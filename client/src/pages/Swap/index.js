@@ -31,56 +31,56 @@ function TokenInputUI(
   const tokenContractIn = useContract(currencyIn.contract, VEGA_CONTRACT_ABI, true);
   const tokenContractOut = useContract(currencyOut.contract, VEGA_CONTRACT_ABI, true);
 
-  const [bal, setBalance] = useState();
-  const [balOut, setBalanceOut] = useState();
+  // const [bal, setBalance] = useState();
+  // const [balOut, setBalanceOut] = useState();
 
-  useEffect(() => {
-    if (!!account && !!library) {
-      let stale = false;
+  // useEffect(() => {
+  //   if (!!account && !!library) {
+  //     let stale = false;
 
-      tokenContractIn.callStatic
-        .balanceOf(account)
-        .then((x) => {
-          if (!stale) {
-            x = x / 10 ** 18;
-            x = Math.round(x*100)/100;
-            setBalance(x);
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBalance(null);
-          }
-        });
+  //     tokenContractIn.callStatic
+  //       .balanceOf(account)
+  //       .then((x) => {
+  //         if (!stale) {
+  //           x = x / 10 ** 18;
+  //           x = Math.round(x*100)/100;
+  //           setBalance(x);
+  //         }
+  //       })
+  //       .catch(() => {
+  //         if (!stale) {
+  //           setBalance(null);
+  //         }
+  //       });
 
-      return () => {
-        stale = true;
-        setBalance(undefined);
-      };
-    }
-  }, [account, library, chainId, tokenContractIn]);
+  //     return () => {
+  //       stale = true;
+  //       setBalance(undefined);
+  //     };
+  //   }
+  // }, [account, library, chainId, tokenContractIn]);
 
-  useEffect(() => {
-    if (!!account && !!library) {
-      let stale = false;
+  // useEffect(() => {
+  //   if (!!account && !!library) {
+  //     let stale = false;
 
-      tokenContractOut.callStatic
-        .balanceOf(account)
-        .then((x) => {
-          if (!stale) {
-            x = x / 10 ** 18;
-            x = Math.round(x*100)/100;
-            setBalanceOut(x);
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBalanceOut(null);
-          }
-        });
+  //     tokenContractOut.callStatic
+  //       .balanceOf(account)
+  //       .then((x) => {
+  //         if (!stale) {
+  //           x = x / 10 ** 18;
+  //           x = Math.round(x*100)/100;
+  //           setBalanceOut(x);
+  //         }
+  //       })
+  //       .catch(() => {
+  //         if (!stale) {
+  //           setBalanceOut(null);
+  //         }
+  //       });
       
-    }
-  }, [account, library, chainId, tokenContractOut]);
+  //   }
+  // }, [account, library, chainId, tokenContractOut]);
 
   return (
     <div
@@ -110,7 +110,7 @@ function TokenInputUI(
           }}
         >
           {/* {tokenSelect === "tokenIn" ? currencyIn.symbol : currencyOut.symbol} */}
-          <p>Balance {tokenSelect === "tokenIn" ? bal : balOut}</p>
+          {/* <p>Balance {tokenSelect === "tokenIn" ? bal : balOut}</p> */}
         </div>
 
         <FormControl
@@ -227,64 +227,68 @@ const PageSwapInner = () => {
   // TODO handle in tokenui
   async function swap() {
     // TODO: Duplicate code
-    let slip = store.getState().slippageReducer.value;
-    let token0 = store.getState().tokenReducer.tokenIn;
-    let token1 = store.getState().tokenReducer.tokenOut;
-    console.log(`slippage`, slip);
-    console.log(`token0`, token0);
-    console.log(`token1`, token1);
+    try {
+      let slip = store.getState().tradingReducer.slippage;
+      let token0 = store.getState().tokenReducer.tokenIn;
+      let token1 = store.getState().tokenReducer.tokenOut;
+      console.log(`slippage`, slip);
+      console.log(`token0`, token0);
+      console.log(`token1`, token1);
 
-    if (routerContract === null) {
-      console.log("You don't connect to bsc mainnet");
-      return;
-    }
+      if (routerContract === null) {
+        console.log("Not connected to BSC Mainnet");
+        return;
+      }
 
-    const amountIn = trade.convertTextToUnint256(token0Input, token0);
+      const amountIn = trade.convertTextToUnint256(token0Input, token0);
 
-    console.log(`amountIn: ${amountIn}`);
-    const result = await trade.getAmountsOut(routerContract, amountIn, [
-      token0,
-      token1,
-    ]);
+      console.log(`amountIn: ${amountIn}`);
+      const result = await trade.getAmountsOut(routerContract, amountIn, [
+        token0,
+        token1,
+      ]);
 
-    // TODO: didn't the case we have error
-    if (!result.error) {
-      let amountOut = result.data;
-      console.log("amountOut " + amountOut);
-      // calculate slippage
-      const amountOutMin = amountOut
-        .mul(Math.round((1 - slip) * 1000))
-        .div(1000);
-      console.log("amountOutMin " + amountOutMin);
+      // TODO: didn't the case we have error
+      if (!result.error) {
+        let amountOut = result.data;
+        console.log("amountOut " + amountOut);
+        // calculate slippage
+        const amountOutMin = amountOut
+          .mul(Math.round((1 - slip) * 1000))
+          .div(1000);
+        console.log("amountOutMin " + amountOutMin);
 
-      // TODO set loading while pending
-      try {
-        setLoading(true);
-        const result = await trade.swap(
-          routerContract,
-          amountIn,
-          amountOutMin,
-          [token0, token1],
-          account,
-        );
-        const [status, statusInfo] = result;
-        if (status === 1) {
-          const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
-          const msg = (
-            <a target="_blank" href={link}>
-              Swap successful
-            </a>
+        // TODO set loading while pending
+        try {
+          setLoading(true);
+          const result = await trade.swap(
+            routerContract,
+            amountIn,
+            amountOutMin,
+            [token0, token1],
+            account,
           );
-          toast.success(msg);
-          setLoading(false);
-        } else {
-          toast.error(statusInfo.message);
+          const [status, statusInfo] = result;
+          if (status === 1) {
+            const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
+            const msg = (
+              <a target="_blank" href={link}>
+                Swap successful
+              </a>
+            );
+            toast.success(msg);
+            setLoading(false);
+          } else {
+            toast.error(statusInfo.message);
+            setLoading(false);
+          }
+        } catch {
+          toast.error("error with trade");
           setLoading(false);
         }
-      } catch {
-        toast.error("error with trade");
-        setLoading(false);
       }
+    } catch {
+      toast.error("error with swap")
     }
   }
 

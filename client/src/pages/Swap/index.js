@@ -45,7 +45,6 @@ const PageSwapInner = () => {
   const debounceOnChange = useMemo(
     () =>
       _.debounce(async (e) => {
-        console.log(`running debounce`);
         await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
       }, 500),
     [routerContract],
@@ -100,73 +99,68 @@ const PageSwapInner = () => {
     debounceOnChange(e);
   }
 
-  // Rewrite swap that supports both ETH->Token and Token->Token
-  // float number should work properly
-  // TODO handle in tokenui
+  // TODO: Double check this function, because of failed merge from prev commit
   async function swap() {
-    // TODO: Duplicate code
+    let slippage = store.getState().swapReducer.slippage;
+    const [token0, token1] = store.getState().swapReducer.tokenPath;
+    console.log(`slippage`, slippage);
+    console.log(`token0`, token0);
+    console.log(`token1`, token1);
+
+    if (routerContract === null) {
+      console.log("Not connected to BSC Mainnet");
+      return;
+    }
+
+    const amountIn = trade.convertTextToUnint256(token0Input, token0);
+
+    console.log(`amountIn: ${amountIn}`);
+    const result = await trade.getAmountsOut(routerContract, amountIn, [
+      token0,
+      token1,
+    ]);
+
+    if (result.error === true) {
+      // handle error message properly here
+      return;
+    }
+
+
+    let amountOut = result.data;
+    console.log("amountOut " + amountOut);
+    // calculate slippage
+    const amountOutMin = amountOut
+        .mul(Math.round((1 - slippage) * 1000))
+        .div(1000);
+    console.log("amountOutMin " + amountOutMin);
+
+    // TODO set loading while pending
     try {
-      let slip = store.getState().tradingReducer.slippage;
-      let token0 = store.getState().tokenReducer.tokenIn;
-      let token1 = store.getState().tokenReducer.tokenOut;
-      console.log(`slippage`, slip);
-      console.log(`token0`, token0);
-      console.log(`token1`, token1);
-
-      if (routerContract === null) {
-        console.log("Not connected to BSC Mainnet");
-        return;
-      }
-
-      const amountIn = trade.convertTextToUnint256(token0Input, token0);
-
-      console.log(`amountIn: ${amountIn}`);
-      const result = await trade.getAmountsOut(routerContract, amountIn, [
-        token0,
-        token1,
-      ]);
-
-      // TODO: didn't the case we have error
-      if (!result.error) {
-        let amountOut = result.data;
-        console.log("amountOut " + amountOut);
-        // calculate slippage
-        const amountOutMin = amountOut
-          .mul(Math.round((1 - slip) * 1000))
-          .div(1000);
-        console.log("amountOutMin " + amountOutMin);
-
-        // TODO set loading while pending
-        try {
-          setLoading(true);
-          const result = await trade.swap(
-            routerContract,
-            amountIn,
-            amountOutMin,
-            [token0, token1],
-            account,
-          );
-          const [status, statusInfo] = result;
-          if (status === 1) {
-            const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
-            const msg = (
-              <a target="_blank" href={link}>
-                Swap successful
-              </a>
-            );
-            toast.success(msg);
-            setLoading(false);
-          } else {
-            toast.error(statusInfo.message);
-            setLoading(false);
-          }
-        } catch {
-          toast.error("error with trade");
-          setLoading(false);
-        }
+      setLoading(true);
+      const result = await trade.swap(
+          routerContract,
+          amountIn,
+          amountOutMin,
+          [token0, token1],
+          account,
+      );
+      const [status, statusInfo] = result;
+      if (status === 1) {
+        const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
+        const msg = (
+            <a target="_blank" href={link}>
+              Swap successful
+            </a>
+        );
+        toast.success(msg);
+        setLoading(false);
+      } else {
+        toast.error(statusInfo.message);
+        setLoading(false);
       }
     } catch {
-      toast.error("error with swap")
+      toast.error("error with trade");
+      setLoading(false);
     }
   }
 

@@ -1,5 +1,6 @@
 // utils
 import { BigNumber, ethers } from "ethers";
+import ERC20_ABI from "../../abis/erc20.json";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 
 const GAS_PRICE = {
@@ -17,32 +18,46 @@ function getGasPrice() {
   return GAS_PRICE_GWEI.default;
 }
 
-const INFINITE = -1;
+async function multiCall(multiCallContract, abi, calls) {
+  const itf = new ethers.utils.Interface(abi);
+  const callData = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);
+  return await multiCallContract.callStatic.aggregate(callData);
+}
+
+const UINT_MAX = BigNumber.from(2).pow(256).sub(1);
 // TODO: Update this to use getContract and multicall
 export async function hasEnoughAllowance(
-  erc20Contract,
+  multicallContract,
   token,
   ownerAddress,
   spenderAddress = PCS_ROUTER_ADDRESS,
-  amount = INFINITE,
+  amount = UINT_MAX,
 ) {
+  console.log(`allowance token`, token);
   if (token.isNative) {
     return true;
   }
 
-  // TODO: Make this ERC20 contract for each address
-  const res = await erc20Contract.callStatic.allowance(ownerAddress, spenderAddress)
-    .catch((e) => {
-      console.log("Failed to get allowance", e);
-      return false;
-    });
+  const calls = [
+    {
+      address: token.address,
+      name: "allowance",
+      params: [ownerAddress, spenderAddress],
+    },
+  ];
 
-  if (res.toString() === "0") {
+  const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
+  // DEBUG
+  console.log(`returnData`, returnData);
+  const allowance0 = BigNumber.from(returnData[0]);
+
+  if (allowance0.toString() === "0") {
     return false;
   }
 
+  return true;
+
   // check amount to return true
-  console.log(`res`, res);
 }
 
 export function toUint256(amount, token) {

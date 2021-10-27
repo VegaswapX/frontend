@@ -3,15 +3,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
-import ERC20_ABI from "../../abis/erc20.json";
-import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
+import MULTICALL_ABI from "../../abis/Multicall.json";
 import ROUTER_ABI from "../../abis/Router.json";
 import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 import "./style.css";
 
 import { useSelector } from "react-redux";
-import { Chains } from "../../chain/constant";
+import { Chains, MULTICALL_ADDR } from "../../chain/constant";
 import { store } from "../../redux/store";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
@@ -33,7 +32,7 @@ const PageSwapInner = () => {
   const { account, chainId } = useWeb3React();
 
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
-  const erc20Contract = useContract(`0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d`, ERC20_ABI, true);
+  const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
   const [token0Input, setToken0Input] = useState(0);
@@ -163,13 +162,16 @@ const PageSwapInner = () => {
   }
 
   useEffect(async () => {
-    if (erc20Contract === null) {
-      console.log(`User doesn't connect to bsc network`);
+    console.log(`check allowance for account`, account);
+    const res = await trade.hasEnoughAllowance(multiCallContract, token1, account); // always check token0
+
+    if (res === true) {
       return;
     }
-    console.log(`check allowance`);
-    const res = await trade.hasEnoughAllowance(erc20Contract, token1, account);
-  }, [erc20Contract, token0, token1, account]);
+
+    // add approve button
+    console.log(`res`, res);
+  }, [multiCallContract, token0, token1, account]);
 
   const tokenInputUI = TokenInput(token0Input, token0, handleTokenInputChange, {
     disabled: tokenInputDisabled,

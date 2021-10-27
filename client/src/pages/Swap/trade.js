@@ -37,6 +37,28 @@ async function multiCall(multiCallContract, abi, calls) {
   return await multiCallContract.callStatic.aggregate(callData);
 }
 
+export async function fetchAccountBalances(
+    multicallContract,
+    tokenPath,
+    ownerAddress,
+) {
+  const [token0, token1] = tokenPath;
+  const calls = [
+    {
+      address: token0.address,
+      name: "balanceOf",
+      params: [ownerAddress],
+    },
+    {
+      address: token1.address,
+      name: "balanceOf",
+      params: [ownerAddress],
+    },
+  ];
+
+  const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
+}
+
 // TODO: Update this to use getContract and multicall
 export async function hasEnoughAllowance(
   multicallContract,

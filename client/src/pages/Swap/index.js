@@ -64,8 +64,7 @@ const PageSwapInner = () => {
       return;
     }
 
-    console.log(`Running here`);
-    // TODO: Change back to token0
+    // TODO: Handle network delay, which already happened
     const res = await trade.hasEnoughAllowance(multiCallContract, token0, account); // always check token0
     console.log(`res allowance`, res);
 
@@ -119,12 +118,6 @@ const PageSwapInner = () => {
     setToken0Input(amountText);
     debounceOnChange(e);
   }
-
-  // Keep it here to DEBUG later
-  // const approveToken0 = useMemo(async () => {
-  //   return async () => {
-  //   }
-  // }, [account, library])
 
   async function approveToken0() {
     const [token0] = store.getState().swapReducer.tokenPath;

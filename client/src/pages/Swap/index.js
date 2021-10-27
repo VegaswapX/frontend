@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
-import React, {useEffect, useMemo, useState} from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import React, { useMemo, useState, useEffect } from "react";
+import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import ROUTER_ABI from "../../abis/Router.json";
@@ -8,6 +8,7 @@ import ERC20_ABI from "../../abis/erc20.json";
 import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 import "./style.css";
+import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 
 import { Chains } from "../../chain/constant";
 import { store } from "../../redux/store";
@@ -15,6 +16,132 @@ import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
 import * as trade from "./trade.js";
 import {useSelector} from "react-redux";
+
+function TokenInputUI(
+  tokenInput,
+  tokenSelect,
+  handleChange,
+  opts = { disabled: false },
+) {
+  const { disabled } = opts;
+
+  const { account, library, chainId } = useWeb3React();
+
+  let currencyIn = store.getState().tokenReducer.tokenIn;
+  let currencyOut = store.getState().tokenReducer.tokenOut;
+
+  console.log("currencyIn.contract " + currencyIn.contract);  
+
+  const tokenContractIn = useContract(currencyIn.contract, VEGA_CONTRACT_ABI, true);
+  const tokenContractOut = useContract(currencyOut.contract, VEGA_CONTRACT_ABI, true);
+
+  // const [bal, setBalance] = useState();
+  // const [balOut, setBalanceOut] = useState();
+
+  // useEffect(() => {
+  //   if (!!account && !!library) {
+  //     let stale = false;
+
+  //     tokenContractIn.callStatic
+  //       .balanceOf(account)
+  //       .then((x) => {
+  //         if (!stale) {
+  //           x = x / 10 ** 18;
+  //           x = Math.round(x*100)/100;
+  //           setBalance(x);
+  //         }
+  //       })
+  //       .catch(() => {
+  //         if (!stale) {
+  //           setBalance(null);
+  //         }
+  //       });
+
+  //     return () => {
+  //       stale = true;
+  //       setBalance(undefined);
+  //     };
+  //   }
+  // }, [account, library, chainId, tokenContractIn]);
+
+  // useEffect(() => {
+  //   if (!!account && !!library) {
+  //     let stale = false;
+
+  //     tokenContractOut.callStatic
+  //       .balanceOf(account)
+  //       .then((x) => {
+  //         if (!stale) {
+  //           x = x / 10 ** 18;
+  //           x = Math.round(x*100)/100;
+  //           setBalanceOut(x);
+  //         }
+  //       })
+  //       .catch(() => {
+  //         if (!stale) {
+  //           setBalanceOut(null);
+  //         }
+  //       });
+      
+  //   }
+  // }, [account, library, chainId, tokenContractOut]);
+
+  return (
+    <div
+      style={{
+        background: "#22262c",
+        height: "70px",
+        borderRadius: "10px",
+        width: "100%",
+        padding: "5px",
+      }}
+    >
+      <InputGroup className="mb-3">
+        <div
+          style={{
+            marginLeft: "5px",
+            marginTop: "5px",
+          }}
+        >
+          {tokenSelect === "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />}
+        </div>
+
+        
+        <div
+          style={{
+            marginLeft: "5px",
+            marginTop: "5px",
+          }}
+        >
+          {/* {tokenSelect === "tokenIn" ? currencyIn.symbol : currencyOut.symbol} */}
+          {/* <p>Balance {tokenSelect === "tokenIn" ? bal : balOut}</p> */}
+        </div>
+
+        <FormControl
+          size="lg"
+          type="number"
+          placeholder="Amount"
+          aria-label="Amount"
+          aria-describedby="token0Input"
+          value={tokenInput}
+          disabled={disabled}
+          style={{
+            textAlign: "left",
+            fontFamily: "Helvetica",
+            fontSize: "1.3rem",
+            height: "50px",
+            border: "none",
+            marginTop: "5px",
+            marginLeft: "20px",
+            background: "#1f2125",
+          }}
+          onChange={handleChange}
+        />
+      </InputGroup>
+    </div>
+  );
+}
+
 
 const swapButtonStates = {
   wrongNetwork: {
@@ -103,63 +230,68 @@ const PageSwapInner = () => {
   // TODO handle in tokenui
   async function swap() {
     // TODO: Duplicate code
-    let slippage = store.getState().swapReducer.slippage;
-    const [token0, token1] = store.getState().swapReducer.tokenPath;
-
-    console.log(`slippage`, slippage);
-    console.log(`token0`, token0);
-    console.log(`token1`, token1);
-
-    if (routerContract === null) {
-      console.log("You don't connect to bsc mainnet");
-      return;
-    }
-
-    const amountIn = trade.convertTextToUnint256(token0Input, token0);
-    console.log(`amountIn: ${amountIn}`);
-    const result = await trade.getAmountsOut(routerContract, amountIn, [
-      token0,
-      token1,
-    ]);
-
-    if (result.error === true) {
-      return;
-    }
-
-    let amountOut = result.data;
-    console.log("amountOut " + amountOut);
-    // calculate slippage
-    const amountOutMin = amountOut
-      .mul(Math.round((1 - slippage) * 1000))
-      .div(1000);
-    console.log("amountOutMin " + amountOutMin);
-
     try {
-      setLoading(true);
-      const result = await trade.swap(
-        routerContract,
-        amountIn,
-        amountOutMin,
-        [token0, token1],
-        account,
-      );
-      const [status, statusInfo] = result;
-      if (status === 1) {
-        const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
-        const msg = (
-          <a target="_blank" href={link}>
-            Swap successful
-          </a>
-        );
-        toast.success(msg);
-        setLoading(false);
-      } else {
-        toast.error(statusInfo.message);
-        setLoading(false);
+      let slip = store.getState().tradingReducer.slippage;
+      let token0 = store.getState().tokenReducer.tokenIn;
+      let token1 = store.getState().tokenReducer.tokenOut;
+      console.log(`slippage`, slip);
+      console.log(`token0`, token0);
+      console.log(`token1`, token1);
+
+      if (routerContract === null) {
+        console.log("Not connected to BSC Mainnet");
+        return;
+      }
+
+      const amountIn = trade.convertTextToUnint256(token0Input, token0);
+
+      console.log(`amountIn: ${amountIn}`);
+      const result = await trade.getAmountsOut(routerContract, amountIn, [
+        token0,
+        token1,
+      ]);
+
+      // TODO: didn't the case we have error
+      if (!result.error) {
+        let amountOut = result.data;
+        console.log("amountOut " + amountOut);
+        // calculate slippage
+        const amountOutMin = amountOut
+          .mul(Math.round((1 - slip) * 1000))
+          .div(1000);
+        console.log("amountOutMin " + amountOutMin);
+
+        // TODO set loading while pending
+        try {
+          setLoading(true);
+          const result = await trade.swap(
+            routerContract,
+            amountIn,
+            amountOutMin,
+            [token0, token1],
+            account,
+          );
+          const [status, statusInfo] = result;
+          if (status === 1) {
+            const link = `https://bscscan.com/tx/${statusInfo.transactionHash}`;
+            const msg = (
+              <a target="_blank" href={link}>
+                Swap successful
+              </a>
+            );
+            toast.success(msg);
+            setLoading(false);
+          } else {
+            toast.error(statusInfo.message);
+            setLoading(false);
+          }
+        } catch {
+          toast.error("error with trade");
+          setLoading(false);
+        }
       }
     } catch {
-      toast.error("error with trade");
-      setLoading(false);
+      toast.error("error with swap")
     }
   }
 

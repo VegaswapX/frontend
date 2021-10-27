@@ -58,13 +58,13 @@ const PageSwapInner = () => {
   );
 
   // swapButtonState
+  // TODO: Handle network delay, which already happened
   useEffect(async () => {
     if (chainId !== Chains.BSC_MAINNET.chainId) {
       setSwapButtonState(swapButtonStates.wrongNetwork);
       return;
     }
 
-    // TODO: Handle network delay, which already happened
     const res = await trade.hasEnoughAllowance(multiCallContract, token0, account); // always check token0
     console.log(`res allowance`, res);
 
@@ -122,7 +122,7 @@ const PageSwapInner = () => {
   async function approveToken0() {
     const [token0] = store.getState().swapReducer.tokenPath;
     const res = await trade.approve(account, library, token0);
-    // TODO: Check if approve success or not
+    // TODO: Handle button state after approve success
   }
 
   // TODO: Double check this function, because of failed merge from prev commit

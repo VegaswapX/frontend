@@ -116,7 +116,7 @@ export const CurrencySelectOut = () => {
   );
 };
 
-export function CurrencySelector({token}) {
+export function CurrencySelector({ token }) {
   const [size] = useState(null);
   const [className] = useState(null);
   const [scroll] = useState(null);
@@ -128,15 +128,15 @@ export function CurrencySelector({token}) {
   };
 
   return (
-      <span>
+    <span>
       <CurrencyButton currency={token} toggle={toggle} />
 
       <Modal
-          show={modal}
-          onHide={toggle}
-          dialogClassName={className}
-          size={size}
-          scrollable={scroll}
+        show={modal}
+        onHide={toggle}
+        dialogClassName={className}
+        size={size}
+        scrollable={scroll}
       >
         <Modal.Header onHide={toggle} closeButton>
           <h4 className="modal-title">Select token</h4>
@@ -153,4 +153,4 @@ export function CurrencySelector({token}) {
       </Modal>
     </span>
   );
-};
+}

@@ -5,24 +5,24 @@
 //     opts = { disabled: false },
 //   ) {
 //     const { disabled } = opts;
-  
+
 //     const { account, library, chainId } = useWeb3React();
-  
+
 //     let currencyIn = store.getState().tokenReducer.tokenIn;
 //     let currencyOut = store.getState().tokenReducer.tokenOut;
-  
-//     console.log("currencyIn.contract " + currencyIn.contract);  
-  
+
+//     console.log("currencyIn.contract " + currencyIn.contract);
+
 //     const tokenContractIn = useContract(currencyIn.contract, VEGA_CONTRACT_ABI, true);
 //     const tokenContractOut = useContract(currencyOut.contract, VEGA_CONTRACT_ABI, true);
-  
+
 //     // const [bal, setBalance] = useState();
 //     // const [balOut, setBalanceOut] = useState();
-  
+
 //     // useEffect(() => {
 //     //   if (!!account && !!library) {
 //     //     let stale = false;
-  
+
 //     //     tokenContractIn.callStatic
 //     //       .balanceOf(account)
 //     //       .then((x) => {
@@ -37,18 +37,18 @@
 //     //           setBalance(null);
 //     //         }
 //     //       });
-  
+
 //     //     return () => {
 //     //       stale = true;
 //     //       setBalance(undefined);
 //     //     };
 //     //   }
 //     // }, [account, library, chainId, tokenContractIn]);
-  
+
 //     // useEffect(() => {
 //     //   if (!!account && !!library) {
 //     //     let stale = false;
-  
+
 //     //     tokenContractOut.callStatic
 //     //       .balanceOf(account)
 //     //       .then((x) => {
@@ -63,10 +63,10 @@
 //     //           setBalanceOut(null);
 //     //         }
 //     //       });
-        
+
 //     //   }
 //     // }, [account, library, chainId, tokenContractOut]);
-  
+
 //     return (
 //       <div
 //         style={{
@@ -86,8 +86,7 @@
 //           >
 //             {/* {tokenSelect === "tokenIn" ? <CurrencySelectIn /> : <CurrencySelectOut />} */}
 //           </div>
-  
-          
+
 //           <div
 //             style={{
 //               marginLeft: "5px",
@@ -97,7 +96,7 @@
 //             {/* {tokenSelect === "tokenIn" ? currencyIn.symbol : currencyOut.symbol} */}
 //             {/* <p>Balance {tokenSelect === "tokenIn" ? bal : balOut}</p> */}
 //           </div>
-  
+
 //           <FormControl
 //             size="lg"
 //             type="number"
@@ -122,5 +121,3 @@
 //       </div>
 //     );
 //   }
-  
-  

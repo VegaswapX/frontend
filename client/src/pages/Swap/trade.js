@@ -1,6 +1,6 @@
 // utils
 import { BigNumber, ethers } from "ethers";
-import {PCS_ROUTER_ADDRESS} from "./addr";
+import { PCS_ROUTER_ADDRESS } from "./addr";
 
 const GAS_PRICE = {
   default: "5",
@@ -19,17 +19,23 @@ function getGasPrice() {
 
 const INFINITE = -1;
 // TODO: Update this to use getContract and multicall
-export async function hasEnoughAllowance(erc20Contract, token, ownerAddress, spenderAddress = PCS_ROUTER_ADDRESS, amount = INFINITE, ) {
+export async function hasEnoughAllowance(
+  erc20Contract,
+  token,
+  ownerAddress,
+  spenderAddress = PCS_ROUTER_ADDRESS,
+  amount = INFINITE,
+) {
   if (token.isNative) {
     return true;
   }
 
   // TODO: Make this ERC20 contract for each address
   const res = await erc20Contract.callStatic.allowance(ownerAddress, spenderAddress)
-      .catch((e) => {
-        console.log("Failed to get allowance", e);
-        return false;
-      });
+    .catch((e) => {
+      console.log("Failed to get allowance", e);
+      return false;
+    });
 
   if (res.toString() === "0") {
     return false;

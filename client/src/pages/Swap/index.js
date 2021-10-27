@@ -21,6 +21,10 @@ const swapButtonStates = {
     disabled: true,
     text: "Connect to BSC network",
   },
+  needApprove: {
+    disabled: false,
+    text: "Approve ",
+  },
   correctNetwork: {
     disabled: false,
     text: "Swap",
@@ -35,6 +39,8 @@ const PageSwapInner = () => {
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
+  const [swapButtonState, setSwapButtonState] = useState(swapButtonStates.wrongNetwork);
+
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
 
@@ -48,14 +54,28 @@ const PageSwapInner = () => {
     [routerContract],
   );
 
-  let swapButtonState, tokenInputDisabled;
-  if (chainId === Chains.BSC_MAINNET.chainId) {
-    swapButtonState = swapButtonStates["correctNetwork"];
-    tokenInputDisabled = false;
-  } else {
-    swapButtonState = swapButtonStates["wrongNetwork"];
-    tokenInputDisabled = true;
-  }
+  // swapButtonState
+  useEffect(async () => {
+    if (chainId !== Chains.BSC_MAINNET.chainId) {
+      setSwapButtonState(swapButtonStates.wrongNetwork);
+      return;
+    }
+
+    console.log(`check allowance for account`, account);
+    // TODO: Change back to token0
+    const res = await trade.hasEnoughAllowance(multiCallContract, token1, account); // always check token0
+
+    if (res === true) {
+      setSwapButtonState(swapButtonStates["correctNetwork"]);
+      return;
+    }
+
+    // add approve button
+    console.log(`res`, res);
+    setSwapButtonState(swapButtonStates.needApprove);
+  }, [chainId]);
+
+  const tokenInputDisabled = false;
 
   async function setOutputAmountText(routerContract, e) {
     if (routerContract === null) {

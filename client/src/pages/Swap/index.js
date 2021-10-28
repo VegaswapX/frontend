@@ -68,27 +68,27 @@ const PageSwapInner = () => {
 
   // swapButtonState
   // TODO: Handle network delay, which already happened
-  useEffect(async () => {
-    if (chainId !== Chains.BSC_MAINNET.chainId) {
-      setSwapButtonState(swapButtonStates.wrongNetwork);
-      return;
-    }
-
-    const res = await trade.hasEnoughAllowance(
-      multiCallContract,
-      token0,
-      account
-    ); // always check token0
-    console.log(`res allowance`, res);
-
-    if (res === true) {
-      setSwapButtonState(swapButtonStates["correctNetwork"]);
-      return;
-    }
-
-    // add approve button
-    setSwapButtonState(swapButtonStates.needApprove);
-  }, [chainId, account]);
+  // useEffect(async () => {
+  //   if (chainId !== Chains.BSC_MAINNET.chainId) {
+  //     setSwapButtonState(swapButtonStates.wrongNetwork);
+  //     return;
+  //   }
+  //
+  //   const res = await trade.hasEnoughAllowance(
+  //     multiCallContract,
+  //     token0,
+  //     account
+  //   ); // always check token0
+  //   console.log(`res allowance`, res);
+  //
+  //   if (res === true) {
+  //     setSwapButtonState(swapButtonStates["correctNetwork"]);
+  //     return;
+  //   }
+  //
+  //   // add approve button
+  //   setSwapButtonState(swapButtonStates.needApprove);
+  // }, [chainId, account]);
 
   const tokenInputDisabled = false;
 

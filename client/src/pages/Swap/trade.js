@@ -19,10 +19,18 @@ function getGasPrice() {
   return GAS_PRICE_GWEI.default;
 }
 
-export async function approve(account, library, token, spenderAddress = PCS_ROUTER_ADDRESS) {
+export async function approve(
+  account,
+  library,
+  token,
+  spenderAddress = PCS_ROUTER_ADDRESS
+) {
   const erc20Contract = getContract(token.address, ERC20_ABI, library, account);
   try {
-    const tx = await erc20Contract.approve(spenderAddress, ethers.constants.MaxUint256);
+    const tx = await erc20Contract.approve(
+      spenderAddress,
+      ethers.constants.MaxUint256
+    );
     const receipt = await tx.await();
     console.log(`receipt`, receipt);
   } catch (e) {
@@ -33,14 +41,17 @@ export async function approve(account, library, token, spenderAddress = PCS_ROUT
 
 async function multiCall(multiCallContract, abi, calls) {
   const itf = new ethers.utils.Interface(abi);
-  const callData = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);
+  const callData = calls.map((call) => [
+    call.address.toLowerCase(),
+    itf.encodeFunctionData(call.name, call.params),
+  ]);
   return await multiCallContract.callStatic.aggregate(callData);
 }
 
 export async function fetchAccountBalances(
-    multicallContract,
-    tokenPath,
-    ownerAddress,
+  multicallContract,
+  tokenPath,
+  ownerAddress
 ) {
   const [token0, token1] = tokenPath;
   const calls = [
@@ -65,7 +76,7 @@ export async function hasEnoughAllowance(
   token,
   ownerAddress,
   spenderAddress = PCS_ROUTER_ADDRESS,
-  amount = ethers.constants.MaxUint256,
+  amount = ethers.constants.MaxUint256
 ) {
   if (token.isNative) {
     return true;
@@ -95,7 +106,7 @@ export async function hasEnoughAllowance(
 
 export function toUint256(amount, token) {
   return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(token.decimals - 6),
+    BigNumber.from(10).pow(token.decimals - 6)
   );
 }
 
@@ -132,7 +143,7 @@ export async function swap(
   amountOutMin,
   tokenPath,
   to,
-  deadline = defaultDeadline(),
+  deadline = defaultDeadline()
 ) {
   const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
 
@@ -144,7 +155,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline,
+      deadline
     );
   }
   if (!!tokenPath[1].isNative) {
@@ -155,7 +166,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline,
+      deadline
     );
   }
 
@@ -165,7 +176,7 @@ export async function swap(
     amountOutMin,
     addressPath,
     to,
-    deadline,
+    deadline
   );
 }
 
@@ -178,7 +189,7 @@ async function swapExactETHForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactETHForTokens");
@@ -191,7 +202,7 @@ async function swapExactETHForTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, value: amountIn, gasPrice },
+      { ...defaultOptions, value: amountIn, gasPrice }
     );
     let receipt = await tx.wait();
     return [receipt.status, receipt];
@@ -208,7 +219,7 @@ async function swapExactTokensForETH(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactTokensForETH...");
@@ -228,7 +239,7 @@ async function swapExactTokensForETH(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice },
+      { ...defaultOptions, gasPrice }
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);
@@ -267,7 +278,7 @@ async function swapExactTokensForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapTokensForExactTokens...");
@@ -281,7 +292,7 @@ async function swapExactTokensForTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice },
+      { ...defaultOptions, gasPrice }
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);

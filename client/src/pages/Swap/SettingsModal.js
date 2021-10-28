@@ -78,8 +78,7 @@ export const SettingsModal = (props) => {
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>
-          {" "}
+          </Button>{" "}
         </Modal.Footer>
       </Modal>
       {/* </span> */}

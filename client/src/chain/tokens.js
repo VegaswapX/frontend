@@ -67,11 +67,10 @@ export const TokenList = {
     },
     WBNB: {
       address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-      image:
-        "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png?1547034615",
+      image: "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png?1547034615",
       dollarvolume: 0,
       name: "Binance Smart Chain BNB",
-      symbol: "BNB",
+      symbol: "WBNB",
       decimals: 18,
       isNative: true,
     },
@@ -95,5 +94,13 @@ export const TokenList = {
     },
   },
 };
+
+export function arrayTokenList(tokenList) {
+  let res = [];
+  for (const [k, v] of Object.entries(tokenList)) {
+    res.push(v);
+  }
+  return res;
+}
 
 export default tokens;

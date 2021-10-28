@@ -123,7 +123,7 @@ export const CurrencySelectOut = () => {
   );
 };
 
-export function CurrencySelector({ token }) {
+export function CurrencySelector({ token, tokenIndex }) {
   const [size] = useState(null);
   const [className] = useState(null);
   const [scroll] = useState(null);
@@ -133,6 +133,7 @@ export function CurrencySelector({ token }) {
   function toggle() {
     store.dispatch({ type: "ui/toggleTokenSelector" });
   };
+
 
   return (
     <span>
@@ -149,7 +150,7 @@ export function CurrencySelector({ token }) {
           <h4 className="modal-title">Select token</h4>
         </Modal.Header>
         <Modal.Body>
-          <Tokentable tokenSelect="tokenIn" />
+          <Tokentable tokenIndex={tokenIndex} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>

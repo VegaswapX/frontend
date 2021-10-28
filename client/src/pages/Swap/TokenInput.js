@@ -5,6 +5,7 @@ import { CurrencySelector } from "./CurrencySelect";
 export function TokenInput(
   tokenInput,
   token,
+  tokenIndex,
   handleChange,
   opts = { disabled: false },
 ) {
@@ -27,7 +28,7 @@ export function TokenInput(
             marginTop: "5px",
           }}
         >
-          <CurrencySelector token={token} />
+          <CurrencySelector token={token} tokenIndex={tokenIndex}/>
         </div>
 
         <FormControl

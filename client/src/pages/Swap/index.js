@@ -200,11 +200,11 @@ const PageSwapInner = () => {
     }
   }
 
-  const tokenInputUI = TokenInput(token0Input, token0, handleTokenInputChange, {
+  const tokenInputUI = TokenInput(token0Input, token0, 0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
   });
 
-  const tokenOutputUI = TokenInput(token1Input, token1, () => {}, {
+  const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
     disabled: tokenInputDisabled,
   });
 

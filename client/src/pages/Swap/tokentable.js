@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { useTable } from "react-table";
-import { tokens } from "../../chain/tokens.js";
+import {arrayTokenList, TokenList} from "../../chain/tokens.js";
 import { store } from "../../redux/store";
 
-function Table({ tokenSelect, columns, data }) {
+function Table({ tokenIndex, columns, data }) {
+  // TODO: Fix tomorrow, some how 2 modals are opened at the same time
+  console.log(`tokenIndexi nxqdddddd`, tokenIndex);
   // selecting in or out?
   let selecting = store.getState().uiReducer.tokenSelect;
 
@@ -21,16 +23,25 @@ function Table({ tokenSelect, columns, data }) {
     data,
   });
 
-  function rowClick(row) {
-    console.log("rowClick >>>> " + selecting);
-    if (selecting == "tokenIn") {
-      store.dispatch({ type: "ui/togglemodalTokenIn" });
-      store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
-    } else if (selecting == "tokenOut") {
-      console.log("dispatch >>>> " + row.original.symbol);
-      store.dispatch({ type: "ui/togglemodalTokenOut" });
-      store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
-    }
+  function handleRowClick(row) {
+    // console.log("rowClick >>>> " + selecting);
+    // console.log(`row`, row);
+
+
+    const {symbol} = row.original;
+    store.dispatch({ type: "swap/setToken", payload: {
+        tokenIndex,
+        symbol
+      }});
+
+    // if (selecting == "tokenIn") {
+    //   store.dispatch({ type: "ui/togglemodalTokenIn" });
+    //   store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
+    // } else if (selecting == "tokenOut") {
+    //   console.log("dispatch >>>> " + row.original.symbol);
+    //   store.dispatch({ type: "ui/togglemodalTokenOut" });
+    //   store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
+    // }
 
     // row.selected = !row.selected;
   }
@@ -58,6 +69,7 @@ function Table({ tokenSelect, columns, data }) {
     Render the UI for your table
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
+  // TODO: Fix the key property
   return (
     // getTrProps={getTrProps}
     <table {...getTableProps()}>
@@ -74,16 +86,16 @@ function Table({ tokenSelect, columns, data }) {
       }
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
-          console.log(">> " + row);
           prepareRow(row);
           // row.onMouseEnter = function(){
           //   console.log("enter")
           // }
           return (
             <tr
+              key={i.toString()}
               {...row.getRowProps()}
               onClick={() => {
-                rowClick(row);
+                handleRowClick(row);
               }}
             >
               {row.cells.map((cell) => {
@@ -119,7 +131,7 @@ function Table({ tokenSelect, columns, data }) {
 
 // import Table from "./Table";
 
-function Tokentable({ tokenSelect }) {
+function Tokentable({ tokenIndex }) {
   const columns = useMemo(
     () => [
       {
@@ -151,9 +163,13 @@ function Tokentable({ tokenSelect }) {
     [],
   );
 
+
+  const tokens = arrayTokenList(TokenList.BSC);
+
+  // TODO: make TokenList.BSC to by chain variable later
   return (
     <div className="App">
-      <Table tokenSelect={tokenSelect} columns={columns} data={tokens} />
+      <Table tokenIndex={tokenIndex} columns={columns} data={tokens} />
     </div>
   );
 }

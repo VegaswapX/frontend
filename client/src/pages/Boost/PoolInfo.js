@@ -91,10 +91,14 @@ export function PoolInfo({ pool }) {
         x = x / 10 ** 18;
         setTotalAmountStaked(x.toString());
       });
+      //TODP call current reward instead?
       let rewardStep = 0;
       poolContract.callStatic.rewardSteps(rewardStep).then((x) => {
         setReward(x.toString());
       });
+      // poolContract.callStatic.currentReward().then((x) => {
+      //   setReward(x.toString());
+      // });
       poolContract.callStatic.maxYield().then((x) => {
         x = x / 10 ** 18;
         setMaxyield(x);

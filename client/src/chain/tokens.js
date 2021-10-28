@@ -50,7 +50,7 @@ export const TokenList = {
     USDC: {
       address: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
       image:
-          "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389",
+        "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389",
       dollarvolume: 0,
       name: "USD Coin",
       symbol: "USDC",
@@ -59,7 +59,7 @@ export const TokenList = {
     VGA: {
       address: "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
       image:
-          "https://assets.coingecko.com/coins/images/18397/large/big_logo.png?1631769696",
+        "https://assets.coingecko.com/coins/images/18397/large/big_logo.png?1631769696",
       dollarvolume: 0,
       name: "Vega Token",
       symbol: "VGA",
@@ -68,7 +68,7 @@ export const TokenList = {
     WBNB: {
       address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       image:
-          "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png?1547034615",
+        "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png?1547034615",
       dollarvolume: 0,
       name: "Binance Smart Chain BNB",
       symbol: "BNB",
@@ -78,7 +78,7 @@ export const TokenList = {
     USDT: {
       address: "0x55d398326f99059ff775485246999027b3197955",
       image:
-          "https://assets.coingecko.com/coins/images/325/large/Tether-logo.png?1598003707",
+        "https://assets.coingecko.com/coins/images/325/large/Tether-logo.png?1598003707",
       dollarvolume: 0,
       name: "USDT",
       symbol: "USDT",
@@ -87,13 +87,13 @@ export const TokenList = {
     BUSD: {
       address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
       image:
-          "https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1568947766",
+        "https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1568947766",
       dollarvolume: 0,
       name: "Binance USD",
       symbol: "BUSD",
       decimals: 18,
     },
-  }
+  },
 };
 
 export default tokens;

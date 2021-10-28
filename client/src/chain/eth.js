@@ -1,9 +1,9 @@
-import {useEffect, useMemo, useState} from "react";
-import {Contract} from "@ethersproject/contracts";
-import {useWeb3React, Web3ReactProvider} from "@web3-react/core";
-import {InjectedConnector} from "@web3-react/injected-connector";
-import {NetworkConnector} from "@web3-react/network-connector";
-import {Web3Provider} from "@ethersproject/providers";
+import { useEffect, useMemo, useState } from "react";
+import { Contract } from "@ethersproject/contracts";
+import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { NetworkConnector } from "@web3-react/network-connector";
+import { Web3Provider } from "@ethersproject/providers";
 
 export const BSC_MAINNET = 56;
 export const BSC_TESTNET = 97;

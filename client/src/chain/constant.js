@@ -1,4 +1,4 @@
-import {BSC_MAINNET, LOCAL_NET} from "./eth";
+import { BSC_MAINNET, LOCAL_NET } from "./eth";
 
 export const MULTICALL_ADDR = "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c";
 
@@ -12,4 +12,4 @@ const Chains = {
   },
 };
 
-export {Chains};
+export { Chains };

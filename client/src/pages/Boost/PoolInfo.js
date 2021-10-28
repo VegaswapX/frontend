@@ -85,9 +85,9 @@ export function PoolInfo({ pool }) {
         let z = statusPool(startTime, endTime);
         setPoolstatus(z);
       });
-      poolContract.callStatic.stakes(account).then((x) => {
-        let z = ethers.utils.formatEther(x[1].toString());
-        setTotalAmountStaked(z.toString());
+      poolContract.callStatic.totalAmountStaked().then((x) => {
+        //let z = ethers.utils.formatEther(x[1].toString());
+        setTotalAmountStaked(x[1].toString());
       });
       let rewardStep = 0;
       poolContract.callStatic.rewardSteps(rewardStep).then((x) => {
@@ -133,16 +133,18 @@ export function PoolInfo({ pool }) {
     return link;
   }
 
+  let pstaked = Math.round(100 * (totalAmountStaked / poolMaxStake));
+
   let data = [
     ["Name", pool.poolName],
     ["Description", pool.description],
-    ["Current reward", reward],
-    ["Start time<", startTimeF],
+    ["Current reward", reward + " " + pool.per],
+    ["Start time", startTimeF],
     ["End time", endTimeF],
     ["totalAmountStaked", totalAmountStaked],
     ["Max stake", poolMaxStake],
     ["Pool yield", poolYield],
-    ["% staked", totalAmountStaked / poolMaxStake],
+    ["% staked", pstaked],
     //["Pool address", shortenAddress(pool.address)],
   ];
 

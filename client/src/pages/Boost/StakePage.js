@@ -14,13 +14,9 @@ import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { VEGA_TOKEN_ADDRESS } from "../../chain/Contracts.js";
 import ApproveButton from "../../components/Buttons/ApproveButton";
 import { getContractA } from "../../chain/eth.js";
-import { parseEther } from "ethers/lib/utils";
-import StakeInfo from "./StakeInfo";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
 import { PoolInfo } from "./PoolInfo";
-import { hasEnoughAllowance } from "./StakeFunctions";
 import { MULTICALL_ADDR } from "../../chain/constant";
 import { useContract } from "../../chain/eth.js";
 import MULTICALL_ABI from "../../abis/Multicall.json";
@@ -32,6 +28,16 @@ const StakeForm = ({ pool }) => {
 
   const { account, library } = useWeb3React();
   const [modalStatus, setModalStatus] = useState(false);
+
+  const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
+  const [stakeAmount, setStakeamount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  //const [harvestActive, setHarvestActive] = useState(false);
+  const [stakedAmount, setStakedamount] = useState(0);
+  const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
+  const [approveEnabled, setApproveEnabled] = useState(false);
+
+
   let poolContract, vegaContract;
   vegaContract = getContractA(
     account,
@@ -49,28 +55,31 @@ const StakeForm = ({ pool }) => {
   } catch {
     console.log("error loading contract");
   }
-  const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
-  const [stakeAmount, setStakeamount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
 
-  const [approveEnabled, setApproveEnabled] = useState(false);
+  
 
   //reducerState.stakeAmount > 0 || reducerState.allowance <= 0
 
-  // useEffect(async () => {
-  //   //console.log("pool.address " + poolContract.address);
+  useEffect(async () => {
+    //console.log("pool.address " + poolContract.address);
 
-  //   //vegaContract.allowance.
-  //   const allowance = await hasEnoughAllowance(
-  //     multiCallContract,
-  //     VEGA_TOKEN_ADDRESS,
-  //     account,
-  //     poolContract.address
-  //   ); // always check token0
-  //   console.log(!allowance);
-  //   setApproveEnabled(!allowance);
-  // }, [poolContract]);
+    //vegaContract.allowance.
+    // const allowance = await hasEnoughAllowance(
+    //   multiCallContract,
+    //   VEGA_TOKEN_ADDRESS,
+    //   account,
+    //   poolContract.address
+    // ); // always check token0
+    // console.log(!allowance);
+    // setApproveEnabled(!allowance);
+
+    poolContract.callStatic.stakes(account).then((x) => {
+      //let z = ethers.utils.formatEther(x[1].toString());
+      setStakedamount(x[1].toString());
+    });
+
+
+  }, [poolContract]);
 
   const stake = async () => {
     //TODO check balance first
@@ -124,7 +133,7 @@ const StakeForm = ({ pool }) => {
     //approveF
   };
 
-  if (reducerState.stakeAmount < 1) {
+  if (stakedAmount == 0) {
     return (
       <>
         <Form>
@@ -155,6 +164,7 @@ const StakeForm = ({ pool }) => {
             approve={approve}
             //disabled={approveEnabled}
           />
+        
          
         </Form>
 
@@ -183,21 +193,19 @@ const StakeForm = ({ pool }) => {
     return <> Loading</>;
   } else {
     return (
-      <Card>
-        <Card.Body>
-          <h4 className="mb-3 header-title">Staked</h4>
-          <StakeInfo staked={reducerState.stakeAmount} />
-
+      <>         
+          StakedAmount: {stakedAmount} {pool.stakedUnit}
+          <br />
           <Button
             variant="primary"
             //onClick={unStake}
             className="m-1"
             disabled={reducerState.stakeAmount <= 0}
           >
+
             Harvest
-          </Button>
-        </Card.Body>
-      </Card>
+          </Button>   
+          </>     
     );
   }
 };

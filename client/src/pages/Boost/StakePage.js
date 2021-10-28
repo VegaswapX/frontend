@@ -71,15 +71,21 @@ const StakeForm = ({ pool }) => {
   }
 
   useEffect(async () => {
-    const allowance = await getAllowance(
-      multiCallContract,
-      stakeToken,
-      account,
-      poolContract.address
-    );
-    setAllowance(allowance);
-    setApproveEnabled(allowance == 0);
-    console.log("allowance >> " + allowance);
+    try {
+      console.log("stakeToken " + stakeToken)
+      const allowance = await getAllowance(
+        multiCallContract,
+        stakeToken,
+        account,
+        poolContract.address
+      );
+      setAllowance(allowance);
+      setApproveEnabled(allowance == 0);
+      console.log("allowance >> " + allowance);
+    } 
+      catch(error){
+
+      }
   }, [stakeToken]);
 
   //

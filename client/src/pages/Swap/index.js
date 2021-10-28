@@ -62,7 +62,7 @@ const PageSwapInner = () => {
     () =>
       _.debounce(async (e) => {
         await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
-      }, 500),
+      }, 300),
     [routerContract]
   );
 

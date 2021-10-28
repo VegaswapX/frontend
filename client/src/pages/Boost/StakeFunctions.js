@@ -60,38 +60,43 @@ export async function hasEnoughAllowance(
   // check amount to return true
 }
 
-export async function stakeF() {
-  // var stakeAmountDEC = ethers.BigNumber.from(stakeAmount).pow(18);
-  //   console.log("stake " + stakeAmountDEC);
+export async function stakeF(stakeAmount, poolContract) {
+  var stakeAmountDEC = ethers.BigNumber.from(stakeAmount).pow(18);
+  console.log("stake " + stakeAmountDEC);
   //   let minAmount = 1 * 10 ** 18;
-  //   try {
-  //     //TODO check maximum
-  //     if (stakeAmountDEC >= 0) {
-  //       await poolContract.stake(stakeAmountDEC);
-  //       dispatch(changeStakeAmount(stakeAmountDEC));
-  //       toast("Staking successful", {
-  //         className: "success",
-  //         bodyClassName: "grow-font-size",
-  //         progressClassName: "fancy-progress-bar",
-  //       });
-  //     } else {
-  //       toast("Minimum amount is " + minAmount, {
-  //         className: "success",
-  //         bodyClassName: "grow-font-size",
-  //         progressClassName: "fancy-progress-bar",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     toast("Staking error " + error.message, {
-  //       className: "success",
-  //       bodyClassName: "grow-font-size",
-  //       progressClassName: "fancy-progress-bar",
-  //     });
-  //     // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
-  //   } finally {
-  //     setLoading(false);
-  //     console.log("stake done");
-  //   }
+    try {
+      //TODO check maximum
+      if (stakeAmountDEC >= 0) {
+        const tx =  await poolContract.stake(stakeAmountDEC);
+        let receipt = await tx.wait();
+        console.log("receipt " + receipt);
+        console.log("receipt " + receipt.status);
+
+        
+        //dispatch(changeStakeAmount(stakeAmountDEC));
+        // toast("Staking successful", {
+        //   className: "success",
+        //   bodyClassName: "grow-font-size",
+        //   progressClassName: "fancy-progress-bar",
+        // });
+      } else {
+        // toast("Minimum amount is " + minAmount, {
+        //   className: "success",
+        //   bodyClassName: "grow-font-size",
+        //   progressClassName: "fancy-progress-bar",
+        // });
+      }
+    } catch (error) {
+      // toast("Staking error " + error.message, {
+      //   className: "success",
+      //   bodyClassName: "grow-font-size",
+      //   progressClassName: "fancy-progress-bar",
+      // });
+      // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+    } finally {
+      //setLoading(false);
+      console.log("stake done");
+    }
 }
 
 export async function approveF() {

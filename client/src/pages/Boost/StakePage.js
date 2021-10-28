@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
@@ -24,8 +24,12 @@ import { hasEnoughAllowance } from "./StakeFunctions";
 import { MULTICALL_ADDR } from "../../chain/constant";
 import { useContract } from "../../chain/eth.js";
 import MULTICALL_ABI from "../../abis/Multicall.json";
+import { stakeF, approveF } from "./StakeFunctions";
+import _ from "underscore";
 
 const StakeForm = ({ pool }) => {
+  console.log(" pool " + pool.address);
+
   const { account, library } = useWeb3React();
   const [modalStatus, setModalStatus] = useState(false);
   let poolContract, vegaContract;
@@ -69,10 +73,30 @@ const StakeForm = ({ pool }) => {
   // }, [poolContract]);
 
   const stake = async () => {
+    //TODO check balance first
     setLoading(true);
     // let stakeAmountDEC = stakeAmount * 10**18;
     //TODO
+    console.log("?? " + poolContract)
+    stakeF(stakeAmount, poolContract);
   };
+
+  const debounceOnChange = useMemo(
+    () =>
+      _.debounce(async (e) => {
+        //await setOutputAmountText(routerContract, e); 
+        console.log(">> " + e);
+      }, 300),
+    []
+  );
+
+  function handleStakeInput(e){
+    console.log(e);
+    const amountText = e.target.value;
+    console.log(amountText);
+    setStakeamount(amountText);
+    debounceOnChange(e);
+  }
 
   // const unStake = async () => {
   //   setLoading(true);
@@ -112,7 +136,7 @@ const StakeForm = ({ pool }) => {
             <input
               type="text"
               value={stakeAmount}
-              onChange={(e) => setStakeamount(e.target.value)}
+              onChange={handleStakeInput}
               className="stakeInput"
             />
           </Form.Group>
@@ -131,14 +155,7 @@ const StakeForm = ({ pool }) => {
             approve={approve}
             //disabled={approveEnabled}
           />
-
-          <Button
-            onClick={() => setModalStatus(true)}
-            variant={"primary"}
-            className="ms-1"
-          >
-            Details
-          </Button>
+         
         </Form>
 
         <Modal

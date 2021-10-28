@@ -4,9 +4,10 @@ import {Button} from "react-bootstrap";
 function ApproveButton({approveEnabled, approve}){
     if (!approveEnabled) {
         return (
-            <Button variant="secondary">
-                Approved
-            </Button>
+            // <Button variant="secondary">
+            //     Approved
+            // </Button>
+            <></>
         )   
     }    
     return (

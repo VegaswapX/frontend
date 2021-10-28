@@ -40,13 +40,9 @@ export async function approve(
 }
 
 export async function multiCall(multiCallContract, abi, calls) {
-  console.log("ABI " + abi);
-  console.log("calls " + calls[0]);
   const itf = new ethers.utils.Interface(abi);
   const callData = calls.map((call) => [
-    //TODO check why lowercase needed
-    //call.address.toLowerCase(),
-    call.address,
+    call.address.toLowerCase(),
     itf.encodeFunctionData(call.name, call.params),
   ]);
   return await multiCallContract.callStatic.aggregate(callData);

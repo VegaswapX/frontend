@@ -14,7 +14,6 @@ import { store } from "../../redux/store";
 
 import { PoolInfo } from "./Pool.js";
 
-
 function PoolRow({ pool }) {
   let modal = store.getState().uiReducer.poolInfo;
 

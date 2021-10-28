@@ -1,6 +1,13 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  FormControl,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
@@ -42,7 +49,9 @@ const PageSwapInner = () => {
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
-  const [swapButtonState, setSwapButtonState] = useState(swapButtonStates.wrongNetwork);
+  const [swapButtonState, setSwapButtonState] = useState(
+    swapButtonStates.wrongNetwork
+  );
 
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
@@ -54,7 +63,7 @@ const PageSwapInner = () => {
       _.debounce(async (e) => {
         await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
       }, 500),
-    [routerContract],
+    [routerContract]
   );
 
   // swapButtonState
@@ -65,7 +74,11 @@ const PageSwapInner = () => {
       return;
     }
 
-    const res = await trade.hasEnoughAllowance(multiCallContract, token0, account); // always check token0
+    const res = await trade.hasEnoughAllowance(
+      multiCallContract,
+      token0,
+      account
+    ); // always check token0
     console.log(`res allowance`, res);
 
     if (res === true) {
@@ -93,11 +106,10 @@ const PageSwapInner = () => {
       return;
     }
 
-    let result = await trade.getAmountsOut(
-      routerContract,
-      token0AmountEther,
-      [token0, token1],
-    );
+    let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
+      token0,
+      token1,
+    ]);
 
     if (!result.error) {
       const outAmount = result.data;
@@ -166,7 +178,7 @@ const PageSwapInner = () => {
         amountIn,
         amountOutMin,
         [token0, token1],
-        account,
+        account
       );
       const [status, statusInfo] = result;
       if (status === 1) {
@@ -246,7 +258,7 @@ const PageSwapInner = () => {
           {/*TODO: Refactor this button later */}
           <Button
             variant="primary"
-            onClick={function(e) {
+            onClick={function (e) {
               if (swapButtonState.name === "correctNetwork") {
                 swap();
               } else if (swapButtonState.name === "needApprove") {
@@ -256,7 +268,9 @@ const PageSwapInner = () => {
             disabled={swapButtonState.disabled}
             style={{ width: "90%", height: "55px", fontSize: "1.5em" }}
           >
-            {swapButtonState.name === "needApprove" ? swapButtonState.text + " " + token0.symbol : swapButtonState.text}
+            {swapButtonState.name === "needApprove"
+              ? swapButtonState.text + " " + token0.symbol
+              : swapButtonState.text}
           </Button>
         </div>
       </>

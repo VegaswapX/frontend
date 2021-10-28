@@ -2,10 +2,10 @@ import React, { useState, useEffect, useReducer } from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
-import { getContractA} from "../../chain/eth.js";
+import { getContractA } from "../../chain/eth.js";
 import { ethers } from "ethers";
 import { Table } from "react-bootstrap";
-import {Chains} from "../../chain/constant";
+import { Chains } from "../../chain/constant";
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -133,7 +133,7 @@ export function PoolInfo({ pool }) {
     return addr.substring(0, 5) + "..." + addr.substring(l - 3, l);
   }
 
-  function addressLink(addr){    
+  function addressLink(addr) {
     const link = `https://bscscan.com/address/${addr}`;
     return link;
   }
@@ -213,15 +213,18 @@ export function PoolInfo({ pool }) {
               <td>
                 {" "}
                 {
-                  pool === null ? "Error" : 
-                  <>
-                  {shortenAddress(pool.address)}&nbsp;
-                  <a target="_blank" href={addressLink(pool.address)}>
-                  {/* {shortenAddress(pool.address)} */}
-                  (Block explorer)
-                  </a>
-                  </>
-                  
+                  pool === null ? (
+                    "Error"
+                  ) : (
+                    <>
+                      {shortenAddress(pool.address)}&nbsp;
+                      <a target="_blank" href={addressLink(pool.address)}>
+                        {/* {shortenAddress(pool.address)} */}
+                        (Block explorer)
+                      </a>
+                    </>
+                  )
+
                   // ? `${pool.address.substring(0, 10)}`
                   // : ""
                 }

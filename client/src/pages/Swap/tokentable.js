@@ -61,8 +61,7 @@ function Table({ tokenSelect, columns, data }) {
   return (
     // getTrProps={getTrProps}
     <table {...getTableProps()}>
-      {
-        /* <thead>
+      {/* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -70,8 +69,7 @@ function Table({ tokenSelect, columns, data }) {
             ))}
           </tr>
         ))}
-      </thead> */
-      }
+      </thead> */}
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           console.log(">> " + row);
@@ -148,7 +146,7 @@ function Tokentable({ tokenSelect }) {
         ],
       },
     ],
-    [],
+    []
   );
 
   return (

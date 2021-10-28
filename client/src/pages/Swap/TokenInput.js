@@ -6,7 +6,7 @@ export function TokenInput(
   tokenInput,
   token,
   handleChange,
-  opts = { disabled: false },
+  opts = { disabled: false }
 ) {
   const { disabled } = opts;
 

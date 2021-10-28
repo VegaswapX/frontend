@@ -15,13 +15,13 @@ import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { VEGA_TOKEN_ADDRESS } from "../../chain/Contracts.js";
 import { BPOOLS } from "../../chain/Contracts.js";
 import ApproveButton from "../../components/Buttons/ApproveButton";
-import { useContract, getContractA} from "../../chain/eth.js";
+import { useContract, getContractA } from "../../chain/eth.js";
 import { parseEther } from "ethers/lib/utils";
 import StakeInfo from "./StakeInfo";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
-import {Chains} from "../../chain/constant";
+import { Chains } from "../../chain/constant";
 
 // components
 // import PageTitle from '../components/PageTitle';

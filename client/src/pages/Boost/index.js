@@ -5,7 +5,7 @@ import { Accordion } from "react-bootstrap";
 // import Balances from "./Balances";
 // components
 // import PageTitle from '../../components/PageTitle';
-import Stake from "./Stake.js";
+import StakePage from "./StakePage.js";
 import "react-toastify/dist/ReactToastify.css";
 import { BPOOLS } from "../../chain/Contracts.js";
 import { store } from "../../redux/store";
@@ -27,7 +27,7 @@ function PoolRow({ pool }) {
 
   return (
     <>
-      <Stake pool={pool} />
+      <StakePage pool={pool} />
     </>
   );
 }

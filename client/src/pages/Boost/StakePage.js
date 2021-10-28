@@ -1,5 +1,5 @@
 // @flow
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
@@ -20,6 +20,10 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
 import { PoolInfo } from "./Pool";
+import { hasEnoughAllowance } from "./StakeFunctions";
+import { Chains, MULTICALL_ADDR } from "../../chain/constant";
+import { useContract } from "../../chain/eth.js";
+import MULTICALL_ABI from "../../abis/Multicall.json";
 
 // components
 // import PageTitle from '../components/PageTitle';
@@ -41,9 +45,23 @@ const StakeForm = ({ pool }) => {
     pool.address,
     POOL_CONTRACT_ABI
   );
+  const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [stakeAmount, setStakeamount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
+
+  useEffect(async () => {
+
+    console.log("pool.address " + pool.address);
+
+    //vegaContract.allowance.
+    const res = await hasEnoughAllowance(
+      multiCallContract,
+      VEGA_TOKEN_ADDRESS,
+      account,
+      pool.address
+    ); // always check token0
+  }, [pool])
 
   const stake = async () => {
     setLoading(true);
@@ -115,10 +133,7 @@ const StakeForm = ({ pool }) => {
       console.log(vegaContract, "vegaContract");
       await vegaContract.approve(pool.address, approveAmount);
       dispatch(changeAllowanceAmount(approveAmount));
-      // await depositLpToken(vegaContract, lpContract, account, amount);
-      // addToast({ title: 'Deposit Success', description: "Successfully deposited", type: 'TOAST_SUCCESS' });
-      // tokenBalance.refetch();
-      // lpBalance.refetch();
+      
       toast("approve successful", {
         className: "success",
         bodyClassName: "grow-font-size",
@@ -131,7 +146,7 @@ const StakeForm = ({ pool }) => {
         bodyClassName: "grow-font-size",
         progressClassName: "fancy-progress-bar",
       });
-      // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+
     } finally {
       setLoading(false);
       //TODO reload amount
@@ -230,9 +245,9 @@ const StakeForm = ({ pool }) => {
   }
 };
 
-const Stake = ({ pool }) => {
+const StakePage = ({ pool }) => {
   const { account, library } = useWeb3React();
   if (!account || !library) return <div>Waiting</div>;
   return <StakeForm pool={pool} />;
 };
-export default Stake;
+export default StakePage;

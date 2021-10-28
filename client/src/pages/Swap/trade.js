@@ -39,7 +39,9 @@ export async function approve(
   }
 }
 
-async function multiCall(multiCallContract, abi, calls) {
+export async function multiCall(multiCallContract, abi, calls) {
+  console.log("ABI " + abi);
+  console.log("calls " + calls[0]);
   const itf = new ethers.utils.Interface(abi);
   const callData = calls.map((call) => [
     call.address.toLowerCase(),
@@ -110,10 +112,16 @@ export function toUint256(amount, token) {
   );
 }
 
+export function toFloatNumberN(amount, dec) {  
+  const y = amount.div(BigNumber.from(10).pow(12));
+  return y.toNumber() / Math.pow(10, dec);
+}
+
+
+//TODO clean
 export function toFloatNumber(amount, token) {
   // check token decimals
-  const y = amount.div(BigNumber.from(10).pow(12));
-  return y.toNumber() / Math.pow(10, 6);
+  toFloatNumberN(amount, 6);
 }
 
 export function convertTextToUnint256(s, token) {

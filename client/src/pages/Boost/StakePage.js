@@ -60,6 +60,12 @@ const StakeForm = ({ pool }) => {
 
   //reducerState.stakeAmount > 0 || reducerState.allowance <= 0
 
+  function rounded(amount){
+    amount = amount/10**18;
+    let rounded_amount = Math.round(amount*100)/100;
+    return rounded_amount;
+  }
+
   useEffect(async () => {
     //console.log("pool.address " + poolContract.address);
 
@@ -75,7 +81,8 @@ const StakeForm = ({ pool }) => {
 
     poolContract.callStatic.stakes(account).then((x) => {
       //let z = ethers.utils.formatEther(x[1].toString());
-      setStakedamount(x[1].toString());
+      let amount = x[1];              
+      setStakedamount(amount);
     });
 
 
@@ -194,7 +201,7 @@ const StakeForm = ({ pool }) => {
   } else {
     return (
       <>         
-          StakedAmount: {stakedAmount} {pool.stakedUnit}
+          StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit}
           <br />
           <Button
             variant="primary"

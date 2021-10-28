@@ -4,10 +4,10 @@ import { useWeb3React } from "@web3-react/core";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
 import { getAllowance } from "./StakeFunctions";
-import {
-  changeAllowanceAmount,
-  changeStakeAmount,
-} from "../../redux/poolinfo/actions";
+// import {
+//   changeAllowanceAmount,
+//   changeStakeAmount,
+// } from "../../redux/poolinfo/actions";
 
 // import { useWeb3React } from "@web3-react/core";
 import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
@@ -23,6 +23,7 @@ import { useContract } from "../../chain/eth.js";
 import MULTICALL_ABI from "../../abis/Multicall.json";
 import { stakeF, approveF } from "./StakeFunctions";
 import _ from "underscore";
+import { toast } from "react-toastify";
 
 const StakeForm = ({ pool }) => {
   console.log(" pool " + pool.address);
@@ -157,8 +158,21 @@ const StakeForm = ({ pool }) => {
   const approve = async () => {
     console.log("call approve");
     console.log("stakeToken " + stakeToken);
+    console.log("account, library " + account);
     //TODO contract depends on address of the pool
-    //approveF(poolContract, vegaContract)
+    let status, statusInfo;
+    try {
+      [status, statusInfo] = approveF(account, library, stakeToken, poolContract.address)
+      // console.log(">>> " + status)
+      // console.log(">>> " + statusInfo )
+      if (!status){
+        toast.error(statusInfo);
+      }
+    } catch(error){
+      // console.log("???");
+      // console.log(statusInfo);
+      // toast.error(statusInfo);
+    }
   };
 
   if (canStake) {

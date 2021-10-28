@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import ERC20_ABI from "../../abis/erc20.json";
 import { multiCall } from "../Swap/trade";
 import { toFloatNumberN } from "../Swap/trade";
+import { getContract } from "../../chain/eth";
 export const BIG_ZERO = new BigNumber(0);
 export const BIG_ONE = new BigNumber(1);
 export const BIG_NINE = new BigNumber(9);
@@ -109,26 +110,46 @@ export async function stakeF(stakeAmount, poolContract) {
   }
 }
 
-export async function approveF(poolContract, tokenContract) {
-  console.log("approve " + poolContract.address);
-  try {
-    //let approveAmount = parseEther("1000000");
-    // let approveAmount = 1000 * 10**18;
-    //console.log(vegaContract, "vegaContract");
-    // let tx = await tokenContract.approve(pool.address, approveAmount);
-    // console.log(tx);
-    //dispatch(changeAllowanceAmount(approveAmount));
-    // toast("approve successful", {
-    //   className: "success",
-    //   bodyClassName: "grow-font-size",
-    //   progressClassName: "fancy-progress-bar",
-    // });
-  } catch (error) {
-    console.log({ error });
-    //toast("approve failed", {
-  } finally {
-    //TODO reload amount
-    //check allowance
-    console.log("approve done");
-  }
+export async function approveF(account, library, tokenAddress,spenderAddress)
+{
+    const erc20Contract = getContract(tokenAddress, ERC20_ABI, library, account);
+    try {
+      const tx = await erc20Contract.approve(
+        spenderAddress,
+        ethers.constants.MaxUint256
+      );
+      const receipt = await tx.await();
+      console.log(`receipt`, receipt);
+      return [receipt, receipt.status];
+    } catch (e) {
+      console.log(`Cannot approve token: ${tokenAddress}`, e);
+      return [false, e];
+    }
+    
 }
+
+// export async function approveFF(poolContract, tokenContract) {
+//   console.log("approve " + poolContract.address);
+//   try {
+//     let approveAmount = 10000 * 10**18;
+//     //console.log(vegaContract, "vegaContract");
+//     const tx = await tokenContract.approve(pool.address, approveAmount);
+//     let receipt = await tx.wait();
+//     console.log(">> " + receipt);
+//     return [receipt.status, receipt];
+//     // console.log(tx);
+//     //dispatch(changeAllowanceAmount(approveAmount));
+//     // toast("approve successful", {
+//     //   className: "success",
+//     //   bodyClassName: "grow-font-size",
+//     //   progressClassName: "fancy-progress-bar",
+//     // });
+//   } catch (error) {
+//     console.log({ error });
+//     //toast("approve failed", {
+//   } finally {
+//     //TODO reload amount
+//     //check allowance
+//     console.log("approve done");
+//   }
+// }

@@ -59,9 +59,8 @@ const PageSwapInner = () => {
     [routerContract],
   );
 
-  // swapButtonState
+  // Set swapButton state
   useEffect(async () => {
-    console.log(`chainId`, chainId);
     if (chainId !== Chains.BSC_MAINNET.chainId) {
       setSwapButtonState(swapButtonStates.wrongNetwork);
       return;
@@ -83,7 +82,6 @@ const PageSwapInner = () => {
       return;
     }
 
-    // add approve button
     setSwapButtonState(swapButtonStates.needApprove);
   }, [multiCallContract, chainId, account]);
 
@@ -143,6 +141,7 @@ const PageSwapInner = () => {
   async function swap() {
     let slippage = store.getState().swapReducer.slippage;
     const [token0, token1] = store.getState().swapReducer.tokenPath;
+    // TODO: Double check slippage value and display on the form minimum received amount
     console.log(`slippage`, slippage);
     console.log(`token0`, token0);
     console.log(`token1`, token1);
@@ -165,7 +164,6 @@ const PageSwapInner = () => {
     }
 
     let amountOut = result.data;
-    // console.log("amountOut " + amountOut);
     // calculate slippage
     const amountOutMin = amountOut
       .mul(Math.round((1 - slippage) * 1000))
@@ -213,7 +211,7 @@ const PageSwapInner = () => {
   if (loading) {
     return (
       <>
-        <h1 style={{ textAlign: "center" }}>Transaction Pending</h1>
+        <h2 style={{ textAlign: "center" }}>Transaction Pending</h2>
       </>
     );
   } else {
@@ -257,7 +255,6 @@ const PageSwapInner = () => {
             textAlign: "center",
           }}
         >
-          {/*TODO: Refactor this button later */}
           <Button
             variant="primary"
             onClick={function(e) {
@@ -271,7 +268,7 @@ const PageSwapInner = () => {
             style={{ width: "90%", height: "55px", fontSize: "1.5em" }}
           >
             {swapButtonState.name === "needApprove"
-              ? swapButtonState.text + " " + token0.symbol
+              ? `${swapButtonState.text} ${token0.symbol}`
               : swapButtonState.text}
           </Button>
         </div>

@@ -9,7 +9,13 @@ function CurrencyButton(props) {
   return (
     <Button
       size="lg"
-      style={{ backgroundColor: "#1f2125", border: "none", height: "50px" }}
+      style={{
+        backgroundColor: "#1f2125",
+        border: "3px solid #333",
+        borderRadius: "8px",
+        height: "50px",
+        boxShadow: "none",
+      }}
       onClick={props.toggle}
     >
       <img

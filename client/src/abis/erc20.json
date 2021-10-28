@@ -28,6 +28,7 @@
     "name": "approve",
     "outputs": [
       {
+        "internalType": "bool",
         "name": "",
         "type": "bool"
       }

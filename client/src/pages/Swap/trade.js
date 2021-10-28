@@ -1,6 +1,8 @@
 // utils
 import { BigNumber, ethers } from "ethers";
-import {PCS_ROUTER_ADDRESS} from "./addr";
+import ERC20_ABI from "../../abis/erc20.json";
+import { getContract } from "../../chain/eth";
+import { PCS_ROUTER_ADDRESS } from "./addr";
 
 const GAS_PRICE = {
   default: "5",
@@ -17,39 +19,89 @@ function getGasPrice() {
   return GAS_PRICE_GWEI.default;
 }
 
-const INFINITE = -1;
+export async function approve(account, library, token, spenderAddress = PCS_ROUTER_ADDRESS) {
+  const erc20Contract = getContract(token.address, ERC20_ABI, library, account);
+  try {
+    const tx = await erc20Contract.approve(spenderAddress, ethers.constants.MaxUint256);
+    const receipt = await tx.await();
+    console.log(`receipt`, receipt);
+  } catch (e) {
+    console.log(`Cannot approve token: ${token.symbol}`, e);
+    return false;
+  }
+}
+
+async function multiCall(multiCallContract, abi, calls) {
+  const itf = new ethers.utils.Interface(abi);
+  const callData = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);
+  return await multiCallContract.callStatic.aggregate(callData);
+}
+
+export async function fetchAccountBalances(
+    multicallContract,
+    tokenPath,
+    ownerAddress,
+) {
+  const [token0, token1] = tokenPath;
+  const calls = [
+    {
+      address: token0.address,
+      name: "balanceOf",
+      params: [ownerAddress],
+    },
+    {
+      address: token1.address,
+      name: "balanceOf",
+      params: [ownerAddress],
+    },
+  ];
+
+  const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
+}
+
 // TODO: Update this to use getContract and multicall
-export async function hasEnoughAllowance(erc20Contract, token, ownerAddress, spenderAddress = PCS_ROUTER_ADDRESS, amount = INFINITE, ) {
+export async function hasEnoughAllowance(
+  multicallContract,
+  token,
+  ownerAddress,
+  spenderAddress = PCS_ROUTER_ADDRESS,
+  amount = ethers.constants.MaxUint256,
+) {
   if (token.isNative) {
     return true;
   }
 
-  const res = await erc20Contract.callStatic.allowance(ownerAddress, spenderAddress)
-      .catch((e) => {
-        console.log("Failed to get allowance", e);
-        return false;
-      });
+  const calls = [
+    {
+      address: token.address,
+      name: "allowance",
+      params: [ownerAddress, spenderAddress],
+    },
+  ];
 
-  if (res.toString() === "0") {
+  const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
+  // DEBUG
+  console.log(`returnData`, returnData);
+  const allowance0 = BigNumber.from(returnData[0]);
+
+  if (allowance0.toString() === "0") {
     return false;
   }
 
+  return true;
+
   // check amount to return true
-  console.log(`res`, res);
 }
 
 export function toUint256(amount, token) {
-  console.log("token " + token.decimals);
   return BigNumber.from(Math.round(amount * 1000000)).mul(
     BigNumber.from(10).pow(token.decimals - 6),
   );
 }
 
 export function toFloatNumber(amount, token) {
-  console.log(`amount`, amount.toString());
   // check token decimals
   const y = amount.div(BigNumber.from(10).pow(12));
-  console.log(`y`, y);
   return y.toNumber() / Math.pow(10, 6);
 }
 
@@ -70,9 +122,6 @@ export function convertTextToUnint256(s, token) {
 
 function defaultDeadline() {
   return Math.floor(Date.now() / 1000) + 60 * 10; // 1 minutes
-}
-
-export async function approve() {
 }
 
 const defaultOptions = {};

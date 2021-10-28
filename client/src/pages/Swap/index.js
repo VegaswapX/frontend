@@ -1,27 +1,34 @@
 import { useWeb3React } from "@web3-react/core";
-import React, {useEffect, useMemo, useState} from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
+import MULTICALL_ABI from "../../abis/Multicall.json";
 import ROUTER_ABI from "../../abis/Router.json";
-import ERC20_ABI from "../../abis/erc20.json";
 import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "./addr";
 import "./style.css";
 
-import { Chains } from "../../chain/constant";
+import { useSelector } from "react-redux";
+import { Chains, MULTICALL_ADDR } from "../../chain/constant";
 import { store } from "../../redux/store";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
 import * as trade from "./trade.js";
-import {useSelector} from "react-redux";
 
 const swapButtonStates = {
   wrongNetwork: {
+    name: "wrongNetwork",
     disabled: true,
     text: "Connect to BSC network",
   },
+  needApprove: {
+    name: "needApprove",
+    disabled: false,
+    text: "Approve ",
+  },
   correctNetwork: {
+    name: "correctNetwork",
     disabled: false,
     text: "Swap",
   },
@@ -29,11 +36,13 @@ const swapButtonStates = {
 
 // TODO: Rework on reducer to make this work properly
 const PageSwapInner = () => {
-  const { account, chainId } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const routerContract = useContract(PCS_ROUTER_ADDRESS, ROUTER_ABI, true);
-  const erc20Contract = useContract(`0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d`, ERC20_ABI, true);
-  const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath );
+  const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
+  const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
+
+  const [swapButtonState, setSwapButtonState] = useState(swapButtonStates.wrongNetwork);
 
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
@@ -43,20 +52,32 @@ const PageSwapInner = () => {
   const debounceOnChange = useMemo(
     () =>
       _.debounce(async (e) => {
-        console.log(`running debounce`);
         await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
       }, 500),
     [routerContract],
   );
 
-  let swapButtonState, tokenInputDisabled;
-  if (chainId === Chains.BSC_MAINNET.chainId) {
-    swapButtonState = swapButtonStates["correctNetwork"];
-    tokenInputDisabled = false;
-  } else {
-    swapButtonState = swapButtonStates["wrongNetwork"];
-    tokenInputDisabled = true;
-  }
+  // swapButtonState
+  // TODO: Handle network delay, which already happened
+  useEffect(async () => {
+    if (chainId !== Chains.BSC_MAINNET.chainId) {
+      setSwapButtonState(swapButtonStates.wrongNetwork);
+      return;
+    }
+
+    const res = await trade.hasEnoughAllowance(multiCallContract, token0, account); // always check token0
+    console.log(`res allowance`, res);
+
+    if (res === true) {
+      setSwapButtonState(swapButtonStates["correctNetwork"]);
+      return;
+    }
+
+    // add approve button
+    setSwapButtonState(swapButtonStates.needApprove);
+  }, [chainId, account]);
+
+  const tokenInputDisabled = false;
 
   async function setOutputAmountText(routerContract, e) {
     if (routerContract === null) {
@@ -98,24 +119,27 @@ const PageSwapInner = () => {
     debounceOnChange(e);
   }
 
-  // Rewrite swap that supports both ETH->Token and Token->Token
-  // float number should work properly
-  // TODO handle in tokenui
+  async function approveToken0() {
+    const [token0] = store.getState().swapReducer.tokenPath;
+    const res = await trade.approve(account, library, token0);
+    // TODO: Handle button state after approve success
+  }
+
+  // TODO: Double check this function, because of failed merge from prev commit
   async function swap() {
-    // TODO: Duplicate code
     let slippage = store.getState().swapReducer.slippage;
     const [token0, token1] = store.getState().swapReducer.tokenPath;
-
     console.log(`slippage`, slippage);
     console.log(`token0`, token0);
     console.log(`token1`, token1);
 
     if (routerContract === null) {
-      console.log("You don't connect to bsc mainnet");
+      console.log("Not connected to BSC Mainnet");
       return;
     }
 
     const amountIn = trade.convertTextToUnint256(token0Input, token0);
+
     console.log(`amountIn: ${amountIn}`);
     const result = await trade.getAmountsOut(routerContract, amountIn, [
       token0,
@@ -127,13 +151,14 @@ const PageSwapInner = () => {
     }
 
     let amountOut = result.data;
-    console.log("amountOut " + amountOut);
+    // console.log("amountOut " + amountOut);
     // calculate slippage
     const amountOutMin = amountOut
       .mul(Math.round((1 - slippage) * 1000))
       .div(1000);
     console.log("amountOutMin " + amountOutMin);
 
+    // TODO set loading while pending
     try {
       setLoading(true);
       const result = await trade.swap(
@@ -163,16 +188,6 @@ const PageSwapInner = () => {
     }
   }
 
-  useEffect(async () => {
-    if (erc20Contract === null) {
-      console.log(`User doesn't connect to bsc network`);
-      return;
-    }
-    console.log(`check allowance`);
-    const res = await trade.hasEnoughAllowance(erc20Contract, token1, account);
-
-  }, [erc20Contract, token0, token1, account])
-
   const tokenInputUI = TokenInput(token0Input, token0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
   });
@@ -180,11 +195,6 @@ const PageSwapInner = () => {
   const tokenOutputUI = TokenInput(token1Input, token1, () => {}, {
     disabled: tokenInputDisabled,
   });
-
-  // DEBUG
-  // const link = `https://bscscan.com/tx/test`;
-  // const msg = <a target="_blank" href={link}>Swap successfully with transction.</a>;
-  // const notify = () => toast(msg);
 
   if (loading) {
     return (
@@ -233,13 +243,20 @@ const PageSwapInner = () => {
             textAlign: "center",
           }}
         >
+          {/*TODO: Refactor this button later */}
           <Button
             variant="primary"
-            onClick={swap}
+            onClick={function(e) {
+              if (swapButtonState.name === "correctNetwork") {
+                swap();
+              } else if (swapButtonState.name === "needApprove") {
+                approveToken0();
+              }
+            }}
             disabled={swapButtonState.disabled}
             style={{ width: "90%", height: "55px", fontSize: "1.5em" }}
           >
-            {swapButtonState.text}
+            {swapButtonState.name === "needApprove" ? swapButtonState.text + " " + token0.symbol : swapButtonState.text}
           </Button>
         </div>
       </>

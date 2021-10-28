@@ -1,6 +1,6 @@
 import React from "react";
 import { FormControl, InputGroup } from "react-bootstrap";
-import {CurrencySelector} from "./CurrencySelect";
+import { CurrencySelector } from "./CurrencySelect";
 
 export function TokenInput(
   tokenInput,

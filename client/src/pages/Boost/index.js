@@ -10,27 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { BPOOLS } from "../../chain/Contracts.js";
 import { store } from "../../redux/store";
 
-function PoolRow({ pool }) {
-  let modal = store.getState().uiReducer.poolInfo;
-
-  const [size] = useState(null);
-  const [className] = useState(null);
-  const [scroll] = useState(null);
-
-  const toggle = () => {
-    console.log("toggle");
-    if (modal) {
-    } else {
-    }
-    store.dispatch({ type: "ui/showpoolinfo" });
-  };
-
-  return (
-    <>
-      <StakePage pool={pool} />
-    </>
-  );
-}
 
 const PoolsList = () => {
   //console.log(pool.poolName);
@@ -47,10 +26,12 @@ const PoolsList = () => {
                   pool === null ? "Error" : pool.poolName
                   // ? `${pool.address.substring(0, 10)}`
                   // : ""
+                  //onClick={() => removeFile(i)}
                 }
+                <i className="dripicons-information" style={{ marginLeft: "8px"}} ></i>
               </Accordion.Header>
               <Accordion.Body>
-                <PoolRow pool={pool} />
+              <StakePage pool={pool} />
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>

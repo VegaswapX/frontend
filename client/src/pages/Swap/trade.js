@@ -118,6 +118,7 @@ export function toFloatNumberN(amount, dec) {
 }
 
 
+
 //TODO clean
 export function toFloatNumber(amount, token) {
   // check token decimals
@@ -234,7 +235,7 @@ async function swapExactTokensForETH(
 
   const minBNB = 0.001 * 10 ** 18;
   // const minBNB = ethers.utils.parseUnits(10000, "wei")
-  // const minBNB = toUint256_18(0.001); // should be removed in production code
+  
 
   console.log("..." + minBNB);
 

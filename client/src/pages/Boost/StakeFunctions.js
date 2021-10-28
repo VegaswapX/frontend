@@ -118,7 +118,7 @@ export async function approveF(account, library, tokenAddress,spenderAddress)
         spenderAddress,
         ethers.constants.MaxUint256
       );
-      const receipt = await tx.await();
+      const receipt = await tx.wait();
       console.log(`receipt`, receipt);
       return [receipt, receipt.status];
     } catch (e) {

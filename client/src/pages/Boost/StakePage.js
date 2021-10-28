@@ -160,19 +160,19 @@ const StakeForm = ({ pool }) => {
     console.log("stakeToken " + stakeToken);
     console.log("account, library " + account);
     //TODO contract depends on address of the pool
-    let status, statusInfo;
-    try {
-      [status, statusInfo] = approveF(account, library, stakeToken, poolContract.address)
-      // console.log(">>> " + status)
-      // console.log(">>> " + statusInfo )
+    let status, statusInfo, result;
+    //try {
+      result = await approveF(account, library, stakeToken, poolContract.address);
+      [status, statusInfo] = result;
+      console.log(">>> " + status)
+      console.log(">>> " + statusInfo.message )
+
       if (!status){
-        toast.error(statusInfo);
+        toast.error(statusInfo.message);
+      } else {
+
       }
-    } catch(error){
-      // console.log("???");
-      // console.log(statusInfo);
-      // toast.error(statusInfo);
-    }
+       
   };
 
   if (canStake) {

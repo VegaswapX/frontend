@@ -59,7 +59,8 @@ export const CurrencySelectIn = () => {
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>{" "}
+          </Button>
+          {" "}
         </Modal.Footer>
       </Modal>
     </span>
@@ -107,7 +108,8 @@ export const CurrencySelectOut = () => {
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>{" "}
+          </Button>
+          {" "}
         </Modal.Footer>
       </Modal>
     </span>
@@ -145,7 +147,8 @@ export function CurrencySelector({ token }) {
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>
             Close
-          </Button>{" "}
+          </Button>
+          {" "}
         </Modal.Footer>
       </Modal>
     </span>

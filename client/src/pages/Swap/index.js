@@ -1,13 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  Col,
-  Form,
-  FormControl,
-  InputGroup,
-  Row,
-} from "react-bootstrap";
+import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
@@ -50,7 +43,7 @@ const PageSwapInner = () => {
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
   const [swapButtonState, setSwapButtonState] = useState(
-    swapButtonStates.wrongNetwork
+    swapButtonStates.wrongNetwork,
   );
 
   const [token0Input, setToken0Input] = useState(0);
@@ -63,7 +56,7 @@ const PageSwapInner = () => {
       _.debounce(async (e) => {
         await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
       }, 500),
-    [routerContract]
+    [routerContract],
   );
 
   // swapButtonState
@@ -78,7 +71,7 @@ const PageSwapInner = () => {
     const res = await trade.hasEnoughAllowance(
       multiCallContract,
       token0,
-      account
+      account,
     );
 
     if (!!res.error) {
@@ -119,7 +112,7 @@ const PageSwapInner = () => {
       const outAmount = result.data;
       const outputFloat = trade.toFloatNumber(outAmount, token1);
       console.log(`outputFloat`, outputFloat);
-      
+
       setToken1Input(outputFloat);
       // setLoadingAmount(false);
     }
@@ -187,7 +180,7 @@ const PageSwapInner = () => {
         amountIn,
         amountOutMin,
         [token0, token1],
-        account
+        account,
       );
       const [status, statusInfo] = result;
       if (status === 1) {
@@ -267,7 +260,7 @@ const PageSwapInner = () => {
           {/*TODO: Refactor this button later */}
           <Button
             variant="primary"
-            onClick={function (e) {
+            onClick={function(e) {
               if (swapButtonState.name === "correctNetwork") {
                 swap();
               } else if (swapButtonState.name === "needApprove") {

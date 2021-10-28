@@ -35,7 +35,7 @@ export const StakeModal = ({ pool }) => {
           <h4 className="modal-title">Stake</h4>
         </Modal.Header>
         <Modal.Body>
-          <StakePage pool={pool}/>
+          <StakePage pool={pool} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>

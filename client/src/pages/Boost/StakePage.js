@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
+import { getAllowance } from "./StakeFunctions";
 import {
   changeAllowanceAmount,
   changeStakeAmount,
@@ -29,14 +30,18 @@ const StakeForm = ({ pool }) => {
   const { account, library } = useWeb3React();
   const [modalStatus, setModalStatus] = useState(false);
 
-  const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
+  //const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [stakeAmount, setStakeamount] = useState(0);
+  const [canStake, setCanStake] = useState(0);
+  const [stakeToken, setStakeToken] = useState(0);
+  const [allowance, setAllowance] = useState(0);
   const [loading, setLoading] = useState(false);
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
   const [approveEnabled, setApproveEnabled] = useState(false);
 
+  const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
 
   let poolContract, vegaContract;
   vegaContract = getContractA(
@@ -56,57 +61,70 @@ const StakeForm = ({ pool }) => {
     console.log("error loading contract");
   }
 
-  
-
   //reducerState.stakeAmount > 0 || reducerState.allowance <= 0
 
-  function rounded(amount){
-    amount = amount/10**18;
-    let rounded_amount = Math.round(amount*100)/100;
+  function rounded(amount) {
+    amount = amount / 10 ** 18;
+    let rounded_amount = Math.round(amount * 100) / 100;
     return rounded_amount;
   }
 
   useEffect(async () => {
-    //console.log("pool.address " + poolContract.address);
+    const allowance = await getAllowance(
+      multiCallContract,
+      VEGA_TOKEN_ADDRESS,
+      account,
+      poolContract.address
+    );
+    setAllowance(allowance);
+    setApproveEnabled(allowance == 0);
+    console.log("allowance >> " + allowance);
+  });
 
-    //vegaContract.allowance.
-    // const allowance = await hasEnoughAllowance(
-    //   multiCallContract,
-    //   VEGA_TOKEN_ADDRESS,
-    //   account,
-    //   poolContract.address
-    // ); // always check token0
-    // console.log(!allowance);
-    // setApproveEnabled(!allowance);
+  //
 
-    poolContract.callStatic.stakes(account).then((x) => {
-      //let z = ethers.utils.formatEther(x[1].toString());
-      let amount = x[1];              
-      setStakedamount(amount);
-    });
+  useEffect(async () => {
+    const stake = await poolContract.callStatic.stakes(account);
+    console.log("stake " + stake[1]);
+    setCanStake(stake[1] == 0);
+  });
 
+  useEffect(async () => {
+    const x = await poolContract.callStatic.StakeToken();
+    setStakeToken(x);
+  });
 
-  }, [poolContract]);
+  // useEffect(async () => {
+  //   //console.log("pool.address " + poolContract.address);
+
+  //   // setApproveEnabled(!allowance);
+
+  //   poolContract.callStatic.stakes(account).then((x) => {
+  //     //let z = ethers.utils.formatEther(x[1].toString());
+  //     let amount = x[1];
+  //     setStakedamount(amount);
+  //   });
+  // }, [poolContract]);
 
   const stake = async () => {
     //TODO check balance first
     setLoading(true);
     // let stakeAmountDEC = stakeAmount * 10**18;
     //TODO
-    console.log("?? " + poolContract)
-    stakeF(stakeAmount, poolContract);
+    console.log("?? " + poolContract);
+    //stakeF(stakeAmount, poolContract);
   };
 
   const debounceOnChange = useMemo(
     () =>
       _.debounce(async (e) => {
-        //await setOutputAmountText(routerContract, e); 
+        //await setOutputAmountText(routerContract, e);
         console.log(">> " + e);
       }, 300),
     []
   );
 
-  function handleStakeInput(e){
+  function handleStakeInput(e) {
     console.log(e);
     const amountText = e.target.value;
     console.log(amountText);
@@ -137,10 +155,13 @@ const StakeForm = ({ pool }) => {
   // };
 
   const approve = async () => {
-    //approveF
+    console.log("call approve");
+    console.log("stakeToken " + stakeToken);
+    //TODO contract depends on address of the pool
+    //approveF(poolContract, vegaContract)
   };
 
-  if (stakedAmount == 0) {
+  if (canStake) {
     return (
       <>
         <Form>
@@ -156,7 +177,13 @@ const StakeForm = ({ pool }) => {
               className="stakeInput"
             />
           </Form.Group>
-
+          <ApproveButton
+            approveEnabled={approveEnabled}
+            approve={approve}
+            //disabled={approveEnabled}
+          />
+          allowance: {allowance}
+          staked: {stakedAmount}
           <Button
             variant="primary"
             onClick={stake}
@@ -165,14 +192,6 @@ const StakeForm = ({ pool }) => {
           >
             Stake
           </Button>
-
-          <ApproveButton
-            approveEnabled={approveEnabled}
-            approve={approve}
-            //disabled={approveEnabled}
-          />
-        
-         
         </Form>
 
         <Modal
@@ -200,19 +219,18 @@ const StakeForm = ({ pool }) => {
     return <> Loading</>;
   } else {
     return (
-      <>         
-          StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit}
-          <br />
-          <Button
-            variant="primary"
-            //onClick={unStake}
-            className="m-1"
-            disabled={reducerState.stakeAmount <= 0}
-          >
-
-            Harvest
-          </Button>   
-          </>     
+      <>
+        StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit}
+        <br />
+        <Button
+          variant="primary"
+          //onClick={unStake}
+          className="m-1"
+          disabled={reducerState.stakeAmount <= 0}
+        >
+          Harvest
+        </Button>
+      </>
     );
   }
 };

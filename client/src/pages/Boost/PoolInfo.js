@@ -88,7 +88,7 @@ export function PoolInfo({ pool }) {
       poolContract.callStatic.totalAmountStaked().then((x) => {
         //let z = ethers.utils.formatEther(x[1].toString());
         console.log(">>> " + x);
-        x  = x/10**18;
+        x = x / 10 ** 18;
         setTotalAmountStaked(x.toString());
       });
       let rewardStep = 0;

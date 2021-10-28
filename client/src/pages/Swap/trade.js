@@ -26,17 +26,18 @@ export async function approve(
   spenderAddress = PCS_ROUTER_ADDRESS
 ) {
   const erc20Contract = getContract(token.address, ERC20_ABI, library, account);
-  try {
-    const tx = await erc20Contract.approve(
+  const res = await erc20Contract.approve(
       spenderAddress,
       ethers.constants.MaxUint256
-    );
-    const receipt = await tx.await();
-    console.log(`receipt`, receipt);
-  } catch (e) {
+  ).catch(e => {
     console.log(`Cannot approve token: ${token.symbol}`, e);
-    return false;
+    return { error: e }
+  });
+  if (res.error) {
+    return res;
   }
+
+  return { data: true };
 }
 
 export async function multiCall(multiCallContract, abi, calls) {
@@ -90,18 +91,24 @@ export async function hasEnoughAllowance(
     },
   ];
 
-  const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
+  const res = await multiCall(multicallContract, ERC20_ABI, calls).catch((e) => {
+    console.log(`Error while getting balance`, e);
+    return { error: e };
+  });
+  if (!!res.error) {
+    return res;
+  }
+
+  const {returnData} = res;
   // DEBUG
   console.log(`returnData`, returnData);
   const allowance0 = BigNumber.from(returnData[0]);
 
   if (allowance0.toString() === "0") {
-    return false;
+    return { data: false, error: null};
   }
 
-  return true;
-
-  // check amount to return true
+  return { data: true, error: null};
 }
 
 export function toUint256(amount, token) {
@@ -110,15 +117,9 @@ export function toUint256(amount, token) {
   );
 }
 
-export function toFloatNumberN(amount, dec) {
-  const y = amount.div(BigNumber.from(10).pow(12));
-  return y.toNumber() / Math.pow(10, dec);
-}
-
-//TODO clean
 export function toFloatNumber(amount, token) {
-  // check token decimals
-  toFloatNumberN(amount, 6);
+  const y = amount.div(BigNumber.from(10).pow(12));
+  return y.toNumber() / Math.pow(10, 6);
 }
 
 export function convertTextToUnint256(s, token) {

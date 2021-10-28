@@ -62,33 +62,37 @@ const PageSwapInner = () => {
     () =>
       _.debounce(async (e) => {
         await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
-      }, 300),
+      }, 500),
     [routerContract]
   );
 
   // swapButtonState
-  // TODO: Handle network delay, which already happened
-  // useEffect(async () => {
-  //   if (chainId !== Chains.BSC_MAINNET.chainId) {
-  //     setSwapButtonState(swapButtonStates.wrongNetwork);
-  //     return;
-  //   }
-  //
-  //   const res = await trade.hasEnoughAllowance(
-  //     multiCallContract,
-  //     token0,
-  //     account
-  //   ); // always check token0
-  //   console.log(`res allowance`, res);
-  //
-  //   if (res === true) {
-  //     setSwapButtonState(swapButtonStates["correctNetwork"]);
-  //     return;
-  //   }
-  //
-  //   // add approve button
-  //   setSwapButtonState(swapButtonStates.needApprove);
-  // }, [chainId, account]);
+  useEffect(async () => {
+    console.log(`chainId`, chainId);
+    if (chainId !== Chains.BSC_MAINNET.chainId) {
+      setSwapButtonState(swapButtonStates.wrongNetwork);
+      return;
+    }
+
+    // check token0 balance
+    const res = await trade.hasEnoughAllowance(
+      multiCallContract,
+      token0,
+      account
+    );
+
+    if (!!res.error) {
+      // Handle error message
+    }
+
+    if (!!res.data) {
+      setSwapButtonState(swapButtonStates["correctNetwork"]);
+      return;
+    }
+
+    // add approve button
+    setSwapButtonState(swapButtonStates.needApprove);
+  }, [multiCallContract, chainId, account]);
 
   const tokenInputDisabled = false;
 
@@ -113,8 +117,10 @@ const PageSwapInner = () => {
 
     if (!result.error) {
       const outAmount = result.data;
-      const outAmountText = trade.toFloatNumber(outAmount, token1);
-      setToken1Input(outAmountText.toFixed(2));
+      const outputFloat = trade.toFloatNumber(outAmount, token1);
+      console.log(`outputFloat`, outputFloat);
+      
+      setToken1Input(outputFloat);
       // setLoadingAmount(false);
     }
 
@@ -134,6 +140,9 @@ const PageSwapInner = () => {
   async function approveToken0() {
     const [token0] = store.getState().swapReducer.tokenPath;
     const res = await trade.approve(account, library, token0);
+    if (!!res.error) {
+      // toast
+    }
     // TODO: Handle button state after approve success
   }
 

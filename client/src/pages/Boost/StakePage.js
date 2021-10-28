@@ -19,19 +19,15 @@ import StakeInfo from "./StakeInfo";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
-import { PoolInfo } from "./Pool";
+import { PoolInfo } from "./PoolInfo";
 import { hasEnoughAllowance } from "./StakeFunctions";
-import { Chains, MULTICALL_ADDR } from "../../chain/constant";
+import { MULTICALL_ADDR } from "../../chain/constant";
 import { useContract } from "../../chain/eth.js";
 import MULTICALL_ABI from "../../abis/Multicall.json";
-
-// components
-// import PageTitle from '../components/PageTitle';
 
 const StakeForm = ({ pool }) => {
   const { account, library } = useWeb3React();
   const [modalStatus, setModalStatus] = useState(false);
-  //const poolContract = useContract(pool.address, pool.abi, true);
   let poolContract, vegaContract;
   vegaContract = getContractA(
     account,
@@ -54,10 +50,7 @@ const StakeForm = ({ pool }) => {
 
   //reducerState.stakeAmount > 0 || reducerState.allowance <= 0
 
-  
-
   useEffect(async () => {
-
     console.log("pool.address " + pool.address);
 
     //vegaContract.allowance.
@@ -67,9 +60,9 @@ const StakeForm = ({ pool }) => {
       account,
       pool.address
     ); // always check token0
-      console.log(!allowance)
-      setApproveEnabled(!allowance);
-  }, [pool])
+    console.log(!allowance);
+    setApproveEnabled(!allowance);
+  }, [pool]);
 
   const stake = async () => {
     setLoading(true);
@@ -141,7 +134,7 @@ const StakeForm = ({ pool }) => {
       console.log(vegaContract, "vegaContract");
       await vegaContract.approve(pool.address, approveAmount);
       dispatch(changeAllowanceAmount(approveAmount));
-      
+
       toast("approve successful", {
         className: "success",
         bodyClassName: "grow-font-size",
@@ -154,7 +147,6 @@ const StakeForm = ({ pool }) => {
         bodyClassName: "grow-font-size",
         progressClassName: "fancy-progress-bar",
       });
-
     } finally {
       setLoading(false);
       //TODO reload amount
@@ -193,7 +185,7 @@ const StakeForm = ({ pool }) => {
               </Button>
 
               <ApproveButton
-                allowance={approveEnabled}
+                approveEnabled={approveEnabled}
                 approve={approve}
                 //disabled={approveEnabled}
               />

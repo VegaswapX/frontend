@@ -8,7 +8,7 @@ const slippageRadios = [
   { name: "1%", value: 1 / 100 },
 ];
 
-export const SettingsModal = (props) => {
+export const SettingsModal = () => {
   const [modal, setModal] = useState(false);
   const [size] = useState(null);
   const [className] = useState(null);

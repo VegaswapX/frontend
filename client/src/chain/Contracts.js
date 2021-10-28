@@ -9,6 +9,6 @@ export const LP_TOKEN_ADDRESS = "0xdA6F484F5fFE2382C20F80dCEdcB860Cea955461";
 //export const POOL1 = "0xE7eD6747FaC5360f88a2EFC03E00d25789F69291";
 
 export const BPOOLS = [
-  { poolName: "USDT-VGA", address: POOL1, description: "Stake USDT and earn VGA. The stake amount will be locked for the specified time. After the expiration the stake token will be returned together with the reward", per: "VGA per USDT"},
+  { poolName: "USDT-VGA", address: POOL1, description: "Stake USDT and earn VGA. The stake amount will be locked for the specified time. After the expiration the USDT amount will be returned together with the reward in VGA", per: "VGA per USDT"},
   //{poolName: "USDT", poolAddress: POOL2}
 ];

@@ -76,7 +76,7 @@ export function Vgabalance() {
         .then((x) => {
           if (!stale) {
             x = x / 10 ** 18;
-            x = Math.round(x * 100) / 100;
+            x = Math.round(x);
             setBalance(x);
           }
         })

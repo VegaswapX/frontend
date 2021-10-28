@@ -151,7 +151,7 @@ export async function swap(
   to,
   deadline = defaultDeadline()
 ) {
-  const addressPath = [tokenPath[0].contract, tokenPath[1].contract];
+  const addressPath = [tokenPath[0].address, tokenPath[1].address];
 
   // TODO deal with isNative
   if (!!tokenPath[0].isNative) {

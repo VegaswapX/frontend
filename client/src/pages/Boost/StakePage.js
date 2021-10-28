@@ -118,16 +118,16 @@ const StakeForm = ({ pool }) => {
     setLoading(true);
     // let stakeAmountDEC = stakeAmount * 10**18;
     //TODO
-    console.log("?? " + poolContract);
-    let result, receipt, receiptstatus;
-    result = await stakeF(account, library, stakeToken, poolContract.address);
-    [receipt, receiptstatus] = result;
-    if (!receiptstatus){
-      console.log(">>> " + receiptstatus)
-      toast.error(receiptstatus.message);
-    } else {
-      toast.info("staked successfully")
-    }
+    // console.log("?? " + poolContract);
+    // let result, receipt, receiptstatus;
+    // result = await stakeF(account, library, stakeToken, poolContract.address);
+    // [receipt, receiptstatus] = result;
+    // if (!receiptstatus){
+    //   console.log(">>> " + receiptstatus)
+    //   toast.error(receiptstatus.message);
+    // } else {
+    //   toast.info("staked successfully")
+    // }
     //console.log(">>> " + statusInfo.message )
 
 

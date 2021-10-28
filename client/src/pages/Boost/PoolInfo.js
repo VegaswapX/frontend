@@ -166,14 +166,13 @@ export function PoolInfo({ pool }) {
               );
             })}
             <tr>
-<td>Pool address</td>
-            <td>
-            
-              <a target="_blank" href={addressLink(pool.address)}>{shortenAddress(pool.address)}</a>
+              <td>Pool address</td>
+              <td>
+                <a target="_blank" href={addressLink(pool.address)}>
+                  {shortenAddress(pool.address)}
+                </a>
               </td>
             </tr>
-
-
           </tbody>
         </Table>
       </>
@@ -187,5 +186,3 @@ export function PoolInfo({ pool }) {
               <td>{poolStatus}</td>
             </tr> */
 }
-
-

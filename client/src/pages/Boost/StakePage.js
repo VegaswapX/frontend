@@ -35,12 +35,16 @@ const StakeForm = ({ pool }) => {
     VEGA_TOKEN_ADDRESS,
     VEGA_CONTRACT_ABI
   );
-  poolContract = getContractA(
-    account,
-    library,
-    pool.address,
-    POOL_CONTRACT_ABI
-  );
+  try {
+    poolContract = getContractA(
+      account,
+      library,
+      pool.address,
+      POOL_CONTRACT_ABI
+    );
+  } catch {
+    console.log("error loading contract");
+  }
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [stakeAmount, setStakeamount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -50,55 +54,24 @@ const StakeForm = ({ pool }) => {
 
   //reducerState.stakeAmount > 0 || reducerState.allowance <= 0
 
-  useEffect(async () => {
-    console.log("pool.address " + pool.address);
+  // useEffect(async () => {
+  //   //console.log("pool.address " + poolContract.address);
 
-    //vegaContract.allowance.
-    const allowance = await hasEnoughAllowance(
-      multiCallContract,
-      VEGA_TOKEN_ADDRESS,
-      account,
-      pool.address
-    ); // always check token0
-    console.log(!allowance);
-    setApproveEnabled(!allowance);
-  }, [pool]);
+  //   //vegaContract.allowance.
+  //   const allowance = await hasEnoughAllowance(
+  //     multiCallContract,
+  //     VEGA_TOKEN_ADDRESS,
+  //     account,
+  //     poolContract.address
+  //   ); // always check token0
+  //   console.log(!allowance);
+  //   setApproveEnabled(!allowance);
+  // }, [poolContract]);
 
   const stake = async () => {
     setLoading(true);
     // let stakeAmountDEC = stakeAmount * 10**18;
-    var stakeAmountDEC = ethers.BigNumber.from(stakeAmount).pow(18);
-
-    console.log("stake " + stakeAmountDEC);
-    let minAmount = 1 * 10 ** 18;
-    try {
-      //TODO check maximum
-      if (stakeAmountDEC >= 0) {
-        await poolContract.stake(stakeAmountDEC);
-        dispatch(changeStakeAmount(stakeAmountDEC));
-        toast("Staking successful", {
-          className: "success",
-          bodyClassName: "grow-font-size",
-          progressClassName: "fancy-progress-bar",
-        });
-      } else {
-        toast("Minimum amount is " + minAmount, {
-          className: "success",
-          bodyClassName: "grow-font-size",
-          progressClassName: "fancy-progress-bar",
-        });
-      }
-    } catch (error) {
-      toast("Staking error " + error.message, {
-        className: "success",
-        bodyClassName: "grow-font-size",
-        progressClassName: "fancy-progress-bar",
-      });
-      // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
-    } finally {
-      setLoading(false);
-      console.log("stake done");
-    }
+    //TODO
   };
 
   // const unStake = async () => {
@@ -124,82 +97,50 @@ const StakeForm = ({ pool }) => {
   // };
 
   const approve = async () => {
-    console.log("approve " + pool.address);
-    // setLoading(true);
-
-    try {
-      //TODO
-      let approveAmount = parseEther("10000");
-      // let approveAmount = 1000 * 10**18;
-      console.log(vegaContract, "vegaContract");
-      await vegaContract.approve(pool.address, approveAmount);
-      dispatch(changeAllowanceAmount(approveAmount));
-
-      toast("approve successful", {
-        className: "success",
-        bodyClassName: "grow-font-size",
-        progressClassName: "fancy-progress-bar",
-      });
-    } catch (error) {
-      console.log({ error });
-      toast("approve failed", {
-        className: "success",
-        bodyClassName: "grow-font-size",
-        progressClassName: "fancy-progress-bar",
-      });
-    } finally {
-      setLoading(false);
-      //TODO reload amount
-      //check allowance
-      console.log("approve done");
-    }
+    //approveF
   };
 
   if (reducerState.stakeAmount < 1) {
     return (
       <>
-        <Card>
-          <Card.Body>
-            <h4 className="mb-3 header-title">Stake</h4>
-            <Form>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="" column sm={2}>
-                  Amount:{" "}
-                </Form.Label>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label htmlFor="" column sm={2}>
+              Amount:{" "}
+            </Form.Label>
 
-                <input
-                  type="text"
-                  value={stakeAmount}
-                  onChange={(e) => setStakeamount(e.target.value)}
-                  className="stakeInput"
-                />
-              </Form.Group>
+            <input
+              type="text"
+              value={stakeAmount}
+              onChange={(e) => setStakeamount(e.target.value)}
+              className="stakeInput"
+            />
+          </Form.Group>
 
-              <Button
-                variant="primary"
-                onClick={stake}
-                className="m-1"
-                // disabled={approveEnabled}
-              >
-                Stake
-              </Button>
+          <Button
+            variant="primary"
+            onClick={stake}
+            className="m-1"
+            // disabled={approveEnabled}
+          >
+            Stake
+          </Button>
 
-              <ApproveButton
-                approveEnabled={approveEnabled}
-                approve={approve}
-                //disabled={approveEnabled}
-              />
+          <ApproveButton
+            approveEnabled={approveEnabled}
+            approve={approve}
+            //disabled={approveEnabled}
+          />
 
-              <Button
-                onClick={() => setModalStatus(true)}
-                variant={"primary"}
-                className="ms-1"
-              >
-                Details
-              </Button>
-            </Form>
-          </Card.Body>
-        </Card>
+          <Button
+            onClick={() => setModalStatus(true)}
+            variant={"primary"}
+            className="ms-1"
+          >
+            Details
+          </Button>
+        </Form>
+
         <Modal
           show={modalStatus}
           onHide={() => setModalStatus(false)}

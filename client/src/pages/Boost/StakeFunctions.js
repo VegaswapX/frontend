@@ -59,3 +59,67 @@ export async function hasEnoughAllowance(
 
   // check amount to return true
 }
+
+export async function stakeF() {
+  // var stakeAmountDEC = ethers.BigNumber.from(stakeAmount).pow(18);
+  //   console.log("stake " + stakeAmountDEC);
+  //   let minAmount = 1 * 10 ** 18;
+  //   try {
+  //     //TODO check maximum
+  //     if (stakeAmountDEC >= 0) {
+  //       await poolContract.stake(stakeAmountDEC);
+  //       dispatch(changeStakeAmount(stakeAmountDEC));
+  //       toast("Staking successful", {
+  //         className: "success",
+  //         bodyClassName: "grow-font-size",
+  //         progressClassName: "fancy-progress-bar",
+  //       });
+  //     } else {
+  //       toast("Minimum amount is " + minAmount, {
+  //         className: "success",
+  //         bodyClassName: "grow-font-size",
+  //         progressClassName: "fancy-progress-bar",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast("Staking error " + error.message, {
+  //       className: "success",
+  //       bodyClassName: "grow-font-size",
+  //       progressClassName: "fancy-progress-bar",
+  //     });
+  //     // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+  //   } finally {
+  //     setLoading(false);
+  //     console.log("stake done");
+  //   }
+}
+
+export async function approveF() {
+  // console.log("approve " + pool.address);
+  //   // setLoading(true);
+  //   try {
+  //     //TODO
+  //     let approveAmount = parseEther("10000");
+  //     // let approveAmount = 1000 * 10**18;
+  //     console.log(vegaContract, "vegaContract");
+  //     await vegaContract.approve(pool.address, approveAmount);
+  //     dispatch(changeAllowanceAmount(approveAmount));
+  //     toast("approve successful", {
+  //       className: "success",
+  //       bodyClassName: "grow-font-size",
+  //       progressClassName: "fancy-progress-bar",
+  //     });
+  //   } catch (error) {
+  //     console.log({ error });
+  //     toast("approve failed", {
+  //       className: "success",
+  //       bodyClassName: "grow-font-size",
+  //       progressClassName: "fancy-progress-bar",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //     //TODO reload amount
+  //     //check allowance
+  //     console.log("approve done");
+  //   }
+}

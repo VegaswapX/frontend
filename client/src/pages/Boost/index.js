@@ -1,40 +1,39 @@
 // @flow
 import React, { useState } from "react";
 
-import { Accordion } from "react-bootstrap";
-// import Balances from "./Balances";
-// components
+import { Button, Table } from "react-bootstrap";
 // import PageTitle from '../../components/PageTitle';
 import StakePage from "./StakePage.js";
 import "react-toastify/dist/ReactToastify.css";
 import { BPOOLS } from "../../chain/Contracts.js";
 import { store } from "../../redux/store";
 import { InfoModal } from "./InfoModal";
+import { StakeModal } from "./StakeModal";
 
 const PoolRow = ({ pool }) => {
   console.log(">>> " + pool.poolName);
 
   return (
-    <Accordion.Item eventKey="0">
-      <Accordion.Header>
+    <tr>
+      <td>
         {pool.poolName}
         <InfoModal pool={pool} />
-      </Accordion.Header>
-      <Accordion.Body>{/* <StakePage pool={pool} /> */}</Accordion.Body>
-    </Accordion.Item>
+      </td>
+      <td>
+        <StakeModal pool={pool} />
+      </td>
+    </tr>
   );
 };
 
 const PoolsList = () => {
   return (
     <>
-      {BPOOLS.map((pool) => {
-        return (
-          <Accordion defaultActiveKey="0">
-            <PoolRow pool={pool} />
-          </Accordion>
-        );
-      })}
+      <Table className="mb-0" style={{ width: "60%", border: "1px" }}>
+        {BPOOLS.map((pool) => {
+          return <PoolRow pool={pool} />;
+        })}
+      </Table>
     </>
   );
 };

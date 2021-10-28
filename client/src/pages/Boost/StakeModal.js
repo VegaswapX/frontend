@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, Modal, ToggleButton } from "react-bootstrap";
-import { PoolInfo } from "./PoolInfo";
+import StakePage from "./StakePage";
 
-export const InfoModal = ({ pool }) => {
+export const StakeModal = ({ pool }) => {
   const [modal, setModal] = useState(false);
   const [size] = useState(null);
   const [className] = useState(null);
@@ -21,7 +21,7 @@ export const InfoModal = ({ pool }) => {
       >    
      </i>  */}
       <Button onClick={toggle} style={{ marginLeft: "20px" }}>
-        Info{" "}
+        Stake{" "}
       </Button>
 
       <Modal
@@ -32,10 +32,10 @@ export const InfoModal = ({ pool }) => {
         scrollable={scroll}
       >
         <Modal.Header onHide={toggle} closeButton>
-          <h4 className="modal-title">Pool Info</h4>
+          <h4 className="modal-title">Stake</h4>
         </Modal.Header>
         <Modal.Body>
-          <PoolInfo pool={pool} />
+          <StakePage />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={toggle}>

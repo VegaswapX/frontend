@@ -112,12 +112,10 @@ export function toUint256(amount, token) {
   );
 }
 
-export function toFloatNumberN(amount, dec) {  
+export function toFloatNumberN(amount, dec) {
   const y = amount.div(BigNumber.from(10).pow(12));
   return y.toNumber() / Math.pow(10, dec);
 }
-
-
 
 //TODO clean
 export function toFloatNumber(amount, token) {
@@ -235,7 +233,6 @@ async function swapExactTokensForETH(
 
   const minBNB = 0.001 * 10 ** 18;
   // const minBNB = ethers.utils.parseUnits(10000, "wei")
-  
 
   console.log("..." + minBNB);
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { store } from "../../redux/store";
 import Tokentable from "./tokentable.js";
+import {useSelector} from "react-redux";
 
 // TODO one component
 
@@ -127,10 +128,10 @@ export function CurrencySelector({ token }) {
   const [className] = useState(null);
   const [scroll] = useState(null);
 
-  let modal = store.getState().uiReducer.modalTokenIn;
+  const isTokenSelectorModalOpened = useSelector((state) => state.uiReducer.isTokenSelectorModalOpened);
 
-  const toggle = () => {
-    // TODO: Implement this properly
+  function toggle() {
+    store.dispatch({ type: "ui/toggleTokenSelector" });
   };
 
   return (
@@ -138,7 +139,7 @@ export function CurrencySelector({ token }) {
       <CurrencyButton currency={token} toggle={toggle} />
 
       <Modal
-        show={modal}
+        show={isTokenSelectorModalOpened}
         onHide={toggle}
         dialogClassName={className}
         size={size}

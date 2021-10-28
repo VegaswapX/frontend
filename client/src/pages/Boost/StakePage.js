@@ -119,6 +119,18 @@ const StakeForm = ({ pool }) => {
     // let stakeAmountDEC = stakeAmount * 10**18;
     //TODO
     console.log("?? " + poolContract);
+    let result, receipt, receiptstatus;
+    result = await stakeF(account, library, stakeToken, poolContract.address);
+    [receipt, receiptstatus] = result;
+    if (!receiptstatus){
+      console.log(">>> " + receiptstatus)
+      toast.error(receiptstatus.message);
+    } else {
+      toast.info("staked successfully")
+    }
+    //console.log(">>> " + statusInfo.message )
+
+
     //stakeF(stakeAmount, poolContract);
   };
 
@@ -162,10 +174,7 @@ const StakeForm = ({ pool }) => {
   // };
 
   const approve = async () => {
-    console.log("call approve");
-    console.log("stakeToken " + stakeToken);
-    console.log("account, library " + account);
-    //TODO contract depends on address of the pool
+    console.log("call approve" + stakeToken);
     let status, statusInfo, result;
     //try {
       result = await approveF(account, library, stakeToken, poolContract.address);
@@ -176,7 +185,7 @@ const StakeForm = ({ pool }) => {
       if (!status){
         toast.error(statusInfo.message);
       } else {
-
+        toast.info("approved successfully")
       }
        
   };

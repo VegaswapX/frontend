@@ -27,6 +27,7 @@
     "apollo-link-http": "^1.5.17",
     "axios": "^0.21.1",
     "axios-mock-adapter": "^1.19.0",
+    "bignumber.js": "^9.0.1",
     "bootstrap": "^5.0.2",
     "britecharts-react": "^0.5.4",
     "chart.js": "^2.9.3",

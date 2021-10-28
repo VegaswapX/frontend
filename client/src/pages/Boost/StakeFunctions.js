@@ -45,8 +45,12 @@ export async function hasEnoughAllowance(
     console.log(">> " + calls[0].address);
     const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
     // DEBUG
-    let x = returnData[0];
-    console.log(getDecAmount(x).toNumber());
+    let x = getDecAmount(returnData[0]).toNumber();
+    if (x > 0){
+        return true;
+    } else {
+        return false;
+    }
     //let x = BigNumber.from(returnData[0]);
     
     // const allowance0 = BigNumber.from(returnData[0]);

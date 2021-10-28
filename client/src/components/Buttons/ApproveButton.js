@@ -1,8 +1,8 @@
 import React from 'react'
 import {Button} from "react-bootstrap";
 
-function ApproveButton({allowance, approve}){
-    if (allowance > 0) {
+function ApproveButton({approveEnabled, approve}){
+    if (!approveEnabled) {
         return (
             <Button variant="secondary">
                 Approved

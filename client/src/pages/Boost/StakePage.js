@@ -50,17 +50,25 @@ const StakeForm = ({ pool }) => {
   const [loading, setLoading] = useState(false);
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
 
+  const [approveEnabled, setApproveEnabled] = useState(false);
+
+  //reducerState.stakeAmount > 0 || reducerState.allowance <= 0
+
+  
+
   useEffect(async () => {
 
     console.log("pool.address " + pool.address);
 
     //vegaContract.allowance.
-    const res = await hasEnoughAllowance(
+    const allowance = await hasEnoughAllowance(
       multiCallContract,
       VEGA_TOKEN_ADDRESS,
       account,
       pool.address
     ); // always check token0
+      console.log(!allowance)
+      setApproveEnabled(!allowance);
   }, [pool])
 
   const stake = async () => {
@@ -163,7 +171,7 @@ const StakeForm = ({ pool }) => {
             <h4 className="mb-3 header-title">Stake</h4>
             <Form>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="exampleEmail2" column sm={2}>
+                <Form.Label htmlFor="" column sm={2}>
                   Amount:{" "}
                 </Form.Label>
 
@@ -179,16 +187,15 @@ const StakeForm = ({ pool }) => {
                 variant="primary"
                 onClick={stake}
                 className="m-1"
-                disabled={
-                  reducerState.stakeAmount > 0 || reducerState.allowance <= 0
-                }
+                // disabled={approveEnabled}
               >
                 Stake
               </Button>
 
               <ApproveButton
-                allowance={reducerState.allowance}
+                allowance={approveEnabled}
                 approve={approve}
+                //disabled={approveEnabled}
               />
 
               <Button

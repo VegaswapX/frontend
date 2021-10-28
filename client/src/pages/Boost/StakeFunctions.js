@@ -110,17 +110,18 @@ export async function stakeF(stakeAmount, poolContract) {
   }
 }
 
-export async function approveF(account, library, tokenAddress,spenderAddress)
+export async function approveF(account, library, tokenAddress, spenderAddress)
 {
     const erc20Contract = getContract(tokenAddress, ERC20_ABI, library, account);
     try {
-      const tx = await erc20Contract.approve(
-        spenderAddress,
-        ethers.constants.MaxUint256
-      );
-      const receipt = await tx.wait();
-      console.log(`receipt`, receipt);
-      return [receipt, receipt.status];
+      console.log("?? " + ethers.constants.MaxUint256);
+      // const tx = await erc20Contract.approve(
+      //   spenderAddress,
+      //   ethers.constants.MaxUint256
+      // );
+      // const receipt = await tx.wait();
+      // console.log(`receipt`, receipt);
+      // return [receipt, receipt.status];
     } catch (e) {
       console.log(`Cannot approve token: ${tokenAddress}`, e);
       return [false, e];

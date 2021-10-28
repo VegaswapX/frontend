@@ -73,14 +73,14 @@ const StakeForm = ({ pool }) => {
   useEffect(async () => {
     const allowance = await getAllowance(
       multiCallContract,
-      VEGA_TOKEN_ADDRESS,
+      stakeToken,
       account,
       poolContract.address
     );
     setAllowance(allowance);
     setApproveEnabled(allowance == 0);
     console.log("allowance >> " + allowance);
-  });
+  }, [stakeToken]);
 
   //
 

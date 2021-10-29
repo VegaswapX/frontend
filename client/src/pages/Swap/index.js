@@ -6,7 +6,7 @@ import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
 import ROUTER_ABI from "../../abis/Router.json";
 import { useContract } from "../../chain/eth.js";
-import { PCS_ROUTER_ADDRESS } from "../..chain/addr";
+import { PCS_ROUTER_ADDRESS } from "../../chain/Contracts";
 import "./style.css";
 
 import { useSelector } from "react-redux";

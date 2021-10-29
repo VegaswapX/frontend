@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-// import { FACTORY_ADDRESS, BUNDLE_ID } from '../constants'
+// import { PCS_FACTORY_ADDRESS, BUNDLE_ID } from '../constants'
 
 export const ALL_TOKENS = gql`
   query tokens($skip: Int!) {
@@ -487,7 +487,7 @@ export const FACTORY_PAIRS = gql`
 // 	const queryString = ` query uniswapFactories {
 //       uniswapFactories(
 //        ${block ? `block: { number: ${block}}` : ``} 
-//        where: { id: "${FACTORY_ADDRESS}" }) {
+//        where: { id: "${PCS_FACTORY_ADDRESS}" }) {
 //         id
 //         totalVolumeUSD
 //         totalVolumeETH

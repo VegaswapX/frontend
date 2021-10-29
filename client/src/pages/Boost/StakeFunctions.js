@@ -19,7 +19,8 @@ export const getDecimalAmount = (amount, decimals = 18) => {
 };
 
 export const getDecAmount = (amount, decimals = 18) => {
-  return new BigNumber(amount).dividedBy(BIG_TEN.pow(decimals));
+  //return new BigNumber(amount).dividedBy(BIG_TEN.pow(decimals));
+  return new BigNumber(amount); //.dividedBy(BIG_TEN.pow(1));;
 };
 
 export async function getAllowance(
@@ -73,7 +74,7 @@ export async function getAllowance(
 
 export async function stakeF(account, library, stakeAmount, poolContract) {
   
-  let stakeAmountDEC = getDecimalAmount(100);
+  let stakeAmountDEC = getDecimalAmount(stakeAmount);
   console.log(stakeAmountDEC.toNumber());
   console.log("!stake " + stakeAmountDEC);
   console.log("!poolContract " + poolContract);

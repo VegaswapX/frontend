@@ -24,7 +24,7 @@ import MULTICALL_ABI from "../../abis/Multicall.json";
 import { stakeF, approveF } from "./StakeFunctions";
 import _ from "underscore";
 import { toast } from "react-toastify";
-import {getDecimalAmount} from "./StakeFunctions";
+import {getDecimalAmount, getDecAmount} from "./StakeFunctions";
 
 const StakeForm = ({ pool }) => {
   console.log(" pool " + pool.address);
@@ -102,17 +102,22 @@ const StakeForm = ({ pool }) => {
     setStakeToken(x);
   });
 
-  // useEffect(async () => {
-  //   //console.log("pool.address " + poolContract.address);
+  useEffect(async () => {
+    //console.log("pool.address " + poolContract.address);
 
-  //   // setApproveEnabled(!allowance);
+    // setApproveEnabled(!allowance);
 
-  //   poolContract.callStatic.stakes(account).then((x) => {
-  //     //let z = ethers.utils.formatEther(x[1].toString());
-  //     let amount = x[1];
-  //     setStakedamount(amount);
-  //   });
-  // }, [poolContract]);
+    poolContract.callStatic.stakes(account).then((x) => {
+      //let z = ethers.utils.formatEther(x[1].toString());
+      let amount = x[1];
+      let damount =  amount/10**18;
+      //let z = getDecAmount(amount).toNumber();
+      //console.log(">>>> "  + amount);
+      //console.log("z: " + z);
+
+      setStakedamount(damount);
+    });
+  }, [poolContract]);
 
   const stakeClick = async () => {
     console.log("stakeClick " + stakeAmount);
@@ -260,7 +265,8 @@ const StakeForm = ({ pool }) => {
   } else {
     return (
       <>
-        StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit}
+        {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
+        StakedAmount: {stakedAmount} {pool.stakedUnit}
         <br />
         <Button
           variant="primary"

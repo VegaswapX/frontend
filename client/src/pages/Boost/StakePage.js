@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
-import { getAllowance } from "./StakeFunctions";
+import { getAllowance, unstake } from "./StakeFunctions";
 // import {
 //   changeAllowanceAmount,
 //   changeStakeAmount,
@@ -134,6 +134,11 @@ const StakeForm = ({ pool }) => {
     //stakeF(stakeAmount, poolContract);
   };
 
+  const unstakeClick = async () => {
+    console.log("..")
+    let result = await unstake(poolContract);
+  }
+
   const debounceOnChange = useMemo(
     () =>
       _.debounce(async (e) => {
@@ -253,9 +258,9 @@ const StakeForm = ({ pool }) => {
         <br />
         <Button
           variant="primary"
-          //onClick={unStake}
+          onClick={unstakeClick}
           className="m-1"
-          disabled={reducerState.stakeAmount <= 0}
+          // disabled={reducerState.stakeAmount <= 0}
         >
           Harvest
         </Button>

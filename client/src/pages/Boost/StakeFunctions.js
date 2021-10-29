@@ -80,7 +80,7 @@ export async function stakeF(account, library, stakeAmount, poolContract) {
   try {
     //TODO check maximum
     if (stakeAmountDEC >= 0) {
-      const tx = await poolContract.callStatic.stake(stakeAmountDEC);
+      const tx = await poolContract.stake(stakeAmountDEC);
       let receipt = await tx.wait();
       console.log("receipt " + receipt);
       console.log("receipt " + receipt.status);
@@ -113,6 +113,38 @@ export async function stakeF(account, library, stakeAmount, poolContract) {
     //setLoading(false);
     console.log("stake done");
   }
+}
+
+export async function unstake(poolContract) {
+  console.log("unstake ");
+
+  const tx = await poolContract.unstake();
+  let receipt = await tx.wait();
+  console.log("receipt " + receipt);
+  console.log("receipt status: " + receipt.status);
+  //   let minAmount = 1 * 10 ** 18;
+  
+  // try {
+  //   //TODO check maximum
+  //   if (stakeAmountDEC >= 0) {
+  //     const tx = await poolContract.callStatic.stake(stakeAmountDEC);
+  //     let receipt = await tx.wait();
+  //     console.log("receipt " + receipt.status);
+  //     console.log(`receipt`, receipt);
+  //     return [receipt, receipt.status];
+
+
+  //   } else {
+  //     return [false, null]
+
+  //   }
+  // } catch (error) {
+
+  //   return [false, error];
+  // } finally {
+  //   //setLoading(false);
+  //   console.log("stake done");
+  // }
 }
 
 export async function approveF(account, library, tokenAddress, spenderAddress)

@@ -93,10 +93,20 @@ export function PoolInfo({ pool }) {
         setTotalAmountStaked(x.toString());
       });
       //TODP call current reward instead?
-      let rewardStep = 0;
-      poolContract.callStatic.rewardSteps(rewardStep).then((x) => {
-        setReward(x.toString());
+      let curentStep = 0;
+      
+      poolContract.callStatic.currentStep().then((x) => {
+
+        //setReward(x.toString());
+        curentStep = x;
+        console.log("curentStep ? " + curentStep);
+
+        poolContract.callStatic.rewardSteps(curentStep).then((x) => {
+          console.log(">>>>> rewardSteps " + x);
+          setReward(x.toString());
+        });
       });
+      
       // poolContract.callStatic.currentReward().then((x) => {
       //   setReward(x.toString());
       // });

@@ -24,6 +24,7 @@ import MULTICALL_ABI from "../../abis/Multicall.json";
 import { stakeF, approveF } from "./StakeFunctions";
 import _ from "underscore";
 import { toast } from "react-toastify";
+import {getDecimalAmount} from "./StakeFunctions";
 
 const StakeForm = ({ pool }) => {
   console.log(" pool " + pool.address);
@@ -97,7 +98,7 @@ const StakeForm = ({ pool }) => {
   });
 
   useEffect(async () => {
-    const x = await poolContract.callStatic.StakeToken();
+    const x = await poolContract.callStatic.stakeToken();
     setStakeToken(x);
   });
 
@@ -113,18 +114,23 @@ const StakeForm = ({ pool }) => {
   //   });
   // }, [poolContract]);
 
-  const stake = async () => {
+  const stakeClick = async () => {
+    console.log("stakeClick " + stakeAmount);
+    if (stakeAmount < 10){
+      toast.error("Staking amount too low");
+    }
     //TODO check balance first
     setLoading(true);
-    // let stakeAmountDEC = stakeAmount * 10**18;
+    
     //TODO
-    // console.log("?? " + poolContract);
-    // let result, receipt, receiptstatus;
-    // result = await stakeF(account, library, stakeToken, poolContract.address);
-    // [receipt, receiptstatus] = result;
-    // if (!receiptstatus){
-    //   console.log(">>> " + receiptstatus)
-    //   toast.error(receiptstatus.message);
+    // console.log("stake poolContract" + poolContract);
+    let [receipt, receiptstatus] = await stakeF(account, library, stakeAmount, poolContract);
+     
+    console.log("receipt >>> " + receipt);
+    console.log(">>> " + receiptstatus);
+    if (!receipt){
+      toast.error(receiptstatus.data.message);
+    }
     // } else {
     //   toast.info("staked successfully")
     // }
@@ -216,11 +222,11 @@ const StakeForm = ({ pool }) => {
             approve={approve}
             //disabled={approveEnabled}
           />
-          allowance: {allowance}
+          {/* allowance: {allowance} */}
           staked: {stakedAmount}
           <Button
             variant="primary"
-            onClick={stake}
+            onClick={stakeClick}
             className="m-1"
             // disabled={approveEnabled}
           >

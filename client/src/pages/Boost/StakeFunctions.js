@@ -72,14 +72,19 @@ export async function getAllowance(
 // }
 
 export async function stakeF(account, library, stakeAmount, poolContract) {
-  var stakeAmountDEC = ethers.BigNumber.from(stakeAmount).pow(18);
-  console.log("stake " + stakeAmountDEC);
+  
+  let stakeAmountDEC = getDecimalAmount(100);
+  console.log(stakeAmountDEC.toNumber());
+  console.log("!stake " + stakeAmountDEC);
+  console.log("!poolContract " + poolContract);
   //   let minAmount = 1 * 10 ** 18;
   
   try {
     //TODO check maximum
-    if (stakeAmountDEC >= 0) {
-      const tx = await poolContract.stake(stakeAmountDEC);
+    
+      //let stakeAmountDEC = ethers.BigNumber.from(100).pow(18);
+      //const tx = await poolContract.stake(stakeAmountDEC);
+      const tx = await poolContract.stake(stakeAmountDEC.toString());
       let receipt = await tx.wait();
       console.log("receipt " + receipt);
       console.log("receipt " + receipt.status);
@@ -92,15 +97,16 @@ export async function stakeF(account, library, stakeAmount, poolContract) {
       //   bodyClassName: "grow-font-size",
       //   progressClassName: "fancy-progress-bar",
       // });
-    } else {
-      return [false, null]
+    
       // toast("Minimum amount is " + minAmount, {
       //   className: "success",
       //   bodyClassName: "grow-font-size",
       //   progressClassName: "fancy-progress-bar",
       // });
-    }
+    
   } catch (error) {
+    console.log("catch " + error);
+    console.log("catch " + error.message + " " + error.data.message);
     // toast("Staking error " + error.message, {
     //   className: "success",
     //   bodyClassName: "grow-font-size",

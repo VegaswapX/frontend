@@ -117,9 +117,10 @@ export function PoolInfo({ pool }) {
       poolContract.callStatic.maxStake().then((x) => {
         x = x / 10 ** 18;
         setMaxStake(x);
+        setLoading(false);
       });
 
-      setLoading(false);
+      
     }
   }
 
@@ -168,11 +169,11 @@ export function PoolInfo({ pool }) {
   ];
 
   if (loading) {
-    if (supported) {
-      return <>Loading</>;
-    } else {
-      return <>Chain not supported</>;
-    }
+    return <>Loading</>;
+    // if (supported) {
+    // } else {
+    //   return <>Chain not supported</>;
+    // }
   } else {
     return (
       <>

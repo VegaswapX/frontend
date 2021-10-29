@@ -6,7 +6,7 @@ import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
 import ROUTER_ABI from "../../abis/Router.json";
 import { useContract } from "../../chain/eth.js";
-import { PCS_ROUTER_ADDRESS } from "./addr";
+import { PCS_ROUTER_ADDRESS } from "../../chain/Contracts";
 import "./style.css";
 
 import { useSelector } from "react-redux";
@@ -14,7 +14,7 @@ import { Chains, MULTICALL_ADDR } from "../../chain/constant";
 import { store } from "../../redux/store";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
-import * as trade from "./trade.js";
+import * as trade from "../../chain/trade.js";
 
 const swapButtonStates = {
   wrongNetwork: {

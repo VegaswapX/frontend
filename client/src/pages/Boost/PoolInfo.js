@@ -65,6 +65,7 @@ export function PoolInfo({ pool }) {
 
   async function loadData() {
     console.log("try load pool contract data " + pool.address);
+    setLoading(true);
 
     poolContract = getContractA(
       account,
@@ -107,6 +108,8 @@ export function PoolInfo({ pool }) {
         x = x / 10 ** 18;
         setMaxStake(x);
       });
+
+      setLoading(false);
     }
   }
 

@@ -1,8 +1,7 @@
 import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
 import ERC20_ABI from "../../abis/erc20.json";
-import { multiCall } from "../Swap/trade";
-import { toFloatNumberN } from "../Swap/trade";
+import { multiCall } from "../../chain/trade";
 import { getContract } from "../../chain/eth";
 export const BIG_ZERO = new BigNumber(0);
 export const BIG_ONE = new BigNumber(1);

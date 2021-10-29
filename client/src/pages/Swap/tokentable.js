@@ -7,7 +7,7 @@ function Table({ tokenIndex, columns, data }) {
   // TODO: Fix tomorrow, some how 2 modals are opened at the same time
   console.log(`tokenIndexi nxqdddddd`, tokenIndex);
   // selecting in or out?
-  let selecting = store.getState().uiReducer.tokenSelect;
+  //let selecting = store.getState().uiReducer.tokenSelect;
 
   const [hoveredRow, setHoveredRow] = useState(null);
 
@@ -33,6 +33,9 @@ function Table({ tokenIndex, columns, data }) {
         tokenIndex,
         symbol
       }});
+
+    store.dispatch({ type: "ui/toggleTokenSelector" });
+      
 
     // if (selecting == "tokenIn") {
     //   store.dispatch({ type: "ui/togglemodalTokenIn" });

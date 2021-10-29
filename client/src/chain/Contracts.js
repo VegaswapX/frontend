@@ -12,9 +12,10 @@ export const BPOOLS = [
     poolName: "USDT-VGA",
     address: POOL1,
     description:
-      "Stake USDT and earn VGA. The stake amount will be locked for the specified time. After the expiration the USDT amount will be returned together with the reward in VGA",
+      "Stake USDT and earn VGA. The staked amount will be locked for the specified time. After the expiration the USDT amount will be returned together with the reward in VGA",
     per: "VGA per USDT",
-    stakedUnit: "USDT"
+    stakedUnit: "USDT",
+    yieldUnit: "VGA"
   },
   //{poolName: "USDT", poolAddress: POOL2}
 ];

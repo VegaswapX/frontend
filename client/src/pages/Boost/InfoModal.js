@@ -21,7 +21,7 @@ export const InfoModal = ({ pool }) => {
       >    
      </i>  */}
       <Button onClick={toggle} style={{ marginLeft: "20px" }}>
-        Info{" "}
+        Details{" "}
       </Button>
 
       <Modal

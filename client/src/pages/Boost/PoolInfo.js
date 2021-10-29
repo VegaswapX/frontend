@@ -147,9 +147,9 @@ export function PoolInfo({ pool }) {
     ["Current reward", reward + " " + pool.per],
     ["Start time", startTimeF],
     ["End time", endTimeF],
-    ["totalAmountStaked", totalAmountStaked],
-    ["Max stake", poolMaxStake],
-    ["Pool yield", poolYield],
+    ["totalAmountStaked", totalAmountStaked + " " + pool.stakedUnit],
+    ["Max stake", poolMaxStake  + " " + pool.stakedUnit],
+    ["Yield token to distribute", poolYield + " " + pool.yieldUnit],
     ["% staked", pstaked],
     //["Pool address", shortenAddress(pool.address)],
   ];

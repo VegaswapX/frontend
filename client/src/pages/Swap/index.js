@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
+import { Button, Col, Form, FormControl, InputGroup, Row, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
@@ -113,18 +113,23 @@ const PageSwapInner = () => {
       return;
     }
 
-    let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
-      token0,
-      token1,
-    ]);
+    try{
+      let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
+        token0,
+        token1,
+      ]);
 
-    if (!result.error) {
-      const outAmount = result.data;
-      const outputFloat = trade.toFloatNumber(outAmount, token1);
-      console.log(`outputFloat`, outputFloat);
+      if (!result.error) {
+        
+          const outAmount = result.data;
+          const outputFloat = trade.toFloatNumber(outAmount, token1);
+          console.log(`outputFloat`, outputFloat);
 
-      setToken1Input(outputFloat);
-      // setLoadingAmount(false);
+          setToken1Input(outputFloat);
+      } 
+        // setLoadingAmount(false);
+    } catch (error) {
+      console.log('error parsing input ' + error);
     }
 
     // TODO: Set proper error message, it can be anything
@@ -227,6 +232,9 @@ const PageSwapInner = () => {
     return (
       <>
         <h2 style={{ textAlign: "center" }}>Transaction Pending</h2>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
       </>
     );
   } else {

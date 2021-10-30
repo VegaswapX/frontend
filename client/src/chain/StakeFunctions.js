@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
-import ERC20_ABI from "../../abis/erc20.json";
-import { multiCall } from "../../chain/trade";
-import { getContract } from "../../chain/eth";
+import ERC20_ABI from "../abis/erc20.json";
+import { multiCall } from "./trade";
+import { getContract } from "./eth";
 export const BIG_ZERO = new BigNumber(0);
 export const BIG_ONE = new BigNumber(1);
 export const BIG_NINE = new BigNumber(9);
@@ -72,7 +72,7 @@ export async function getAllowance(
 
 // }
 
-export async function stakeF(stakeAmount, poolContract) {
+export async function stake(stakeAmount, poolContract) {
   
   let stakeAmountDEC = getDecimalAmount(stakeAmount);
   console.log(stakeAmountDEC.toNumber());
@@ -168,7 +168,7 @@ export async function unstake(poolContract) {
   // }
 }
 
-export async function approveF(account, library, tokenAddress, spenderAddress)
+export async function approve(account, library, tokenAddress, spenderAddress)
 {
     const erc20Contract = getContract(tokenAddress, ERC20_ABI, library, account);
     try {

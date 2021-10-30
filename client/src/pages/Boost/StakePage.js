@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
-import { getAllowance, unstake } from "./StakeFunctions";
+import { getAllowance, unstake } from "../../chain/StakeFunctions";
 // import {
 //   changeAllowanceAmount,
 //   changeStakeAmount,
@@ -21,10 +21,9 @@ import { PoolInfo } from "./PoolInfo";
 import { MULTICALL_ADDR } from "../../chain/constant";
 import { useContract } from "../../chain/eth.js";
 import MULTICALL_ABI from "../../abis/Multicall.json";
-import { stakeF, approveF } from "./StakeFunctions";
+import { stake, approve } from "../../chain/StakeFunctions";
 import _ from "underscore";
 import { toast } from "react-toastify";
-import {getDecimalAmount, getDecAmount} from "./StakeFunctions";
 
 const StakeForm = ({ pool }) => {
   console.log(" pool " + pool.address);
@@ -106,17 +105,10 @@ const StakeForm = ({ pool }) => {
   });
 
   useEffect(async () => {
-    //console.log("pool.address " + poolContract.address);
-
-    // setApproveEnabled(!allowance);
 
     poolContract.callStatic.stakes(account).then((x) => {
-      //let z = ethers.utils.formatEther(x[1].toString());
       let amount = x[1];
       let damount =  amount/10**18;
-      //let z = getDecAmount(amount).toNumber();
-      //console.log(">>>> "  + amount);
-      //console.log("z: " + z);
 
       setStakedamount(damount);
     });
@@ -128,17 +120,22 @@ const StakeForm = ({ pool }) => {
       toast.error("Staking amount too low");
     }
     //TODO check balance first
-    setLoading(true);
-    
-    //TODO
-    // console.log("stake poolContract" + poolContract);
-    let [receipt, receiptstatus] = await stakeF(stakeAmount, poolContract);
+          
+    try {
+      setLoading(true);
+      let [receipt, receiptstatus] = await stake(stakeAmount, poolContract);
      
-    console.log("receipt >>> " + receipt);
-    console.log(">>> " + receiptstatus);
-    if (!receipt){
-      toast.error(receiptstatus.data.message);
+      console.log("receipt >>> " + receipt);
+      console.log(">>> " + receiptstatus);
+      if (!receipt){
+        toast.error(receiptstatus.data.message);
+      }
+    } catch {
+      toast.error("error with stake");
     }
+
+    setLoading(false);
+
     // } else {
     //   toast.info("staked successfully")
     // }
@@ -149,12 +146,21 @@ const StakeForm = ({ pool }) => {
   };
 
   const unstakeClick = async () => {
-    console.log("..")
-    let [receipt, receiptstatus] = await unstake(poolContract);
+    
+    try {
+      setLoading(true);
+      let [receipt, receiptstatus] = await unstake(poolContract);
 
-    if (!receipt){
-      toast.error(receiptstatus.data.message);
+      if (!receipt){
+        toast.error(receiptstatus.data.message);
+      } else {
+        toast.success("unstaked successfully");
+      }
+    } catch {
+      toast.error("error with unstake");
     }
+
+    setLoading(false);
   }
 
   const debounceOnChange = useMemo(
@@ -172,48 +178,33 @@ const StakeForm = ({ pool }) => {
     console.log(amountText);
     setStakeamount(amountText);
     debounceOnChange(e);
-  }
-
-  // const unStake = async () => {
-  //   setLoading(true);
-  //   try {
-  //     await poolContract.unstake();
-  //     toast("Staking successful", {
-  //       className: "success",
-  //       bodyClassName: "grow-font-size",
-  //       progressClassName: "fancy-progress-bar",
-  //     });
-  //   } catch (error) {
-  //     toast("Staking error " + error.message, {
-  //       className: "success",
-  //       bodyClassName: "grow-font-size",
-  //       progressClassName: "fancy-progress-bar",
-  //     });
-  //     // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
-  //   } finally {
-  //     setLoading(false);
-  //     console.log("stake done");
-  //   }
-  // };
+  }  
 
   const approve = async () => {
     console.log("call approve" + stakeToken);
     let status, statusInfo, result;
-    //try {
-      result = await approveF(account, library, stakeToken, poolContract.address);
+    try {
+      result = await approve(account, library, stakeToken, poolContract.address);
       [status, statusInfo] = result;
       console.log(">>> " + status)
       console.log(">>> " + statusInfo.message )
 
       if (!status){
         toast.error(statusInfo.message);
-      } else {
-        toast.info("approved successfully")
+      } else {        
+        toast.success("approved successfully");
       }
+    } catch{
+      toast.error("error with approve");
+    }
        
   };
 
-  if (canStake) {
+  if (loading) {
+    return <> Loading</>;
+  }
+
+  else if (canStake) {
     return (
       <>
         <Form>
@@ -267,8 +258,6 @@ const StakeForm = ({ pool }) => {
         </Modal>
       </>
     );
-  } else if (loading) {
-    return <> Loading</>;
   } else {
     if (isStaked){
       return (

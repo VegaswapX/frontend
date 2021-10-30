@@ -3,8 +3,8 @@ import {TokenList} from "../chain/tokens";
 const initialState = {
   slippage: 0.5 / 100,
   tokenPath: [
-    TokenList.BSC.VGA,
     TokenList.BSC.WBNB,
+    TokenList.BSC.VGA,
   ],
 };
 

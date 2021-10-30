@@ -17,7 +17,7 @@ import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
 
-const swapButtonStates = {
+const actionButtonStates = {
   wrongNetwork: {
     name: "wrongNetwork",
     disabled: true,
@@ -27,6 +27,11 @@ const swapButtonStates = {
     name: "needApprove",
     disabled: false,
     text: "Approve ",
+  },
+  approving: {
+    name: "approving",
+    disabled: true,
+    text: "Approving",
   },
   correctNetwork: {
     name: "correctNetwork",
@@ -43,8 +48,8 @@ const PageSwapInner = () => {
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
-  const [swapButtonState, setSwapButtonState] = useState(
-    swapButtonStates.wrongNetwork,
+  const [actionButtonState, setActionButtonState] = useState(
+    actionButtonStates.wrongNetwork,
   );
 
   const [token0Input, setToken0Input] = useState(0);
@@ -63,7 +68,13 @@ const PageSwapInner = () => {
   // Set swapButton state
   useEffect(async () => {
     if (chainId !== Chains.BSC_MAINNET.chainId) {
-      setSwapButtonState(swapButtonStates.wrongNetwork);
+      setActionButtonState(actionButtonStates.wrongNetwork);
+      return;
+    }
+
+    // no need to approve for native token
+    if (token0.isNative === true) {
+      setActionButtonState(actionButtonStates["correctNetwork"]);
       return;
     }
 
@@ -79,11 +90,11 @@ const PageSwapInner = () => {
     }
 
     if (!!res.data) {
-      setSwapButtonState(swapButtonStates["correctNetwork"]);
+      setActionButtonState(actionButtonStates["correctNetwork"]);
       return;
     }
 
-    setSwapButtonState(swapButtonStates.needApprove);
+    setActionButtonState(actionButtonStates.needApprove);
   }, [multiCallContract, chainId, account]);
 
   const tokenInputDisabled = false;
@@ -131,11 +142,14 @@ const PageSwapInner = () => {
 
   async function approveToken0() {
     const [token0] = store.getState().swapReducer.tokenPath;
+
+    setActionButtonState(actionButtonStates.approving);
     const res = await trade.approve(account, library, token0);
     if (!!res.error) {
       // toast
     }
     // TODO: Handle button state after approve success
+    setActionButtonState(actionButtonStates.swap);
   }
 
   // TODO: Double check this function, because of failed merge from prev commit
@@ -244,7 +258,9 @@ const PageSwapInner = () => {
           <div className={"swapMain"} style={{ marginTop: "15px" }}>
             <div className={"swapInput"}>
               {tokenInputUI}
-              <br />
+              <div>
+                <br />
+              </div>
               {tokenOutputUI}
             </div>
           </div>
@@ -259,18 +275,18 @@ const PageSwapInner = () => {
           <Button
             variant="primary"
             onClick={function(e) {
-              if (swapButtonState.name === "correctNetwork") {
+              if (actionButtonState.name === "correctNetwork") {
                 swap();
-              } else if (swapButtonState.name === "needApprove") {
+              } else if (actionButtonState.name === "needApprove") {
                 approveToken0();
               }
             }}
-            disabled={swapButtonState.disabled}
+            disabled={actionButtonState.disabled}
             style={{ width: "90%", height: "55px", fontSize: "1.5em" }}
           >
-            {swapButtonState.name === "needApprove"
-              ? `${swapButtonState.text} ${token0.symbol}`
-              : swapButtonState.text}
+            {actionButtonState.name === "needApprove"
+              ? `${actionButtonState.text} ${token0.symbol}`
+              : actionButtonState.text}
           </Button>
         </div>
       </>

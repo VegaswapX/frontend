@@ -231,10 +231,12 @@ const PageSwapInner = () => {
   if (loading) {
     return (
       <>
+      <div style={{alignContent: "center"}}>
         <h2 style={{ textAlign: "center" }}>Transaction Pending</h2>
-        <Spinner animation="border" role="status">
+        <Spinner animation="border" role="status" style={{ marginLeft: "45%", marginTop: "20px", width: "60px", height: "60px"}}>
           <span className="visually-hidden">Loading...</span>
         </Spinner>
+        </div>
       </>
     );
   } else {

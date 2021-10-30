@@ -72,7 +72,7 @@ export async function getAllowance(
 
 // }
 
-export async function stakeF(account, library, stakeAmount, poolContract) {
+export async function stakeF(stakeAmount, poolContract) {
   
   let stakeAmountDEC = getDecimalAmount(stakeAmount);
   console.log(stakeAmountDEC.toNumber());
@@ -124,10 +124,25 @@ export async function stakeF(account, library, stakeAmount, poolContract) {
 export async function unstake(poolContract) {
   console.log("unstake ");
 
-  const tx = await poolContract.unstake();
-  let receipt = await tx.wait();
-  console.log("receipt " + receipt);
-  console.log("receipt status: " + receipt.status);
+  try {
+    const tx = await poolContract.unstake();
+    let receipt = await tx.wait();
+    console.log("receipt " + receipt);
+      console.log("receipt status: " + receipt.status);
+  } catch (error) {
+    console.log("catch " + error);
+    console.log("catch " + error.message + " " + error.data.message);
+    // toast("Staking error " + error.message, {
+    //   className: "success",
+    //   bodyClassName: "grow-font-size",
+    //   progressClassName: "fancy-progress-bar",
+    // });
+    // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+    return [false, error];
+  } finally {
+    //setLoading(false);
+    console.log("stake done");
+  }
   //   let minAmount = 1 * 10 ** 18;
   
   // try {
@@ -171,28 +186,3 @@ export async function approveF(account, library, tokenAddress, spenderAddress)
     
 }
 
-// export async function approveFF(poolContract, tokenContract) {
-//   console.log("approve " + poolContract.address);
-//   try {
-//     let approveAmount = 10000 * 10**18;
-//     //console.log(vegaContract, "vegaContract");
-//     const tx = await tokenContract.approve(pool.address, approveAmount);
-//     let receipt = await tx.wait();
-//     console.log(">> " + receipt);
-//     return [receipt.status, receipt];
-//     // console.log(tx);
-//     //dispatch(changeAllowanceAmount(approveAmount));
-//     // toast("approve successful", {
-//     //   className: "success",
-//     //   bodyClassName: "grow-font-size",
-//     //   progressClassName: "fancy-progress-bar",
-//     // });
-//   } catch (error) {
-//     console.log({ error });
-//     //toast("approve failed", {
-//   } finally {
-//     //TODO reload amount
-//     //check allowance
-//     console.log("approve done");
-//   }
-// }

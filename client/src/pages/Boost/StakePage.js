@@ -40,6 +40,7 @@ const StakeForm = ({ pool }) => {
   const [loading, setLoading] = useState(false);
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
+  const [isStaked, setIsStaked] = useState(0);
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
   const [approveEnabled, setApproveEnabled] = useState(false);
 
@@ -94,6 +95,8 @@ const StakeForm = ({ pool }) => {
   useEffect(async () => {
     const stake = await poolContract.callStatic.stakes(account);
     console.log("stake " + stake[1]);
+    setIsStaked(stake[5]);
+    console.log(">> stake " + stake);
     setCanStake(stake[1] == 0);
   });
 
@@ -129,7 +132,7 @@ const StakeForm = ({ pool }) => {
     
     //TODO
     // console.log("stake poolContract" + poolContract);
-    let [receipt, receiptstatus] = await stakeF(account, library, stakeAmount, poolContract);
+    let [receipt, receiptstatus] = await stakeF(stakeAmount, poolContract);
      
     console.log("receipt >>> " + receipt);
     console.log(">>> " + receiptstatus);
@@ -147,7 +150,11 @@ const StakeForm = ({ pool }) => {
 
   const unstakeClick = async () => {
     console.log("..")
-    let result = await unstake(poolContract);
+    let [receipt, receiptstatus] = await unstake(poolContract);
+
+    if (!receipt){
+      toast.error(receiptstatus.data.message);
+    }
   }
 
   const debounceOnChange = useMemo(
@@ -263,21 +270,25 @@ const StakeForm = ({ pool }) => {
   } else if (loading) {
     return <> Loading</>;
   } else {
-    return (
-      <>
-        {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
-        StakedAmount: {stakedAmount} {pool.stakedUnit}
-        <br />
-        <Button
-          variant="primary"
-          onClick={unstakeClick}
-          className="m-1"
-          // disabled={reducerState.stakeAmount <= 0}
-        >
-          Harvest
-        </Button>
-      </>
-    );
+    if (isStaked){
+      return (
+        <>
+          {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
+          StakedAmount: {stakedAmount} {pool.stakedUnit}
+          <br />
+          <Button
+            variant="primary"
+            onClick={unstakeClick}
+            className="m-1"
+            // disabled={reducerState.stakeAmount <= 0}
+          >
+            Harvest
+          </Button>
+        </>
+      );
+    } else{
+      return (<>Stake harvested</>)
+    }
   }
 };
 

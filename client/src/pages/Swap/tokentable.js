@@ -5,7 +5,6 @@ import { store } from "../../redux/store";
 
 function Table({ tokenIndex, columns, data }) {
   // TODO: Fix tomorrow, some how 2 modals are opened at the same time
-  console.log(`tokenIndexi nxqdddddd`, tokenIndex);
   // selecting in or out?
   //let selecting = store.getState().uiReducer.tokenSelect;
 

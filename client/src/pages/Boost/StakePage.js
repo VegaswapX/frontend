@@ -90,8 +90,6 @@ const StakeForm = ({ pool }) => {
       }
   }, [stakeToken]);
 
-  //
-
   useEffect(async () => {
     const stake = await poolContract.callStatic.stakes(account);
     console.log("stake " + stake[1]);
@@ -248,13 +246,16 @@ const StakeForm = ({ pool }) => {
                 className="stakeInput"
               />
             </Form.Group>
+            
+            <span style={{fontSize: "14pt"}}>Staked amount: {stakedAmount}</span>
+
             <ApproveButton
               approveEnabled={approveEnabled}
               approve={approveClick}
               //disabled={approveEnabled}
             />
             {/* allowance: {allowance} */}
-            <span style={{fontSize: "14pt"}}>Staked amount: {stakedAmount}</span>
+            
             <br/>
             <Button
               variant="primary"

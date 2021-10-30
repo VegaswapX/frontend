@@ -16,7 +16,7 @@ const PoolRow = ({ pool }) => {
   return (
     <tr>
       <td>
-        {pool.poolName}
+        {pool.poolName}&nbsp;&nbsp;
         <InfoModal pool={pool} />
       </td>
       <td>
@@ -29,7 +29,7 @@ const PoolRow = ({ pool }) => {
 const PoolsList = () => {
   return (
     <>
-      <Table className="mb-0" style={{ width: "60%", border: "1px" }}>
+      <Table className="mb-0" style={{ width: "40%", border: "0px" }}>
         {BPOOLS.map((pool) => {
           return <PoolRow pool={pool} />;
         })}

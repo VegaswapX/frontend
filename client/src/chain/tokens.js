@@ -45,6 +45,27 @@ export const TokenList = {
       symbol: "BUSD",
       decimals: 18,
     },
+    BTC: {
+      address: "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+      image: "https://assets.coingecko.com/coins/images/14108/large/Binance-bitcoin.png?1617332330",
+      name: "Binance BTC",
+      symbol: "BTC",
+      decimals: 18
+    },
+    ETH: {
+      address: "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+      image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880",
+      name: "Binance ETH",
+      symbol: "ETH",
+      decimals: 18
+    },
+    CAKE: {
+      address: "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+      image: "https://assets.coingecko.com/coins/images/12632/large/pancakeswap-cake-logo_%281%29.png?1629359065",
+      name: "CAKE",
+      symbol: "CAKE",
+      decimals: 18
+    }
   },
 };
 

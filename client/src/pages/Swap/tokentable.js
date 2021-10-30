@@ -131,47 +131,41 @@ function Table({ tokenIndex, columns, data }) {
   );
 }
 
-// import Table from "./Table";
-
-function Tokentable({ tokenIndex }) {
-  const columns = useMemo(
-    () => [
+const columnsConf = [
+  {
+    Header: "Token",
+    columns: [
+      // {
+      //   Header: "Contract",
+      //   accessor: "contract"
+      // },
       {
-        Header: "Token",
-        columns: [
-          // {
-          //   Header: "Contract",
-          //   accessor: "contract"
-          // },
-          {
-            Header: "Image",
-            accessor: "image",
-          },
-          {
-            Header: "Symbol",
-            accessor: "symbol",
-          },
-          {
-            Header: "Name",
-            accessor: "name",
-          },
-          {
-            Header: "Address",
-            accessor: "contract",
-          },
-        ],
+        Header: "Image",
+        accessor: "image",
+      },
+      {
+        Header: "Symbol",
+        accessor: "symbol",
+      },
+      {
+        Header: "Name",
+        accessor: "name",
+      },
+      {
+        Header: "Address",
+        accessor: "contract",
       },
     ],
-    [],
-  );
+  },
+]
 
-
+function Tokentable({ tokenIndex }) {
   const tokens = arrayTokenList(TokenList.BSC);
 
   // TODO: make TokenList.BSC to by chain variable later
   return (
     <div className="App">
-      <Table tokenIndex={tokenIndex} columns={columns} data={tokens} />
+      <Table tokenIndex={tokenIndex} columns={columnsConf} data={tokens} />
     </div>
   );
 }

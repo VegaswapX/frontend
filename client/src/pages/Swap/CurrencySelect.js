@@ -4,8 +4,6 @@ import { store } from "../../redux/store";
 import Tokentable from "./tokentable.js";
 import {useSelector} from "react-redux";
 
-// TODO one component
-
 function CurrencyButton(props) {
   return (
     <Button
@@ -28,8 +26,6 @@ function CurrencyButton(props) {
   );
 }
 
-
-//BUG select in doesnt work
 export function CurrencySelector({ token, tokenIndex }) {
   const [size] = useState(null);
   const [className] = useState(null);
@@ -40,7 +36,6 @@ export function CurrencySelector({ token, tokenIndex }) {
   function toggle() {
     store.dispatch({ type: "ui/toggleTokenSelector" });
   };
-
 
   return (
     <span>

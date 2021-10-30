@@ -40,6 +40,7 @@ const StakeForm = ({ pool }) => {
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
   const [isStaked, setIsStaked] = useState(0);
+  const [hasStaked, setHasStaked] = useState(0);
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
   const [approveEnabled, setApproveEnabled] = useState(false);
 
@@ -94,6 +95,9 @@ const StakeForm = ({ pool }) => {
   useEffect(async () => {
     const stake = await poolContract.callStatic.stakes(account);
     console.log("stake " + stake[1]);
+    //isadded
+    setHasStaked(stake[4]);
+    //staked flag
     setIsStaked(stake[5]);
     console.log(">> stake " + stake);
     setCanStake(stake[1] == 0);
@@ -180,20 +184,22 @@ const StakeForm = ({ pool }) => {
     debounceOnChange(e);
   }  
 
-  const approve = async () => {
+  const approveClick = async () => {
     console.log("call approve" + stakeToken);
     let status, statusInfo, result;
     try {
+      setLoading(true);
       result = await approve(account, library, stakeToken, poolContract.address);
       [status, statusInfo] = result;
       console.log(">>> " + status)
       console.log(">>> " + statusInfo.message )
-
+      
       if (!status){
         toast.error(statusInfo.message);
       } else {        
         toast.success("approved successfully");
       }
+      setLoading(false);
     } catch{
       toast.error("error with approve");
     }
@@ -204,81 +210,103 @@ const StakeForm = ({ pool }) => {
     return <> Loading</>;
   }
 
-  else if (canStake) {
-    return (
-      <>
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="" column sm={2}>
-              Amount:{" "}
-            </Form.Label>
+  else {
 
-            <input
-              type="text"
-              value={stakeAmount}
-              onChange={handleStakeInput}
-              className="stakeInput"
-            />
-          </Form.Group>
-          <ApproveButton
-            approveEnabled={approveEnabled}
-            approve={approve}
-            //disabled={approveEnabled}
-          />
-          {/* allowance: {allowance} */}
-          staked: {stakedAmount}
-          <Button
-            variant="primary"
-            onClick={stakeClick}
-            className="m-1"
-            // disabled={approveEnabled}
-          >
-            Stake
-          </Button>
-        </Form>
-
-        <Modal
-          show={modalStatus}
-          onHide={() => setModalStatus(false)}
-          // dialogClassName={className}
-          size={100}
-          scrollable={true}
-        >
-          <Modal.Header onHide={() => setModalStatus(false)}>
-            <h4 className="modal-title">Pool Information</h4>
-          </Modal.Header>
-          <Modal.Body>
-            <PoolInfo pool={pool} />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="light" onClick={() => setModalStatus(false)}>
-              Close
-            </Button>{" "}
-          </Modal.Footer>
-        </Modal>
-      </>
-    );
-  } else {
-    if (isStaked){
+    if (hasStaked) {
+      if (isStaked){
+      return (<>
+             {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
+             StakedAmount: {stakedAmount} {pool.stakedUnit}
+             <br />
+             <Button
+               variant="primary"
+               onClick={unstakeClick}
+               className="m-1"
+               // disabled={reducerState.stakeAmount <= 0}
+             >
+               Harvest
+             </Button>
+           </>
+    )
+      } 
+      else {
+      return (<>Harvested</>)
+      }
+    } else {
       return (
         <>
-          {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
-          StakedAmount: {stakedAmount} {pool.stakedUnit}
-          <br />
-          <Button
-            variant="primary"
-            onClick={unstakeClick}
-            className="m-1"
-            // disabled={reducerState.stakeAmount <= 0}
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="" column sm={2}>
+                Amount:{" "}
+              </Form.Label>
+
+              <input
+                type="text"
+                value={stakeAmount}
+                onChange={handleStakeInput}
+                className="stakeInput"
+              />
+            </Form.Group>
+            <ApproveButton
+              approveEnabled={approveEnabled}
+              approve={approveClick}
+              //disabled={approveEnabled}
+            />
+            {/* allowance: {allowance} */}
+            <span style={{fontSize: "14pt"}}>Staked amount: {stakedAmount}</span>
+            <br/>
+            <Button
+              variant="primary"
+              onClick={stakeClick}
+              className="m-1"
+              // disabled={approveEnabled}
+            >
+              Stake
+            </Button>
+          </Form>
+
+          <Modal
+            show={modalStatus}
+            onHide={() => setModalStatus(false)}
+            // dialogClassName={className}
+            size={100}
+            scrollable={true}
           >
-            Harvest
-          </Button>
+            <Modal.Header onHide={() => setModalStatus(false)}>
+              <h4 className="modal-title">Pool Information</h4>
+            </Modal.Header>
+            <Modal.Body>
+              <PoolInfo pool={pool} />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="light" onClick={() => setModalStatus(false)}>
+                Close
+              </Button>{" "}
+            </Modal.Footer>
+          </Modal>
         </>
       );
-    } else{
-      return (<>Stake harvested</>)
     }
+
+    
+    // return <>?? canStake: {canStake}
+    // hasStaked {hasStaked}
+
+        
   }
+
+    // if (canStake) {
+    
+    // } else {
+    //   //hasStaked
+    //   if (!hasStaked){
+    
+    //     );
+    //   } else{
+    //     return (<>Stake harvested</>)
+    //   }
+    // }
 };
 
 const StakePage = ({ pool }) => {

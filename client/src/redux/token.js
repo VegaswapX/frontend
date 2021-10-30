@@ -7,8 +7,6 @@ const initialState = {
 };
 
 export default function tokenReducer(state = initialState, action) {
-  console.log("STORE " + action.type + " " + action.value);
-
   //map to tokens
   try {
     let token = TokenList[action.value];

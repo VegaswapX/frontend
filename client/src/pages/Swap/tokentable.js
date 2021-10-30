@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { useTable } from "react-table";
-import {arrayTokenList, TokenList} from "../../chain/tokens.js";
+import { arrayTokenList, TokenList } from "../../chain/tokens.js";
 import { store } from "../../redux/store";
 
 function Table({ tokenIndex, columns, data }) {
   // TODO: Fix tomorrow, some how 2 modals are opened at the same time
   // selecting in or out?
-  //let selecting = store.getState().uiReducer.tokenSelect;
+  // let selecting = store.getState().uiReducer.tokenSelect;
 
   const [hoveredRow, setHoveredRow] = useState(null);
 
@@ -26,15 +26,16 @@ function Table({ tokenIndex, columns, data }) {
     // console.log("rowClick >>>> " + selecting);
     // console.log(`row`, row);
 
-
-    const {symbol} = row.original;
-    store.dispatch({ type: "swap/setToken", payload: {
+    const { symbol } = row.original;
+    store.dispatch({
+      type: "swap/setToken",
+      payload: {
         tokenIndex,
-        symbol
-      }});
+        symbol,
+      },
+    });
 
     store.dispatch({ type: "ui/toggleTokenSelector" });
-      
 
     // if (selecting == "tokenIn") {
     //   store.dispatch({ type: "ui/togglemodalTokenIn" });
@@ -157,7 +158,7 @@ const columnsConf = [
       },
     ],
   },
-]
+];
 
 function Tokentable({ tokenIndex }) {
   const tokens = arrayTokenList(TokenList.BSC);

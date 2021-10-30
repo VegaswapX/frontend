@@ -1,5 +1,6 @@
 const initialState = {
   isTokenSelectorModalOpened: false,
+  currentModalTokenIndex: null,
   modalTokenIn: false,
   modalTokenOut: false,
   tokenSelect: "",
@@ -14,7 +15,13 @@ export default function uiReducer(state = initialState, action) {
       return { ...state, isTokenSelectorModalOpened: false };
 
     case "ui/toggleTokenSelector":
-      return { ...state, isTokenSelectorModalOpened: !state.isTokenSelectorModalOpened };
+      console.log(`action?.payload`, action);
+      const tokenIndex = action?.payload?.tokenIndex;
+
+      return { ...state,
+        isTokenSelectorModalOpened: !state.isTokenSelectorModalOpened,
+        currentModalTokenIndex: tokenIndex,
+      };
 
     case "ui/togglemodalTokenIn":
       return { ...state, modalTokenIn: !state.modalTokenIn };     

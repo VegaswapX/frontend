@@ -28,7 +28,7 @@ export function TokenInput(
             marginTop: "5px",
           }}
         >
-          <CurrencySelector token={token} tokenIndex={tokenIndex}/>
+          <CurrencySelector token={token} tokenIndex={tokenIndex} />
         </div>
 
         <FormControl

@@ -5,16 +5,17 @@ import { toast } from "react-toastify";
 import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
 import ROUTER_ABI from "../../abis/Router.json";
-import { useContract } from "../../chain/eth.js";
 import { PCS_ROUTER_ADDRESS } from "../../chain/Contracts";
+import { useContract } from "../../chain/eth.js";
 import "./style.css";
 
 import { useSelector } from "react-redux";
 import { Chains, MULTICALL_ADDR } from "../../chain/constant";
+import * as trade from "../../chain/trade.js";
 import { store } from "../../redux/store";
+import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
-import * as trade from "../../chain/trade.js";
 
 const swapButtonStates = {
   wrongNetwork: {
@@ -297,6 +298,7 @@ const PageSwap = () => {
               border: "1px solid #000",
             }}
           >
+            <CurrencySelectorModal />
             <PageSwapInner />
           </div>
         </Col>

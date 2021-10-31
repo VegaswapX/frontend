@@ -10,7 +10,7 @@ import { useContract } from "../../chain/eth.js";
 import "./style.css";
 
 import { useSelector } from "react-redux";
-import { Chains, MULTICALL_ADDR } from "../../chain/constant";
+import { Chains, MULTICALL_ADDR } from "../../chain/eth";
 import * as trade from "../../chain/trade.js";
 import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";

@@ -2,7 +2,7 @@ import React from 'react'
 import {useWeb3React} from "@web3-react/core";
 import {Button} from "react-bootstrap";
 // import NetworkSelectModal from "../Modal/NetworkSelectModal";
-import {supportedChains, LOCAL_NET, BSC_TESTNET, BSC_MAINNET} from "../../chain/eth.js"
+import {supportedChains, LOCAL_NET_ID, getChainName} from "../../chain/eth.js"
 
 const NetworkSwitchButton = () => {
     const { chainId } = useWeb3React()
@@ -17,19 +17,10 @@ const NetworkSwitchButton = () => {
     
 
     function chainEl(){
-        switch(chainId){
-            case LOCAL_NET:
-                return "Localhost"                    
-            case BSC_TESTNET:
-                return "BSC Testnet";
-            case BSC_MAINNET:
-                return "BSC Mainnet";                        
-            default:
-                return "Not supported"
-        }    
+        return getChainName(chainId);
     }
 
-    if (chainId == LOCAL_NET){
+    if (chainId == LOCAL_NET_ID){
         return (
             <> </>
         )

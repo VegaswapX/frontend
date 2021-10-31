@@ -5,27 +5,61 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
 import { Web3Provider } from "@ethersproject/providers";
 
-export const BSC_MAINNET = 56;
-export const BSC_TESTNET = 97;
-export const LOCAL_NET = 1337;
+export const BSC_MAINNET_ID = 56;
+export const BSC_TESTNET_ID = 97;
+export const LOCAL_NET_ID = 1337;
 // ETH_MAINNET: 1,
 // ETH_ROPSTEN: 3,
 // ETH_RINKEBY: 4,
 // ETH_KOVAN: 42,
-export const supportedChains = [BSC_MAINNET, BSC_TESTNET, LOCAL_NET];
+export const supportedChains = [BSC_MAINNET_ID, BSC_TESTNET_ID, LOCAL_NET_ID];
 
 // const TESTNET="https://data-seed-prebsc-1-s1.binance.org:8545"
 
 const LOCALNET_URL = "http://127.0.0.1:8545";
 const BSCMAIN_URL = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
+// Notice: Organize this later
+const Chains = {
+  BSC_MAINNET: {
+    chainId: BSC_MAINNET_ID,
+  },
+  LOCAL_NET: {
+    chainId: LOCAL_NET_ID,
+  },
+};
+
+export function getChainName (chainId) {
+  switch(chainId){
+    case LOCAL_NET_ID:
+        return "Localhost"                    
+    case BSC_TESTNET_ID:
+        return "BSC Testnet";
+    case BSC_MAINNET_ID:
+        return "BSC Mainnet";                        
+    default:
+        return "Not supported"
+}  
+}
+
+//TODO rewview
 export const network = new NetworkConnector({
   urls: {
     1337: LOCALNET_URL,
-    97: BSCMAIN_URL,
+    //97: BSCMAIN_URL,
+    56: BSCMAIN_URL,
   },
-  defaultChainId: LOCAL_NET,
+  defaultChainId: BSC_MAINNET_ID,
 });
+
+
+// export const network = new NetworkConnector({
+//   urls: {
+//     LOCAL_NET_ID: LOCALNET_URL,
+//     BSC_MAINNET_ID: BSCMAIN_URL,
+//   },
+//   defaultChainId: LOCAL_NET_ID,
+// });
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
@@ -187,7 +221,14 @@ export function Web3ConnectionManager({ children }) {
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
 
-  //network?
+  //TODO review
+  console.log("network?? " + network);
+  console.log("network currentChainId? " + network.currentChainId);
+  console.log("network supportedChainIds? " + network.supportedChainIds);
+  // for (let key in network) {
+  //   console.log(key, network[key]);
+  // }
+
   useEffect(() => {
     if (triedEager && !active) {
       activate(network);
@@ -211,6 +252,13 @@ export function WrappedWeb3ReactProvider({ children }) {
     <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
   );
 }
+
+
+export const MULTICALL_ADDR = "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c";
+
+
+export { Chains };
+
 
 // Array of available nodes to connect to
 

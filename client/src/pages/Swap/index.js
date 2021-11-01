@@ -177,7 +177,7 @@ const PageSwapInner = () => {
       // toast
     }
     // TODO: Handle button state after approve success
-    setActionButtonState(actionButtonStates.swap);
+    setActionButtonState(actionButtonStates.correctNetwork);
   }
 
   // TODO: Double check this function, because of failed merge from prev commit

@@ -40,7 +40,6 @@ const actionButtonStates = {
   },
 };
 
-// TODO: Rework on reducer to make this work properly
 const PageSwapInner = () => {
   const { account, library, chainId } = useWeb3React();
 

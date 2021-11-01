@@ -25,13 +25,17 @@ export function TokenInput(
         className={"TokenInput-extra-info"}
         style={{
           display: "flex",
-          flexFlow: "column wrap",
+          flexFlow: "row wrap",
           alignContent: "space-between",
           paddingBottom: "5px",
         }}
       >
         <div>{fromTo}</div>
-        <div>Balance: {balance}</div>
+        <div
+            style={{
+              marginLeft: "auto"
+            }}
+        >Balance: {balance}</div>
       </div>
 
       <InputGroup>

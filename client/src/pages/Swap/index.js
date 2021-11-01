@@ -100,6 +100,12 @@ const PageSwapInner = () => {
     await checkAllowance(multiCallContract, chainId, account);
   }, [multiCallContract, chainId, account, token0]);
 
+  // fetch user balances on token changes
+  useEffect(async () => {
+    await trade.fetchAccountBalances()
+    await checkAllowance(multiCallContract, chainId, account);
+  }, [token0, token1]);
+
   const tokenInputDisabled = false;
 
   async function setOutputAmountText(routerContract, e) {

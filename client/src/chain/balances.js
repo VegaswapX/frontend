@@ -1,23 +1,19 @@
-//const tokenContractIn = useContract(currencyIn.contract, VEGA_CONTRACT_ABI, true);
-//const tokenContractOut = useContract(currencyOut.contract, VEGA_CONTRACT_ABI, true);
+// const tokenContractIn = useContract(currencyIn.contract, VEGA_CONTRACT_ABI, true);
+// const tokenContractOut = useContract(currencyOut.contract, VEGA_CONTRACT_ABI, true);
+import { useWeb3React } from "@web3-react/core";
 import { React, useCallback } from "react";
 import VEGA_CONTRACT_ABI from "../abis/erc20.json";
-import { useWeb3React } from "@web3-react/core";
-import {
-  VEGA_TOKEN_ADDRESS,
-  LP_TOKEN_ADDRESS,
-  BSC_USDT,
-} from "../chain/Contracts.js";
+import { BSC_USDT, LP_TOKEN_ADDRESS, VEGA_TOKEN_ADDRESS } from "../chain/Contracts.js";
 import { useContract } from "../chain/eth.js";
 
 //  export function getBalance(token){
 export const useTokenBalance = () => {
   const { account, library, chainId } = useWeb3React();
-  //const contract = useERC20Token(false)
-  //const contract = useERC20Token(false)
+  // const contract = useERC20Token(false)
+  // const contract = useERC20Token(false)
   const tokencontract = useContract(BSC_USDT, VEGA_CONTRACT_ABI, true);
   return useCallback(() => {
-    //return await evaluateTransaction(tokencontract, 'balanceOf', [address])
+    // return await evaluateTransaction(tokencontract, 'balanceOf', [address])
     return tokencontract.callStatic.balanceOf(account);
   }, []);
 };

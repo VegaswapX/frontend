@@ -1,8 +1,8 @@
 // utils
 import { BigNumber, ethers } from "ethers";
 import ERC20_ABI from "../abis/erc20.json";
-import { getContract } from "./eth";
 import { PCS_ROUTER_ADDRESS } from "./Contracts";
+import { getContract } from "./eth";
 
 const GAS_PRICE = {
   default: "5",

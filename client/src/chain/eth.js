@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
 import { Contract } from "@ethersproject/contracts";
+import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
-import { Web3Provider } from "@ethersproject/providers";
+import { useEffect, useMemo, useState } from "react";
 
 export const BSC_MAINNET_ID = 56;
 export const BSC_TESTNET_ID = 97;
@@ -29,29 +29,28 @@ const Chains = {
   },
 };
 
-export function getChainName (chainId) {
-  switch(chainId){
+export function getChainName(chainId) {
+  switch (chainId) {
     case LOCAL_NET_ID:
-        return "Localhost"                    
+      return "Localhost";
     case BSC_TESTNET_ID:
-        return "BSC Testnet";
+      return "BSC Testnet";
     case BSC_MAINNET_ID:
-        return "BSC Mainnet";                        
+      return "BSC Mainnet";
     default:
-        return "Not supported"
-}  
+      return "Not supported";
+  }
 }
 
-//TODO rewview
+// TODO rewview
 export const network = new NetworkConnector({
   urls: {
     1337: LOCALNET_URL,
-    //97: BSCMAIN_URL,
+    // 97: BSCMAIN_URL,
     56: BSCMAIN_URL,
   },
   defaultChainId: BSC_MAINNET_ID,
 });
-
 
 // export const network = new NetworkConnector({
 //   urls: {
@@ -96,7 +95,7 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
         address,
         ABI,
         library,
-        withSignerIfPossible && account ? account : undefined
+        withSignerIfPossible && account ? account : undefined,
       );
     } catch (error) {
       console.error("Failed to get contract", error);
@@ -221,7 +220,7 @@ export function Web3ConnectionManager({ children }) {
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
 
-  //TODO review
+  // TODO review
   console.log("network?? " + network);
   console.log("network currentChainId? " + network.currentChainId);
   console.log("network supportedChainIds? " + network.supportedChainIds);
@@ -248,17 +247,12 @@ function getLibrary(provider) {
 }
 
 export function WrappedWeb3ReactProvider({ children }) {
-  return (
-    <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
-  );
+  return <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>;
 }
-
 
 export const MULTICALL_ADDR = "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c";
 
-
 export { Chains };
-
 
 // Array of available nodes to connect to
 

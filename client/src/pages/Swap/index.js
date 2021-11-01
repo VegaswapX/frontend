@@ -64,8 +64,7 @@ const PageSwapInner = () => {
     [routerContract],
   );
 
-  // Set swapButton state
-  useEffect(async () => {
+  async function checkAllowance(multiCallContract, chainId, account) {
     if (chainId !== Chains.BSC_MAINNET.chainId) {
       setActionButtonState(actionButtonStates.wrongNetwork);
       return;
@@ -79,9 +78,9 @@ const PageSwapInner = () => {
 
     // check token0 balance
     const res = await trade.hasEnoughAllowance(
-      multiCallContract,
-      token0,
-      account,
+        multiCallContract,
+        token0,
+        account,
     );
 
     if (!!res.error) {
@@ -94,7 +93,12 @@ const PageSwapInner = () => {
     }
 
     setActionButtonState(actionButtonStates.needApprove);
-  }, [multiCallContract, chainId, account]);
+  }
+
+  // Set swapButton state
+  useEffect(async () => {
+    await checkAllowance(multiCallContract, chainId, account);
+  }, [multiCallContract, chainId, account, token0]);
 
   const tokenInputDisabled = false;
 
@@ -161,9 +165,10 @@ const PageSwapInner = () => {
     let slippage = store.getState().swapReducer.slippage;
     const [token0, token1] = store.getState().swapReducer.tokenPath;
     // TODO: Double check slippage value and display on the form minimum received amount
-    console.log(`slippage`, slippage);
-    console.log(`token0`, token0);
-    console.log(`token1`, token1);
+    // DEBUG
+    // console.log(`slippage`, slippage);
+    // console.log(`token0`, token0);
+    // console.log(`token1`, token1);
 
     if (routerContract === null) {
       console.log("Not connected to BSC Mainnet");

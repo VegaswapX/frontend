@@ -32,7 +32,6 @@ function toggle(tokenIndex) {
     if (tokenIndex !== undefined && tokenIndex !== null) {
       payload = { tokenIndex };
     }
-    // return { type: "ui/toggleTokenSelector", payload }
     store.dispatch({ type: "ui/toggleTokenSelector", payload });
   };
 }

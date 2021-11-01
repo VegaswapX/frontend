@@ -23,9 +23,6 @@ function Table({ tokenIndex, columns, data }) {
   });
 
   function handleRowClick(row) {
-    // console.log("rowClick >>>> " + selecting);
-    // console.log(`row`, row);
-
     const { symbol } = row.original;
     store.dispatch({
       type: "swap/setToken",
@@ -36,37 +33,8 @@ function Table({ tokenIndex, columns, data }) {
     });
 
     store.dispatch({ type: "ui/toggleTokenSelector" });
-
-    // if (selecting == "tokenIn") {
-    //   store.dispatch({ type: "ui/togglemodalTokenIn" });
-    //   store.dispatch({ type: "tokenIn/set", value: row.original.symbol });
-    // } else if (selecting == "tokenOut") {
-    //   console.log("dispatch >>>> " + row.original.symbol);
-    //   store.dispatch({ type: "ui/togglemodalTokenOut" });
-    //   store.dispatch({ type: "tokenOut/set", value: row.original.symbol });
-    // }
-
     // row.selected = !row.selected;
   }
-
-  const getTrProps = (state, rowInfo, instance) => {
-    console.log("rowInfo" + rowInfo);
-
-    // if (rowInfo) {
-    //   return {
-    //     onMouseEnter: (e) => {
-    //       console.log("onMouseEnter")
-    //       setHoveredRow(rowInfo.index)
-    //     },
-    //     style: {
-    //       // 'background-color': rowInfo.original.customercomplaints.order_ref === currentOrderId ? '' : 'yellow',
-    //       //"background-color": "yellow",
-    //       background: rowInfo.index === hoveredRow ? '#efefef' : 'white'
-    //     },
-    //   };
-    // }
-    return {};
-  };
 
   /*
     Render the UI for your table
@@ -74,7 +42,6 @@ function Table({ tokenIndex, columns, data }) {
   */
   // TODO: Fix the key property
   return (
-    // getTrProps={getTrProps}
     <table {...getTableProps()}>
       {
         /* <thead>
@@ -95,6 +62,7 @@ function Table({ tokenIndex, columns, data }) {
           // }
           return (
             <tr
+                className={"selecting-token-row"}
               key={i.toString()}
               {...row.getRowProps()}
               onClick={() => {

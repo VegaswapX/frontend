@@ -1,3 +1,8 @@
+.selecting-token-row:hover {
+  cursor: pointer;
+  background-color: #111618;
+}
+
 .dripicons-gear.noti-icon:hover {
   cursor: pointer;
 }

@@ -324,7 +324,7 @@ const PageSwapInner = () => {
               }
             }}
             disabled={actionButtonState.disabled}
-            style={{ width: "90%", height: "55px", fontSize: "1.5em", borderRadius: "10px" }}
+            style={{ width: "85%", height: "55px", fontSize: "1.5em", borderRadius: "10px", marginTop: "5px", marginBottom: "20px" }}
           >
             {actionButtonState.name === "needApprove"
               ? `${actionButtonState.text} ${token0.symbol}`

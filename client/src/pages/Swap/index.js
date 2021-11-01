@@ -81,9 +81,9 @@ const PageSwapInner = () => {
 
     // check token0 balance
     const res = await trade.hasEnoughAllowance(
-        multiCallContract,
-        token0,
-        account,
+      multiCallContract,
+      token0,
+      account,
     );
 
     if (!!res.error) {
@@ -137,23 +137,22 @@ const PageSwapInner = () => {
       return;
     }
 
-    try{
+    try {
       let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
         token0,
         token1,
       ]);
 
       if (!result.error) {
-        
-          const outAmount = result.data;
-          const outputFloat = trade.toFloatNumber(outAmount, token1);
-          console.log(`outputFloat`, outputFloat);
+        const outAmount = result.data;
+        const outputFloat = trade.toFloatNumber(outAmount, token1);
+        console.log(`outputFloat`, outputFloat);
 
-          setToken1Input(outputFloat);
-      } 
-        // setLoadingAmount(false);
+        setToken1Input(outputFloat);
+      }
+      // setLoadingAmount(false);
     } catch (error) {
-      console.log('error parsing input ' + error);
+      console.log("error parsing input " + error);
     }
 
     // TODO: Set proper error message, it can be anything
@@ -248,23 +247,27 @@ const PageSwapInner = () => {
   const tokenInputUI = TokenInput(token0Input, token0, 0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
     fromTo: "From",
-    balance: token0Balance
+    balance: token0Balance,
   });
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
     disabled: tokenInputDisabled,
     fromTo: "To",
-    balance: token1Balance
+    balance: token1Balance,
   });
 
   if (loading) {
     return (
       <>
-      <div style={{alignContent: "center"}}>
-        <h2 style={{ textAlign: "center" }}>Transaction Pending</h2>
-        <Spinner animation="border" role="status" style={{ marginLeft: "45%", marginTop: "20px", width: "60px", height: "60px"}}>
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        <div style={{ alignContent: "center" }}>
+          <h2 style={{ textAlign: "center" }}>Transaction Pending</h2>
+          <Spinner
+            animation="border"
+            role="status"
+            style={{ marginLeft: "45%", marginTop: "20px", width: "60px", height: "60px" }}
+          >
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
         </div>
       </>
     );
@@ -321,7 +324,7 @@ const PageSwapInner = () => {
               }
             }}
             disabled={actionButtonState.disabled}
-            style={{ width: "90%", height: "55px", fontSize: "1.5em", borderRadius: "10px"}}
+            style={{ width: "90%", height: "55px", fontSize: "1.5em", borderRadius: "10px" }}
           >
             {actionButtonState.name === "needApprove"
               ? `${actionButtonState.text} ${token0.symbol}`

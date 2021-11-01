@@ -21,13 +21,14 @@ export function TokenInput(
         padding: "10px",
       }}
     >
-      <div className={"TokenInput-extra-info"}
-           style={{
-             display: "flex",
-             flexFlow: "column wrap",
-             alignContent: "space-between",
-             paddingBottom: "5px",
-           }}
+      <div
+        className={"TokenInput-extra-info"}
+        style={{
+          display: "flex",
+          flexFlow: "column wrap",
+          alignContent: "space-between",
+          paddingBottom: "5px",
+        }}
       >
         <div>{fromTo}</div>
         <div>Balance: {balance}</div>

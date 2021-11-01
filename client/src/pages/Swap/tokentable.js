@@ -62,7 +62,7 @@ function Table({ tokenIndex, columns, data }) {
           // }
           return (
             <tr
-                className={"selecting-token-row"}
+              className={"selecting-token-row"}
               key={i.toString()}
               {...row.getRowProps()}
               onClick={() => {

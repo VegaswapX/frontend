@@ -7,27 +7,34 @@ export function TokenInput(
   token,
   tokenIndex,
   handleChange,
-  opts = { disabled: false },
+  opts = { disabled: false, fromTo: "from", balance: "Loading" },
 ) {
-  const { disabled } = opts;
+  const { disabled, fromTo, balance } = opts;
+  const balanceText = balance === undefined ? "Loading" : balance;
 
   return (
     <div
       style={{
         background: "#22262c",
-        height: "70px",
         borderRadius: "10px",
         width: "100%",
-        padding: "5px",
+        padding: "10px",
       }}
     >
-      <InputGroup className="mb-3">
-        <div
-          style={{
-            marginLeft: "5px",
-            marginTop: "5px",
-          }}
-        >
+      <div className={"TokenInput-extra-info"}
+           style={{
+             display: "flex",
+             flexFlow: "column wrap",
+             alignContent: "space-between",
+             paddingBottom: "5px",
+           }}
+      >
+        <div>{fromTo}</div>
+        <div>Balance: {balance}</div>
+      </div>
+
+      <InputGroup>
+        <div>
           <CurrencySelector token={token} tokenIndex={tokenIndex} />
         </div>
 
@@ -40,13 +47,14 @@ export function TokenInput(
           value={tokenInput}
           disabled={disabled}
           style={{
-            textAlign: "left",
-            fontFamily: "Helvetica",
-            fontSize: "1.3rem",
-            height: "50px",
-            border: "none",
-            marginTop: "5px",
+            // textAlign: "left",
+            // fontFamily: "Helvetica",
+            // fontSize: "1.3rem",
+            // height: "50px",
+            // border: "none",
+            // marginTop: "5px",
             marginLeft: "20px",
+            borderRadius: "8px",
             background: "#1f2125",
           }}
           onChange={handleChange}

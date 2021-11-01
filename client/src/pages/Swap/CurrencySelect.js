@@ -13,6 +13,7 @@ function CurrencyButton(props) {
         border: "3px solid #333",
         borderRadius: "8px",
         height: "50px",
+        width: "140px",
         boxShadow: "none",
       }}
       onClick={props.toggle}

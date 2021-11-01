@@ -54,6 +54,9 @@ const PageSwapInner = () => {
   const [token0Input, setToken0Input] = useState(0);
   const [token1Input, setToken1Input] = useState(0);
 
+  const [token0Balance, setToken0Balance] = useState(undefined);
+  const [token1Balance, setToken1Balance] = useState(undefined);
+
   const [loading, setLoading] = useState(false);
 
   const debounceOnChange = useMemo(
@@ -102,9 +105,21 @@ const PageSwapInner = () => {
 
   // fetch user balances on token changes
   useEffect(async () => {
-    await trade.fetchAccountBalances()
-    await checkAllowance(multiCallContract, chainId, account);
-  }, [token0, token1]);
+    const res = await trade.fetchAccountBalances(multiCallContract, [token0, token1], account);
+    if (!!res.error) {
+      // handle to get baalance eror
+      return;
+    }
+
+    // wrong network error
+    if (res.data === undefined) {
+      return;
+    }
+
+    const [token0Balance_, token1Balance_] = res.data;
+    setToken0Balance(token0Balance_);
+    setToken1Balance(token1Balance_); // combine these 2
+  }, [token0, token1, account]);
 
   const tokenInputDisabled = false;
 
@@ -232,10 +247,14 @@ const PageSwapInner = () => {
 
   const tokenInputUI = TokenInput(token0Input, token0, 0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
+    fromTo: "From",
+    balance: token0Balance
   });
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
     disabled: tokenInputDisabled,
+    fromTo: "To",
+    balance: token1Balance
   });
 
   if (loading) {
@@ -302,7 +321,7 @@ const PageSwapInner = () => {
               }
             }}
             disabled={actionButtonState.disabled}
-            style={{ width: "90%", height: "55px", fontSize: "1.5em" }}
+            style={{ width: "90%", height: "55px", fontSize: "1.5em", borderRadius: "10px"}}
           >
             {actionButtonState.name === "needApprove"
               ? `${actionButtonState.text} ${token0.symbol}`
@@ -321,7 +340,6 @@ const PageSwap = () => {
         <Col lg={12}>
           <div
             style={{
-              height: "360px",
               width: "580px",
               backgroundColor: "#1c1f27",
               color: "white",

@@ -51,10 +51,11 @@ export async function multiCall(multiCallContract, abi, calls) {
 
 export async function fetchAccountBalances(
   multicallContract,
-  tokenPath,
+  [token0, token1],
   ownerAddress,
 ) {
-  const [token0, token1] = tokenPath;
+  let token0Native, token1Native;
+  // TODO: Returns native token balance
   const calls = [
     {
       address: token0.address,
@@ -68,7 +69,30 @@ export async function fetchAccountBalances(
     },
   ];
 
-  const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
+  const res = await multiCall(multicallContract, ERC20_ABI, calls).catch(e => {
+    return { error: e};
+  });
+
+  if (!!res.e) {
+    return res;
+  }
+
+  const { returnData } = res;
+  if (returnData === undefined) {
+    return {
+      data: undefined,
+    }
+  }
+  console.log(`res`, res);
+  // DEBUG
+  console.log(`returnData fetch user balances`, returnData);
+
+  return {
+    data: [
+      toFloatNumber(BigNumber.from(returnData[0]), token0),
+      toFloatNumber(BigNumber.from(returnData[1]), token1)
+    ]
+  };
 }
 
 // TODO: Update this to use getContract and multicall

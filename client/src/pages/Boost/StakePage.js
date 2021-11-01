@@ -38,6 +38,7 @@ const StakeForm = ({ pool }) => {
   const [loading, setLoading] = useState(false);
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
+  const [yieldAmount, setYieldamount] = useState(0);
   const [isStaked, setIsStaked] = useState(0);
   const [hasStaked, setHasStaked] = useState(0);
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
@@ -176,9 +177,13 @@ const StakeForm = ({ pool }) => {
   function handleStakeInput(e) {
     console.log(e);
     const amountText = e.target.value;
-    console.log(amountText);
+    console.log(">> stake amountText " + amountText);
     setStakeamount(amountText);
     debounceOnChange(e);
+
+    //console.log()
+
+    //setYieldamount()
   }  
 
   const approveClick = async () => {
@@ -234,6 +239,9 @@ const StakeForm = ({ pool }) => {
         <>
           <Form>
             <Form.Group className="mb-3">
+            <span style={{fontSize: "14pt"}}>Staked amount: {stakedAmount}</span>
+            <br />
+
               <Form.Label htmlFor="" column sm={2}>
                 Amount:{" "}
               </Form.Label>
@@ -243,10 +251,16 @@ const StakeForm = ({ pool }) => {
                 value={stakeAmount}
                 onChange={handleStakeInput}
                 className="stakeInput"
-              />
+              /> USDT
+
+            {/* <br />
+            //TODO
+              <span style={{fontSize: "14pt"}}>Yield amount: {yieldAmount}</span> */}
+            <br />
+
             </Form.Group>
             
-            <span style={{fontSize: "14pt"}}>Staked amount: {stakedAmount}</span>
+            
 
             <ApproveButton
               approveEnabled={approveEnabled}
@@ -255,7 +269,7 @@ const StakeForm = ({ pool }) => {
             />
             {/* allowance: {allowance} */}
             
-            <br/>
+            {/* <br/> */}
             <Button
               variant="primary"
               onClick={stakeClick}

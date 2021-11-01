@@ -26,6 +26,7 @@
     "apollo-client": "^2.6.10",
     "apollo-link-http": "^1.5.17",
     "axios": "^0.21.1",
+    "axios-hooks": "^3.0.0",
     "axios-mock-adapter": "^1.19.0",
     "bignumber.js": "^9.0.1",
     "bootstrap": "^5.0.2",

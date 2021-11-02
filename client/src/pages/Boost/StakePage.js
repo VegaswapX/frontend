@@ -65,7 +65,6 @@ const StakeForm = ({ pool }) => {
   }
 
   //reducerState.stakeAmount > 0 || reducerState.allowance <= 0
-
   function rounded(amount) {
     amount = amount / 10 ** 18;
     let rounded_amount = Math.round(amount * 100) / 100;

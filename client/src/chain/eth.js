@@ -124,7 +124,7 @@ export const useContractA = (address, ABI, account, library) => {
 };
 
 const useEagerConnect = () => {
-  console.log("useEagerConnect");
+  //console.log("useEagerConnect");
   const { activate, active } = useWeb3React();
 
   const [tried, setTried] = useState(false);
@@ -221,12 +221,9 @@ export function Web3ConnectionManager({ children }) {
   const triedEager = useEagerConnect();
 
   // TODO review
-  console.log("network?? " + network);
-  console.log("network currentChainId? " + network.currentChainId);
-  console.log("network supportedChainIds? " + network.supportedChainIds);
-  // for (let key in network) {
-  //   console.log(key, network[key]);
-  // }
+  //console.log("network: " + network);
+  //console.log("network currentChainId? " + network.currentChainId);
+  //console.log("network supportedChainIds? " + network.supportedChainIds);
 
   useEffect(() => {
     if (triedEager && !active) {

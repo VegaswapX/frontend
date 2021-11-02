@@ -5,6 +5,7 @@ import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { getContractA, Chains } from "../../chain/eth.js";
 import { ethers } from "ethers";
 import { Table } from "react-bootstrap";
+import {agetPrices} from "../../api/data"
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -120,8 +121,16 @@ export function PoolInfo({ pool }) {
       });
 
       
+
+      
     }
   }
+
+  //TODO fix
+  useEffect(() => {
+    agetPrices();
+  },[])
+  
 
   let poolContract;
   useEffect(() => {

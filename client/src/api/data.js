@@ -16,9 +16,9 @@ function getPrices() {
   }
 
 export async function agetPrices() {
-  console.log('calling');
+  console.log('calling agetPrices');
   const result = await getPrices();
   if (result) {
-      console.log(result.data["binancecoin"]);
+      console.log("price " + result.data["binancecoin"]);
   }
 }

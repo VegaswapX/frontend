@@ -35,7 +35,7 @@ export function TokenInput(
             style={{
               marginLeft: "auto"
             }}
-        >Balance: {balance}</div>
+        >Balance: {balanceText}</div>
       </div>
 
       <InputGroup>

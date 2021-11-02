@@ -107,7 +107,6 @@ const PageSwapInner = () => {
   // TOOD: Error 415 from data-seed-prebsc server
   useEffect(async () => {
     const res = await trade.fetchAccountBalances(multiCallContract, [token0, token1], account);
-    console.log(`res`, res);
     if (!!res.error) {
       // handle to get baalance eror
       return;

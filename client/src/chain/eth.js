@@ -14,10 +14,9 @@ export const LOCAL_NET_ID = 1337;
 // ETH_KOVAN: 42,
 export const supportedChains = [BSC_MAINNET_ID, BSC_TESTNET_ID, LOCAL_NET_ID];
 
-// const TESTNET="https://data-seed-prebsc-1-s1.binance.org:8545"
-
 const LOCALNET_URL = "http://127.0.0.1:8545";
-const BSCMAIN_URL = "https://data-seed-prebsc-1-s1.binance.org:8545";
+// https://docs.binance.org/smart-chain/developer/rpc.html
+const BSCMAIN_URL = "https://bsc-dataseed.binance.org/";
 
 // Notice: Organize this later
 const Chains = {
@@ -46,19 +45,10 @@ export function getChainName(chainId) {
 export const network = new NetworkConnector({
   urls: {
     1337: LOCALNET_URL,
-    // 97: BSCMAIN_URL,
     56: BSCMAIN_URL,
   },
   defaultChainId: BSC_MAINNET_ID,
 });
-
-// export const network = new NetworkConnector({
-//   urls: {
-//     LOCAL_NET_ID: LOCALNET_URL,
-//     BSC_MAINNET_ID: BSCMAIN_URL,
-//   },
-//   defaultChainId: LOCAL_NET_ID,
-// });
 
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();

@@ -62,7 +62,8 @@ const PageSwapInner = () => {
   const debounceOnChange = useMemo(
     () =>
       _.debounce(async (e) => {
-        await setOutputAmountText(routerContract, e); // add routerContract here  because of network changes
+        const amountText = e.target.value;
+        await setOutputAmountText(routerContract, amountText); // add routerContract here  because of network changes
       }, 500),
     [routerContract],
   );
@@ -103,6 +104,14 @@ const PageSwapInner = () => {
     await checkAllowance(multiCallContract, chainId, account);
   }, [multiCallContract, chainId, account, token0]);
 
+  // recalculate token0 when token is changed
+  useEffect(async () => {
+    console.log(`token0Input`, token0Input);
+    if (token0Balance !== undefined) {
+      await setOutputAmountText(routerContract, token0Balance);
+    }
+  }, [routerContract, token0]);
+
   async function fetchAccountBalances(token0, token1, account) {
     if (account === undefined) {
       return;
@@ -131,13 +140,12 @@ const PageSwapInner = () => {
 
   const tokenInputDisabled = false;
 
-  async function setOutputAmountText(routerContract, e) {
+  async function setOutputAmountText(routerContract, amountText) {
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
       return;
     }
 
-    const amountText = e.target.value;
     const [token0, token1] = store.getState().swapReducer.tokenPath;
     const token0AmountEther = trade.convertTextToUnint256(amountText, token0);
     if (token0AmountEther === null) {
@@ -154,7 +162,6 @@ const PageSwapInner = () => {
       if (!result.error) {
         const outAmount = result.data;
         const outputFloat = trade.toFloatNumber(outAmount, token1);
-        console.log(`outputFloat`, outputFloat);
 
         setToken1Input(outputFloat);
       }
@@ -332,7 +339,14 @@ const PageSwapInner = () => {
               }
             }}
             disabled={actionButtonState.disabled}
-            style={{ width: "85%", height: "55px", fontSize: "1.5em", borderRadius: "10px", marginTop: "5px", marginBottom: "20px" }}
+            style={{
+              width: "85%",
+              height: "55px",
+              fontSize: "1.5em",
+              borderRadius: "10px",
+              marginTop: "5px",
+              marginBottom: "20px",
+            }}
           >
             {actionButtonState.name === "needApprove"
               ? `${actionButtonState.text} ${token0.symbol}`

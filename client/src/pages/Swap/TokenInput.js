@@ -32,10 +32,12 @@ export function TokenInput(
       >
         <div>{fromTo}</div>
         <div
-            style={{
-              marginLeft: "auto"
-            }}
-        >Balance: {balanceText}</div>
+          style={{
+            marginLeft: "auto",
+          }}
+        >
+          Balance: {balanceText}
+        </div>
       </div>
 
       <InputGroup>

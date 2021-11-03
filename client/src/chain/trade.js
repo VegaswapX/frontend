@@ -83,9 +83,8 @@ export async function fetchAccountBalances(
       data: undefined,
     }
   }
-  console.log(`res`, res);
   // DEBUG
-  console.log(`returnData fetch user balances`, returnData);
+  // console.log(`returnData fetch user balances`, returnData);
 
   return {
     data: [

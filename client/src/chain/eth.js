@@ -68,7 +68,8 @@ export function getContract(address, ABI, library, account) {
 }
 
 export const useContract = (address, ABI, withSignerIfPossible = true) => {
-  console.log("useContract " + address);
+  // DEBUG
+  // console.log("useContract " + address);
   const { account, library } = useWeb3React();
 
   return useMemo(() => {
@@ -100,8 +101,6 @@ export function getContractA(account, library, address, abi) {
 }
 
 export const useContractA = (address, ABI, account, library) => {
-  console.log("useContractA " + address);
-
   return useMemo(() => {
     try {
       console.log("try load contract");

@@ -33,6 +33,11 @@ const actionButtonStates = {
     disabled: true,
     text: "Approving",
   },
+  confirmSwap: {
+    name: "confirmSwap",
+    disabled: true,
+    text: "Confirm swap",
+  },
   correctNetwork: {
     name: "correctNetwork",
     disabled: false,

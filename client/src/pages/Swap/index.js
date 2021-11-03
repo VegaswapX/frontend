@@ -64,11 +64,10 @@ const PageSwapInner = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const debounceOnChange = useMemo(
+  const debounceSetToken1Input = useMemo(
     () =>
-      _.debounce(async (e) => {
-        const amountText = e.target.value;
-        await setOutputAmountText(routerContract, amountText); // add routerContract here  because of network changes
+      _.debounce(async (token0Input) => {
+        await setToken1InputBasedOnRate(routerContract, token0Input); // add routerContract here  because of network changes
       }, 500),
     [routerContract],
   );
@@ -111,11 +110,10 @@ const PageSwapInner = () => {
 
   // recalculate token0 when token is changed
   useEffect(async () => {
-    console.log(`token0Input`, token0Input);
-    if (token0Balance !== undefined) {
-      await setOutputAmountText(routerContract, token0Balance);
+    if (token0Input !== undefined) {
+      debounceSetToken1Input(token0Input);
     }
-  }, [routerContract, token0]);
+  }, [routerContract, token0, token0Input]);
 
   async function fetchAccountBalances(token0, token1, account) {
     if (account === undefined) {
@@ -145,14 +143,14 @@ const PageSwapInner = () => {
 
   const tokenInputDisabled = false;
 
-  async function setOutputAmountText(routerContract, amountText) {
+  async function setToken1InputBasedOnRate(routerContract, token0Input) {
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
       return;
     }
 
     const [token0, token1] = store.getState().swapReducer.tokenPath;
-    const token0AmountEther = trade.convertTextToUnint256(amountText, token0);
+    const token0AmountEther = trade.convertTextToUnint256(token0Input, token0);
     if (token0AmountEther === null) {
       setToken1Input(0);
       return;
@@ -183,9 +181,9 @@ const PageSwapInner = () => {
   }
 
   function handleTokenInputChange(e) {
-    const amountText = e.target.value;
-    setToken0Input(amountText);
-    debounceOnChange(e);
+    const token0Input = e.target.value;
+    setToken0Input(token0Input);
+    debounceSetToken1Input(token0Input);
   }
 
   async function approveToken0() {
@@ -269,12 +267,19 @@ const PageSwapInner = () => {
     disabled: tokenInputDisabled,
     fromTo: "From",
     balance: token0Balance,
+    clickMaxHandler: async () => {
+      setToken0Input(token0Balance);
+      await setToken1Input(routerContract, token0Balance);
+    }
   });
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
     disabled: tokenInputDisabled,
     fromTo: "To",
     balance: token1Balance,
+    clickMaxHandler: async () => {
+      setToken1Input(token1Balance);
+    }
   });
 
   if (loading) {

@@ -6,3 +6,9 @@
 .dripicons-gear.noti-icon:hover {
   cursor: pointer;
 }
+
+.TokenInput-max-button {
+  display: block;
+  padding: 0 10px;
+  cursor: pointer;
+}

@@ -189,13 +189,14 @@ const PageSwapInner = () => {
     setActionButtonState(actionButtonStates.approving);
     const res = await trade.approve(account, library, token0);
     if (!!res.error) {
-      // toast
+      toast.error(res.error.message);
+      setActionButtonState(actionButtonStates.needApprove);
+      return;
     }
     // TODO: Handle button state after approve success
     setActionButtonState(actionButtonStates.correctNetwork);
   }
 
-  // TODO: Double check this function, because of failed merge from prev commit
   async function swap() {
     let slippage = store.getState().swapReducer.slippage;
     const [token0, token1] = store.getState().swapReducer.tokenPath;

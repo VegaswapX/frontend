@@ -103,9 +103,11 @@ const PageSwapInner = () => {
     await checkAllowance(multiCallContract, chainId, account);
   }, [multiCallContract, chainId, account, token0]);
 
-  // fetch user balances on token changes
-  // TOOD: Error 415 from data-seed-prebsc server
-  useEffect(async () => {
+  async function fetchAccountBalances(token0, token1, account) {
+    if (account === undefined) {
+      return;
+    }
+
     const res = await trade.fetchAccountBalances(multiCallContract, [token0, token1], account);
     if (!!res.error) {
       // handle to get baalance eror
@@ -120,6 +122,11 @@ const PageSwapInner = () => {
     const [token0Balance_, token1Balance_] = res.data;
     setToken0Balance(token0Balance_);
     setToken1Balance(token1Balance_); // combine these 2
+  }
+
+  // fetch user balances on token changes
+  useEffect(async () => {
+    await fetchAccountBalances(token0, token1, account);
   }, [token0, token1, account]);
 
   const tokenInputDisabled = false;

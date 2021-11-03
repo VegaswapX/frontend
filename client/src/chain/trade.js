@@ -3,6 +3,8 @@ import { BigNumber, ethers } from "ethers";
 import ERC20_ABI from "../abis/erc20.json";
 import { PCS_ROUTER_ADDRESS } from "./Contracts";
 import { getContract } from "./eth";
+import simpleRpcProvider from "./providers";
+
 
 const GAS_PRICE = {
   default: "5",
@@ -54,20 +56,49 @@ export async function fetchAccountBalances(
   [token0, token1],
   ownerAddress,
 ) {
-  let token0Native, token1Native;
-  // TODO: Returns native token balance
-  const calls = [
-    {
-      address: token0.address,
-      name: "balanceOf",
-      params: [ownerAddress],
-    },
-    {
-      address: token1.address,
-      name: "balanceOf",
-      params: [ownerAddress],
-    },
-  ];
+  let token0NativeBalance, token1NativeBalance;
+  let nativeTokenPosition;
+  if (token0.isNative) {
+    token0NativeBalance = await simpleRpcProvider.getBalance(ownerAddress);
+    nativeTokenPosition = 0;
+  } else if (token1.isNative) {
+    token1NativeBalance = await simpleRpcProvider.getBalance(ownerAddress);
+    nativeTokenPosition = 1;
+  }
+
+  let calls = [];
+  if (nativeTokenPosition !== undefined) {
+    if (nativeTokenPosition === 0) {
+      calls = [
+        {
+          address: token1.address,
+          name: "balanceOf",
+          params: [ownerAddress],
+        },
+      ];
+    } else {
+      calls = [
+        {
+          address: token0.address,
+          name: "balanceOf",
+          params: [ownerAddress],
+        },
+      ];
+    }
+  } else {
+    calls = [
+      {
+        address: token0.address,
+        name: "balanceOf",
+        params: [ownerAddress],
+      },
+      {
+        address: token1.address,
+        name: "balanceOf",
+        params: [ownerAddress],
+      },
+    ];
+  }
 
   const res = await multiCall(multicallContract, ERC20_ABI, calls).catch(e => {
     return { error: e};
@@ -83,14 +114,30 @@ export async function fetchAccountBalances(
       data: undefined,
     }
   }
-  // DEBUG
-  // console.log(`returnData fetch user balances`, returnData);
 
-  return {
-    data: [
+  // DEBUG
+  console.log(`returnData fetch user balances`, returnData);
+
+  let data;
+  if (nativeTokenPosition === undefined) {
+    data = [
       toFloatNumber(BigNumber.from(returnData[0]), token0),
       toFloatNumber(BigNumber.from(returnData[1]), token1)
     ]
+  } else if (nativeTokenPosition === 0) {
+    data = [
+      toFloatNumber(BigNumber.from(token0NativeBalance), token0),
+      toFloatNumber(BigNumber.from(returnData[0]), token1)
+    ]
+  } else {
+    data = [
+      toFloatNumber(BigNumber.from(returnData[0]), token0),
+      toFloatNumber(BigNumber.from(token1NativeBalance), token1),
+    ]
+  }
+
+  return {
+    data
   };
 }
 

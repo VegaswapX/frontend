@@ -200,10 +200,11 @@ const PageSwapInner = () => {
     setActionButtonState(actionButtonStates.correctNetwork);
   }
 
-  async function swap() {
+  async function swap(token0_, token1_, account) {
     let slippage = store.getState().swapReducer.slippage;
     const [token0, token1] = store.getState().swapReducer.tokenPath;
     // TODO: Double check slippage value and display on the form minimum received amount
+
     // DEBUG
     // console.log(`slippage`, slippage);
     // console.log(`token0`, token0);
@@ -253,6 +254,7 @@ const PageSwapInner = () => {
         );
         toast.success(msg);
         setLoading(false);
+        await fetchAccountBalances(token0_, token1_, account);
       } else {
         toast.error(statusInfo.message);
         setLoading(false);
@@ -344,7 +346,7 @@ const PageSwapInner = () => {
             variant="primary"
             onClick={function(e) {
               if (actionButtonState.name === "correctNetwork") {
-                swap();
+                swap(token0, token1, account);
               } else if (actionButtonState.name === "needApprove") {
                 approveToken0();
               }

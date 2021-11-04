@@ -10,13 +10,13 @@ import { useContract } from "../../chain/eth.js";
 import "./style.css";
 
 import { useSelector } from "react-redux";
+import { getTokensPrices } from "../../api/data";
 import { Chains, MULTICALL_ADDR } from "../../chain/eth";
 import * as trade from "../../chain/trade.js";
 import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
-import {getTokensPrices} from "../../api/data";
 
 const actionButtonStates = {
   wrongNetwork: {
@@ -45,6 +45,30 @@ const actionButtonStates = {
     text: "Swap",
   },
 };
+
+function TransactionPending() {
+  return (
+    <div
+      style={{
+        alignContent: "center",
+      }}
+    >
+      <h2 style={{ textAlign: "center" }}>Transaction Pending</h2>
+      <Spinner
+        animation="border"
+        role="status"
+        style={{
+          marginLeft: "45%",
+          marginTop: "20px",
+          width: "60px",
+          height: "60px",
+        }}
+      >
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>
+  );
+}
 
 const PageSwapInner = () => {
   const { account, library, chainId } = useWeb3React();
@@ -338,103 +362,87 @@ const PageSwapInner = () => {
   });
 
   if (loading) {
-    return (
-      <>
-        <div style={{ alignContent: "center" }}>
-          <h2 style={{ textAlign: "center" }}>Transaction Pending</h2>
-          <Spinner
-            animation="border"
-            role="status"
-            style={{
-              marginLeft: "45%",
-              marginTop: "20px",
-              width: "60px",
-              height: "60px",
-            }}
-          >
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Form.Group className="mb-3">
-          <Row>
-            <div class="d-flex justify-content-between">
-              <div></div>
-              <div>
-                <span
-                  style={{
-                    fontSize: "20pt",
-                    marginTop: "5px",
-                    marginLeft: "50%",
-                  }}
-                >
-                  Swap
-                </span>
-              </div>
-              <div>
-                <span style={{ marginRight: "10px" }}>
-                  <SettingsModal />
-                </span>
-              </div>
-            </div>
-          </Row>
+    return <TransactionPending />;
+  }
 
-          <div className={"swapMain"} style={{ marginTop: "15px" }}>
-            <div className={"swapInput"}>
-              {tokenInputUI}
-              <div>
-                {/* <br /> */}
-                <span style={{ marginLeft: "43%" }}>
-                  <Button
-                    onClick={reverseInput}
-                    style={{ background: "#1d1f27" }}
-                  >
-                    <i className="uil-arrows-v-alt"></i>
-                  </Button>
-                </span>
-              </div>
-              {tokenOutputUI}
+  return (
+    <>
+      <Form.Group className="mb-3">
+        <Row>
+          <div class="d-flex justify-content-between">
+            <div></div>
+            <div>
+              <span
+                style={{
+                  fontSize: "20pt",
+                  marginTop: "5px",
+                  marginLeft: "50%",
+                }}
+              >
+                Swap
+              </span>
+            </div>
+            <div>
+              <span style={{ marginRight: "10px" }}>
+                <SettingsModal />
+              </span>
             </div>
           </div>
-        </Form.Group>
+        </Row>
 
-        <div
-          className={"buttons"}
+        <div className={"swapMain"} style={{ marginTop: "15px" }}>
+          <div className={"swapInput"}>
+            {tokenInputUI}
+
+            <div
+                style={{
+                  textAlign: "center",
+                  padding: "10px 0",
+                }}
+            >
+              <span className={"swap-inverseButton"}
+                    onClick={reverseInput}>
+                  <i className="uil-arrows-v-alt"></i>
+              </span>
+            </div>
+
+            {tokenOutputUI}
+          </div>
+        </div>
+      </Form.Group>
+
+      <div
+        className={"buttons"}
+        style={{
+          textAlign: "center",
+        }}
+      >
+        <Button
+          variant="primary"
+          onClick={function(e) {
+            if (actionButtonState.name === "correctNetwork") {
+              swap(token0, token1, account);
+            } else if (actionButtonState.name === "needApprove") {
+              approveToken0();
+            }
+          }}
+          disabled={actionButtonState.disabled}
           style={{
-            textAlign: "center",
+            width: "85%",
+            height: "55px",
+            fontSize: "1.5em",
+            borderRadius: "10px",
+            marginTop: "5px",
+            marginBottom: "20px",
           }}
         >
-          <Button
-            variant="primary"
-            onClick={function(e) {
-              if (actionButtonState.name === "correctNetwork") {
-                swap(token0, token1, account);
-              } else if (actionButtonState.name === "needApprove") {
-                approveToken0();
-              }
-            }}
-            disabled={actionButtonState.disabled}
-            style={{
-              width: "85%",
-              height: "55px",
-              fontSize: "1.5em",
-              borderRadius: "10px",
-              marginTop: "5px",
-              marginBottom: "20px",
-            }}
-          >
-            {actionButtonState.name === "needApprove"
-              ? `${actionButtonState.text} ${token0.symbol}`
-              : actionButtonState.text}
-          </Button>
-        </div>
-      </>
-    );
-  }
+          {actionButtonState.name === "needApprove"
+            ? `${actionButtonState.text} ${token0.symbol}`
+            : actionButtonState.text}
+        </Button>
+      </div>
+    </>
+  );
 };
 
 const PageSwap = () => {

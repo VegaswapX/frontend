@@ -12,7 +12,7 @@ const getRandomIndex = () => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const getNodeUrl = (): string => {
+const getNodeUrl = () => {
   const randomIndex = getRandomIndex();
   return nodes[randomIndex];
 };

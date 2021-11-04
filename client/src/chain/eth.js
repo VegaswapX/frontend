@@ -86,7 +86,7 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
         address,
         ABI,
         library,
-        withSignerIfPossible && account ? account : undefined
+        withSignerIfPossible && account ? account : undefined,
       );
     } catch (error) {
       console.error("Failed to get contract", error);
@@ -113,7 +113,7 @@ export const useContractA = (address, ABI, account, library) => {
 };
 
 const useEagerConnect = () => {
-  //console.log("useEagerConnect");
+  // console.log("useEagerConnect");
   const { activate, active } = useWeb3React();
 
   const [tried, setTried] = useState(false);
@@ -210,9 +210,9 @@ export function Web3ConnectionManager({ children }) {
   const triedEager = useEagerConnect();
 
   // TODO review
-  //console.log("network: " + network);
-  //console.log("network currentChainId? " + network.currentChainId);
-  //console.log("network supportedChainIds? " + network.supportedChainIds);
+  // console.log("network: " + network);
+  // console.log("network currentChainId? " + network.currentChainId);
+  // console.log("network supportedChainIds? " + network.supportedChainIds);
 
   useEffect(() => {
     if (triedEager && !active) {
@@ -233,9 +233,7 @@ function getLibrary(provider) {
 }
 
 export function WrappedWeb3ReactProvider({ children }) {
-  return (
-    <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
-  );
+  return <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>;
 }
 
 export const MULTICALL_ADDR = "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c";

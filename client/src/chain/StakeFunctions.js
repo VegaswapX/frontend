@@ -10,7 +10,7 @@ export const BIG_TEN = new BigNumber(10);
 
 export function toUint256(amount) {
   return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(18 - 6)
+    BigNumber.from(10).pow(18 - 6),
   );
 }
 
@@ -27,7 +27,7 @@ export async function getAllowance(
   multicallContract,
   tokenAddress,
   ownerAddress,
-  spenderAddress
+  spenderAddress,
 ) {
   console.log("spenderAddress >>> " + spenderAddress);
 
@@ -170,7 +170,7 @@ export async function approve(account, library, tokenAddress, spenderAddress) {
   try {
     const tx = await erc20Contract.approve(
       spenderAddress,
-      ethers.constants.MaxUint256
+      ethers.constants.MaxUint256,
     );
     const receipt = await tx.wait();
     console.log(`receipt`, receipt);

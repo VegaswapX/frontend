@@ -10,12 +10,10 @@ const initialState = {
 export default function uiReducer(state = initialState, action) {
   console.log("uiReducer " + action.type);
   switch (action.type) {
-    // case "ui/showmodal":
     case "ui/hideTokenSelector":
       return { ...state, isTokenSelectorModalOpened: false };
 
     case "ui/toggleTokenSelector":
-      console.log(`action?.payload`, action);
       const tokenIndex = action?.payload?.tokenIndex;
 
       return {

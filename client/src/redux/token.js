@@ -1,4 +1,4 @@
-//TODO WBNB, VGA init
+// TODO WBNB, VGA init
 import { TokenList } from "../chain/tokens";
 
 const initialState = {
@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export default function tokenReducer(state = initialState, action) {
-  //map to tokens
+  // map to tokens
   try {
     let token = TokenList[action.value];
     switch (action.type) {

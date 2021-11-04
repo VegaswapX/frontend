@@ -13,11 +13,11 @@ import { useSelector } from "react-redux";
 import { getTokensPrices } from "../../api/data";
 import { Chains, MULTICALL_ADDR } from "../../chain/eth";
 import * as trade from "../../chain/trade.js";
+import { toUint256 } from "../../chain/trade.js";
 import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
-import {toUint256} from "../../chain/trade.js";
 
 const actionButtonStates = {
   wrongNetwork: {
@@ -49,6 +49,11 @@ const actionButtonStates = {
     name: "insufficientBalance",
     disabled: true,
     text: "Insufficient balance",
+  },
+  insufficientLiquidity: {
+    name: "insufficientLiquidity",
+    disabled: true,
+    text: "Insufficient liquidity",
   },
 };
 
@@ -219,23 +224,30 @@ const PageSwapInner = () => {
       return;
     }
 
-    try {
-      let result = await trade.getAmountsOut(
-        routerContract,
-        token0AmountEther,
-        [token0, token1],
-      );
+    let result = await trade.getAmountsOut(
+      routerContract,
+      token0AmountEther,
+      [token0, token1],
+    );
 
-      if (!result.error) {
-        const outAmount = result.data;
-        const outputFloat = trade.toFloatNumber(outAmount, token1);
+    console.log(`result`, result);
 
-        setToken1Input(outputFloat);
+    if (result.error !== false) {
+      const msgCode = result.error?.data?.code;
+      console.log(`msgCode`, msgCode);
+      // no pool found
+      if (msgCode === -32000) {
+        setActionButtonState(actionButtonStates.insufficientLiquidity);
       }
-      // setLoadingAmount(false);
-    } catch (e) {
-      console.log(`Error getAmountsOut`, e);
+      return;
     }
+
+    const outAmount = result.data;
+    const outputFloat = trade.toFloatNumber(outAmount, token1);
+
+    setToken1Input(outputFloat);
+    console.log(`resultAmountOut`, result);
+    // setLoadingAmount(false);
 
     // extraUI
     if (token0Amount > token0Balance) {
@@ -417,14 +429,13 @@ const PageSwapInner = () => {
             {tokenInputUI}
 
             <div
-                style={{
-                  textAlign: "center",
-                  padding: "10px 0",
-                }}
+              style={{
+                textAlign: "center",
+                padding: "10px 0",
+              }}
             >
-              <span className={"swap-inverseButton"}
-                    onClick={reverseInput}>
-                  <i className="uil-arrows-v-alt"></i>
+              <span className={"swap-inverseButton"} onClick={reverseInput}>
+                <i className="uil-arrows-v-alt"></i>
               </span>
             </div>
 

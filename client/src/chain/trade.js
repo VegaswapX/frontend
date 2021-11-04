@@ -349,6 +349,7 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
   if (amount <= 0) {
     return failedGetAmountsOutReturn;
   }
+
   const addressPath = [tokenPath[0].address, tokenPath[1].address];
 
   try {
@@ -356,12 +357,17 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
       .getAmountsOut(amount, addressPath)
       .catch((e) => {
         console.log("Failed to run getAmountsOut", e);
-        return failedGetAmountsOutReturn;
+        return {data: null, error: e};
       });
+
+    if (x.error !== false) {
+      return x;
+    }
+
     return { data: x[1], error: false };
-  } catch {
-    console.log("Failed to run getAmountsOut ", addressPath);
-    return failedGetAmountsOutReturn;
+  } catch(e) {
+    console.log("Failed to run getAmountsOut ", e);
+    return {data: null, error: e};
   }
 }
 

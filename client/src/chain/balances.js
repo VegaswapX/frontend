@@ -3,7 +3,11 @@
 import { useWeb3React } from "@web3-react/core";
 import { React, useCallback } from "react";
 import VEGA_CONTRACT_ABI from "../abis/erc20.json";
-import { BSC_USDT, LP_TOKEN_ADDRESS, VEGA_TOKEN_ADDRESS } from "../chain/Contracts.js";
+import {
+  BSC_USDT,
+  LP_TOKEN_ADDRESS,
+  VEGA_TOKEN_ADDRESS,
+} from "../chain/Contracts.js";
 import { useContract } from "../chain/eth.js";
 
 //  export function getBalance(token){

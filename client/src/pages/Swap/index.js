@@ -1,6 +1,14 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Col, Form, FormControl, InputGroup, Row, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  FormControl,
+  InputGroup,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
@@ -53,7 +61,7 @@ const PageSwapInner = () => {
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
   const [actionButtonState, setActionButtonState] = useState(
-    actionButtonStates.wrongNetwork,
+    actionButtonStates.wrongNetwork
   );
 
   const [token0Input, setToken0Input] = useState(0);
@@ -69,11 +77,11 @@ const PageSwapInner = () => {
       _.debounce(async (token0Input) => {
         await setToken1InputBasedOnRate(routerContract, token0Input); // add routerContract here  because of network changes
       }, 500),
-    [routerContract],
+    [routerContract]
   );
 
   async function checkAllowance(multiCallContract, chainId, account) {
-    console.log("checkAllowance")
+    console.log("checkAllowance");
     if (chainId !== Chains.BSC_MAINNET.chainId) {
       setActionButtonState(actionButtonStates.wrongNetwork);
       return;
@@ -89,7 +97,7 @@ const PageSwapInner = () => {
     const res = await trade.hasEnoughAllowance(
       multiCallContract,
       token0,
-      account,
+      account
     );
 
     if (!!res.error) {
@@ -121,24 +129,35 @@ const PageSwapInner = () => {
       return;
     }
 
-    const res = await trade.fetchAccountBalances(multiCallContract, [token0, token1], account);
-    if (!!res.error) {
-      // handle to get baalance eror
-      return;
-    }
+    try {
+      const res = await trade.fetchAccountBalances(
+        multiCallContract,
+        [token0, token1],
+        account
+      );
+      if (!!res.error) {
+        // handle to get baalance eror
+        return;
+      }
 
-    // wrong network error
-    if (res.data === undefined) {
-      return;
-    }
+      // wrong network error
+      if (res.data === undefined) {
+        return;
+      }
 
-    const [token0Balance_, token1Balance_] = res.data;
-    setToken0Balance(token0Balance_);
-    setToken1Balance(token1Balance_); // combine these 2
+      const [token0Balance_, token1Balance_] = res.data;
+      setToken0Balance(token0Balance_);
+      setToken1Balance(token1Balance_); // combine these 2
+    } catch {
+      console.log("cant fetch balances");
+    }
   }
 
   // fetch user balances on token changes
   useEffect(async () => {
+    if (account === undefined) {
+      return;
+    }
     await fetchAccountBalances(token0, token1, account);
   }, [token0, token1, account]);
 
@@ -158,10 +177,11 @@ const PageSwapInner = () => {
     }
 
     try {
-      let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
-        token0,
-        token1,
-      ]);
+      let result = await trade.getAmountsOut(
+        routerContract,
+        token0AmountEther,
+        [token0, token1]
+      );
 
       if (!result.error) {
         const outAmount = result.data;
@@ -243,7 +263,7 @@ const PageSwapInner = () => {
         amountIn,
         amountOutMin,
         [token0, token1],
-        account,
+        account
       );
       const [status, statusInfo] = result;
       if (status === 1) {
@@ -267,9 +287,9 @@ const PageSwapInner = () => {
   }
 
   function reverseInput() {
-    console.log("reverse");    
+    console.log("reverse");
 
-    store.dispatch({type: "swap/switchToken"});
+    store.dispatch({ type: "swap/switchToken" });
 
     setToken0Input(0);
     setToken1Input(0);
@@ -283,15 +303,21 @@ const PageSwapInner = () => {
     // });
   }
 
-  const tokenInputUI = TokenInput(token0Input, token0, 0, handleTokenInputChange, {
-    disabled: tokenInputDisabled,
-    fromTo: "From",
-    balance: token0Balance,
-    clickMaxHandler: async () => {
-      setToken0Input(token0Balance);
-      await setToken1Input(routerContract, token0Balance);
+  const tokenInputUI = TokenInput(
+    token0Input,
+    token0,
+    0,
+    handleTokenInputChange,
+    {
+      disabled: tokenInputDisabled,
+      fromTo: "From",
+      balance: token0Balance,
+      clickMaxHandler: async () => {
+        setToken0Input(token0Balance);
+        await setToken1Input(routerContract, token0Balance);
+      },
     }
-  });
+  );
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
     disabled: tokenInputDisabled,
@@ -299,7 +325,7 @@ const PageSwapInner = () => {
     balance: token1Balance,
     clickMaxHandler: async () => {
       setToken1Input(token1Balance);
-    }
+    },
   });
 
   if (loading) {
@@ -310,7 +336,12 @@ const PageSwapInner = () => {
           <Spinner
             animation="border"
             role="status"
-            style={{ marginLeft: "45%", marginTop: "20px", width: "60px", height: "60px" }}
+            style={{
+              marginLeft: "45%",
+              marginTop: "20px",
+              width: "60px",
+              height: "60px",
+            }}
           >
             <span className="visually-hidden">Loading...</span>
           </Spinner>
@@ -348,11 +379,14 @@ const PageSwapInner = () => {
               {tokenInputUI}
               <div>
                 {/* <br /> */}
-                <span style={{marginLeft: "43%"}}>
-                  <Button onClick={reverseInput} style={{background: "#1d1f27"}}>                    
+                <span style={{ marginLeft: "43%" }}>
+                  <Button
+                    onClick={reverseInput}
+                    style={{ background: "#1d1f27" }}
+                  >
                     <i className="uil-arrows-v-alt"></i>
                   </Button>
-                  </span>
+                </span>
               </div>
               {tokenOutputUI}
             </div>
@@ -367,7 +401,7 @@ const PageSwapInner = () => {
         >
           <Button
             variant="primary"
-            onClick={function(e) {
+            onClick={function (e) {
               if (actionButtonState.name === "correctNetwork") {
                 swap(token0, token1, account);
               } else if (actionButtonState.name === "needApprove") {

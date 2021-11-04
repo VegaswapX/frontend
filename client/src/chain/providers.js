@@ -1,4 +1,4 @@
-import {ethers} from "ethers";
+import { ethers } from "ethers";
 
 export const nodes = [
   "https://bsc-dataseed1.ninicoin.io",

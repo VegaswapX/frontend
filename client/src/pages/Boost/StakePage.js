@@ -73,7 +73,7 @@ const StakeForm = ({ pool }) => {
 
   useEffect(async () => {
     try {
-      console.log("stakeToken " + stakeToken)
+      console.log("stakeToken " + stakeToken);
       const allowance = await getAllowance(
         multiCallContract,
         stakeToken,
@@ -83,10 +83,7 @@ const StakeForm = ({ pool }) => {
       setAllowance(allowance);
       setApproveEnabled(allowance == 0);
       console.log("allowance >> " + allowance);
-    } 
-      catch(error){
-
-      }
+    } catch (error) {}
   }, [stakeToken]);
 
   useEffect(async () => {
@@ -106,10 +103,9 @@ const StakeForm = ({ pool }) => {
   });
 
   useEffect(async () => {
-
     poolContract.callStatic.stakes(account).then((x) => {
       let amount = x[1];
-      let damount =  amount/10**18;
+      let damount = amount / 10 ** 18;
 
       setStakedamount(damount);
     });
@@ -117,18 +113,18 @@ const StakeForm = ({ pool }) => {
 
   const stakeClick = async () => {
     console.log("stakeClick " + stakeAmount);
-    if (stakeAmount < 10){
+    if (stakeAmount < 10) {
       toast.error("Staking amount too low");
     }
     //TODO check balance first
-          
+
     try {
       setLoading(true);
       let [receipt, receiptstatus] = await stake(stakeAmount, poolContract);
-     
+
       console.log("receipt >>> " + receipt);
       console.log(">>> " + receiptstatus);
-      if (!receipt){
+      if (!receipt) {
         toast.error(receiptstatus.data.message);
       }
     } catch {
@@ -142,17 +138,15 @@ const StakeForm = ({ pool }) => {
     // }
     //console.log(">>> " + statusInfo.message )
 
-
     //stakeF(stakeAmount, poolContract);
   };
 
   const unstakeClick = async () => {
-    
     try {
       setLoading(true);
       let [receipt, receiptstatus] = await unstake(poolContract);
 
-      if (!receipt){
+      if (!receipt) {
         toast.error(receiptstatus.data.message);
       } else {
         toast.success("unstaked successfully");
@@ -162,7 +156,7 @@ const StakeForm = ({ pool }) => {
     }
 
     setLoading(false);
-  }
+  };
 
   const debounceOnChange = useMemo(
     () =>
@@ -183,83 +177,81 @@ const StakeForm = ({ pool }) => {
     //console.log()
 
     //setYieldamount()
-  }  
+  }
 
   const approveClick = async () => {
     console.log("call approve" + stakeToken);
     let status, statusInfo, result;
     try {
       setLoading(true);
-      result = await approve(account, library, stakeToken, poolContract.address);
+      result = await approve(
+        account,
+        library,
+        stakeToken,
+        poolContract.address
+      );
       [status, statusInfo] = result;
-      console.log(">>> " + status)
-      console.log(">>> " + statusInfo.message )
-      
-      if (!status){
+      console.log(">>> " + status);
+      console.log(">>> " + statusInfo.message);
+
+      if (!status) {
         toast.error(statusInfo.message);
-      } else {        
+      } else {
         toast.success("approved successfully");
       }
       setLoading(false);
-    } catch{
+    } catch {
       toast.error("error with approve");
     }
-       
   };
 
   if (loading) {
     return <> Loading</>;
-  }
-
-  else {
-
+  } else {
     if (hasStaked) {
-      if (isStaked){
-      return (<>
-             {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
-             StakedAmount: {stakedAmount} {pool.stakedUnit}
-             <br />
-             <Button
-               variant="primary"
-               onClick={unstakeClick}
-               className="m-1"
-               // disabled={reducerState.stakeAmount <= 0}
-             >
-               Harvest
-             </Button>
-           </>
-    )
-      } 
-      else {
-      return (<>Harvested</>)
+      if (isStaked) {
+        return (
+          <>
+            {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
+            StakedAmount: {stakedAmount} {pool.stakedUnit}
+            <br />
+            <Button
+              variant="primary"
+              onClick={unstakeClick}
+              className="m-1"
+              // disabled={reducerState.stakeAmount <= 0}
+            >
+              Harvest
+            </Button>
+          </>
+        );
+      } else {
+        return <>Harvested</>;
       }
     } else {
       return (
         <>
           <Form>
             <Form.Group className="mb-3">
-            <span style={{fontSize: "14pt"}}>Staked amount: {stakedAmount}</span>
-            <br />
-
+              <span style={{ fontSize: "14pt" }}>
+                Staked amount: {stakedAmount}
+              </span>
+              <br />
               <Form.Label htmlFor="" column sm={2}>
                 Amount:{" "}
               </Form.Label>
-
               <input
                 type="text"
                 value={stakeAmount}
                 onChange={handleStakeInput}
                 className="stakeInput"
-              /> USDT
-
-            {/* <br />
+              />{" "}
+              USDT
+              {/* <br />
             //TODO
               <span style={{fontSize: "14pt"}}>Yield amount: {yieldAmount}</span> */}
-            <br />
-
+              <br />
             </Form.Group>
-            
-            
 
             <ApproveButton
               approveEnabled={approveEnabled}
@@ -267,7 +259,7 @@ const StakeForm = ({ pool }) => {
               //disabled={approveEnabled}
             />
             {/* allowance: {allowance} */}
-            
+
             {/* <br/> */}
             <Button
               variant="primary"
@@ -302,24 +294,21 @@ const StakeForm = ({ pool }) => {
       );
     }
 
-    
     // return <>?? canStake: {canStake}
     // hasStaked {hasStaked}
-
-        
   }
 
-    // if (canStake) {
-    
-    // } else {
-    //   //hasStaked
-    //   if (!hasStaked){
-    
-    //     );
-    //   } else{
-    //     return (<>Stake harvested</>)
-    //   }
-    // }
+  // if (canStake) {
+
+  // } else {
+  //   //hasStaked
+  //   if (!hasStaked){
+
+  //     );
+  //   } else{
+  //     return (<>Stake harvested</>)
+  //   }
+  // }
 };
 
 const StakePage = ({ pool }) => {

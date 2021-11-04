@@ -7,9 +7,14 @@ export function TokenInput(
   token,
   tokenIndex,
   handleChange,
-  opts = { disabled: false, fromTo: "from", balance: "Loading", clickMaxHandler: (e) => {} },
+  opts = {
+    disabled: false,
+    fromTo: "from",
+    balance: "Loading",
+    clickMaxHandler: (e) => {},
+  }
 ) {
-  const { disabled, fromTo, balance, clickMaxHandler} = opts;
+  const { disabled, fromTo, balance, clickMaxHandler } = opts;
   const balanceText = balance === undefined ? "Loading" : balance;
 
   return (
@@ -42,17 +47,17 @@ export function TokenInput(
       </div>
 
       <InputGroup
-          style={{
-            alignItems: "center",
-          }}
-        >
+        style={{
+          alignItems: "center",
+        }}
+      >
         <div>
           <CurrencySelector token={token} tokenIndex={tokenIndex} />
         </div>
 
-        <span
-            onClick={clickMaxHandler}
-            className={"TokenInput-max-button"}>MAX</span>
+        <span onClick={clickMaxHandler} className={"TokenInput-max-button"}>
+          MAX
+        </span>
 
         <FormControl
           size="lg"

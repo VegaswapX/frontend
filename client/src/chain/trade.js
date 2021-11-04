@@ -5,7 +5,6 @@ import { PCS_ROUTER_ADDRESS } from "./Contracts";
 import { getContract } from "./eth";
 import simpleRpcProvider from "./providers";
 
-
 const GAS_PRICE = {
   default: "5",
   fast: "6",
@@ -25,57 +24,81 @@ export async function approve(
   account,
   library,
   token,
-  spenderAddress = PCS_ROUTER_ADDRESS,
+  spenderAddress = PCS_ROUTER_ADDRESS
 ) {
-  const erc20Contract = getContract(token.address, ERC20_ABI, library, account);
-  const res = await erc20Contract.approve(
-    spenderAddress,
-    ethers.constants.MaxUint256,
-  ).catch(e => {
-    console.log(`Cannot approve token: ${token.symbol}`, e);
-    return { error: e };
-  });
-  if (res.error) {
-    return res;
-  }
+  try {
+    const erc20Contract = getContract(
+      token.address,
+      ERC20_ABI,
+      library,
+      account
+    );
+    const res = await erc20Contract
+      .approve(spenderAddress, ethers.constants.MaxUint256)
+      .catch((e) => {
+        console.log(`Cannot approve token: ${token.symbol}`, e);
+        return { error: e };
+      });
+    if (res.error) {
+      return res;
+    }
 
-  return { data: true };
+    return { data: true };
+  } catch {
+    console.log("error approve");
+  }
 }
 
 export async function multiCall(multiCallContract, abi, calls) {
-  const itf = new ethers.utils.Interface(abi);
-  const callData = calls.map((call) => [
-    call.address.toLowerCase(),
-    itf.encodeFunctionData(call.name, call.params),
-  ]);
-  return await multiCallContract.callStatic.aggregate(callData);
+  try {
+    const itf = new ethers.utils.Interface(abi);
+    const callData = calls.map((call) => [
+      call.address.toLowerCase(),
+      itf.encodeFunctionData(call.name, call.params),
+    ]);
+    return await multiCallContract.callStatic.aggregate(callData);
+  } catch {
+    console.log("error multiCall");
+  }
 }
 
 export async function fetchAccountBalances(
   multicallContract,
   [token0, token1],
-  ownerAddress,
+  ownerAddress
 ) {
-  let token0NativeBalance, token1NativeBalance;
-  let nativeTokenPosition;
-  if (token0.isNative) {
-    token0NativeBalance = await simpleRpcProvider.getBalance(ownerAddress);
-    nativeTokenPosition = 0;
-  } else if (token1.isNative) {
-    token1NativeBalance = await simpleRpcProvider.getBalance(ownerAddress);
-    nativeTokenPosition = 1;
-  }
+  
+  try {
 
-  let calls = [];
-  if (nativeTokenPosition !== undefined) {
-    if (nativeTokenPosition === 0) {
-      calls = [
-        {
-          address: token1.address,
-          name: "balanceOf",
-          params: [ownerAddress],
-        },
-      ];
+    let token0NativeBalance, token1NativeBalance;
+    let nativeTokenPosition;
+    if (token0.isNative) {
+      token0NativeBalance = await simpleRpcProvider.getBalance(ownerAddress);
+      nativeTokenPosition = 0;
+    } else if (token1.isNative) {
+      token1NativeBalance = await simpleRpcProvider.getBalance(ownerAddress);
+      nativeTokenPosition = 1;
+    }
+
+    let calls = [];
+    if (nativeTokenPosition !== undefined) {
+      if (nativeTokenPosition === 0) {
+        calls = [
+          {
+            address: token1.address,
+            name: "balanceOf",
+            params: [ownerAddress],
+          },
+        ];
+      } else {
+        calls = [
+          {
+            address: token0.address,
+            name: "balanceOf",
+            params: [ownerAddress],
+          },
+        ];
+      }
     } else {
       calls = [
         {
@@ -83,62 +106,58 @@ export async function fetchAccountBalances(
           name: "balanceOf",
           params: [ownerAddress],
         },
+        {
+          address: token1.address,
+          name: "balanceOf",
+          params: [ownerAddress],
+        },
       ];
     }
-  } else {
-    calls = [
-      {
-        address: token0.address,
-        name: "balanceOf",
-        params: [ownerAddress],
-      },
-      {
-        address: token1.address,
-        name: "balanceOf",
-        params: [ownerAddress],
-      },
-    ];
-  }
 
-  const res = await multiCall(multicallContract, ERC20_ABI, calls).catch(e => {
-    return { error: e};
-  });
+    const res = await multiCall(multicallContract, ERC20_ABI, calls).catch(
+      (e) => {
+        return { error: e };
+      }
+    );
 
-  if (!!res.e) {
-    return res;
-  }
-
-  const { returnData } = res;
-  if (returnData === undefined) {
-    return {
-      data: undefined,
+    if (!!res.e) {
+      return res;
     }
+
+    const { returnData } = res;
+    if (returnData === undefined) {
+      return {
+        data: undefined,
+      };
+    }
+
+    // DEBUG
+    console.log(`returnData fetch user balances`, returnData);
+
+    let data;
+    if (nativeTokenPosition === undefined) {
+      data = [
+        toFloatNumber(BigNumber.from(returnData[0]), token0),
+        toFloatNumber(BigNumber.from(returnData[1]), token1),
+      ];
+    } else if (nativeTokenPosition === 0) {
+      data = [
+        toFloatNumber(BigNumber.from(token0NativeBalance), token0),
+        toFloatNumber(BigNumber.from(returnData[0]), token1),
+      ];
+    } else {
+      data = [
+        toFloatNumber(BigNumber.from(returnData[0]), token0),
+        toFloatNumber(BigNumber.from(token1NativeBalance), token1),
+      ];
+    }
+
+    return {
+      data,
+    };
+  } catch {
+    console.log("error multiCall");
   }
-
-  // DEBUG
-  console.log(`returnData fetch user balances`, returnData);
-
-  let data;
-  if (nativeTokenPosition === undefined) {
-    data = [
-      toFloatNumber(BigNumber.from(returnData[0]), token0),
-      toFloatNumber(BigNumber.from(returnData[1]), token1)
-    ]
-  } else if (nativeTokenPosition === 0) {
-    data = [
-      toFloatNumber(BigNumber.from(token0NativeBalance), token0),
-      toFloatNumber(BigNumber.from(returnData[0]), token1)
-    ]
-  } else {
-    data = [
-      toFloatNumber(BigNumber.from(returnData[0]), token0),
-      toFloatNumber(BigNumber.from(token1NativeBalance), token1),
-    ]
-  }
-
-  return {
-    data
-  };
 }
 
 // TODO: Update this to use getContract and multicall
@@ -147,7 +166,7 @@ export async function hasEnoughAllowance(
   token,
   ownerAddress,
   spenderAddress = PCS_ROUTER_ADDRESS,
-  amount = ethers.constants.MaxUint256,
+  amount = ethers.constants.MaxUint256
 ) {
   if (token.isNative) {
     return true;
@@ -161,10 +180,12 @@ export async function hasEnoughAllowance(
     },
   ];
 
-  const res = await multiCall(multicallContract, ERC20_ABI, calls).catch((e) => {
-    console.log(`Error while getting balance`, e);
-    return { error: e };
-  });
+  const res = await multiCall(multicallContract, ERC20_ABI, calls).catch(
+    (e) => {
+      console.log(`Error while getting balance`, e);
+      return { error: e };
+    }
+  );
   if (!!res.error) {
     return res;
   }
@@ -173,7 +194,7 @@ export async function hasEnoughAllowance(
   // DEBUG
   console.log(`returnData`, returnData);
   const allowance0 = BigNumber.from(returnData[0]);
-  console.log(`allowance0`, allowance0);  
+  console.log(`allowance0`, allowance0);
 
   if (allowance0.toString() === "0") {
     return { data: false, error: null };
@@ -184,7 +205,7 @@ export async function hasEnoughAllowance(
 
 export function toUint256(amount, token) {
   return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(token.decimals - 6),
+    BigNumber.from(10).pow(token.decimals - 6)
   );
 }
 
@@ -220,7 +241,7 @@ export async function swap(
   amountOutMin,
   tokenPath,
   to,
-  deadline = defaultDeadline(),
+  deadline = defaultDeadline()
 ) {
   const addressPath = [tokenPath[0].address, tokenPath[1].address];
 
@@ -232,7 +253,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline,
+      deadline
     );
   }
   if (!!tokenPath[1].isNative) {
@@ -243,7 +264,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline,
+      deadline
     );
   }
 
@@ -253,7 +274,7 @@ export async function swap(
     amountOutMin,
     addressPath,
     to,
-    deadline,
+    deadline
   );
 }
 
@@ -265,7 +286,7 @@ async function swapExactETHForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactETHForTokens");
@@ -278,7 +299,7 @@ async function swapExactETHForTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, value: amountIn, gasPrice },
+      { ...defaultOptions, value: amountIn, gasPrice }
     );
     let receipt = await tx.wait();
     return [receipt.status, receipt];
@@ -295,7 +316,7 @@ async function swapExactTokensForETH(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactTokensForETH...");
@@ -314,7 +335,7 @@ async function swapExactTokensForETH(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice },
+      { ...defaultOptions, gasPrice }
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);
@@ -353,7 +374,7 @@ async function swapExactTokensForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapTokensForExactTokens...");
@@ -367,7 +388,7 @@ async function swapExactTokensForTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice },
+      { ...defaultOptions, gasPrice }
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);

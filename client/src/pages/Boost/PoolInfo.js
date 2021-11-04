@@ -5,7 +5,7 @@ import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { getContractA, Chains } from "../../chain/eth.js";
 import { ethers } from "ethers";
 import { Table } from "react-bootstrap";
-import {agetPrices} from "../../api/data"
+import { agetPrices } from "../../api/data";
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -94,9 +94,8 @@ export function PoolInfo({ pool }) {
       });
       //TODP call current reward instead?
       let curentStep = 0;
-      
-      poolContract.callStatic.currentStep().then((x) => {
 
+      poolContract.callStatic.currentStep().then((x) => {
         //setReward(x.toString());
         curentStep = x;
         console.log("curentStep ? " + curentStep);
@@ -106,7 +105,7 @@ export function PoolInfo({ pool }) {
           setReward(x.toString());
         });
       });
-      
+
       // poolContract.callStatic.currentReward().then((x) => {
       //   setReward(x.toString());
       // });
@@ -119,16 +118,13 @@ export function PoolInfo({ pool }) {
         setMaxStake(x);
         setLoading(false);
       });
-
-      
     }
   }
 
   //TODO fix
   useEffect(() => {
     agetPrices();
-  },[])
-
+  }, []);
 
   let poolContract;
   useEffect(() => {
@@ -168,7 +164,7 @@ export function PoolInfo({ pool }) {
     ["Start time", startTimeF],
     ["End time", endTimeF],
     ["totalAmountStaked", totalAmountStaked + " " + pool.stakedUnit],
-    ["Maximum total to stake", poolMaxStake  + " " + pool.stakedUnit],
+    ["Maximum total to stake", poolMaxStake + " " + pool.stakedUnit],
     ["Yield token to distribute", poolYield + " " + pool.yieldUnit],
     ["% staked", pstaked],
     //["Pool address", shortenAddress(pool.address)],

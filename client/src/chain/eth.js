@@ -86,7 +86,7 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
         address,
         ABI,
         library,
-        withSignerIfPossible && account ? account : undefined,
+        withSignerIfPossible && account ? account : undefined
       );
     } catch (error) {
       console.error("Failed to get contract", error);
@@ -233,7 +233,9 @@ function getLibrary(provider) {
 }
 
 export function WrappedWeb3ReactProvider({ children }) {
-  return <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>;
+  return (
+    <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
+  );
 }
 
 export const MULTICALL_ADDR = "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c";

@@ -35,12 +35,12 @@ export const InfoModal = ({ pool }) => {
       <Modal
         size="lg"
         show={modal}
-        onHide={toggle}
+        onHide={toggle}        
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-lg">
-            Stake
+            Pool Information
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

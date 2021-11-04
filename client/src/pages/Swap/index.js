@@ -2,11 +2,9 @@ import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Button,
+  Row,
   Col,
   Form,
-  FormControl,
-  InputGroup,
-  Row,
   Spinner,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -84,7 +82,7 @@ const PageSwapInner = () => {
     if (account === undefined){
       return;
     }
-    
+
     console.log("checkAllowance");
     if (chainId !== Chains.BSC_MAINNET.chainId) {
       setActionButtonState(actionButtonStates.wrongNetwork);

@@ -44,7 +44,20 @@ const StakeForm = ({ pool }) => {
   const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
   const [approveEnabled, setApproveEnabled] = useState(false);
 
+  const [reward, setReward] = useState();
+  const [totalReward, setTotalreward] = useState();
+  const [roi, setRoi] = useState();
+
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
+
+  //TODO!
+  const stakeCurrency = pool.stakedUnit;
+  const rewardCurrency = pool.yieldUnit;
+  const yieldPrice = 0.012;
+  
+
+  // stakedUnit: "USDT",
+  //   yieldUnit: "VGA",
 
   let poolContract, vegaContract;
   vegaContract = getContractA(
@@ -69,6 +82,10 @@ const StakeForm = ({ pool }) => {
     amount = amount / 10 ** 18;
     let rounded_amount = Math.round(amount * 100) / 100;
     return rounded_amount;
+  }
+
+  function calculateRoi(reward){
+    return Math.round(reward*yieldPrice*10000)/100;
   }
 
   useEffect(async () => {
@@ -108,6 +125,21 @@ const StakeForm = ({ pool }) => {
       let damount = amount / 10 ** 18;
 
       setStakedamount(damount);
+    });
+  }, [poolContract]);
+
+  useEffect(async () => {
+    poolContract.callStatic.currentStep().then((x) => {
+      //setReward(x.toString());
+      let curentStep = x;
+      //console.log("curentStep ? " + curentStep);
+
+      poolContract.callStatic.rewardSteps(curentStep).then((x) => {
+        //console.log(">>>>> rewardSteps " + x);
+        setReward(x.toString());
+        
+        setRoi(calculateRoi(x).toString());
+      });
     });
   }, [poolContract]);
 
@@ -162,7 +194,11 @@ const StakeForm = ({ pool }) => {
     () =>
       _.debounce(async (e) => {
         //await setOutputAmountText(routerContract, e);
-        console.log(">> " + e);
+        let z = e.target.value;
+        console.log("event >> " + z);
+        console.log("total: >> " + z*reward);
+        setStakeamount(z);
+        setTotalreward(z*reward);
       }, 300),
     []
   );
@@ -172,7 +208,10 @@ const StakeForm = ({ pool }) => {
     const amountText = e.target.value;
     console.log(">> stake amountText " + amountText);
     setStakeamount(amountText);
+    
     debounceOnChange(e);
+    console.log("> " + reward);
+    
 
     //console.log()
 
@@ -244,7 +283,7 @@ const StakeForm = ({ pool }) => {
                 onChange={handleStakeInput}
                 className="stakeInput"
               />{" "}
-              USDT
+              {stakeCurrency}
               {/* <br />
             //TODO
               <span style={{fontSize: "14pt"}}>Yield amount: {yieldAmount}</span> */}
@@ -252,7 +291,24 @@ const StakeForm = ({ pool }) => {
             </Form.Group>
 
             <div>
-            Yield amount
+            Yield multiplier: {reward} {rewardCurrency} per {stakeCurrency}
+            </div>
+
+            <br />
+
+            <div>
+            VGA price: {yieldPrice}$
+            </div>
+
+            <br />
+
+            <div>
+            Yield amount: {totalReward}  {rewardCurrency}
+            </div>
+
+            <br />
+            <div>
+            Yield ROI: {roi} %
             </div>
 
             <br />

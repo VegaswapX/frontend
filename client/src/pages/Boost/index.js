@@ -3,10 +3,8 @@ import React, { useState } from "react";
 
 import { Button, Table } from "react-bootstrap";
 // import PageTitle from '../../components/PageTitle';
-import StakePage from "./StakePage.js";
 import "react-toastify/dist/ReactToastify.css";
 import { BPOOLS } from "../../chain/Contracts.js";
-import { store } from "../../redux/store";
 import { InfoModal } from "./InfoModal";
 import { StakeModal } from "./StakeModal";
 import {
@@ -40,11 +38,13 @@ const PoolRow = ({ pool }) => {
       </td>
 
       <td>
-        <StakeModal pool={pool} />
-      </td>
-      <td>
         <InfoModal pool={pool} />
       </td>
+
+      <td>
+        <StakeModal pool={pool} />
+      </td>
+      
       {/* <td>
         TVL
       </td> */}
@@ -61,8 +61,8 @@ const HeadRow = ({ pool }) => {
 
       <td>Yield currency</td>
 
-      <td>Stake</td>
       <td>Information</td>
+      <td>Stake Action</td>
 
       {/* <td>
         TVL

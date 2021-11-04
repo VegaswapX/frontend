@@ -15,7 +15,12 @@ const VGA_IMG =
 const USDT_IMG =
   "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707";
 
+const IMAGES = {
+  USDT: USDT_IMG,
+  VGA: VGA_IMG
+}
 
+  
 const PoolRow = ({ pool }) => {
   console.log(">>> " + pool.poolName);
 
@@ -26,11 +31,11 @@ const PoolRow = ({ pool }) => {
       </td>
 
       <td>
-      <img src={`${USDT_IMG}`} alt="currency"></img>
+      <img src={`${IMAGES[pool.stakedUnit]}`} alt="currency"></img>
       </td>
 
       <td>
-      <img src={`${VGA_IMG}`} alt="currency"></img>
+      <img src={`${IMAGES[pool.yieldUnit]}`} alt="currency"></img>
       </td>      
 
       <td>

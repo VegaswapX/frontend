@@ -16,6 +16,7 @@ import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
+import {getTokensPrices} from "../../api/data";
 
 const actionButtonStates = {
   wrongNetwork: {
@@ -107,6 +108,13 @@ const PageSwapInner = () => {
 
     setActionButtonState(actionButtonStates.needApprove);
   }
+
+  useEffect(async () => {
+    getTokensPrices().then(async (res) => {
+      const json = await res.json();
+      console.log(`res`, json);
+    });
+  }, []);
 
   // Set swapButton state
   useEffect(async () => {

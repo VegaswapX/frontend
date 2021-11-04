@@ -81,6 +81,10 @@ const PageSwapInner = () => {
   );
 
   async function checkAllowance(multiCallContract, chainId, account) {
+    if (account === undefined){
+      return;
+    }
+    
     console.log("checkAllowance");
     if (chainId !== Chains.BSC_MAINNET.chainId) {
       setActionButtonState(actionButtonStates.wrongNetwork);

@@ -37,13 +37,13 @@ const AccountConnect = ({ connect }) => {
     if (account) {
       //console.log("account" + account);
       return (
-        <Button onClick={disconnect} variant="info">
+        <Button onClick={disconnect} variant="info" style={{width:"100px"}}>
           Disconnect
         </Button>
       );
     } else {
       return (
-        <Button onClick={connect} variant="primary">
+        <Button onClick={connect} variant="primary" style={{width:"100px"}}>
           Connect
         </Button>
       );
@@ -96,8 +96,8 @@ const AccountManage = () => {
   if (networkStatus) {
     return (
       <>
-        <NetworkSwitchButton />
         <AccountInfo />
+        <NetworkSwitchButton />
         <AccountConnect connect={connect} />
       </>
     );

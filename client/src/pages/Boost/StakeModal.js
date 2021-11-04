@@ -25,6 +25,20 @@ export const StakeModal = ({ pool }) => {
       </Button>
 
       <Modal
+        size="lg"
+        show={modal}
+        onHide={toggle}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-lg">
+            Stake
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body><StakePage pool={pool} /></Modal.Body>
+      </Modal>
+
+      {/* <Modal
         show={modal}
         onHide={toggle}
         dialogClassName={className}
@@ -42,7 +56,7 @@ export const StakeModal = ({ pool }) => {
             Close
           </Button>{" "}
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
       {/* </span> */}
     </>
   );

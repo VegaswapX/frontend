@@ -213,7 +213,7 @@ const StakeForm = ({ pool }) => {
         return (
           <>
             {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
-            StakedAmount: {stakedAmount} {pool.stakedUnit}
+            Staked Amount: {stakedAmount} {pool.stakedUnit}
             <br />
             <Button
               variant="primary"
@@ -231,14 +231,12 @@ const StakeForm = ({ pool }) => {
     } else {
       return (
         <>
+        <div style={{marginLeft: "10px", fontSize: "15pt"}}>
           <Form>
             <Form.Group className="mb-3">
-              <span style={{ fontSize: "14pt" }}>
-                Staked amount: {stakedAmount}
-              </span>
-              <br />
-              <Form.Label htmlFor="" column sm={2}>
-                Amount:{" "}
+              
+              <Form.Label htmlFor="" column sm={3}>
+                Stake Amount:{" "}
               </Form.Label>
               <input
                 type="text"
@@ -253,29 +251,40 @@ const StakeForm = ({ pool }) => {
               <br />
             </Form.Group>
 
-            <ApproveButton
-              approveEnabled={approveEnabled}
-              approve={approveClick}
-              //disabled={approveEnabled}
-            />
-            {/* allowance: {allowance} */}
+            <div>
+            Yield amount
+            </div>
 
-            {/* <br/> */}
-            <Button
-              variant="primary"
-              onClick={stakeClick}
-              className="m-1"
-              // disabled={approveEnabled}
-            >
-              Stake
-            </Button>
+            <br />
+
+            <span style={{marginLeft: "40%"}}>
+
+              <ApproveButton
+                approveEnabled={approveEnabled}
+                approve={approveClick}                
+                //disabled={approveEnabled}
+              />
+              {/* allowance: {allowance} */}
+
+              {/* <br/> */}
+              &nbsp;&nbsp;
+              <Button
+                variant="primary"
+                onClick={stakeClick}
+                className="m-1"
+                style={{marginLeft: "100px"}}
+                // disabled={approveEnabled}
+              >
+                Stake
+              </Button>
+              </span>
           </Form>
-
+          </div>
+         
           <Modal
             show={modalStatus}
             onHide={() => setModalStatus(false)}
-            // dialogClassName={className}
-            size={100}
+            // dialogClassName={className}            
             scrollable={true}
           >
             <Modal.Header onHide={() => setModalStatus(false)}>
@@ -290,6 +299,7 @@ const StakeForm = ({ pool }) => {
               </Button>{" "}
             </Modal.Footer>
           </Modal>
+          
         </>
       );
     }

@@ -15,10 +15,6 @@ export const InfoModal = ({ pool }) => {
     setModal(!modal);
   };
 
-  const openModalWithHeaderClass = (className) => {
-    setHeaderClassName(className);
-    toggle();
-  };
 
   return (
     <>
@@ -37,32 +33,22 @@ export const InfoModal = ({ pool }) => {
       </Button> */}
 
       <Modal
+        size="lg"
         show={modal}
         onHide={toggle}
-        dialogClassName={className}
-        size={size}
-        scrollable={scroll}
+        aria-labelledby="example-modal-sizes-title-lg"
       >
-        <Modal.Header
-          onHide={toggle}
-          closeButton
-          className={classNames(
-            "modal-colored-header",
-            "bg-" + headerClassName
-          )}
-        >
-          <h4 className="modal-title">Pool Details</h4>
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-lg">
+            Stake
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <PoolInfo pool={pool} />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="light" onClick={toggle}>
-            Close
-          </Button>{" "}
-        </Modal.Footer>
+        <PoolInfo pool={pool} />
+          </Modal.Body>
       </Modal>
-      {/* </span> */}
+
+      
     </>
   );
 };

@@ -266,6 +266,23 @@ const PageSwapInner = () => {
     }
   }
 
+  function reverseInput() {
+    console.log("reverse");    
+
+    store.dispatch({type: "swap/switchToken"});
+
+    setToken0Input(0);
+    setToken1Input(0);
+
+    // store.dispatch({
+    //   type: "swap/setToken",
+    //   payload: {
+    //     tokenIndex,
+    //     symbol,
+    //   },
+    // });
+  }
+
   const tokenInputUI = TokenInput(token0Input, token0, 0, handleTokenInputChange, {
     disabled: tokenInputDisabled,
     fromTo: "From",
@@ -330,7 +347,12 @@ const PageSwapInner = () => {
             <div className={"swapInput"}>
               {tokenInputUI}
               <div>
-                <br />
+                {/* <br /> */}
+                <span style={{marginLeft: "43%"}}>
+                  <Button onClick={reverseInput} style={{background: "#1d1f27"}}>                    
+                    <i className="uil-arrows-v-alt"></i>
+                  </Button>
+                  </span>
               </div>
               {tokenOutputUI}
             </div>

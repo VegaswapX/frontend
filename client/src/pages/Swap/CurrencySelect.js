@@ -28,6 +28,7 @@ function CurrencyButton(props) {
 }
 
 function toggle(tokenIndex) {
+  console.log(">> select " + tokenIndex);
   return () => {
     let payload = null;
     if (tokenIndex !== undefined && tokenIndex !== null) {

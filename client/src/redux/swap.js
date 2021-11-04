@@ -28,6 +28,12 @@ export default function swapReducer(state = initialState, action) {
       tokenPath_[tokenIndex] = selectedToken; // TODO: chainId as variable
       return { ...state, tokenPath: tokenPath_ };
 
+    case "swap/switchToken":
+        // DEBUG        
+      console.log("switchToken >> " + state.tokenPath);
+      const tokenPathR = state.tokenPath.slice().reverse();
+      return { ...state, tokenPath: tokenPathR };
+
     case "swap/setSlippage":
       return { ...state, slippage: action.payload };
     default:

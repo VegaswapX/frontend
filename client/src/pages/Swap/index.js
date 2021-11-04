@@ -275,6 +275,7 @@ const PageSwapInner = () => {
         );
         toast.success(msg);
         setLoading(false);
+        resetInputs();
         await fetchAccountBalances(token0_, token1_, account);
       } else {
         toast.error(statusInfo.message);
@@ -286,13 +287,17 @@ const PageSwapInner = () => {
     }
   }
 
+  function resetInputs(){
+    setToken0Input(0);
+    setToken1Input(0);
+  }
+
   function reverseInput() {
     console.log("reverse");
 
     store.dispatch({ type: "swap/switchToken" });
 
-    setToken0Input(0);
-    setToken1Input(0);
+    resetInputs();
 
     // store.dispatch({
     //   type: "swap/setToken",

@@ -121,8 +121,6 @@ export function PoolInfo({ pool }) {
       });
 
       
-
-      
     }
   }
 
@@ -130,7 +128,7 @@ export function PoolInfo({ pool }) {
   useEffect(() => {
     agetPrices();
   },[])
-  
+
 
   let poolContract;
   useEffect(() => {

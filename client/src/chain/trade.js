@@ -127,6 +127,7 @@ export async function hasEnoughAllowance(
   // DEBUG
   console.log(`returnData`, returnData);
   const allowance0 = BigNumber.from(returnData[0]);
+  console.log(`allowance0`, allowance0);  
 
   if (allowance0.toString() === "0") {
     return { data: false, error: null };

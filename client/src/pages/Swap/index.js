@@ -1,12 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  Row,
-  Col,
-  Form,
-  Spinner,
-} from "react-bootstrap";
+import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import _ from "underscore";
 import MULTICALL_ABI from "../../abis/Multicall.json";
@@ -59,7 +53,7 @@ const PageSwapInner = () => {
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
   const [actionButtonState, setActionButtonState] = useState(
-    actionButtonStates.wrongNetwork
+    actionButtonStates.wrongNetwork,
   );
 
   const [token0Input, setToken0Input] = useState(0);
@@ -75,11 +69,11 @@ const PageSwapInner = () => {
       _.debounce(async (token0Input) => {
         await setToken1InputBasedOnRate(routerContract, token0Input); // add routerContract here  because of network changes
       }, 500),
-    [routerContract]
+    [routerContract],
   );
 
   async function checkAllowance(multiCallContract, chainId, account) {
-    if (account === undefined){
+    if (account === undefined) {
       return;
     }
 
@@ -99,7 +93,7 @@ const PageSwapInner = () => {
     const res = await trade.hasEnoughAllowance(
       multiCallContract,
       token0,
-      account
+      account,
     );
 
     if (!!res.error) {
@@ -135,7 +129,7 @@ const PageSwapInner = () => {
       const res = await trade.fetchAccountBalances(
         multiCallContract,
         [token0, token1],
-        account
+        account,
       );
       if (!!res.error) {
         // handle to get baalance eror
@@ -182,7 +176,7 @@ const PageSwapInner = () => {
       let result = await trade.getAmountsOut(
         routerContract,
         token0AmountEther,
-        [token0, token1]
+        [token0, token1],
       );
 
       if (!result.error) {
@@ -265,7 +259,7 @@ const PageSwapInner = () => {
         amountIn,
         amountOutMin,
         [token0, token1],
-        account
+        account,
       );
       const [status, statusInfo] = result;
       if (status === 1) {
@@ -323,7 +317,7 @@ const PageSwapInner = () => {
         setToken0Input(token0Balance);
         await setToken1Input(routerContract, token0Balance);
       },
-    }
+    },
   );
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
@@ -408,7 +402,7 @@ const PageSwapInner = () => {
         >
           <Button
             variant="primary"
-            onClick={function (e) {
+            onClick={function(e) {
               if (actionButtonState.name === "correctNetwork") {
                 swap(token0, token1, account);
               } else if (actionButtonState.name === "needApprove") {

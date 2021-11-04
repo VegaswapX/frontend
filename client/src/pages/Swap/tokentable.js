@@ -43,7 +43,8 @@ function Table({ tokenIndex, columns, data }) {
   // TODO: Fix the key property
   return (
     <table {...getTableProps()}>
-      {/* <thead>
+      {
+        /* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -51,7 +52,8 @@ function Table({ tokenIndex, columns, data }) {
             ))}
           </tr>
         ))}
-      </thead> */}
+      </thead> */
+      }
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);

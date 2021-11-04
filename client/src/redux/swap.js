@@ -1,11 +1,8 @@
-import {TokenList} from "../chain/tokens";
+import { TokenList } from "../chain/tokens";
 
 const initialState = {
   slippage: 0.5 / 100,
-  tokenPath: [
-    TokenList.BSC.WBNB,
-    TokenList.BSC.VGA,
-  ],
+  tokenPath: [TokenList.BSC.WBNB, TokenList.BSC.VGA],
 };
 
 // TODO: Magic number all over the places
@@ -23,13 +20,13 @@ export default function swapReducer(state = initialState, action) {
         const tokenPath_ = state.tokenPath.slice().reverse();
         return { ...state, tokenPath: tokenPath_ };
       }
-      
+
       const tokenPath_ = state.tokenPath.slice();
       tokenPath_[tokenIndex] = selectedToken; // TODO: chainId as variable
       return { ...state, tokenPath: tokenPath_ };
 
     case "swap/switchToken":
-        // DEBUG        
+      // DEBUG
       console.log("switchToken >> " + state.tokenPath);
       const tokenPathR = state.tokenPath.slice().reverse();
       return { ...state, tokenPath: tokenPathR };

@@ -287,7 +287,7 @@ const PageSwapInner = () => {
     }
   }
 
-  function resetInputs(){
+  function resetInputs() {
     setToken0Input(0);
     setToken1Input(0);
   }

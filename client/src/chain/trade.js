@@ -67,9 +67,7 @@ export async function fetchAccountBalances(
   [token0, token1],
   ownerAddress
 ) {
-  
   try {
-
     let token0NativeBalance, token1NativeBalance;
     let nativeTokenPosition;
     if (token0.isNative) {

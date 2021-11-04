@@ -4,7 +4,7 @@ const initialState = {
   modalTokenIn: false,
   modalTokenOut: false,
   tokenSelect: "",
-  poolInfo: false
+  poolInfo: false,
 };
 
 export default function uiReducer(state = initialState, action) {
@@ -18,21 +18,22 @@ export default function uiReducer(state = initialState, action) {
       console.log(`action?.payload`, action);
       const tokenIndex = action?.payload?.tokenIndex;
 
-      return { ...state,
+      return {
+        ...state,
         isTokenSelectorModalOpened: !state.isTokenSelectorModalOpened,
         currentModalTokenIndex: tokenIndex,
       };
 
     case "ui/togglemodalTokenIn":
-      return { ...state, modalTokenIn: !state.modalTokenIn };     
+      return { ...state, modalTokenIn: !state.modalTokenIn };
     case "ui/togglemodalTokenOut":
-      return { ...state, modalTokenOut: !state.modalTokenOut };     
+      return { ...state, modalTokenOut: !state.modalTokenOut };
     case "ui/tokenselectIn":
-        return { ...state, tokenSelect: "tokenIn" };          
+      return { ...state, tokenSelect: "tokenIn" };
     case "ui/tokenselectOut":
-        return { ...state, tokenSelect: "tokenOut" };          
+      return { ...state, tokenSelect: "tokenOut" };
     case "ui/showpoolinfo":
-        return { ...state, poolInfo: !state.poolInfo };
+      return { ...state, poolInfo: !state.poolInfo };
     default:
       return state;
   }

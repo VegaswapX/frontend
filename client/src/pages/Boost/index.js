@@ -17,32 +17,29 @@ const USDT_IMG =
 
 const IMAGES = {
   USDT: USDT_IMG,
-  VGA: VGA_IMG
-}
+  VGA: VGA_IMG,
+};
 
-  
 const PoolRow = ({ pool }) => {
   console.log(">>> " + pool.poolName);
 
   return (
-    <tr style={{textAlign: "center", color: "white", cellpadding: "10px"}}>
-       <td>
-        {pool.poolName}&nbsp;&nbsp;
+    <tr style={{ textAlign: "center", color: "white", cellpadding: "10px" }}>
+      <td>{pool.poolName}&nbsp;&nbsp;</td>
+
+      <td>
+        <img src={`${IMAGES[pool.stakedUnit]}`} alt="currency"></img>
       </td>
 
       <td>
-      <img src={`${IMAGES[pool.stakedUnit]}`} alt="currency"></img>
+        <img src={`${IMAGES[pool.yieldUnit]}`} alt="currency"></img>
       </td>
 
       <td>
-      <img src={`${IMAGES[pool.yieldUnit]}`} alt="currency"></img>
-      </td>      
-
-      <td>
-        <StakeModal pool={pool} />        
+        <StakeModal pool={pool} />
       </td>
       <td>
-      <InfoModal pool={pool} />
+        <InfoModal pool={pool} />
       </td>
       {/* <td>
         TVL
@@ -52,27 +49,16 @@ const PoolRow = ({ pool }) => {
 };
 
 const HeadRow = ({ pool }) => {
-
   return (
-    <tr style={{textAlign: "center", color: "white", cellpadding: "10px"}}>
-       <td>
-        Poolname
-      </td>
+    <tr style={{ textAlign: "center", color: "white", cellpadding: "10px" }}>
+      <td>Poolname</td>
 
-      <td>
-      Stake currency
-      </td>
+      <td>Stake currency</td>
 
-      <td>
-      Yield currency
-      </td>     
+      <td>Yield currency</td>
 
-      <td>
-        Stake
-      </td>
-      <td>
-      Info
-      </td>
+      <td>Stake</td>
+      <td>Info</td>
 
       {/* <td>
         TVL
@@ -85,7 +71,14 @@ const PoolsList = () => {
   return (
     <>
       {/* <Table className="mb-0" style={{ width: "40%", border: "solid white 1px;", cellspacing: "10px", backgroundColor: "#1c1f27" }}> */}
-      <Table style={{ width: "40%", border: "solid white 1px;", cellspacing: "10px", backgroundColor: "#1c1f27" }}>
+      <Table
+        style={{
+          width: "40%",
+          border: "solid white 1px;",
+          cellspacing: "10px",
+          backgroundColor: "#1c1f27",
+        }}
+      >
         <HeadRow />
         {BPOOLS.map((pool) => {
           return <PoolRow pool={pool} />;

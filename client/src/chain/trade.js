@@ -130,7 +130,7 @@ export async function fetchAccountBalances(
     }
 
     // DEBUG
-    console.log(`returnData fetch user balances`, returnData);
+    // console.log(`returnData fetch user balances`, returnData);
 
     let data;
     if (nativeTokenPosition === undefined) {
@@ -190,9 +190,9 @@ export async function hasEnoughAllowance(
 
   const { returnData } = res;
   // DEBUG
-  console.log(`returnData`, returnData);
+  // console.log(`returnData`, returnData);
   const allowance0 = BigNumber.from(returnData[0]);
-  console.log(`allowance0`, allowance0);
+  // console.log(`allowance0`, allowance0);
 
   if (allowance0.toString() === "0") {
     return { data: false, error: null };
@@ -213,12 +213,7 @@ export function toFloatNumber(amount, token) {
 }
 
 export function convertTextToUnint256(s, token) {
-  let amount;
-  try {
-    amount = parseFloat(s); // why parseInt
-  } catch (e) {
-    console.log("Cannot parse float", s);
-  }
+  const amount = parseFloat(s); // why parseInt
 
   if (isNaN(amount) || amount <= 0) {
     return null;
@@ -344,10 +339,9 @@ async function swapExactTokensForETH(
   }
 }
 
-const failedGetAmountsOutReturn = { data: null, error: true };
 export async function getAmountsOut(routerContract, amount, tokenPath) {
   if (amount <= 0) {
-    return failedGetAmountsOutReturn;
+    return {data: null, error: "Amount below zero"};
   }
 
   const addressPath = [tokenPath[0].address, tokenPath[1].address];
@@ -360,7 +354,7 @@ export async function getAmountsOut(routerContract, amount, tokenPath) {
         return { data: null, error: e };
       });
 
-    if (x.error !== false) {
+    if (x.error !== false && x.error !== undefined) {
       return x;
     }
 

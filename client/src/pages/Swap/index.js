@@ -199,7 +199,9 @@ const PageSwapInner = () => {
       return;
     }
     await fetchAccountBalances(token0, token1, account);
-  }, [token0, token1, account]);
+    await setToken1InputBasedOnRate(routerContract, token0Input, token0Balance, actionButtonState);
+  }, [routerContract, token0Input, token0Balance, actionButtonState,
+    token0, token1, account]);
 
   const tokenInputDisabled = false;
 
@@ -210,17 +212,15 @@ const PageSwapInner = () => {
     }
 
     const [token0, token1] = store.getState().swapReducer.tokenPath;
-    let token0Amount;
-    try {
-      token0Amount = parseFloat(token0Input); // why parseInt
-    } catch (e) {
-      console.log("Cannot parse float", token0Input);
+    const token0Amount = parseFloat(token0Input); // why parseInt
+    if (isNaN(token0Amount)) {
+      setToken1Input("");
       return;
     }
 
     const token0AmountEther = trade.toUint256(token0Amount, token0);
     if (token0AmountEther === null) {
-      setToken1Input(0);
+      setToken1Input("");
       return;
     }
 
@@ -230,11 +230,12 @@ const PageSwapInner = () => {
       [token0, token1],
     );
 
-    console.log(`result`, result);
+    if (result.error === "Amount below zero") {
+      return;
+    }
 
     if (result.error !== false) {
       const msgCode = result.error?.data?.code;
-      console.log(`msgCode`, msgCode);
       // no pool found
       if (msgCode === -32000) {
         setActionButtonState(actionButtonStates.insufficientLiquidity);
@@ -246,7 +247,6 @@ const PageSwapInner = () => {
     const outputFloat = trade.toFloatNumber(outAmount, token1);
 
     setToken1Input(outputFloat);
-    console.log(`resultAmountOut`, result);
     // setLoadingAmount(false);
 
     // extraUI

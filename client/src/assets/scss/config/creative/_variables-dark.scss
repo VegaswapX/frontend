@@ -1240,8 +1240,9 @@ $modal-content-box-shadow-xs:       $box-shadow-sm;
 $modal-content-box-shadow-sm-up:    $box-shadow;
 
 // $modal-backdrop-bg:                 $gray-500;
-$modal-backdrop-bg:                 #0e1122;
-$modal-backdrop-opacity:            .6;
+//$modal-backdrop-bg:                 #070911;
+$modal-backdrop-bg:                 #1c2130;
+$modal-backdrop-opacity:            .4;
 $modal-header-border-color:         lighten($gray-300,5%);
 $modal-footer-border-color:         lighten($gray-300,5%);
 $modal-header-border-width:         $modal-content-border-width;

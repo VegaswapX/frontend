@@ -9,6 +9,10 @@ import { BPOOLS } from "../../chain/Contracts.js";
 import { store } from "../../redux/store";
 import { InfoModal } from "./InfoModal";
 import { StakeModal } from "./StakeModal";
+import {
+  Row,
+  Col
+} from "react-bootstrap";
 
 const VGA_IMG =
   "https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696";
@@ -58,7 +62,7 @@ const HeadRow = ({ pool }) => {
       <td>Yield currency</td>
 
       <td>Stake</td>
-      <td>Info</td>
+      <td>Information</td>
 
       {/* <td>
         TVL
@@ -73,7 +77,10 @@ const PoolsList = () => {
       {/* <Table className="mb-0" style={{ width: "40%", border: "solid white 1px;", cellspacing: "10px", backgroundColor: "#1c1f27" }}> */}
       <Table
         style={{
-          width: "40%",
+          width: "80%",
+          marginTop: "30px",
+          marginLeft: "10%",
+          fontSize: "16px",
           border: "solid white 1px;",
           cellspacing: "10px",
           backgroundColor: "#1c1f27",
@@ -91,9 +98,29 @@ const PoolsList = () => {
 const BoostPage = () => {
   return (
     <>
-      <h1>Pools</h1>
-      <PoolsList />
+      <Row>
+        <Col lg={12}>
+          <div
+            style={{
+              width: "50%",
+              backgroundColor: "#1c1f27",
+              color: "white",
+              margin: "0 auto",
+              marginTop: "2rem",
+              padding: "10px",
+              boxShadow:
+                "rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px",
+              borderRadius: "24px",
+              border: "1px solid #000",
+            }}
+          >
+           <h1 style={{marginLeft: "45%"}}>Pools</h1>
+            <PoolsList />
+          </div>
+        </Col>
+      </Row>
     </>
+
   );
 };
 

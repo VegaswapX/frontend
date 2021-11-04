@@ -51,7 +51,7 @@ export const InfoModal = ({ pool }) => {
             "bg-" + headerClassName
           )}
         >
-          <h4 className="modal-title">Pool Info</h4>
+          <h4 className="modal-title">Pool Details</h4>
         </Modal.Header>
         <Modal.Body>
           <PoolInfo pool={pool} />

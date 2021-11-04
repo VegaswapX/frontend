@@ -17,6 +17,7 @@ import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
+import {toUint256} from "../../chain/trade.js";
 
 const actionButtonStates = {
   wrongNetwork: {
@@ -39,10 +40,15 @@ const actionButtonStates = {
     disabled: true,
     text: "Confirm swap",
   },
-  correctNetwork: {
-    name: "correctNetwork",
+  swap: {
+    name: "swap",
     disabled: false,
     text: "Swap",
+  },
+  insufficientBalance: {
+    name: "insufficientBalance",
+    disabled: true,
+    text: "Insufficient balance",
   },
 };
 
@@ -92,9 +98,9 @@ const PageSwapInner = () => {
   const debounceSetToken1Input = useMemo(
     () =>
       _.debounce(async (token0Input) => {
-        await setToken1InputBasedOnRate(routerContract, token0Input); // add routerContract here  because of network changes
+        await setToken1InputBasedOnRate(routerContract, token0Input, token0Balance, actionButtonState); // add routerContract here  because of network changes
       }, 500),
-    [routerContract],
+    [routerContract, token0Balance, actionButtonState],
   );
 
   async function checkAllowance(multiCallContract, chainId, account) {
@@ -110,7 +116,7 @@ const PageSwapInner = () => {
 
     // no need to approve for native token
     if (token0.isNative === true) {
-      setActionButtonState(actionButtonStates["correctNetwork"]);
+      setActionButtonState(actionButtonStates["swap"]);
       return;
     }
 
@@ -126,13 +132,14 @@ const PageSwapInner = () => {
     }
 
     if (!!res.data) {
-      setActionButtonState(actionButtonStates["correctNetwork"]);
+      setActionButtonState(actionButtonStates["swap"]);
       return;
     }
 
     setActionButtonState(actionButtonStates.needApprove);
   }
 
+  // TODO: Convert each to USDT value on the form
   useEffect(async () => {
     getTokensPrices().then(async (res) => {
       const json = await res.json();
@@ -191,14 +198,22 @@ const PageSwapInner = () => {
 
   const tokenInputDisabled = false;
 
-  async function setToken1InputBasedOnRate(routerContract, token0Input) {
+  async function setToken1InputBasedOnRate(routerContract, token0Input, token0Balance, actionButtonState) {
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
       return;
     }
 
     const [token0, token1] = store.getState().swapReducer.tokenPath;
-    const token0AmountEther = trade.convertTextToUnint256(token0Input, token0);
+    let token0Amount;
+    try {
+      token0Amount = parseFloat(token0Input); // why parseInt
+    } catch (e) {
+      console.log("Cannot parse float", token0Input);
+      return;
+    }
+
+    const token0AmountEther = trade.toUint256(token0Amount, token0);
     if (token0AmountEther === null) {
       setToken1Input(0);
       return;
@@ -218,8 +233,15 @@ const PageSwapInner = () => {
         setToken1Input(outputFloat);
       }
       // setLoadingAmount(false);
-    } catch (error) {
-      console.log("error parsing input " + error);
+    } catch (e) {
+      console.log(`Error getAmountsOut`, e);
+    }
+
+    // extraUI
+    if (token0Amount > token0Balance) {
+      setActionButtonState(actionButtonStates.insufficientBalance);
+    } else if (actionButtonState !== actionButtonStates.swap) {
+      setActionButtonState(actionButtonStates.swap);
     }
 
     // TODO: Set proper error message, it can be anything
@@ -246,7 +268,7 @@ const PageSwapInner = () => {
       return;
     }
     // TODO: Handle button state after approve success
-    setActionButtonState(actionButtonStates.correctNetwork);
+    setActionButtonState(actionButtonStates.swap);
   }
 
   async function swap(token0_, token1_, account) {
@@ -420,7 +442,7 @@ const PageSwapInner = () => {
         <Button
           variant="primary"
           onClick={function(e) {
-            if (actionButtonState.name === "correctNetwork") {
+            if (actionButtonState.name === "swap") {
               swap(token0, token1, account);
             } else if (actionButtonState.name === "needApprove") {
               approveToken0();

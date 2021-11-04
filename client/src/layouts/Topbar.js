@@ -146,10 +146,10 @@ const VerticalMenu = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto vegatopnav" style={{ fontSize: "20px" }}>
             {/* <Nav.Link href="#home">Dashboard</Nav.Link> */}
-            <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
+            {/* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
               <i className="uil-home-alt"></i>
               <span style={{ marginLeft: "5px" }}>Dashboard</span>
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link href="/swap" style={{ marginLeft: "30px" }}>
               <i className="uil-exchange"></i>
               <span style={{ marginLeft: "5px" }}>Swap</span>
@@ -159,10 +159,10 @@ const VerticalMenu = () => {
               <span style={{ marginLeft: "5px" }}>Farming</span>
               
             </Nav.Link>
-            <Nav.Link href="/liq" style={{ marginLeft: "30px" }}>
+            {/* <Nav.Link href="/liq" style={{ marginLeft: "30px" }}>
               <i className="uil-layer-group"></i> 
               <span style={{ marginLeft: "5px" }}>Liquidity</span>
-            </Nav.Link>
+            </Nav.Link> */}
           </Nav>
         </Navbar.Collapse>
       </Container>

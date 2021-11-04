@@ -11,7 +11,7 @@ import { DashboardPage } from "../pages/Dashboard";
 const baseRoute = {
   path: "/",
   exact: true,
-  component: () => <Redirect to="/dashboard" />,
+  component: () => <Redirect to="/swap" />,
   route: Route,
 };
 

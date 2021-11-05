@@ -1229,9 +1229,10 @@ $modal-dialog-margin-y-sm-up:       1.75rem;
 
 $modal-title-line-height:           $line-height-base;
 
-$modal-content-color:               null;
+$modal-content-color:               white;
 // $modal-content-bg:                  $gray-300;
-$modal-content-bg:                  $gray-300;
+//$modal-content-bg:                  $gray-300;
+$modal-content-bg:                  #1d1f27;
 $modal-content-border-color:        transparent;
 $modal-content-border-width:        $border-width;
 $modal-content-border-radius:       0.2rem;

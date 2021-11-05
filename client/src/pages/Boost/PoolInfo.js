@@ -186,7 +186,7 @@ export function PoolInfo({ pool }) {
   } else {
     return (
       <>
-        <Table className="mb-0">
+        <Table className="mb-0" style={{color: "white"}}>
           <tbody>
             {data.map((row) => {
               return (

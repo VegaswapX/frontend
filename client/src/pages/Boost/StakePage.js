@@ -89,7 +89,7 @@ const StakeForm = ({ pool }) => {
   }
 
   function calculateApy(){
-    return Math.round(roi*365/7)/100;
+    return Math.round(roi*365/7);
   }
 
   // useEffect(async () => {

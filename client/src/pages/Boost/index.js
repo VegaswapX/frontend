@@ -55,14 +55,15 @@ const PoolRow = ({ pool }) => {
 const HeadRow = ({ pool }) => {
   return (
     <tr style={{ textAlign: "center", color: "white", cellpadding: "10px" }}>
-      <td>Poolname</td>
+      <td>Pool Name</td>
 
-      <td>Stake currency</td>
+      <td>Stake Currency</td>
 
-      <td>Yield currency</td>
+      <td>Yield Currency</td>
 
       <td>Information</td>
       <td>Stake Action</td>
+      {/* <td>APY</td> */}
 
       {/* <td>
         TVL
@@ -102,7 +103,7 @@ const BoostPage = () => {
         <Col lg={12}>
           <div
             style={{
-              width: "50%",
+              width: "70%",
               backgroundColor: "#1c1f27",
               color: "white",
               margin: "0 auto",

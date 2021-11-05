@@ -35,7 +35,6 @@ const StakeForm = ({ pool }) => {
   const [loading, setLoading] = useState(false);
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
-  const [yieldAmount, setYieldamount] = useState(0);
   const [isStaked, setIsStaked] = useState(0);
   const [hasStaked, setHasStaked] = useState(0);
   //const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
@@ -47,6 +46,7 @@ const StakeForm = ({ pool }) => {
   const [step, setStep] = useState();
   const [totalReward, setTotalreward] = useState();
   const [roi, setRoi] = useState();
+  const [apy, setApy] = useState();
   const [yieldPrice, setYieldPrice] = useState(0);
   //const [duration, setDuration] = useState(0);
 
@@ -86,6 +86,10 @@ const StakeForm = ({ pool }) => {
 
   function calculateRoi(reward){
     return Math.round(reward*yieldPrice*10000)/100;
+  }
+
+  function calculateApy(){
+    return Math.round(roi*365/7)/100;
   }
 
   // useEffect(async () => {
@@ -206,10 +210,11 @@ const StakeForm = ({ pool }) => {
       
       if (isCancelled()) return;
       
-      console.log("reward >>>>> " + result);
-      console.log("reward >>>>> " + result*10);
-      setReward(result);
-      console.log("!! " + reward);
+      setReward(result.toNumber());
+      
+
+      setRoi(calculateRoi(reward));
+      setApy(calculateApy());
       
     } catch (err) {
       console.log('call contract error:', step, err);
@@ -221,37 +226,28 @@ const StakeForm = ({ pool }) => {
 
       let result = await poolContract.callStatic.currentStep();
       console.log("result currentStep " + result);      
-      console.log("result currentStep type " + typeof(result)); 
-
-      for (let key in result) {
-  console.log(key, result[key]);
-}
 
       if (isCancelled()) return;
 
-      //let b = BigNumber.from(result);
-
-      //console.log("step " + b);
-
-      setStep(result);
+      setStep(result.toNumber());
 
     } catch (err) {
       console.log('call contract error:', step, err);
     }
   }, 1000, true);  
 
-  // useInterval(async (isCancelled) => {    
-  //   try {
+  useInterval(async (isCancelled) => {    
+    try {
 
-  //     let result = await getTokensPrices();
-  //     const json = await result.json();
-  //     if (isCancelled()) return;
-  //     setYieldPrice(Math.round(json.vegaswap.usd*10000)/10000);
+      let result = await getTokensPrices();
+      const json = await result.json();
+      if (isCancelled()) return;
+      setYieldPrice(Math.round(json.vegaswap.usd*10000)/10000);
 
-  //   } catch (err) {
-  //     console.log('call error:', err);
-  //   }
-  // }, 1000, true);
+    } catch (err) {
+      console.log('call error:', err);
+    }
+  }, 1000, true);
 
   const stakeClick = async () => {
     console.log("stakeClick " + stakeAmount);
@@ -321,17 +317,14 @@ const StakeForm = ({ pool }) => {
       console.log(e);
       const amountText = e.target.value;
       console.log(">> stake amountText " + amountText);
+      let amountInt = parseInt(amountText);
       setStakeamount(amountText);
+      setTotalreward(amountInt * reward);
       
-      debounceOnChange(e);
+      //debounceOnChange(e);
     } catch {
 
     }
-    
-
-    //console.log()
-
-    //setYieldamount()
   }
 
   const approveClick = async () => {
@@ -431,6 +424,11 @@ const StakeForm = ({ pool }) => {
             <br />
             <div>
             Yield ROI: {roi} %
+            </div>
+
+            <br />
+            <div>
+            Yield APY: {apy} %
             </div>
 
             {/* <div>

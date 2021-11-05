@@ -27,7 +27,7 @@ export const BPOOLS = [
   //   yieldUnit: "VGA"
   // },
   {
-    poolName: "USDT-VGA-1",
+    poolName: "USDT-VGA (week 42)",
     address: POOL1,
     description:
       "Stake USDT and earn VGA. The staked amount will be locked for the specified time. After the expiration the USDT amount will be returned together with the reward in VGA",
@@ -36,7 +36,7 @@ export const BPOOLS = [
     yieldUnit: "VGA",
   },
   {
-    poolName: "VGA-VGA-1",
+    poolName: "VGA-VGA (week 42)",
     address: POOL2,
     description:
       "Stake VGA and earn VGA. The staked amount will be locked for the specified time. After the expiration the VGA amount will be returned together with the reward in VGA",

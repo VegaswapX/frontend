@@ -57,8 +57,8 @@ export async function multiCall(multiCallContract, abi, calls) {
       itf.encodeFunctionData(call.name, call.params),
     ]);
     return await multiCallContract.callStatic.aggregate(callData);
-  } catch {
-    console.log("error multiCall");
+  } catch (error) {
+    console.log("error multiCall " + error);
   }
 }
 
@@ -201,11 +201,18 @@ export async function hasEnoughAllowance(
   return { data: true, error: null };
 }
 
-export function toUint256(amount, token) {
-  return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(token.decimals - 6),
+export function toUint256(amount, decimals) {
+  const r = 6;
+  return BigNumber.from(Math.round(amount * 10 ** r)).mul(
+    BigNumber.from(10).pow(decimals - r),
   );
 }
+
+
+export function toUint256Dec(amount, token) {
+  return toUint256(amount, token.decimals);
+}
+
 
 export function toFloatNumber(amount, token) {
   const y = amount.div(BigNumber.from(10).pow(12));
@@ -219,7 +226,7 @@ export function convertTextToUnint256(s, token) {
     return null;
   }
 
-  return toUint256(amount, token);
+  return toUint256Dec(amount, token);
 }
 
 function defaultDeadline() {

@@ -36,7 +36,7 @@ function timeConverter(UNIX_timestamp) {
 function statusPool(startTime, endTime) {
   let n = Date.now() / 1000;
   //let isopen = n > startTime;
-  console.log(">> statusPool: " + startTime + " N: " + n);  
+  console.log(">>>> statusPool: " + startTime + " N: " + n);  
 
   if (n < startTime){
     return "Not started yet";

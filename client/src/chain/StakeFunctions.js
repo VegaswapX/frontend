@@ -8,17 +8,12 @@ export const BIG_ONE = new BigNumber(1);
 export const BIG_NINE = new BigNumber(9);
 export const BIG_TEN = new BigNumber(10);
 
-export function toUint256(amount) {
-  return BigNumber.from(Math.round(amount * 1000000)).mul(
-    BigNumber.from(10).pow(18 - 6),
-  );
-}
 
 export const getDecimalAmount = (amount, decimals = 18) => {
   return new BigNumber(amount).times(BIG_TEN.pow(decimals));
 };
 
-export const getDecAmount = (amount, decimals = 18) => {
+export const getBNAmount = (amount) => {
   // return new BigNumber(amount).dividedBy(BIG_TEN.pow(decimals));
   return new BigNumber(amount); // .dividedBy(BIG_TEN.pow(1));;
 };
@@ -42,7 +37,7 @@ export async function getAllowance(
   console.log(">> " + calls[0].address);
   const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
   // DEBUG
-  let x = getDecAmount(returnData[0]).toNumber();
+  let x = getBNAmount(returnData[0]).toNumber();
   return x;
 }
 
@@ -73,6 +68,8 @@ export async function getAllowance(
 // }
 
 export async function stake(stakeAmount, poolContract) {
+
+  console.log("!stakeAmount " + stakeAmount);
   let stakeAmountDEC = getDecimalAmount(stakeAmount);
   console.log(stakeAmountDEC.toNumber());
   console.log("!stake " + stakeAmountDEC);

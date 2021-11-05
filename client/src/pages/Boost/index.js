@@ -77,9 +77,9 @@ const PoolsList = () => {
       {/* <Table className="mb-0" style={{ width: "40%", border: "solid white 1px;", cellspacing: "10px", backgroundColor: "#1c1f27" }}> */}
       <Table
         style={{
-          width: "80%",
+          width: "100%",
           marginTop: "30px",
-          marginLeft: "10%",
+          marginLeft: "0%",
           fontSize: "16px",
           border: "solid white 1px;",
           cellspacing: "10px",
@@ -114,7 +114,7 @@ const BoostPage = () => {
               border: "1px solid #000",
             }}
           >
-           <h1 style={{marginLeft: "45%"}}>Pools</h1>
+           <h1 style={{marginLeft: "40%"}}>Pools</h1>
             <PoolsList />
           </div>
         </Col>

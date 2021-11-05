@@ -1,12 +1,11 @@
 // @flow
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect,useRef, useMemo, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Form, Modal } from "react-bootstrap";
 import { getAllowance, unstake } from "../../chain/StakeFunctions";
-// import {
-//   changeAllowanceAmount,
-//   changeStakeAmount,
-// } from "../../redux/poolinfo/actions";
+import {getTokensPrices} from "../../api/data"
+import { toUint256 } from "../../chain/trade.js";
+import {getBNAmount} from "../../chain/StakeFunctions";
 
 // import { useWeb3React } from "@web3-react/core";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
@@ -20,9 +19,10 @@ import MULTICALL_ABI from "../../abis/Multicall.json";
 import { stake, approve } from "../../chain/StakeFunctions";
 import _ from "underscore";
 import { toast } from "react-toastify";
+import BigNumber from "bignumber.js";
 
 const StakeForm = ({ pool }) => {
-  console.log(" pool " + pool.address);
+  //console.log(" pool " + pool.address);
 
   const { account, library } = useWeb3React();
   const [modalStatus, setModalStatus] = useState(false);
@@ -35,15 +35,19 @@ const StakeForm = ({ pool }) => {
   const [loading, setLoading] = useState(false);
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
-  //const [yieldAmount, setYieldamount] = useState(0);
+  const [yieldAmount, setYieldamount] = useState(0);
   const [isStaked, setIsStaked] = useState(0);
   const [hasStaked, setHasStaked] = useState(0);
   //const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
   const [approveEnabled, setApproveEnabled] = useState(false);
 
+  const [loaded, setLoaded] = useState();
+
   const [reward, setReward] = useState();
+  const [step, setStep] = useState();
   const [totalReward, setTotalreward] = useState();
   const [roi, setRoi] = useState();
+  const [yieldPrice, setYieldPrice] = useState(0);
   //const [duration, setDuration] = useState(0);
 
   //setDuration(10)
@@ -53,11 +57,12 @@ const StakeForm = ({ pool }) => {
   //TODO!
   const stakeCurrency = pool.stakedUnit;
   const rewardCurrency = pool.yieldUnit;
-  const yieldPrice = 0.012;
+  //const yieldPrice = 0.012;
   
 
   // stakedUnit: "USDT",
   //   yieldUnit: "VGA",
+
 
   let poolContract;
   
@@ -99,44 +104,118 @@ const StakeForm = ({ pool }) => {
   }, [stakeToken]);
 
   useEffect(async () => {
-    const stake = await poolContract.callStatic.stakes(account);
-    console.log("stake " + stake[1]);
-    //isadded
-    setHasStaked(stake[4]);
-    //staked flag
-    setIsStaked(stake[5]);
-    console.log(">> stake " + stake);
-    setCanStake(stake[1] == 0);
+    try {
+      const stake = await poolContract.callStatic.stakes(account);
+      console.log(">> stake " + stake);
+      console.log("106: stake " + stake[1]);
+      //isadded
+      setHasStaked(stake[4]);
+      //staked flag
+      setIsStaked(stake[5]);
+      setCanStake(stake[1] == 0);
+    } catch{
+
+    }
+  }, []);
+
+  useEffect(async () => {
+    try{
+      const x = await poolContract.callStatic.stakeToken();
+      setStakeToken(x);
+    } catch {
+
+    }
   });
 
   useEffect(async () => {
-    const x = await poolContract.callStatic.stakeToken();
-    setStakeToken(x);
-  });
-
-  useEffect(async () => {
-    poolContract.callStatic.stakes(account).then((x) => {
-      let amount = x[1];
-      let damount = amount / 10 ** 18;
-
-      setStakedamount(damount);
-    });
-  }, [poolContract]);
-
-  useEffect(async () => {
-    poolContract.callStatic.currentStep().then((x) => {
-      //setReward(x.toString());
-      let curentStep = x;
-      //console.log("curentStep ? " + curentStep);
-
-      poolContract.callStatic.rewardSteps(curentStep).then((x) => {
-        //console.log(">>>>> rewardSteps " + x);
-        setReward(x.toString());
-        
-        setRoi(calculateRoi(x).toString());
+    try{
+      poolContract.callStatic.stakes(account).then((x) => {
+        let amount = x[1];
+        let damount = amount / 10 ** 18;
+  
+        setStakedamount(damount);
       });
-    });
+    } catch{
+
+    }
+    
   }, [poolContract]);
+
+  const useInterval = (callback, interval, immediate) => {
+    const ref = useRef();
+  
+    // keep reference to callback without restarting the interval
+    useEffect(() => {
+      ref.current = callback;
+    }, [callback]);
+  
+    useEffect(() => {
+      // when this flag is set, closure is stale
+      let cancelled = false;
+  
+      // wrap callback to pass isCancelled getter as an argument
+      const fn = () => {
+        ref.current(() => cancelled);
+      };
+  
+      // set interval and run immediately if requested
+      const id = setInterval(fn, interval);
+      if (immediate) fn();
+  
+      // define cleanup logic that runs
+      // when component is unmounting
+      // or when or interval or immediate have changed
+      return () => {
+        cancelled = true;
+        clearInterval(id);
+      };
+    }, [interval, immediate]);
+  };
+
+  useInterval(async (isCancelled) => {
+    if (step == undefined){
+      return;
+    }
+    try {
+
+      const result = await poolContract.callStatic.rewardSteps(step);
+      
+      if (isCancelled()) return;
+      let x = result*10;
+      console.log("reward >>>>> " + result);
+      console.log("reward >>>>> " + x);
+      setReward(Math.round(result, 0));
+      
+    } catch (err) {
+      console.log('call contract error:', step, err);
+    }
+  }, 1000, true);
+
+  useInterval(async (isCancelled) => {    
+    try {
+
+      let result = await poolContract.callStatic.currentStep();
+      if (isCancelled()) return;
+
+      setStep(result);
+
+    } catch (err) {
+      console.log('call contract error:', step, err);
+    }
+  }, 1000, true);  
+
+  // useInterval(async (isCancelled) => {    
+  //   try {
+
+  //     let result = await getTokensPrices();
+  //     const json = await result.json();
+  //     if (isCancelled()) return;
+  //     setYieldPrice(Math.round(json.vegaswap.usd*10000)/10000);
+
+  //   } catch (err) {
+  //     console.log('call error:', err);
+  //   }
+  // }, 1000, true);
 
   const stakeClick = async () => {
     console.log("stakeClick " + stakeAmount);
@@ -189,23 +268,34 @@ const StakeForm = ({ pool }) => {
     () =>
       _.debounce(async (e) => {
         //await setOutputAmountText(routerContract, e);
-        let z = e.target.value;
-        console.log("event >> " + z);
-        console.log("reward >> " + reward);
-        console.log("total reward: >> " + z*reward);
-        setStakeamount(z);
-        setTotalreward(z*reward);
+        try {
+          let z = e.target.value;
+          const amountx = parseInt(z);
+
+          console.log("0 event >> " + z);
+          console.log("1 >> " + amountx);
+          console.log("2  >> " + reward.toString());          
+          console.log("3 total reward: >> " + amountx*parseInt(reward));
+          setStakeamount(z);
+          setTotalreward(z*reward);
+        } catch {
+
+        }
       }, 300),
     []
   );
 
   function handleStakeInput(e) {
-    console.log(e);
-    const amountText = e.target.value;
-    console.log(">> stake amountText " + amountText);
-    setStakeamount(amountText);
-    
-    debounceOnChange(e);
+    try {
+      console.log(e);
+      const amountText = e.target.value;
+      console.log(">> stake amountText " + amountText);
+      setStakeamount(amountText);
+      
+      debounceOnChange(e);
+    } catch {
+
+    }
     
 
     //console.log()
@@ -289,8 +379,14 @@ const StakeForm = ({ pool }) => {
               <br />
             </Form.Group>
 
+
             <div>
-            Yield multiplier: {reward} {rewardCurrency} per {stakeCurrency}
+            <span style={{color: "white"}}>Yield amount: {totalReward}  {rewardCurrency}</span>
+            </div>
+            <br />
+
+            <div>
+            Yield multiplier: {reward? reward.toString(): ""} {rewardCurrency} per {stakeCurrency}
             </div>
 
             <br />
@@ -299,11 +395,7 @@ const StakeForm = ({ pool }) => {
             VGA price: {yieldPrice}$
             </div>
 
-            <br />
-
-            <div>
-            Yield amount: {totalReward}  {rewardCurrency}
-            </div>
+           
 
             <br />
             <div>

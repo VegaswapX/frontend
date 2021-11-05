@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { getTokensPrices } from "../../api/data";
 import { Chains, MULTICALL_ADDR } from "../../chain/eth";
 import * as trade from "../../chain/trade.js";
-import { toUint256 } from "../../chain/trade.js";
+//import { toUint256Dec } from "../../chain/trade.js";
 import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
@@ -223,7 +223,7 @@ const PageSwapInner = () => {
       return;
     }
 
-    const token0AmountEther = trade.toUint256(token0Amount, token0);
+    const token0AmountEther = trade.toUint256Dec(token0Amount, token0);
     if (token0AmountEther === null) {
       setToken1Input("");
       return;

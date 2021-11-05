@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { getContractA, Chains } from "../../chain/eth.js";
-import { ethers } from "ethers";
 import { Table } from "react-bootstrap";
 import { agetPrices } from "../../api/data";
 
@@ -36,14 +35,20 @@ function timeConverter(UNIX_timestamp) {
 
 function statusPool(startTime, endTime) {
   let n = Date.now() / 1000;
-  let isopen = n > startTime;
-  console.log(">> statusPool: " + isopen + " " + startTime + " N: " + n);
+  //let isopen = n > startTime;
+  console.log(">> statusPool: " + startTime + " N: " + n);  
 
-  if (isopen) {
-    return "open";
-  } else {
-    return "not open";
+  if (n < startTime){
+    return "Not started yet";
+  }  else {
+    if (n > endTime) {
+      return "Ended";
+    } else {
+      return "Open";
+    }
   }
+
+  
 }
 
 export function PoolInfo({ pool }) {
@@ -51,7 +56,6 @@ export function PoolInfo({ pool }) {
   console.log(`account`, library);
 
   const [loading, setLoading] = useState(false);
-  const [supported, setSupported] = useState(false);
 
   const [startTime, setStartTime] = useState();
   const [startTimeF, setStartTimeF] = useState();
@@ -159,6 +163,7 @@ export function PoolInfo({ pool }) {
 
   let data = [
     ["Name", pool.poolName],
+    ["Status", poolStatus],
     ["Description", pool.description],
     ["Current reward", reward + " " + pool.per],
     ["Start time", startTimeF],

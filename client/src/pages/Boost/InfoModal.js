@@ -1,15 +1,9 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, Modal, ToggleButton } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { PoolInfo } from "./PoolInfo";
-import classNames from "classnames";
 
 export const InfoModal = ({ pool }) => {
   const [modal, setModal] = useState(false);
-  const [size] = useState(null);
-  const [className] = useState(null);
-  const [scroll] = useState(null);
-
-  const [headerClassName, setHeaderClassName] = useState("");
 
   const toggle = () => {
     setModal(!modal);

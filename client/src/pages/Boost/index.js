@@ -1,7 +1,7 @@
 // @flow
-import React, { useState } from "react";
+import React from "react";
 
-import { Button, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 // import PageTitle from '../../components/PageTitle';
 import "react-toastify/dist/ReactToastify.css";
 import { BPOOLS } from "../../chain/Contracts.js";

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { useTable } from "react-table";
 import { arrayTokenList, TokenList } from "../../chain/tokens.js";
 import { store } from "../../redux/store";
@@ -8,7 +8,7 @@ function Table({ tokenIndex, columns, data }) {
   // selecting in or out?
   // let selecting = store.getState().uiReducer.tokenSelect;
 
-  const [hoveredRow, setHoveredRow] = useState(null);
+  //const [hoveredRow, setHoveredRow] = useState(null);
 
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -133,7 +133,7 @@ function Tokentable({ tokenIndex }) {
 
   // TODO: make TokenList.BSC to by chain variable later
   return (
-    <div className="App">
+    <div className="App" style={{marginLeft: "30%"}}>
       <Table tokenIndex={tokenIndex} columns={columnsConf} data={tokens} />
     </div>
   );

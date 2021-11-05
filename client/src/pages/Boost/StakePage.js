@@ -1,8 +1,7 @@
 // @flow
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { Button, Card, Form, Modal } from "react-bootstrap";
-import { ethers } from "ethers";
+import { Button, Form, Modal } from "react-bootstrap";
 import { getAllowance, unstake } from "../../chain/StakeFunctions";
 // import {
 //   changeAllowanceAmount,
@@ -10,13 +9,11 @@ import { getAllowance, unstake } from "../../chain/StakeFunctions";
 // } from "../../redux/poolinfo/actions";
 
 // import { useWeb3React } from "@web3-react/core";
-import VEGA_CONTRACT_ABI from "../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
-import { VEGA_TOKEN_ADDRESS } from "../../chain/Contracts.js";
 import ApproveButton from "../../components/Buttons/ApproveButton";
 import { getContractA } from "../../chain/eth.js";
 import "react-toastify/dist/ReactToastify.css";
-import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
+//import poolReducer, { INIT_STATE } from "../../redux/poolinfo/reducers";
 import { PoolInfo } from "./PoolInfo";
 import { useContract, MULTICALL_ADDR } from "../../chain/eth.js";
 import MULTICALL_ABI from "../../abis/Multicall.json";
@@ -38,15 +35,18 @@ const StakeForm = ({ pool }) => {
   const [loading, setLoading] = useState(false);
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
-  const [yieldAmount, setYieldamount] = useState(0);
+  //const [yieldAmount, setYieldamount] = useState(0);
   const [isStaked, setIsStaked] = useState(0);
   const [hasStaked, setHasStaked] = useState(0);
-  const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
+  //const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
   const [approveEnabled, setApproveEnabled] = useState(false);
 
   const [reward, setReward] = useState();
   const [totalReward, setTotalreward] = useState();
   const [roi, setRoi] = useState();
+  //const [duration, setDuration] = useState(0);
+
+  //setDuration(10)
 
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
 
@@ -59,13 +59,8 @@ const StakeForm = ({ pool }) => {
   // stakedUnit: "USDT",
   //   yieldUnit: "VGA",
 
-  let poolContract, vegaContract;
-  vegaContract = getContractA(
-    account,
-    library,
-    VEGA_TOKEN_ADDRESS,
-    VEGA_CONTRACT_ABI
-  );
+  let poolContract;
+  
   try {
     poolContract = getContractA(
       account,
@@ -196,7 +191,8 @@ const StakeForm = ({ pool }) => {
         //await setOutputAmountText(routerContract, e);
         let z = e.target.value;
         console.log("event >> " + z);
-        console.log("total: >> " + z*reward);
+        console.log("reward >> " + reward);
+        console.log("total reward: >> " + z*reward);
         setStakeamount(z);
         setTotalreward(z*reward);
       }, 300),
@@ -210,7 +206,6 @@ const StakeForm = ({ pool }) => {
     setStakeamount(amountText);
     
     debounceOnChange(e);
-    console.log("> " + reward);
     
 
     //console.log()
@@ -250,9 +245,13 @@ const StakeForm = ({ pool }) => {
     if (hasStaked) {
       if (isStaked) {
         return (
-          <>
+          <div style={{textAlign: "center"}}>
             {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
             Staked Amount: {stakedAmount} {pool.stakedUnit}
+            <br />
+            <br />
+            Yield Amount: ...
+            <br />
             <br />
             <Button
               variant="primary"
@@ -262,7 +261,7 @@ const StakeForm = ({ pool }) => {
             >
               Harvest
             </Button>
-          </>
+          </div>
         );
       } else {
         return <>Harvested</>;
@@ -310,6 +309,10 @@ const StakeForm = ({ pool }) => {
             <div>
             Yield ROI: {roi} %
             </div>
+
+            {/* <div>
+            Duration: {duration}
+            </div> */}
 
             <br />
 

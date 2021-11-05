@@ -124,13 +124,18 @@ const PageSwapInner = () => {
       setActionButtonState(actionButtonStates["swap"]);
       return;
     }
-
+    let res;
     // check token0 balance
-    const res = await trade.hasEnoughAllowance(
+    try {
+      res = await trade.hasEnoughAllowance(
       multiCallContract,
       token0,
       account,
-    );
+      );
+    } catch {
+      console.log("error with allowance");
+      return;
+    }
 
     if (!!res.error) {
       // Handle error message

@@ -12,7 +12,7 @@ import HorizontalLayout from "../layouts/Horizontal/";
 import { allFlattenRoutes } from "./index";
 
 const Routes = (props) => {
-  const { layout, user } = useSelector((state) => ({
+  const { layout } = useSelector((state) => ({
     layout: state.Layout,
     //user: state.Auth.user,
   }));

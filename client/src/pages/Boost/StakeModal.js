@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, Modal, ToggleButton } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import StakePage from "./StakePage";
 
 export const StakeModal = ({ pool }) => {
   const [modal, setModal] = useState(false);
-  const [size] = useState(null);
-  const [className] = useState(null);
-  const [scroll] = useState(null);
 
   const toggle = () => {
     setModal(!modal);

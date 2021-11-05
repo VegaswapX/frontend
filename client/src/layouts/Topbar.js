@@ -37,13 +37,13 @@ const AccountConnect = ({ connect }) => {
     if (account) {
       //console.log("account" + account);
       return (
-        <Button onClick={disconnect} variant="info" style={{width:"100px"}}>
+        <Button onClick={disconnect} variant="info" style={{width:"105px"}}>
           Disconnect
         </Button>
       );
     } else {
       return (
-        <Button onClick={connect} variant="primary" style={{width:"100px"}}>
+        <Button onClick={connect} variant="primary" style={{width:"105px"}}>
           Connect
         </Button>
       );

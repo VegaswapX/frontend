@@ -43,7 +43,7 @@ const StakeForm = ({ pool }) => {
 
   const [loaded, setLoaded] = useState();
 
-  const [reward, setReward] = useState();
+  const [reward, setReward] = useState(0);
   const [step, setStep] = useState();
   const [totalReward, setTotalreward] = useState();
   const [roi, setRoi] = useState();
@@ -172,24 +172,43 @@ const StakeForm = ({ pool }) => {
     }, [interval, immediate]);
   };
 
-  useInterval(async (isCancelled) => {
-    if (step == undefined){
-      return;
-    }
+  useEffect(() => {
     try {
 
-      const result = await poolContract.callStatic.rewardSteps(step);
+      const result = poolContract.callStatic.rewardSteps(step);
       
-      if (isCancelled()) return;
-      let x = result*10;
-      console.log("reward >>>>> " + result);
-      console.log("reward >>>>> " + x);
-      setReward(Math.round(result, 0));
+      //if (isCancelled()) return;
+      
+      //console.log("reward >>>>> " + result);
+      //console.log("reward >>>>> " + result*10);
+      //setReward(result);
+      //console.log("!! " + reward);
       
     } catch (err) {
       console.log('call contract error:', step, err);
     }
-  }, 1000, true);
+  }, 
+  []);
+
+  // useInterval(async (isCancelled) => {
+  //   if (step == undefined){
+  //     return;
+  //   }
+  //   try {
+
+  //     const result = await poolContract.callStatic.rewardSteps(step);
+      
+  //     if (isCancelled()) return;
+      
+  //     console.log("reward >>>>> " + result);
+  //     console.log("reward >>>>> " + result*10);
+  //     setReward(result);
+  //     console.log("!! " + reward);
+      
+  //   } catch (err) {
+  //     console.log('call contract error:', step, err);
+  //   }
+  // }, 1000, true);
 
   useInterval(async (isCancelled) => {    
     try {
@@ -271,11 +290,12 @@ const StakeForm = ({ pool }) => {
         try {
           let z = e.target.value;
           const amountx = parseInt(z);
+          console.log("??? 2  >> " + reward);          
 
           console.log("0 event >> " + z);
           console.log("1 >> " + amountx);
-          console.log("2  >> " + reward.toString());          
-          console.log("3 total reward: >> " + amountx*parseInt(reward));
+          console.log("3  >> " + parseInt(reward));          
+          console.log("4 total reward: >> " + amountx*parseInt(reward));
           setStakeamount(z);
           setTotalreward(z*reward);
         } catch {

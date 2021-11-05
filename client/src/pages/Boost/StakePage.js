@@ -1,11 +1,10 @@
 // @flow
 import React, { useEffect,useRef, useMemo, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import { getAllowance, unstake } from "../../chain/StakeFunctions";
 import {getTokensPrices} from "../../api/data"
-import { toUint256 } from "../../chain/trade.js";
-import {getBNAmount} from "../../chain/StakeFunctions";
+import {statusPool} from "../../chain/StakeFunctions";
 
 // import { useWeb3React } from "@web3-react/core";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
@@ -35,6 +34,8 @@ const StakeForm = ({ pool }) => {
   const [loading, setLoading] = useState(false);
   //const [harvestActive, setHarvestActive] = useState(false);
   const [stakedAmount, setStakedamount] = useState(0);
+  const [yaAmount, setYamount] = useState(0);
+  
   const [isStaked, setIsStaked] = useState(0);
   const [hasStaked, setHasStaked] = useState(0);
   //const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
@@ -48,21 +49,17 @@ const StakeForm = ({ pool }) => {
   const [roi, setRoi] = useState();
   const [apy, setApy] = useState();
   const [yieldPrice, setYieldPrice] = useState(0);
+
+  const [rq, setRQ] = useState(0);
   //const [duration, setDuration] = useState(0);
 
-  //setDuration(10)
+  //TODO rewardQuote
 
   const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
 
   //TODO!
   const stakeCurrency = pool.stakedUnit;
   const rewardCurrency = pool.yieldUnit;
-  //const yieldPrice = 0.012;
-  
-
-  // stakedUnit: "USDT",
-  //   yieldUnit: "VGA",
-
 
   let poolContract;
   
@@ -92,58 +89,71 @@ const StakeForm = ({ pool }) => {
     return Math.round(roi*365/7);
   }
 
-  // useEffect(async () => {
-  //   try {
-  //     console.log("stakeToken " + stakeToken);
-  //     const allowance = await getAllowance(
-  //       multiCallContract,
-  //       stakeToken,
-  //       account,
-  //       poolContract.address
-  //     );
-  //     setAllowance(allowance);
-  //     setApproveEnabled(allowance == 0);
-  //     console.log("allowance >> " + allowance);
-  //   } catch (error) {}
-  // }, [stakeToken]);
+  useEffect(async () => {
+    try {
+      console.log("stakeToken " + stakeToken);
+      const allowance = await getAllowance(
+        multiCallContract,
+        stakeToken,
+        account,
+        poolContract.address
+      );
+      setAllowance(allowance);
+      setApproveEnabled(allowance == 0);
+      console.log("allowance >> " + allowance);
+    } catch (error) {}
+  }, [stakeToken]);
 
-  // useEffect(async () => {
-  //   try {
-  //     const stake = await poolContract.callStatic.stakes(account);
-  //     console.log(">> stake " + stake);
-  //     console.log("106: stake " + stake[1]);
-  //     //isadded
-  //     setHasStaked(stake[4]);
-  //     //staked flag
-  //     setIsStaked(stake[5]);
-  //     setCanStake(stake[1] == 0);
-  //   } catch{
+  useEffect(async () => {
+    try {
+      const stake = await poolContract.callStatic.stakes(account);
+      console.log(">> stake " + stake);
+      let ya = stake[2]/10**18;
+      //alert(ya);
+      setYamount(ya);
+      console.log("106: stake " + stake[1]);
+      //isadded
+      setHasStaked(stake[4]);
+      //staked flag
+      setIsStaked(stake[5]);
+      setCanStake(stake[1] == 0);
+    } catch{
 
-  //   }
-  // }, []);
+    }
+  }, []);
 
-  // useEffect(async () => {
-  //   try{
-  //     const x = await poolContract.callStatic.stakeToken();
-  //     setStakeToken(x);
-  //   } catch {
+  useEffect(async () => {
+    try {
+      const x = await poolContract.callStatic.rewardQuote();
+      console.log(">>>RQ " + x);
+      setRQ(x.toNumber());      
+    } catch{
 
-  //   }
-  // });
+    }
+  }, []);
 
-  // useEffect(async () => {
-  //   try{
-  //     poolContract.callStatic.stakes(account).then((x) => {
-  //       let amount = x[1];
-  //       let damount = amount / 10 ** 18;
+  useEffect(async () => {
+    try{
+      const x = await poolContract.callStatic.stakeToken();
+      setStakeToken(x);
+    } catch {
+
+    }
+  });
+
+  useEffect(async () => {
+    try{
+      poolContract.callStatic.stakes(account).then((x) => {
+        let amount = x[1];
+        let damount = amount / 10 ** 18;
   
-  //       setStakedamount(damount);
-  //     });
-  //   } catch{
+        setStakedamount(damount);
+      });
+    } catch{
 
-  //   }
+    }
     
-  // }, [poolContract]);
+  }, [poolContract]);
 
   const useInterval = (callback, interval, immediate) => {
     const ref = useRef();
@@ -176,30 +186,32 @@ const StakeForm = ({ pool }) => {
     }, [interval, immediate]);
   };
 
-  // useEffect(() => {
-  //   try {
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
+  const [poolStatus, setPoolstatus] = useState();
+  
 
-  //     //const result = poolContract.callStatic.rewardSteps(step);
+  useEffect(async () => {
+    try{
 
-  //     poolContract.callStatic.rewardSteps(step).then((x) => {
-  //       let b = BigNumber.from(x);                    
-  //       console.log(">>>>> rewardSteps " + b.toString());
-  //       //setReward(b);
-  //     });
-      
-  //     //if (isCancelled()) return;
-      
-  //     //console.log("reward >>>>> " + result);
-  //     //console.log("reward >>>>> " + result*10);
-  //     //setReward(result);
-  //     //console.log("!! " + reward);
-      
-  //   } catch (err) {
-  //     console.log('call contract error:', step, err);
-  //   }
-  // }, 
-  // []);
+      poolContract.callStatic.startTime().then((x) => {
+        setStartTime(x);
+      });
 
+      poolContract.callStatic.endTime().then((x) => {
+        //setEndTime(x);
+        //setEndTimeF(formattedTime);
+        let z = statusPool(startTime, endTime);
+        console.log(">>> " + z);
+        setPoolstatus(z);
+      });
+    } catch{
+
+    }
+    
+  }, [poolContract]);
+
+  
   useInterval(async (isCancelled) => {
     if (step == undefined){
       return;
@@ -210,7 +222,7 @@ const StakeForm = ({ pool }) => {
       
       if (isCancelled()) return;
       
-      setReward(result.toNumber());
+      setReward(result.toNumber()/rq);
       
 
       setRoi(calculateRoi(reward));
@@ -354,17 +366,31 @@ const StakeForm = ({ pool }) => {
   };
 
   if (loading) {
-    return <> Loading</>;
+    return <> 
+    <Spinner
+    animation="border"
+    role="status"
+    style={{
+      marginLeft: "45%",
+      marginTop: "20px",
+      width: "60px",
+      height: "60px",
+    }}
+  >
+    <span className="visually-hidden">Loading...</span>
+  </Spinner>
+    </>;
+
   } else {
     if (hasStaked) {
-      if (isStaked) {
+      if (isStaked && poolStatus=="Ended") {
         return (
           <div style={{textAlign: "center"}}>
             {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
             Staked Amount: {stakedAmount} {pool.stakedUnit}
             <br />
             <br />
-            Yield Amount: ...
+            Yield Amount: {yaAmount}
             <br />
             <br />
             <Button
@@ -378,7 +404,18 @@ const StakeForm = ({ pool }) => {
           </div>
         );
       } else {
-        return <>Harvested</>;
+        return <>
+         <div style={{textAlign: "center"}}>
+            {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
+            Staked Amount: {stakedAmount} {pool.stakedUnit}
+            <br />
+            <br />
+            Yield Amount: {yaAmount}
+            <br />
+            <br />
+            Wait for staking end to harvest           
+          </div>
+        </>;
       }
     } else {
       return (

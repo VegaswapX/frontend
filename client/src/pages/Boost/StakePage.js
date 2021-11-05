@@ -88,58 +88,58 @@ const StakeForm = ({ pool }) => {
     return Math.round(reward*yieldPrice*10000)/100;
   }
 
-  useEffect(async () => {
-    try {
-      console.log("stakeToken " + stakeToken);
-      const allowance = await getAllowance(
-        multiCallContract,
-        stakeToken,
-        account,
-        poolContract.address
-      );
-      setAllowance(allowance);
-      setApproveEnabled(allowance == 0);
-      console.log("allowance >> " + allowance);
-    } catch (error) {}
-  }, [stakeToken]);
+  // useEffect(async () => {
+  //   try {
+  //     console.log("stakeToken " + stakeToken);
+  //     const allowance = await getAllowance(
+  //       multiCallContract,
+  //       stakeToken,
+  //       account,
+  //       poolContract.address
+  //     );
+  //     setAllowance(allowance);
+  //     setApproveEnabled(allowance == 0);
+  //     console.log("allowance >> " + allowance);
+  //   } catch (error) {}
+  // }, [stakeToken]);
 
-  useEffect(async () => {
-    try {
-      const stake = await poolContract.callStatic.stakes(account);
-      console.log(">> stake " + stake);
-      console.log("106: stake " + stake[1]);
-      //isadded
-      setHasStaked(stake[4]);
-      //staked flag
-      setIsStaked(stake[5]);
-      setCanStake(stake[1] == 0);
-    } catch{
+  // useEffect(async () => {
+  //   try {
+  //     const stake = await poolContract.callStatic.stakes(account);
+  //     console.log(">> stake " + stake);
+  //     console.log("106: stake " + stake[1]);
+  //     //isadded
+  //     setHasStaked(stake[4]);
+  //     //staked flag
+  //     setIsStaked(stake[5]);
+  //     setCanStake(stake[1] == 0);
+  //   } catch{
 
-    }
-  }, []);
+  //   }
+  // }, []);
 
-  useEffect(async () => {
-    try{
-      const x = await poolContract.callStatic.stakeToken();
-      setStakeToken(x);
-    } catch {
+  // useEffect(async () => {
+  //   try{
+  //     const x = await poolContract.callStatic.stakeToken();
+  //     setStakeToken(x);
+  //   } catch {
 
-    }
-  });
+  //   }
+  // });
 
-  useEffect(async () => {
-    try{
-      poolContract.callStatic.stakes(account).then((x) => {
-        let amount = x[1];
-        let damount = amount / 10 ** 18;
+  // useEffect(async () => {
+  //   try{
+  //     poolContract.callStatic.stakes(account).then((x) => {
+  //       let amount = x[1];
+  //       let damount = amount / 10 ** 18;
   
-        setStakedamount(damount);
-      });
-    } catch{
+  //       setStakedamount(damount);
+  //     });
+  //   } catch{
 
-    }
+  //   }
     
-  }, [poolContract]);
+  // }, [poolContract]);
 
   const useInterval = (callback, interval, immediate) => {
     const ref = useRef();
@@ -172,49 +172,66 @@ const StakeForm = ({ pool }) => {
     }, [interval, immediate]);
   };
 
-  useEffect(() => {
-    try {
-
-      const result = poolContract.callStatic.rewardSteps(step);
-      
-      //if (isCancelled()) return;
-      
-      //console.log("reward >>>>> " + result);
-      //console.log("reward >>>>> " + result*10);
-      //setReward(result);
-      //console.log("!! " + reward);
-      
-    } catch (err) {
-      console.log('call contract error:', step, err);
-    }
-  }, 
-  []);
-
-  // useInterval(async (isCancelled) => {
-  //   if (step == undefined){
-  //     return;
-  //   }
+  // useEffect(() => {
   //   try {
 
-  //     const result = await poolContract.callStatic.rewardSteps(step);
+  //     //const result = poolContract.callStatic.rewardSteps(step);
+
+  //     poolContract.callStatic.rewardSteps(step).then((x) => {
+  //       let b = BigNumber.from(x);                    
+  //       console.log(">>>>> rewardSteps " + b.toString());
+  //       //setReward(b);
+  //     });
       
-  //     if (isCancelled()) return;
+  //     //if (isCancelled()) return;
       
-  //     console.log("reward >>>>> " + result);
-  //     console.log("reward >>>>> " + result*10);
-  //     setReward(result);
-  //     console.log("!! " + reward);
+  //     //console.log("reward >>>>> " + result);
+  //     //console.log("reward >>>>> " + result*10);
+  //     //setReward(result);
+  //     //console.log("!! " + reward);
       
   //   } catch (err) {
   //     console.log('call contract error:', step, err);
   //   }
-  // }, 1000, true);
+  // }, 
+  // []);
+
+  useInterval(async (isCancelled) => {
+    if (step == undefined){
+      return;
+    }
+    try {
+
+      const result = await poolContract.callStatic.rewardSteps(step);
+      
+      if (isCancelled()) return;
+      
+      console.log("reward >>>>> " + result);
+      console.log("reward >>>>> " + result*10);
+      setReward(result);
+      console.log("!! " + reward);
+      
+    } catch (err) {
+      console.log('call contract error:', step, err);
+    }
+  }, 1000, true);
 
   useInterval(async (isCancelled) => {    
     try {
 
       let result = await poolContract.callStatic.currentStep();
+      console.log("result currentStep " + result);      
+      console.log("result currentStep type " + typeof(result)); 
+
+      for (let key in result) {
+  console.log(key, result[key]);
+}
+
       if (isCancelled()) return;
+
+      //let b = BigNumber.from(result);
+
+      //console.log("step " + b);
 
       setStep(result);
 
@@ -285,19 +302,13 @@ const StakeForm = ({ pool }) => {
 
   const debounceOnChange = useMemo(
     () =>
-      _.debounce(async (e) => {
-        //await setOutputAmountText(routerContract, e);
+      _.debounce(async (e) => {        
         try {
           let z = e.target.value;
-          const amountx = parseInt(z);
-          console.log("??? 2  >> " + reward);          
-
-          console.log("0 event >> " + z);
-          console.log("1 >> " + amountx);
-          console.log("3  >> " + parseInt(reward));          
-          console.log("4 total reward: >> " + amountx*parseInt(reward));
-          setStakeamount(z);
-          setTotalreward(z*reward);
+          //TOOD
+          //const amountx = parseInt(z);      
+          //setStakeamount(z);
+          //setTotalreward(z*reward);
         } catch {
 
         }

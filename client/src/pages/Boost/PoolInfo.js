@@ -5,6 +5,7 @@ import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { getContractA, Chains } from "../../chain/eth.js";
 import { Table } from "react-bootstrap";
 import { agetPrices } from "../../api/data";
+import { BigNumber, ethers } from "ethers";
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -105,8 +106,9 @@ export function PoolInfo({ pool }) {
         console.log("curentStep ? " + curentStep);
 
         poolContract.callStatic.rewardSteps(curentStep).then((x) => {
-          console.log(">>>>> rewardSteps " + x);
-          setReward(x.toString());
+          let b = BigNumber.from(x);                    
+          console.log(">>>>> rewardSteps " + b.toString());
+          setReward(b);
         });
       });
 

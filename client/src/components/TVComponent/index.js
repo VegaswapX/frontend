@@ -1,6 +1,40 @@
 import {createChart} from "lightweight-charts";
 import React, {useEffect, useRef, useState} from "react";
 import {exampleData} from "./data";
+import { ApolloClient, gql,
+  InMemoryCache
+} from "@apollo/client";
+const BITQUERY_ENDPOINT = `https://graphql.bitquery.io`;
+
+const graphqlCache = new InMemoryCache();
+
+const exampleQuery = gql`
+{
+  ethereum(network: bsc) {
+    dexTrades(options: {limit: 100, asc: "timeInterval.minute"}, date: {since: "2020-11-01"}, exchangeName: {in: ["Pancake", "Pancake v2"]}, baseCurrency: {is: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"}, quoteCurrency: {is: "0xe9e7cea3dedca5984780bafc599bd69add087d56"}) {
+      timeInterval {
+        minute(count: 5)
+      }
+      baseCurrency {
+        symbol
+        address
+      }
+      baseAmount
+      quoteCurrency {
+        symbol
+        address
+      }
+      quoteAmount
+      trades: count
+      quotePrice
+      maximum_price: quotePrice(calculate: maximum)
+      minimum_price: quotePrice(calculate: minimum)
+      open_price: minimum(of: block, get: quote_price)
+      close_price: maximum(of: block, get: quote_price)
+    }
+  }
+}
+`
 
 export function ChartWrapper() {
   const chartDiv = useRef();

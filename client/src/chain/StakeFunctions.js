@@ -41,31 +41,6 @@ export async function getAllowance(
   return x;
 }
 
-// export async function StakeAmount(
-//   poolContract,
-//   stakerAddress,
-// ) {
-//   console.log("spenderAddress >>> " + spenderAddress);
-
-//   const calls = [
-//     {
-//       address: tokenAddress,
-//       name: "allowance",
-//       params: [ownerAddress, spenderAddress],
-//     },
-//   ];
-
-//   console.log(">> " + calls[0].address);
-//   const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
-//   // DEBUG
-//   let x = getDecAmount(returnData[0]).toNumber();
-//   if (x > 0) {
-//     return true;
-//   } else {
-//     return false;
-//   }
-
-// }
 
 export async function stake(stakeAmount, poolContract) {
 
@@ -209,3 +184,29 @@ export function statusPool(startTime, endTime) {
 
   
 }
+
+// export async function StakeAmount(
+//   poolContract,
+//   stakerAddress,
+// ) {
+//   console.log("spenderAddress >>> " + spenderAddress);
+
+//   const calls = [
+//     {
+//       address: tokenAddress,
+//       name: "allowance",
+//       params: [ownerAddress, spenderAddress],
+//     },
+//   ];
+
+//   console.log(">> " + calls[0].address);
+//   const { returnData } = await multiCall(multicallContract, ERC20_ABI, calls);
+//   // DEBUG
+//   let x = getDecAmount(returnData[0]).toNumber();
+//   if (x > 0) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+
+// }

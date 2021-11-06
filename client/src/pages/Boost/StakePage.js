@@ -59,8 +59,7 @@ const StakeableForm = ({
   pool,
   modalStatus,
   setModalStatus
-}) => {
-  //return <>stakeable</>;
+}) => {  
 
   return (
     <>
@@ -164,7 +163,7 @@ const HarvestPending = ({ stakedAmount, yaAmount, rewardCurrency, pool }) => {
         Yield Amount: {yaAmount}  {rewardCurrency}
         <br />
         <br />
-        Wait for staking end to harvest
+        Please wait for harvest
       </div>
     </>
   );
@@ -231,8 +230,6 @@ const StakeForm = ({ pool }) => {
   const stakeCurrency = pool.stakedUnit;
   const rewardCurrency = pool.yieldUnit;
 
-  console.log("rewardCurrency " + rewardCurrency);
-
   let poolContract;
 
   try {
@@ -271,8 +268,8 @@ const StakeForm = ({ pool }) => {
         poolContract.address
       );
       setAllowance(allowance);
-      setApproveEnabled(allowance == 0);
       console.log("allowance >> " + allowance);
+      setApproveEnabled(allowance == 0);
     } catch (error) {}
   }, [stakeToken]);
 
@@ -287,7 +284,7 @@ const StakeForm = ({ pool }) => {
 
       let ya = stake[2] / 10 ** 18;
       setYamount(ya);
-      console.log("106: stake " + stake[1]);
+      
       //isadded
       setHasStaked(stake[4]);
       //staked flag
@@ -298,8 +295,7 @@ const StakeForm = ({ pool }) => {
 
   useEffect(async () => {
     try {
-      const x = await poolContract.callStatic.rewardQuote();
-      console.log(">>>RQ " + x);
+      const x = await poolContract.callStatic.rewardQuote();      
       setRQ(x.toNumber());
     } catch {}
   }, []);
@@ -361,7 +357,6 @@ const StakeForm = ({ pool }) => {
 
   async function loadTime(isCancelled) {
     try {
-      console.log("useInterval ");
 
       const st = await poolContract.callStatic.startTime();
 
@@ -371,19 +366,15 @@ const StakeForm = ({ pool }) => {
 
       setStartTime(st);
       setEndTime(et);
-
-      //.then((x) => {
-      //setEndTime(x);
-      //setEndTimeF(formattedTime);
+     
       let z = statusPool(startTime, endTime);
-      console.log(">>> " + z);
       setPoolstatus(z);
 
       let x1 = poolStakeable(startTime, endTime);
       let x2 = poolHarvestable(endTime);
 
-      console.log("startTime: " + st);
-      console.log("endTime: " + et);
+      // console.log("startTime: " + st);
+      // console.log("endTime: " + et);
 
       console.log("stakeable: " + x1);
       console.log("harvestable: " + x2);
@@ -431,8 +422,7 @@ const StakeForm = ({ pool }) => {
   useInterval(
     async (isCancelled) => {
       try {
-        let result = await poolContract.callStatic.currentStep();
-        console.log("result currentStep " + result);
+        let result = await poolContract.callStatic.currentStep();        
 
         if (isCancelled()) return;
 
@@ -546,7 +536,6 @@ const StakeForm = ({ pool }) => {
         poolContract.address
       );
       [status, statusInfo] = result;
-      console.log(">>> " + status);
       console.log(">>> " + statusInfo.message);
 
       if (!status) {
@@ -595,13 +584,24 @@ const StakeForm = ({ pool }) => {
             />
           );
         } else {
-          return (
-            <>
-              <div style={{ textAlign: "center" }}>
-                Harvested: {yaAmount} {pool.yieldUnit}
-              </div>
-            </>
-          );
+          if (hasStaked){
+            return (
+              <>
+                <div style={{ textAlign: "center" }}>
+                  Harvested: {yaAmount} {pool.yieldUnit}
+                </div>
+              </>
+            );
+          } else {
+            return (
+              <>
+                <div style={{ textAlign: "center" }}>
+                  Pool closed
+                </div>
+              </>
+            );
+          }
+          
         }
       } else {
         return (

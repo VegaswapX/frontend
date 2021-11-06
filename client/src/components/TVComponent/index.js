@@ -1,5 +1,5 @@
 import { createChart } from "lightweight-charts";
-import React, {useRef} from "react";
+import React, {useEffect, useRef} from "react";
 
 const exampleData =
     [
@@ -155,39 +155,11 @@ const exampleData =
     ];
 
 
-export function ChartWrapper1() {
-  const chartDiv = useRef(null);
+export function ChartWrapper() {
+  const chartDiv = useRef();
 
-  // const chart = createChart(chartDiv.current, {
-  //   width: 800,
-  //   height: 400,
-  //   timeScale: {
-  //     timeVisible: true,
-  //     secondsVisible: false,
-  //   },
-  //   watermark: {
-  //     visible: true,
-  //     fontSize: 34,
-  //     color: "rgba(0, 0, 0, 0.25)",
-  //   },
-  // });
-
-  return (
-      <div ref={chartDiv} style={{ position: "relative" }}>
-      </div>
-  );
-}
-
-export class ChartWrapper extends React.Component {
-  state = {};
-
-  constructor(props) {
-    super(props);
-    this.chartDiv = React.createRef();
-  }
-
-  componentDidMount() {
-    this.chart = createChart(this.chartDiv.current, {
+  useEffect(() => {
+    const chart = createChart(chartDiv.current, {
       width: 800,
       height: 400,
       timeScale: {
@@ -200,31 +172,17 @@ export class ChartWrapper extends React.Component {
         color: "rgba(0, 0, 0, 0.25)",
       },
     });
-  }
 
-  componentDidUpdate() {
-    // TODO: Get this priceData from external service later
-    console.log(`didUpdate`);
-    const priceData = exampleData; ;
+    const priceData = exampleData;
 
     // candle chart
-    const lineSeries = this.chart.addCandlestickSeries();
+    const lineSeries = chart.addCandlestickSeries();
     lineSeries.setData(priceData)
 
-    // "Setting state" for the chart
-    // var options = {
-    //   watermark: {
-    //     text: this.props.waterData
-    //   }
-    // }
-    // this.chart.applyOptions(options)
-  }
+  }, []);
 
-  render() {
-    return (
-      <div ref={this.chartDiv} style={{ position: "relative" }}>
+  return (
+      <div ref={chartDiv} style={{ position: "relative" }}>
       </div>
-    );
-  }
+  );
 }
-

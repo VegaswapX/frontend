@@ -18,7 +18,7 @@ import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
-import {ChartWrapper1, ChartWrapper} from "../../components/TVComponent";
+import {ChartWrapper} from "../../components/TVComponent";
 
 const actionButtonStates = {
   wrongNetwork: {
@@ -509,7 +509,7 @@ const PageSwap = () => {
         </Col>
         {/*DEBUG*/}
         {/*<Col lg={12}>*/}
-        {/*  <ChartWrapper1/>*/}
+        {/*  <ChartWrapper/>*/}
         {/*</Col>*/}
       </Row>
     </>

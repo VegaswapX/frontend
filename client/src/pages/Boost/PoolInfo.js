@@ -50,6 +50,7 @@ export function PoolInfo({ pool }) {
   const [poolStatus, setPoolstatus] = useState();
   const [poolMaxStake, setMaxStake] = useState();
   const [poolYield, setMaxyield] = useState();
+  const [rq, setRQ] = useState();
 
   async function loadData() {
     console.log("try load pool contract data " + pool.address);
@@ -107,6 +108,11 @@ export function PoolInfo({ pool }) {
         setMaxStake(x);
         setLoading(false);
       });
+
+      poolContract.callStatic.rewardQuote().then((x) => {
+        console.log(">> RQ" + x.toNumber());
+        setRQ(x.toNumber());
+      });
     }
   }
 
@@ -150,7 +156,7 @@ export function PoolInfo({ pool }) {
     ["Name", pool.poolName],
     ["Status", poolStatus],
     ["Description", pool.description],
-    ["Current reward", reward + " " + pool.per],
+    ["Current reward", reward/rq + " " + pool.per],
     ["Start time", startTimeF],
     ["End time", endTimeF],
     ["totalAmountStaked", totalAmountStaked + " " + pool.stakedUnit],

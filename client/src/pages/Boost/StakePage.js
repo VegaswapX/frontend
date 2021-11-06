@@ -563,7 +563,7 @@ const StakeForm = ({ pool }) => {
   if (loading) {
     return <LoadingSpinner />;
   } else {
-    if (ispoolStakeable) {
+    if (ispoolStakeable && !isStaked) {
       return (
         <StakeableForm
           stakeAmount={stakeAmount}

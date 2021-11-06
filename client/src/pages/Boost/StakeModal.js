@@ -28,11 +28,11 @@ export const StakeModal = ({ pool }) => {
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">
-            Stake
-          </Modal.Title>
+          <Modal.Title id="example-modal-sizes-title-lg">Stake</Modal.Title>
         </Modal.Header>
-        <Modal.Body><StakePage pool={pool} /></Modal.Body>
+        <Modal.Body>
+          <StakePage pool={pool} />
+        </Modal.Body>
       </Modal>
 
       {/* <Modal

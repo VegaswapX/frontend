@@ -10,10 +10,7 @@ import { StakeModal } from "./StakeModal";
 
 import logo2 from "../../assets/images/vega2.png";
 
-import {
-  Row,
-  Col
-} from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
 const VGA_IMG =
   "https://assets.coingecko.com/coins/images/18397/small/big_logo.png?1631769696";
@@ -34,11 +31,21 @@ const PoolRow = ({ pool }) => {
       <td>{pool.poolName}&nbsp;&nbsp;</td>
 
       <td>
-        <img src={`${IMAGES[pool.stakedUnit]}`} height="80" width="80" alt="currency"></img>
+        <img
+          src={`${IMAGES[pool.stakedUnit]}`}
+          height="80"
+          width="80"
+          alt="currency"
+        ></img>
       </td>
 
       <td>
-        <img src={`${IMAGES[pool.yieldUnit]}`} height="80" width="80" alt="currency"></img>
+        <img
+          src={`${IMAGES[pool.yieldUnit]}`}
+          height="80"
+          width="80"
+          alt="currency"
+        ></img>
       </td>
 
       <td>
@@ -48,7 +55,7 @@ const PoolRow = ({ pool }) => {
       <td>
         <StakeModal pool={pool} />
       </td>
-      
+
       {/* <td>
         TVL
       </td> */}
@@ -105,7 +112,6 @@ const BoostPage = () => {
     <>
       <Row>
         <Col lg={12}>
-          
           <div
             style={{
               width: "70%",
@@ -120,13 +126,12 @@ const BoostPage = () => {
               border: "1px solid #000",
             }}
           >
-           <h1 style={{marginLeft: "40%"}}>Pools</h1>
+            <h1 style={{ marginLeft: "40%" }}>Pools</h1>
             <PoolsList />
           </div>
         </Col>
       </Row>
     </>
-
   );
 };
 

@@ -35,7 +35,6 @@ function timeConverter(UNIX_timestamp) {
   return time;
 }
 
-
 export function PoolInfo({ pool }) {
   const { account, library, chainId } = useWeb3React();
   console.log(`account`, library);
@@ -90,7 +89,7 @@ export function PoolInfo({ pool }) {
         console.log("curentStep ? " + curentStep);
 
         poolContract.callStatic.rewardSteps(curentStep).then((x) => {
-          let b = BigNumber.from(x);                    
+          let b = BigNumber.from(x);
           console.log(">>>>> rewardSteps " + b.toString());
           setReward(b);
         });
@@ -170,7 +169,7 @@ export function PoolInfo({ pool }) {
   } else {
     return (
       <>
-        <Table className="mb-0" style={{color: "white"}}>
+        <Table className="mb-0" style={{ color: "white" }}>
           <tbody>
             {data.map((row) => {
               return (

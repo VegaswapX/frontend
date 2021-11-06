@@ -9,7 +9,6 @@ export const InfoModal = ({ pool }) => {
     setModal(!modal);
   };
 
-
   return (
     <>
       {/* <i
@@ -29,7 +28,7 @@ export const InfoModal = ({ pool }) => {
       <Modal
         size="lg"
         show={modal}
-        onHide={toggle}        
+        onHide={toggle}
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
@@ -38,11 +37,9 @@ export const InfoModal = ({ pool }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <PoolInfo pool={pool} />
-          </Modal.Body>
+          <PoolInfo pool={pool} />
+        </Modal.Body>
       </Modal>
-
-      
     </>
   );
 };

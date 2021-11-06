@@ -36,6 +36,17 @@ const exampleQuery = gql`
 }
 `
 
+const client = new ApolloClient({
+  cache: graphqlCache,
+  uri: BITQUERY_ENDPOINT,
+});
+
+client.query({
+  query: exampleQuery,
+}).then(res => {
+  console.log("graphql res", res);
+})
+
 export function ChartWrapper() {
   const chartDiv = useRef();
   const [chart, setChart] = useState(null);

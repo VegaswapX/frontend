@@ -508,9 +508,9 @@ const PageSwap = () => {
           </div>
         </Col>
         {/*DEBUG*/}
-        {/*<Col lg={12}>*/}
-        {/*  <ChartWrapper/>*/}
-        {/*</Col>*/}
+        <Col lg={12}>
+          <ChartWrapper/>
+        </Col>
       </Row>
     </>
   );

@@ -1,5 +1,5 @@
 import { createChart } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 const exampleData = [
   { time: "2018-10-19", open: 180.34, high: 180.99, low: 178.57, close: 179.85 },
@@ -155,9 +155,10 @@ const exampleData = [
 
 export function ChartWrapper() {
   const chartDiv = useRef();
+  const [chart, setChart] = useState(null);
 
   useEffect(() => {
-    const chart = createChart(chartDiv.current, {
+    const chart_ = createChart(chartDiv.current, {
       width: 800,
       height: 400,
 
@@ -175,8 +176,9 @@ export function ChartWrapper() {
     const priceData = exampleData;
 
     // candle chart
-    const lineSeries = chart.addCandlestickSeries();
+    const lineSeries = chart_.addCandlestickSeries();
     lineSeries.setData(priceData);
+    setChart(chart_);
   }, []);
 
   return (

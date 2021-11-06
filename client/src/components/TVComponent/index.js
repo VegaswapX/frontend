@@ -1,34 +1,8 @@
 import { createChart } from "lightweight-charts";
-import React from "react";
+import React, {useRef} from "react";
 
-class ChartWrapper extends React.Component {
-  state = {};
-
-  constructor(props) {
-    super(props);
-    this.chartDiv = React.createRef();
-  }
-
-  componentDidMount() {
-    this.chart = createChart(this.chartDiv.current, {
-      width: 800,
-      height: 400,
-      timeScale: {
-        timeVisible: true,
-        secondsVisible: false,
-      },
-      watermark: {
-        visible: true,
-        fontSize: 34,
-        color: "rgba(0, 0, 0, 0.25)",
-      },
-    });
-  }
-
-  componentDidUpdate() {
-    // TODO: Get this priceData from external service later
-    console.log(`didUpdate`);
-    const priceData =[
+const exampleData =
+    [
       { time: '2018-10-19', open: 180.34, high: 180.99, low: 178.57, close: 179.85 },
       { time: '2018-10-22', open: 180.82, high: 181.40, low: 177.56, close: 178.75 },
       { time: '2018-10-23', open: 175.77, high: 179.49, low: 175.44, close: 178.53 },
@@ -180,6 +154,59 @@ class ChartWrapper extends React.Component {
       { time: '2019-05-24', open: 192.54, high: 193.86, low: 190.41, close: 193.59 },
     ];
 
+
+export function ChartWrapper1() {
+  const chartDiv = useRef(null);
+
+  // const chart = createChart(chartDiv.current, {
+  //   width: 800,
+  //   height: 400,
+  //   timeScale: {
+  //     timeVisible: true,
+  //     secondsVisible: false,
+  //   },
+  //   watermark: {
+  //     visible: true,
+  //     fontSize: 34,
+  //     color: "rgba(0, 0, 0, 0.25)",
+  //   },
+  // });
+
+  return (
+      <div ref={chartDiv} style={{ position: "relative" }}>
+      </div>
+  );
+}
+
+export class ChartWrapper extends React.Component {
+  state = {};
+
+  constructor(props) {
+    super(props);
+    this.chartDiv = React.createRef();
+  }
+
+  componentDidMount() {
+    this.chart = createChart(this.chartDiv.current, {
+      width: 800,
+      height: 400,
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+      },
+      watermark: {
+        visible: true,
+        fontSize: 34,
+        color: "rgba(0, 0, 0, 0.25)",
+      },
+    });
+  }
+
+  componentDidUpdate() {
+    // TODO: Get this priceData from external service later
+    console.log(`didUpdate`);
+    const priceData = exampleData; ;
+
     // candle chart
     const lineSeries = this.chart.addCandlestickSeries();
     lineSeries.setData(priceData)
@@ -201,4 +228,3 @@ class ChartWrapper extends React.Component {
   }
 }
 
-export default ChartWrapper;

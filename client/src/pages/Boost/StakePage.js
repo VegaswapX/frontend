@@ -77,9 +77,7 @@ const StakeableForm = ({
               className="stakeInput"
             />{" "}
             {stakeCurrency}
-            {/* <br />
-            //TODO
-              <span style={{fontSize: "14pt"}}>Yield amount: {yieldAmount}</span> */}
+            
             <br />
           </Form.Group>
 
@@ -155,7 +153,7 @@ const StakeableForm = ({
   );
 };
 
-const HarvestPending = ({ stakedAmount, yaAmount, pool }) => {
+const HarvestPending = ({ stakedAmount, yaAmount, rewardCurrency, pool }) => {
   return (
     <>
       <div style={{ textAlign: "center" }}>
@@ -163,7 +161,7 @@ const HarvestPending = ({ stakedAmount, yaAmount, pool }) => {
         Staked Amount: {stakedAmount} {pool.stakedUnit}
         <br />
         <br />
-        Yield Amount: {yaAmount}
+        Yield Amount: {yaAmount}  {rewardCurrency}
         <br />
         <br />
         Wait for staking end to harvest
@@ -232,6 +230,8 @@ const StakeForm = ({ pool }) => {
   //TODO!
   const stakeCurrency = pool.stakedUnit;
   const rewardCurrency = pool.yieldUnit;
+
+  console.log("rewardCurrency " + rewardCurrency);
 
   let poolContract;
 
@@ -608,6 +608,7 @@ const StakeForm = ({ pool }) => {
           <HarvestPending
             stakedAmount={stakedAmount}
             yaAmount={yaAmount}
+            rewardCurrency={rewardCurrency}
             pool={pool}
           />
         );

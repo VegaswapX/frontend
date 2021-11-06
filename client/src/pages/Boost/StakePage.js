@@ -276,7 +276,9 @@ const StakeForm = ({ pool }) => {
   useEffect(async () => {
     try {
       const stake = await poolContract.callStatic.stakes(account);
-      console.log(">> stake " + stake);
+      let stakeAmount = stake[1];
+      console.log("!!! >> stake " + stake);      
+      
       console.log("!>> added " + stake[4]);
       console.log("!>> staked " + stake[5]);
 
@@ -286,7 +288,8 @@ const StakeForm = ({ pool }) => {
       setYamount(ya);
       
       //isadded
-      setHasStaked(stake[4]);
+      //setHasStaked(stake[4]);
+      setHasStaked(stakeAmount>0);
       //staked flag
       setIsStaked(stake[5]);
       setCanStake(stake[1] == 0);
@@ -466,7 +469,8 @@ const StakeForm = ({ pool }) => {
       if (!receipt) {
         toast.error(receiptstatus.data.message);
       }
-    } catch {
+    } catch (error) {
+      console.log("error with stake " + error);
       toast.error("error with stake");
     }
 
@@ -487,14 +491,17 @@ const StakeForm = ({ pool }) => {
 
       if (!receipt) {
         toast.error(receiptstatus.data.message);
+        setLoading(false);
       } else {
         toast.success("unstaked successfully");
+        setLoading(false);
       }
-    } catch {
+    } catch (error) {
+      console.log("error with unstake" + error);
       toast.error("error with unstake");
     }
 
-    setLoading(false);
+    //setLoading(false);
   };
 
   const debounceOnChange = useMemo(

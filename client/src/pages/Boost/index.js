@@ -7,6 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { BPOOLS } from "../../chain/Contracts.js";
 import { InfoModal } from "./InfoModal";
 import { StakeModal } from "./StakeModal";
+
+import logo2 from "../../assets/images/vega2.png";
+
 import {
   Row,
   Col
@@ -20,6 +23,7 @@ const USDT_IMG =
 const IMAGES = {
   USDT: USDT_IMG,
   VGA: VGA_IMG,
+  //VGA: logo2,
 };
 
 const PoolRow = ({ pool }) => {
@@ -30,11 +34,11 @@ const PoolRow = ({ pool }) => {
       <td>{pool.poolName}&nbsp;&nbsp;</td>
 
       <td>
-        <img src={`${IMAGES[pool.stakedUnit]}`} alt="currency"></img>
+        <img src={`${IMAGES[pool.stakedUnit]}`} height="80" width="80" alt="currency"></img>
       </td>
 
       <td>
-        <img src={`${IMAGES[pool.yieldUnit]}`} alt="currency"></img>
+        <img src={`${IMAGES[pool.yieldUnit]}`} height="80" width="80" alt="currency"></img>
       </td>
 
       <td>
@@ -101,6 +105,7 @@ const BoostPage = () => {
     <>
       <Row>
         <Col lg={12}>
+          
           <div
             style={{
               width: "70%",

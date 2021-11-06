@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 // import VEGA_CONTRACT_ABI from "../../../abis/erc20.json";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
 import { getContractA, Chains } from "../../chain/eth.js";
+import { statusPool } from "../../chain/StakeFunctions";
 import { Table } from "react-bootstrap";
 import { agetPrices } from "../../api/data";
 import { BigNumber, ethers } from "ethers";
@@ -34,23 +35,6 @@ function timeConverter(UNIX_timestamp) {
   return time;
 }
 
-function statusPool(startTime, endTime) {
-  let n = Date.now() / 1000;
-  //let isopen = n > startTime;
-  console.log(">>>> statusPool: " + startTime + " N: " + n);  
-
-  if (n < startTime){
-    return "Not started yet";
-  }  else {
-    if (n > endTime) {
-      return "Ended";
-    } else {
-      return "Open";
-    }
-  }
-
-  
-}
 
 export function PoolInfo({ pool }) {
   const { account, library, chainId } = useWeb3React();

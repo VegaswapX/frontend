@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import { getAllowance, unstake } from "../../chain/StakeFunctions";
 import {getTokensPrices} from "../../api/data"
-import {statusPool} from "../../chain/StakeFunctions";
+import {statusPool, poolStakeable, poolHarvestable} from "../../chain/StakeFunctions";
 
 // import { useWeb3React } from "@web3-react/core";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
@@ -38,6 +38,7 @@ const StakeForm = ({ pool }) => {
   
   const [isStaked, setIsStaked] = useState(0);
   const [hasStaked, setHasStaked] = useState(0);
+  const [hasHarvested, sethasHarvested] = useState(0);
   //const [reducerState, dispatch] = useReducer(poolReducer, INIT_STATE);
   const [approveEnabled, setApproveEnabled] = useState(false);
 
@@ -108,8 +109,12 @@ const StakeForm = ({ pool }) => {
     try {
       const stake = await poolContract.callStatic.stakes(account);
       console.log(">> stake " + stake);
+      console.log("!>> added " + stake[4]);
+      console.log("!>> staked " + stake[5]);
+
+      sethasHarvested(!stake[4]);
+
       let ya = stake[2]/10**18;
-      //alert(ya);
       setYamount(ya);
       console.log("106: stake " + stake[1]);
       //isadded
@@ -189,27 +194,50 @@ const StakeForm = ({ pool }) => {
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
   const [poolStatus, setPoolstatus] = useState();
+  const [ispoolStakeable, setPoolStakeable] = useState();
+  const [ispoolHarvestable, setIsPoolHarvestable] = useState();
   
 
-  useEffect(async () => {
+  useInterval(async (isCancelled) => {
     try{
 
-      poolContract.callStatic.startTime().then((x) => {
-        setStartTime(x);
-      });
+      console.log("useInterval ");
 
-      poolContract.callStatic.endTime().then((x) => {
+      const st = await  poolContract.callStatic.startTime();            
+      
+      const et = await poolContract.callStatic.endTime();
+      
+      if (isCancelled()) return;
+      
+      setStartTime(st);
+      setEndTime(et);
+      
+      
+      //.then((x) => {
         //setEndTime(x);
         //setEndTimeF(formattedTime);
-        let z = statusPool(startTime, endTime);
-        console.log(">>> " + z);
-        setPoolstatus(z);
-      });
+      let z = statusPool(startTime, endTime);
+      console.log(">>> " + z);
+      setPoolstatus(z);
+
+      let x1 = poolStakeable(startTime, endTime);
+      let x2 = poolHarvestable(endTime);
+
+      console.log("startTime: " + st);
+      console.log("endTime: " + et);
+
+      console.log("stakeable: " + x1);
+      console.log("harvestable: " + x2);
+
+      setPoolStakeable(x1);
+      setIsPoolHarvestable(x2);
+      //});
+
     } catch{
 
     }
     
-  }, [poolContract]);
+  }, 1000, true);
 
   
   useInterval(async (isCancelled) => {
@@ -382,144 +410,189 @@ const StakeForm = ({ pool }) => {
     </>;
 
   } else {
-    if (hasStaked) {
-      if (isStaked && poolStatus=="Ended") {
-        return (
-          <div style={{textAlign: "center"}}>
-            {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
-            Staked Amount: {stakedAmount} {pool.stakedUnit}
-            <br />
-            <br />
-            Yield Amount: {yaAmount}
-            <br />
-            <br />
-            <Button
-              variant="primary"
-              onClick={unstakeClick}
-              className="m-1"
-              // disabled={reducerState.stakeAmount <= 0}
-            >
-              Harvest
-            </Button>
-          </div>
-        );
-      } else {
-        return <>
-         <div style={{textAlign: "center"}}>
-            {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
-            Staked Amount: {stakedAmount} {pool.stakedUnit}
-            <br />
-            <br />
-            Yield Amount: {yaAmount}
-            <br />
-            <br />
-            Wait for staking end to harvest           
-          </div>
-        </>;
-      }
-    } else {
+
+    if (ispoolStakeable){
       return (
-        <>
-        <div style={{marginLeft: "10px", fontSize: "15pt"}}>
-          <Form>
-            <Form.Group className="mb-3">
-              
-              <Form.Label htmlFor="" column sm={3}>
-                Stake Amount:{" "}
-              </Form.Label>
-              <input
-                type="text"
-                value={stakeAmount}
-                onChange={handleStakeInput}
-                className="stakeInput"
-              />{" "}
-              {stakeCurrency}
-              {/* <br />
-            //TODO
-              <span style={{fontSize: "14pt"}}>Yield amount: {yieldAmount}</span> */}
+      <> 
+      stakeable
+      </>)
+    } else {
+      if (ispoolHarvestable){
+        if (!hasHarvested){
+        return (
+          <> 
+          
+            <div style={{textAlign: "center"}}>
+              {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
+              Staked Amount: {stakedAmount} {pool.stakedUnit}
               <br />
-            </Form.Group>
-
-
-            <div>
-            <span style={{color: "white"}}>Yield amount: {totalReward}  {rewardCurrency}</span>
+              <br />
+              Yield Amount: {yaAmount}
+              <br />
+              <br />
+              <Button
+                variant="primary"
+                onClick={unstakeClick}
+                className="m-1"
+                  //disabled={reducerState.stakeAmount <= 0}
+              >
+                Harvest
+              </Button>
             </div>
-            <br />
-
-            <div>
-            Yield multiplier: {reward? reward.toString(): ""} {rewardCurrency} per {stakeCurrency}
+          );
+          </>)}
+          else {
+            return (
+              
+            <>
+            <div style={{textAlign: "center"}}>
+            Harvested: {yaAmount}  {pool.yieldUnit}
             </div>
+            </>);
+          }
+      } else {
+        return (
+          <> 
+          Not stakeable yet
+          </>)
+      }
+    }
 
-            <br />
+    // return (
+    // <>
+    // ispoolStakeable: {ispoolStakeable.toString()}
+    // <br />
+    // ispoolHarvestable: {ispoolHarvestable.toString()}
+    // <br />
+    // </>
 
-            <div>
-            VGA price: {yieldPrice}$
-            </div>
+    // )
+
+
+    // if (hasStaked) {
+    //   if (isStaked && poolStatus=="Ended") {
+    
+    //   } else {
+    //     return <>
+    //      <div style={{textAlign: "center"}}>
+    //         {/* StakedAmount: {rounded(stakedAmount)} {pool.stakedUnit} */}
+    //         Staked Amount: {stakedAmount} {pool.stakedUnit}
+    //         <br />
+    //         <br />
+    //         Yield Amount: {yaAmount}
+    //         <br />
+    //         <br />
+    //         Wait for staking end to harvest           
+    //       </div>
+    //     </>;
+    //   }
+
+
+    // } 
+    
+    // else {
+    //   return (
+    //     <>
+    //     <div style={{marginLeft: "10px", fontSize: "15pt"}}>
+    //       <Form>
+    //         <Form.Group className="mb-3">
+              
+    //           <Form.Label htmlFor="" column sm={3}>
+    //             Stake Amount:{" "}
+    //           </Form.Label>
+    //           <input
+    //             type="text"
+    //             value={stakeAmount}
+    //             onChange={handleStakeInput}
+    //             className="stakeInput"
+    //           />{" "}
+    //           {stakeCurrency}
+    //           {/* <br />
+    //         //TODO
+    //           <span style={{fontSize: "14pt"}}>Yield amount: {yieldAmount}</span> */}
+    //           <br />
+    //         </Form.Group>
+
+
+    //         <div>
+    //         <span style={{color: "white"}}>Yield amount: {totalReward}  {rewardCurrency}</span>
+    //         </div>
+    //         <br />
+
+    //         <div>
+    //         Yield multiplier: {reward? reward.toString(): ""} {rewardCurrency} per {stakeCurrency}
+    //         </div>
+
+    //         <br />
+
+    //         <div>
+    //         VGA price: {yieldPrice}$
+    //         </div>
 
            
 
-            <br />
-            <div>
-            Yield ROI: {roi} %
-            </div>
+    //         <br />
+    //         <div>
+    //         Yield ROI: {roi} %
+    //         </div>
 
-            <br />
-            <div>
-            Yield APY: {apy} %
-            </div>
+    //         <br />
+    //         <div>
+    //         Yield APY: {apy} %
+    //         </div>
 
-            {/* <div>
-            Duration: {duration}
-            </div> */}
+    //         {/* <div>
+    //         Duration: {duration}
+    //         </div> */}
 
-            <br />
+    //         <br />
 
-            <span style={{marginLeft: "40%"}}>
+    //         <span style={{marginLeft: "40%"}}>
 
-              <ApproveButton
-                approveEnabled={approveEnabled}
-                approve={approveClick}                
-                //disabled={approveEnabled}
-              />
-              {/* allowance: {allowance} */}
+    //           <ApproveButton
+    //             approveEnabled={approveEnabled}
+    //             approve={approveClick}                
+    //             //disabled={approveEnabled}
+    //           />
+    //           {/* allowance: {allowance} */}
 
-              {/* <br/> */}
-              &nbsp;&nbsp;
-              <Button
-                variant="primary"
-                onClick={stakeClick}
-                className="m-1"
-                style={{marginLeft: "100px"}}
-                // disabled={approveEnabled}
-              >
-                Stake
-              </Button>
-              </span>
-          </Form>
-          </div>
+    //           {/* <br/> */}
+    //           &nbsp;&nbsp;
+    //           <Button
+    //             variant="primary"
+    //             onClick={stakeClick}
+    //             className="m-1"
+    //             style={{marginLeft: "100px"}}
+    //             // disabled={approveEnabled}
+    //           >
+    //             Stake
+    //           </Button>
+    //           </span>
+    //       </Form>
+    //       </div>
          
-          <Modal
-            show={modalStatus}
-            onHide={() => setModalStatus(false)}
-            // dialogClassName={className}            
-            scrollable={true}
-          >
-            <Modal.Header onHide={() => setModalStatus(false)}>
-              <h4 className="modal-title">Pool Information</h4>
-            </Modal.Header>
-            <Modal.Body>
-              <PoolInfo pool={pool} />
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="light" onClick={() => setModalStatus(false)}>
-                Close
-              </Button>{" "}
-            </Modal.Footer>
-          </Modal>
+    //       <Modal
+    //         show={modalStatus}
+    //         onHide={() => setModalStatus(false)}
+    //         // dialogClassName={className}            
+    //         scrollable={true}
+    //       >
+    //         <Modal.Header onHide={() => setModalStatus(false)}>
+    //           <h4 className="modal-title">Pool Information</h4>
+    //         </Modal.Header>
+    //         <Modal.Body>
+    //           <PoolInfo pool={pool} />
+    //         </Modal.Body>
+    //         <Modal.Footer>
+    //           <Button variant="light" onClick={() => setModalStatus(false)}>
+    //             Close
+    //           </Button>{" "}
+    //         </Modal.Footer>
+    //       </Modal>
           
-        </>
-      );
-    }
+    //     </>
+    //   );
+    // }
 
     // return <>?? canStake: {canStake}
     // hasStaked {hasStaked}

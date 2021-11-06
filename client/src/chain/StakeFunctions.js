@@ -178,6 +178,21 @@ export async function approve(account, library, tokenAddress, spenderAddress) {
   }
 }
 
+export function poolStakeable(startTime, endTime) {
+  let n = Date.now() / 1000;
+
+  return (n > startTime && n < endTime);
+  
+}
+
+export function poolHarvestable(endTime) {
+  let n = Date.now() / 1000;
+
+  return (n > endTime);
+
+}
+
+
 export function statusPool(startTime, endTime) {
   let n = Date.now() / 1000;
   //console.log(">>>> statusPool: " + startTime + " N: " + n);  

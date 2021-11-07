@@ -47,5 +47,23 @@ export const BPOOLS = [
     stakedUnit: "VGA",
     yieldUnit: "VGA",
   },
+  // {
+  //   poolName: "USDT-VGA (week 42)",
+  //   address: POOL1,
+  //   description:
+  //     "Stake USDT and earn VGA. The staked amount will be locked for the specified time. After the expiration the USDT amount will be returned together with the reward in VGA",
+  //   per: "VGA per USDT",
+  //   stakedUnit: "USDT",
+  //   yieldUnit: "VGA",
+  // },
+  // {
+  //   poolName: "VGA-VGA (week 42)",
+  //   address: POOL2,
+  //   description:
+  //     "Stake VGA and earn VGA. The staked amount will be locked for the specified time. After the expiration the VGA amount will be returned together with the reward in VGA",
+  //   per: "VGA per VGA",
+  //   stakedUnit: "VGA",
+  //   yieldUnit: "VGA",
+  // },
   // {poolName: "USDT", poolAddress: POOL2}
 ];

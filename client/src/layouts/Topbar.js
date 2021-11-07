@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { injected } from "../chain/eth.js";
 import { Navbar, Nav, Container } from "react-bootstrap";
+import { store } from "../redux/store";
 
 // actions
 // import { showRightSidebar } from "../redux/actions";
@@ -23,6 +24,9 @@ import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 
 const AccountConnect = ({ connect }) => {
   const { account, deactivate } = useWeb3React();  
+
+  let state = store.getState();
+  let connected = state.web3Reducer.connected;
 
   async function disconnect() {
     console.log("disconnect");
@@ -56,6 +60,20 @@ const AccountConnect = ({ connect }) => {
 const AccountInfo = () => {
   const { account } = useWeb3React();
 
+  // if (store.state){
+  //   console.log("store " + store.state.connected);
+
+  //   if (store.state.connected)
+  // }
+
+
+  // if (store.state){
+  //   if (store.state.account == "" && store.state.connected){
+  //       console.log("!!!SET ")
+  //       store.dispatch({ type: "web3/switchConnected", payload: account }); //, payload: "x"
+  //   }
+  // }
+
   function accInfo() {
     if (account) {
       return (
@@ -82,6 +100,8 @@ const AccountManage = () => {
   //console.log("networkStatus " + networkStatus);
 
   async function connect() {
+    
+
     await activate(injected, async (error) => {
       if (error instanceof UnsupportedChainIdError) {
         setNetworkStatus();
@@ -138,27 +158,30 @@ const Brand = () => {
 const VerticalMenu = () => {
   return (
     <Navbar bg="" expand="lg">
-      {/* uil-wallet */}
+      
 
       <Container>
         <Brand />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto vegatopnav" style={{ fontSize: "20px" }}>
-            {/* <Nav.Link href="#home">Dashboard</Nav.Link> */}
-            {/* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
-              <i className="uil-home-alt"></i>
-              <span style={{ marginLeft: "5px" }}>Dashboard</span>
-            </Nav.Link> */}
+   
+          <Nav className="me-auto" style={{ fontSize: "20px", marginLeft: "30px"}}>
+            
             <Nav.Link href="/swap" style={{ marginLeft: "30px" }}>
               <i className="uil-exchange"></i>
               <span style={{ marginLeft: "5px" }}>Swap</span>
             </Nav.Link>
+            
             <Nav.Link href="/boost" style={{ marginLeft: "30px" }}>
               <i className="dripicons-rocket"></i> 
-              <span style={{ marginLeft: "5px" }}>Farming</span>
-              
+              <span style={{ marginLeft: "5px" }}>Farming</span>              
             </Nav.Link>
+
+            {/* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
+              <i className="uil-home-alt"></i>
+              <span style={{ marginLeft: "5px" }}>Dashboard</span>
+            </Nav.Link> */}
+
             {/* <Nav.Link href="/liq" style={{ marginLeft: "30px" }}>
               <i className="uil-layer-group"></i> 
               <span style={{ marginLeft: "5px" }}>Liquidity</span>

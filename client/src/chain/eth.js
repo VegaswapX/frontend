@@ -4,6 +4,8 @@ import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
 import { useEffect, useMemo, useState } from "react";
+import { store } from "../redux/store";
+
 
 export const BSC_MAINNET_ID = 56;
 export const BSC_TESTNET_ID = 97;
@@ -118,11 +120,15 @@ const useEagerConnect = () => {
 
   const [tried, setTried] = useState(false);
 
+  let state = store.getState();
+  console.log("state connected " + state.web3Reducer.connected);
+
   function onError(error) {
     console.log("error ");
   }
 
   useEffect(() => {
+    console.log("useEagerConnect")
     injected.isAuthorized().then((isAuthorized) => {
       if (isAuthorized) {
         console.log("activate");
@@ -134,7 +140,8 @@ const useEagerConnect = () => {
         setTried(true);
       }
     });
-  }, [activate]); // intentionally only running on mount (make sure it's only mounted once :))
+  }, [activate]); 
+  // intentionally only running on mount
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
@@ -163,10 +170,12 @@ const useInactiveListener = (suppress = false) => {
   const { active, error, activate } = useWeb3React();
 
   useEffect(() => {
+    console.log("useInactiveListener.. " + active);
     const { ethereum } = window;
     if (error) {
       console.log("> error " + error);
     }
+    
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {
         console.log("Handling 'connect' event");

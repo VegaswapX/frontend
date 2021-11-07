@@ -462,7 +462,7 @@ const StakeForm = ({ pool }) => {
         console.log("call error:", err);
       }
     },
-    1000,
+    2000,
     true
   );
 

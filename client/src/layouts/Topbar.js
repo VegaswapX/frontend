@@ -23,7 +23,7 @@ import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 // get the notifications
 
 const AccountConnect = ({ connect }) => {
-  const { account, deactivate } = useWeb3React();  
+  const { account, deactivate } = useWeb3React();
 
   let state = store.getState();
   let connected = state.web3Reducer.connected;
@@ -41,13 +41,13 @@ const AccountConnect = ({ connect }) => {
     if (account) {
       //console.log("account" + account);
       return (
-        <Button onClick={disconnect} variant="info" style={{width:"105px"}}>
+        <Button onClick={disconnect} variant="info" style={{ width: "105px" }}>
           Disconnect
         </Button>
       );
     } else {
       return (
-        <Button onClick={connect} variant="primary" style={{width:"105px"}}>
+        <Button onClick={connect} variant="primary" style={{ width: "105px" }}>
           Connect
         </Button>
       );
@@ -59,7 +59,6 @@ const AccountConnect = ({ connect }) => {
 
 const AccountInfo = () => {
   const { account } = useWeb3React();
-
 
   // if (store.state != undefined){
   //   //  console.log(">>>> store " + store.state.connected);
@@ -103,8 +102,6 @@ const AccountManage = () => {
   //console.log("networkStatus " + networkStatus);
 
   async function connect() {
-    
-
     await activate(injected, async (error) => {
       if (error instanceof UnsupportedChainIdError) {
         setNetworkStatus();
@@ -134,17 +131,17 @@ const AccountManage = () => {
 };
 
 const Brand = () => {
-
-  return (<Navbar.Brand href="#home">
-  <span className="">
-    <img
-      src={vlogo}
-      alt="logo"
-      width="210"
-      height="110"
-      style={{ marginTop: "0px" }}
-    />
-    {/* <span
+  return (
+    <Navbar.Brand href="#home">
+      <span className="">
+        <img
+          src={vlogo}
+          alt="logo"
+          width="210"
+          height="110"
+          style={{ marginTop: "0px" }}
+        />
+        {/* <span
       style={{
         color: "white",
         marginLeft: "10px",
@@ -154,30 +151,30 @@ const Brand = () => {
     >
       Vegaswap
     </span> */}
-  </span>
-</Navbar.Brand>)
-}
+      </span>
+    </Navbar.Brand>
+  );
+};
 
 const VerticalMenu = () => {
   return (
     <Navbar bg="" expand="lg">
-      
-
       <Container>
         <Brand />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-   
-          <Nav className="me-auto" style={{ fontSize: "20px", marginLeft: "30px"}}>
-            
+          <Nav
+            className="me-auto"
+            style={{ fontSize: "20px", marginLeft: "30px" }}
+          >
             <Nav.Link href="/swap" style={{ marginLeft: "30px" }}>
               <i className="uil-exchange"></i>
               <span style={{ marginLeft: "5px" }}>Swap</span>
             </Nav.Link>
-            
+
             <Nav.Link href="/boost" style={{ marginLeft: "30px" }}>
-              <i className="dripicons-rocket"></i> 
-              <span style={{ marginLeft: "5px" }}>Farming</span>              
+              <i className="dripicons-rocket"></i>
+              <span style={{ marginLeft: "5px" }}>Farming</span>
             </Nav.Link>
 
             {/* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
@@ -196,11 +193,7 @@ const VerticalMenu = () => {
   );
 };
 
-const Topbar = ({
-  hideLogo,
-  navCssClasses,
-  openLeftMenuCallBack,  
-}) => {
+const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack }) => {
   // const dispatch = useDispatch();
 
   // const [isopen, setIsopen] = useState(false);

@@ -1,6 +1,6 @@
 const initialState = {
   connected: false,
-  account: ""
+  account: "",
 };
 
 // TODO: Magic number all over the places
@@ -12,10 +12,9 @@ export default function web3Reducer(state = initialState, action) {
   //return state;
 
   switch (action.type) {
-
     case "web3/switchConnected":
-        // DEBUG        
-        return { ...state, account: "AAA" };
+      // DEBUG
+      return { ...state, account: "AAA" };
 
     default:
       return state;

@@ -1,17 +1,30 @@
-import BigNumber from "bignumber.js";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
+//import { ethers } from "ethers";
 import ERC20_ABI from "../abis/erc20.json";
 import { getContract } from "./eth";
 import { multiCall } from "./trade";
-export const BIG_ZERO = new BigNumber(0);
-export const BIG_ONE = new BigNumber(1);
-export const BIG_NINE = new BigNumber(9);
-export const BIG_TEN = new BigNumber(10);
+// export const BIG_ZERO = new BigNumber(0);
+// export const BIG_ONE = new BigNumber(1);
+// export const BIG_NINE = new BigNumber(9);
+// export const BIG_TEN = new BigNumber(10);
 
+// export const getDecimalAmountZ = (amount, decimals = 18) => {
+//   return new BigNumber(amount).times(BIG_TEN.pow(decimals));
+// };
 
-export const getDecimalAmount = (amount, decimals = 18) => {
-  return new BigNumber(amount).times(BIG_TEN.pow(decimals));
-};
+export function getDecimalAmount(amount) {
+  const r = 6;
+  return BigNumber.from(Math.round(amount * 10 ** 6)).mul(
+    BigNumber.from(10).pow(18 - r)
+  );
+}
+
+export function getDecimalAmountA(amount) {
+
+  return BigNumber.from(Math.round(amount)).mul(
+    BigNumber.from(10).pow(18)
+  );
+}
 
 export const getBNAmount = (amount) => {
   // return new BigNumber(amount).dividedBy(BIG_TEN.pow(decimals));
@@ -22,7 +35,7 @@ export async function getAllowance(
   multicallContract,
   tokenAddress,
   ownerAddress,
-  spenderAddress,
+  spenderAddress
 ) {
   console.log("spenderAddress >>> " + spenderAddress);
 
@@ -41,12 +54,11 @@ export async function getAllowance(
   return x;
 }
 
-
 export async function stake(stakeAmount, poolContract) {
-
   console.log("!stakeAmount " + stakeAmount);
-  let stakeAmountDEC = getDecimalAmount(stakeAmount);
-  console.log(stakeAmountDEC.toNumber());
+  //let stakeAmountDEC = getDecimalAmount(stakeAmount);
+  let stakeAmountDEC = getDecimalAmountA(stakeAmount);
+    
   console.log("!stake " + stakeAmountDEC);
   console.log("!poolContract " + poolContract);
   //   let minAmount = 1 * 10 ** 18;
@@ -59,8 +71,7 @@ export async function stake(stakeAmount, poolContract) {
     const tx = await poolContract.stake(stakeAmountDEC.toString());
     let receipt = await tx.wait();
     console.log("receipt " + receipt);
-    console.log("receipt " + receipt.status);
-    console.log(`receipt`, receipt);
+    console.log("receipt status " + receipt.status);
     return [receipt, receipt.status];
 
     // dispatch(changeStakeAmount(stakeAmountDEC));
@@ -137,13 +148,18 @@ export async function unstake(poolContract) {
   // }
 }
 
-export async function getAllowanceX(account, library, tokenAddress, froma, toa) {
+export async function getAllowanceX(
+  account,
+  library,
+  tokenAddress,
+  froma,
+  toa
+) {
   const erc20Contract = getContract(tokenAddress, ERC20_ABI, library, account);
   try {
-    let a = await erc20Contract.allowance(froma,toa);
+    let a = await erc20Contract.allowance(froma, toa);
     return a;
-  } catch (e) {    
-  }
+  } catch (e) {}
 }
 
 export async function approve(account, library, tokenAddress, spenderAddress) {
@@ -151,7 +167,7 @@ export async function approve(account, library, tokenAddress, spenderAddress) {
   try {
     const tx = await erc20Contract.approve(
       spenderAddress,
-      ethers.constants.MaxUint256,
+      ethers.constants.MaxUint256
     );
     const receipt = await tx.wait();
     console.log(`receipt`, receipt);
@@ -165,33 +181,28 @@ export async function approve(account, library, tokenAddress, spenderAddress) {
 export function poolStakeable(startTime, endTime) {
   let n = Date.now() / 1000;
 
-  return (n > startTime && n < endTime);
-  
+  return n > startTime && n < endTime;
 }
 
 export function poolHarvestable(endTime) {
   let n = Date.now() / 1000;
 
-  return (n > endTime);
-
+  return n > endTime;
 }
-
 
 export function statusPool(startTime, endTime) {
   let n = Date.now() / 1000;
-  //console.log(">>>> statusPool: " + startTime + " N: " + n);  
+  //console.log(">>>> statusPool: " + startTime + " N: " + n);
 
-  if (n < startTime){
+  if (n < startTime) {
     return "Not started yet";
-  }  else {
+  } else {
     if (n > endTime) {
       return "Ended";
     } else {
       return "Open";
     }
   }
-
-  
 }
 
 // export async function StakeAmount(

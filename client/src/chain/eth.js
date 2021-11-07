@@ -6,7 +6,6 @@ import { NetworkConnector } from "@web3-react/network-connector";
 import { useEffect, useMemo, useState } from "react";
 import { store } from "../redux/store";
 
-
 export const BSC_MAINNET_ID = 56;
 export const BSC_TESTNET_ID = 97;
 export const LOCAL_NET_ID = 1337;
@@ -88,7 +87,7 @@ export const useContract = (address, ABI, withSignerIfPossible = true) => {
         address,
         ABI,
         library,
-        withSignerIfPossible && account ? account : undefined,
+        withSignerIfPossible && account ? account : undefined
       );
     } catch (error) {
       console.error("Failed to get contract", error);
@@ -128,7 +127,7 @@ const useEagerConnect = () => {
   }
 
   useEffect(() => {
-    console.log("useEagerConnect")
+    console.log("useEagerConnect");
     injected.isAuthorized().then((isAuthorized) => {
       if (isAuthorized) {
         console.log("activate");
@@ -140,7 +139,7 @@ const useEagerConnect = () => {
         setTried(true);
       }
     });
-  }, [activate]); 
+  }, [activate]);
   // intentionally only running on mount
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
@@ -175,7 +174,7 @@ const useInactiveListener = (suppress = false) => {
     if (error) {
       console.log("> error " + error);
     }
-    
+
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {
         console.log("Handling 'connect' event");
@@ -242,7 +241,9 @@ function getLibrary(provider) {
 }
 
 export function WrappedWeb3ReactProvider({ children }) {
-  return <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>;
+  return (
+    <Web3ReactProvider getLibrary={getLibrary}>{children}</Web3ReactProvider>
+  );
 }
 
 export const MULTICALL_ADDR = "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c";

@@ -28,7 +28,6 @@ const SideBarContent = ({ hideUserProfile }) => {
         </div>
       )}
 
-      
       <div className="clearfix" />
     </>
   );

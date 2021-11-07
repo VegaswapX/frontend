@@ -54,12 +54,10 @@ const DetachedLayout = ({ children }, state) => {
       </Suspense>
       <Container fluid>
         <div className="wrapper">
-          
           <div className="content-page" style={{ marginTop: "20px" }}>
             <div className="content">
               <Suspense fallback={loading()}>{children}</Suspense>
             </div>
-           
           </div>
         </div>
       </Container>

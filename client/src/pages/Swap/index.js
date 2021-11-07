@@ -89,7 +89,7 @@ const PageSwapInner = () => {
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
   const [actionButtonState, setActionButtonState] = useState(
-    actionButtonStates.wrongNetwork,
+    actionButtonStates.wrongNetwork
   );
 
   const [token0Input, setToken0Input] = useState(0);
@@ -103,9 +103,14 @@ const PageSwapInner = () => {
   const debounceSetToken1Input = useMemo(
     () =>
       _.debounce(async (token0Input) => {
-        await setToken1InputBasedOnRate(routerContract, token0Input, token0Balance, actionButtonState); // add routerContract here  because of network changes
+        await setToken1InputBasedOnRate(
+          routerContract,
+          token0Input,
+          token0Balance,
+          actionButtonState
+        ); // add routerContract here  because of network changes
       }, 500),
-    [routerContract, token0Balance, actionButtonState],
+    [routerContract, token0Balance, actionButtonState]
   );
 
   async function checkAllowance(multiCallContract, chainId, account) {
@@ -127,11 +132,7 @@ const PageSwapInner = () => {
     let res;
     // check token0 balance
     try {
-      res = await trade.hasEnoughAllowance(
-      multiCallContract,
-      token0,
-      account,
-      );
+      res = await trade.hasEnoughAllowance(multiCallContract, token0, account);
     } catch {
       console.log("error with allowance");
       return;
@@ -178,7 +179,7 @@ const PageSwapInner = () => {
       const res = await trade.fetchAccountBalances(
         multiCallContract,
         [token0, token1],
-        account,
+        account
       );
       if (!!res.error) {
         // handle to get baalance eror
@@ -204,13 +205,30 @@ const PageSwapInner = () => {
       return;
     }
     await fetchAccountBalances(token0, token1, account);
-    await setToken1InputBasedOnRate(routerContract, token0Input, token0Balance, actionButtonState);
-  }, [routerContract, token0Input, token0Balance, actionButtonState,
-    token0, token1, account]);
+    await setToken1InputBasedOnRate(
+      routerContract,
+      token0Input,
+      token0Balance,
+      actionButtonState
+    );
+  }, [
+    routerContract,
+    token0Input,
+    token0Balance,
+    actionButtonState,
+    token0,
+    token1,
+    account,
+  ]);
 
   const tokenInputDisabled = false;
 
-  async function setToken1InputBasedOnRate(routerContract, token0Input, token0Balance, actionButtonState) {
+  async function setToken1InputBasedOnRate(
+    routerContract,
+    token0Input,
+    token0Balance,
+    actionButtonState
+  ) {
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
       return;
@@ -229,11 +247,10 @@ const PageSwapInner = () => {
       return;
     }
 
-    let result = await trade.getAmountsOut(
-      routerContract,
-      token0AmountEther,
-      [token0, token1],
-    );
+    let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
+      token0,
+      token1,
+    ]);
 
     if (result.error === "Amount below zero") {
       return;
@@ -330,7 +347,7 @@ const PageSwapInner = () => {
         amountIn,
         amountOutMin,
         [token0, token1],
-        account,
+        account
       );
       const [status, statusInfo] = result;
       if (status === 1) {
@@ -388,7 +405,7 @@ const PageSwapInner = () => {
         setToken0Input(token0Balance);
         await setToken1Input(routerContract, token0Balance);
       },
-    },
+    }
   );
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
@@ -457,7 +474,7 @@ const PageSwapInner = () => {
       >
         <Button
           variant="primary"
-          onClick={function(e) {
+          onClick={function (e) {
             if (actionButtonState.name === "swap") {
               swap(token0, token1, account);
             } else if (actionButtonState.name === "needApprove") {

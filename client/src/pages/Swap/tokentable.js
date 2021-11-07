@@ -43,8 +43,7 @@ function Table({ tokenIndex, columns, data }) {
   // TODO: Fix the key property
   return (
     <table {...getTableProps()}>
-      {
-        /* <thead>
+      {/* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -52,8 +51,7 @@ function Table({ tokenIndex, columns, data }) {
             ))}
           </tr>
         ))}
-      </thead> */
-      }
+      </thead> */}
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
@@ -133,7 +131,7 @@ function Tokentable({ tokenIndex }) {
 
   // TODO: make TokenList.BSC to by chain variable later
   return (
-    <div className="App" style={{marginLeft: "30%"}}>
+    <div className="App" style={{ marginLeft: "30%" }}>
       <Table tokenIndex={tokenIndex} columns={columnsConf} data={tokens} />
     </div>
   );

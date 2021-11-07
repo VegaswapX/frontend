@@ -137,7 +137,7 @@ export function PoolInfo({ pool }) {
       }
     } else {
       console.log("not connected");
-    //   setSupported(false);
+      //   setSupported(false);
     }
   }, [account, library]);
 
@@ -157,7 +157,7 @@ export function PoolInfo({ pool }) {
     ["Name", pool.poolName],
     ["Status", poolStatus],
     ["Description", pool.description],
-    ["Current reward", reward/rq + " " + pool.per],
+    ["Current reward", reward / rq + " " + pool.per],
     ["Start time", startTimeF],
     ["End time", endTimeF],
     ["totalAmountStaked", totalAmountStaked + " " + pool.stakedUnit],
@@ -177,35 +177,39 @@ export function PoolInfo({ pool }) {
     // }
   } else {
     if (chainId !== Chains.BSC_MAINNET.chainId) {
-      alert("login")
-      return <><p>Not logged in</p></>;
+      alert("login");
+      return (
+        <>
+          <p>Not logged in</p>
+        </>
+      );
     } else {
-    return (
-      <>
-        <Table className="mb-0" style={{ color: "white" }}>
-          <tbody>
-            {data.map((row) => {
-              return (
-                <tr>
-                  <td scope="row">{row[0]}</td>
-                  <td> {row[1]}</td>
-                </tr>
-              );
-            })}
-            <tr>
-              <td>Pool address</td>
-              <td>
-                <a target="_blank" href={addressLink(pool.address)}>
-                  {shortenAddress(pool.address)}
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-      </>
-    );
+      return (
+        <>
+          <Table className="mb-0" style={{ color: "white" }}>
+            <tbody>
+              {data.map((row) => {
+                return (
+                  <tr>
+                    <td scope="row">{row[0]}</td>
+                    <td> {row[1]}</td>
+                  </tr>
+                );
+              })}
+              <tr>
+                <td>Pool address</td>
+                <td>
+                  <a target="_blank" href={addressLink(pool.address)}>
+                    {shortenAddress(pool.address)}
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </>
+      );
+    }
   }
-}
 }
 
 {

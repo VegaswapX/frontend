@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
-import { getAllowance, unstake } from "../../chain/StakeFunctions";
+import { getAllowance, getAllowanceX, unstake } from "../../chain/StakeFunctions";
 import { getTokensPrices } from "../../api/data";
 import {
   statusPool,
@@ -231,6 +231,9 @@ const StakeForm = ({ pool }) => {
   //TODO!
   const stakeCurrency = pool.stakedUnit;
   const rewardCurrency = pool.yieldUnit;
+  
+  //TODO pull from contract
+  const duration = 7;
 
   let poolContract;
 
@@ -261,21 +264,25 @@ const StakeForm = ({ pool }) => {
   }
 
   function calculateApy() {
-    return Math.round((roi * 365) / 7);
+    return Math.round((roi * 365) / duration);
   }
 
   useEffect(async () => {
     try {
       console.log("stakeToken " + stakeToken);
-      const allowance = await getAllowance(
-        multiCallContract,
+      //account, library, tokenAddress, froma, toa
+      const allowance = await getAllowanceX(        
+        account,
+        library,
         stakeToken,
         account,
         poolContract.address
       );
       setAllowance(allowance);
       console.log("allowance >> " + allowance);
-      setApproveEnabled(allowance == 0);
+      let enabled = allowance == 0;
+      console.log("enabled >> " + enabled);
+      setApproveEnabled(enabled);
     } catch (error) {}
   }, [stakeToken]);
 
@@ -385,8 +392,6 @@ const StakeForm = ({ pool }) => {
       // console.log("startTime: " + st);
       // console.log("endTime: " + et);
 
-      console.log("stakeable: " + x1);
-      console.log("harvestable: " + x2);
 
       setPoolStakeable(x1);
       setIsPoolHarvestable(x2);

@@ -137,6 +137,15 @@ export async function unstake(poolContract) {
   // }
 }
 
+export async function getAllowanceX(account, library, tokenAddress, froma, toa) {
+  const erc20Contract = getContract(tokenAddress, ERC20_ABI, library, account);
+  try {
+    let a = await erc20Contract.allowance(froma,toa);
+    return a;
+  } catch (e) {    
+  }
+}
+
 export async function approve(account, library, tokenAddress, spenderAddress) {
   const erc20Contract = getContract(tokenAddress, ERC20_ABI, library, account);
   try {

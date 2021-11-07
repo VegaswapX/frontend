@@ -41,11 +41,15 @@ const client = new ApolloClient({
   uri: BITQUERY_ENDPOINT,
 });
 
-client.query({
-  query: exampleQuery,
-}).then(res => {
-  console.log("graphql res", res);
-})
+try {
+  client.query({
+    query: exampleQuery,
+  }).then(res => {
+    console.log("graphql res", res);
+  })
+} catch(e) {
+  console.log(`e`, e);
+}
 
 export function ChartWrapper() {
   const chartDiv = useRef();

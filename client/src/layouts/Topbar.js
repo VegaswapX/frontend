@@ -60,16 +60,19 @@ const AccountConnect = ({ connect }) => {
 const AccountInfo = () => {
   const { account } = useWeb3React();
 
-  // if (store.state){
-  //   console.log("store " + store.state.connected);
 
-  //   if (store.state.connected)
+  // if (store.state != undefined){
+  //   //  console.log(">>>> store " + store.state.connected);
+  //   //  alert("store " + store.state.connected);
+
+  // //   if (store.state.connected)
+  // } else {
+  //   //alert("no state " + store.state)
   // }
-
 
   // if (store.state){
   //   if (store.state.account == "" && store.state.connected){
-  //       console.log("!!!SET ")
+  //       console.log("!SET ")
   //       store.dispatch({ type: "web3/switchConnected", payload: account }); //, payload: "x"
   //   }
   // }

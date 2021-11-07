@@ -5,8 +5,8 @@
 //export const POOL1 = "0x54231A92faf4Da14f4A2e88dbAE512e21693C178";
 //export const POOL1 = "0xea77240B0FBcb5300a1EA79FB020Ef9dcbDc6893";
 //export const POOL2 = "0x4a3AdC83Bb73e109e967E90289121B060526181c";
-export const POOL1 = "0x3A26a7bA63AA5B9a11dfe94945F2715C39559977";
-export const POOL2 = "0x46fc0B104cE8c4377F83CE1CC026122c905cBEab";
+export const POOL1 = "0x34CdFC20440Ae40793b0590f316B57a4967f7d4E";
+export const POOL2 = "0x5295Aa37083d1028dcD8Bf321732b504AB82DC18";
 
 
 export const VEGA_TOKEN_ADDRESS = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
@@ -30,8 +30,9 @@ export const BPOOLS = [
   //   yieldUnit: "VGA"
   // },
   {
-    poolName: "USDT-VGA (week 42)",
+    poolName: "USDT-VGA",
     address: POOL1,
+    datestr: "11-08-2021",
     description:
       "Stake USDT and earn VGA. The staked amount will be locked for the specified time. After the expiration the USDT amount will be returned together with the reward in VGA",
     per: "VGA per USDT",
@@ -39,7 +40,8 @@ export const BPOOLS = [
     yieldUnit: "VGA",
   },
   {
-    poolName: "VGA-VGA (week 42)",
+    poolName: "VGA-VGA",
+    datestr: "11-08-2021",
     address: POOL2,
     description:
       "Stake VGA and earn VGA. The staked amount will be locked for the specified time. After the expiration the VGA amount will be returned together with the reward in VGA",

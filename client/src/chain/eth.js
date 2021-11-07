@@ -170,7 +170,7 @@ const useInactiveListener = (suppress = false) => {
   const { active, error, activate } = useWeb3React();
 
   useEffect(() => {
-    console.log("useInactiveListener.. " + active);
+    console.log("useInactiveListener.. active: " + active);
     const { ethereum } = window;
     if (error) {
       console.log("> error " + error);

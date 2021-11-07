@@ -9,6 +9,7 @@ import {
   poolStakeable,
   poolHarvestable,
 } from "../../chain/StakeFunctions";
+import { Chains } from "../../chain/eth";
 
 // import { useWeb3React } from "@web3-react/core";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
@@ -23,6 +24,7 @@ import { stake, approve } from "../../chain/StakeFunctions";
 import _ from "underscore";
 import { toast } from "react-toastify";
 import BigNumber from "bignumber.js";
+import { BSC_USDT, VEGA_TOKEN_ADDRESS } from "../../chain/Contracts";
 
 const LoadingSpinner = () => {
   return (
@@ -191,8 +193,8 @@ const HarvestForm = ({ stakedAmount, yaAmount, pool, unstakeClick }) => {
 const StakeForm = ({ pool }) => {
   //console.log(" pool " + pool.address);
 
-  const { account, library } = useWeb3React();
-  const [modalStatus, setModalStatus] = useState(false);
+  const { account, library, chainId } = useWeb3React();
+  const [modalStatus, setModalStatus] = useState(false);  
 
   //const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
   const [stakeAmount, setStakeamount] = useState(0);
@@ -250,8 +252,12 @@ const StakeForm = ({ pool }) => {
     return rounded_amount;
   }
 
-  function calculateRoi(reward) {
+  function calculateRoiUSDT(reward) {
     return Math.round(reward * yieldPrice * 10000) / 100;
+  }
+
+  function calculateRoiVGA(reward, rq) {
+    return Math.round(reward /rq * 10000);
   }
 
   function calculateApy() {
@@ -294,7 +300,7 @@ const StakeForm = ({ pool }) => {
       setIsStaked(stake[5]);
       setCanStake(stake[1] == 0);
     } catch {}
-  }, []);
+  }, [account]);
 
   useEffect(async () => {
     try {
@@ -412,7 +418,14 @@ const StakeForm = ({ pool }) => {
 
         setReward(result.toNumber() / rq);
 
-        setRoi(calculateRoi(reward));
+        //alert("stakeCurrency " + stakeCurrency);
+
+        if (stakeCurrency == "USDT") {
+          setRoi(calculateRoiUSDT(reward, rq));
+        } 
+        else if (stakeCurrency == "VGA")  {          
+          setRoi(calculateRoiVGA(reward, rq));
+        }
         setApy(calculateApy());
       } catch (err) {
         console.log("call contract error:", step, err);
@@ -437,7 +450,7 @@ const StakeForm = ({ pool }) => {
     1000,
     true
   );
-
+  
   useInterval(
     async (isCancelled) => {
       try {
@@ -559,6 +572,10 @@ const StakeForm = ({ pool }) => {
   if (loading) {
     return <LoadingSpinner />;
   } else {
+    if (chainId !== Chains.BSC_MAINNET.chainId) {
+      return <><p>Not logged in</p></>;
+    } else {
+  
     if (ispoolStakeable && !isStaked) {
       return (
         <StakeableForm
@@ -625,6 +642,7 @@ const StakeForm = ({ pool }) => {
 
     // else {
   }
+}
 };
 
 const StakePage = ({ pool }) => {

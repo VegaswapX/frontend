@@ -124,20 +124,21 @@ export function PoolInfo({ pool }) {
   let poolContract;
   useEffect(() => {
     //poolContract = useContractA(pool.address, POOL_CONTRACT_ABI, true);
-    console.log(chainId);
+    console.log(">>> " + chainId);
     console.log(chainId === Chains.BSC_MAINNET.chainId);
-    //if (chainId === Chains.BSC_MAINNET.chainId) {
-    try {
-      setLoading(true);
-      loadData();
-      setLoading(false);
-    } catch (error) {
-      console.error("Failed to get contract", error);
-      return null;
-    }
-    // } else {
+    if (chainId === Chains.BSC_MAINNET.chainId) {
+      try {
+        setLoading(true);
+        loadData();
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to get contract", error);
+        return null;
+      }
+    } else {
+      console.log("not connected");
     //   setSupported(false);
-    // }
+    }
   }, [account, library]);
 
   function shortenAddress(addr) {
@@ -166,6 +167,8 @@ export function PoolInfo({ pool }) {
     //["Pool address", shortenAddress(pool.address)],
   ];
 
+  //alert(chainId);
+
   if (loading) {
     return <>Loading</>;
     // if (supported) {
@@ -173,6 +176,10 @@ export function PoolInfo({ pool }) {
     //   return <>Chain not supported</>;
     // }
   } else {
+    if (chainId !== Chains.BSC_MAINNET.chainId) {
+      alert("login")
+      return <><p>Not logged in</p></>;
+    } else {
     return (
       <>
         <Table className="mb-0" style={{ color: "white" }}>
@@ -198,6 +205,7 @@ export function PoolInfo({ pool }) {
       </>
     );
   }
+}
 }
 
 {

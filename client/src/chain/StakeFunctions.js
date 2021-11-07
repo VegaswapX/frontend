@@ -3,14 +3,6 @@ import { BigNumber, ethers } from "ethers";
 import ERC20_ABI from "../abis/erc20.json";
 import { getContract } from "./eth";
 import { multiCall } from "./trade";
-// export const BIG_ZERO = new BigNumber(0);
-// export const BIG_ONE = new BigNumber(1);
-// export const BIG_NINE = new BigNumber(9);
-// export const BIG_TEN = new BigNumber(10);
-
-// export const getDecimalAmountZ = (amount, decimals = 18) => {
-//   return new BigNumber(amount).times(BIG_TEN.pow(decimals));
-// };
 
 export function getDecimalAmount(amount) {
   const r = 6;
@@ -56,45 +48,24 @@ export async function getAllowance(
 
 export async function stake(stakeAmount, poolContract) {
   console.log("!stakeAmount " + stakeAmount);
-  //let stakeAmountDEC = getDecimalAmount(stakeAmount);
   let stakeAmountDEC = getDecimalAmountA(stakeAmount);
     
   console.log("!stake " + stakeAmountDEC);
   console.log("!poolContract " + poolContract);
-  //   let minAmount = 1 * 10 ** 18;
-
+  
   try {
     // TODO check maximum
 
-    // let stakeAmountDEC = ethers.BigNumber.from(100).pow(18);
-    // const tx = await poolContract.stake(stakeAmountDEC);
+    
     const tx = await poolContract.stake(stakeAmountDEC.toString());
     let receipt = await tx.wait();
     console.log("receipt " + receipt);
     console.log("receipt status " + receipt.status);
     return [receipt, receipt.status];
-
-    // dispatch(changeStakeAmount(stakeAmountDEC));
-    // toast("Staking successful", {
-    //   className: "success",
-    //   bodyClassName: "grow-font-size",
-    //   progressClassName: "fancy-progress-bar",
-    // });
-
-    // toast("Minimum amount is " + minAmount, {
-    //   className: "success",
-    //   bodyClassName: "grow-font-size",
-    //   progressClassName: "fancy-progress-bar",
-    // });
+    
   } catch (error) {
     console.log("catch " + error);
-    console.log("catch " + error.message + " " + error.data.message);
-    // toast("Staking error " + error.message, {
-    //   className: "success",
-    //   bodyClassName: "grow-font-size",
-    //   progressClassName: "fancy-progress-bar",
-    // });
-    // addToast({ title: 'Deposit Token error!', description: error.message, type: 'TOAST_ERROR' });
+    console.log("catch " + error.message + " " + error.data.message);    
     return [false, error];
   } finally {
     // setLoading(false);
@@ -103,16 +74,16 @@ export async function stake(stakeAmount, poolContract) {
 }
 
 export async function unstake(poolContract) {
-  console.log("unstake ");
+  console.log("unstake " + poolContract);
 
   try {
     const tx = await poolContract.unstake();
     let receipt = await tx.wait();
-    console.log("receipt " + receipt);
-    console.log("receipt status: " + receipt.status);
+    console.log("unstake receipt " + receipt);
+    console.log("unstake receipt status: " + receipt.status);
   } catch (error) {
-    console.log("catch " + error);
-    console.log("catch " + error.message + " " + error.data.message);
+    console.log("unstake catch " + error);
+    console.log("unstake catch " + error.message + " " + error.data.message);
     // toast("Staking error " + error.message, {
     //   className: "success",
     //   bodyClassName: "grow-font-size",

@@ -295,6 +295,7 @@ const StakeForm = ({ pool }) => {
     try {
       const stake = await poolContract.callStatic.stakes(account);
       let stakeAmount = stake[1];
+      console.log("!!! >> stake account " + account);
       console.log("!!! >> stake " + stake);
 
       console.log("!>> added " + stake[4]);
@@ -372,6 +373,7 @@ const StakeForm = ({ pool }) => {
 
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
+  const [restTime, setRestTime] = useState();
   const [poolStatus, setPoolstatus] = useState();
   const [ispoolStakeable, setPoolStakeable] = useState();
   const [ispoolHarvestable, setIsPoolHarvestable] = useState();
@@ -386,6 +388,8 @@ const StakeForm = ({ pool }) => {
 
       setStartTime(st);
       setEndTime(et);
+
+      setRestTime(et - st);
 
       let z = statusPool(startTime, endTime);
       setPoolstatus(z);
@@ -501,6 +505,8 @@ const StakeForm = ({ pool }) => {
   };
 
   const unstakeClick = async () => {
+    console.log("unstakeClick");
+    console.log("unstake: " + account);
     try {
       setLoading(true);
       let [receipt, receiptstatus] = await unstake(poolContract);

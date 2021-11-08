@@ -160,6 +160,11 @@ export function PoolInfo({ pool }) {
   useEffect(() => {
     //poolContract = useContractA(pool.address, POOL_CONTRACT_ABI, true);
     console.log(">>> " + chainId);
+    
+    if (account == undefined || account == null){
+      return;
+    }
+
     console.log(chainId === Chains.BSC_MAINNET.chainId);
     if (chainId === Chains.BSC_MAINNET.chainId) {
       try {

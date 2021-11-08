@@ -24,14 +24,14 @@ export async function approve(
   account,
   library,
   token,
-  spenderAddress = PCS_ROUTER_ADDRESS,
+  spenderAddress = PCS_ROUTER_ADDRESS
 ) {
   try {
     const erc20Contract = getContract(
       token.address,
       ERC20_ABI,
       library,
-      account,
+      account
     );
     const res = await erc20Contract
       .approve(spenderAddress, ethers.constants.MaxUint256)
@@ -65,7 +65,7 @@ export async function multiCall(multiCallContract, abi, calls) {
 export async function fetchAccountBalances(
   multicallContract,
   [token0, token1],
-  ownerAddress,
+  ownerAddress
 ) {
   try {
     let token0NativeBalance, token1NativeBalance;
@@ -115,7 +115,7 @@ export async function fetchAccountBalances(
     const res = await multiCall(multicallContract, ERC20_ABI, calls).catch(
       (e) => {
         return { error: e };
-      },
+      }
     );
 
     if (!!res.e) {
@@ -164,7 +164,7 @@ export async function hasEnoughAllowance(
   token,
   ownerAddress,
   spenderAddress = PCS_ROUTER_ADDRESS,
-  amount = ethers.constants.MaxUint256,
+  amount = ethers.constants.MaxUint256
 ) {
   if (token.isNative) {
     return true;
@@ -182,7 +182,7 @@ export async function hasEnoughAllowance(
     (e) => {
       console.log(`Error while getting balance`, e);
       return { error: e };
-    },
+    }
   );
   if (!!res.error) {
     return res;
@@ -204,15 +204,13 @@ export async function hasEnoughAllowance(
 export function toUint256(amount, decimals) {
   const r = 6;
   return BigNumber.from(Math.round(amount * 10 ** r)).mul(
-    BigNumber.from(10).pow(decimals - r),
+    BigNumber.from(10).pow(decimals - r)
   );
 }
-
 
 export function toUint256Dec(amount, token) {
   return toUint256(amount, token.decimals);
 }
-
 
 export function toFloatNumber(amount, token) {
   const y = amount.div(BigNumber.from(10).pow(12));
@@ -241,7 +239,7 @@ export async function swap(
   amountOutMin,
   tokenPath,
   to,
-  deadline = defaultDeadline(),
+  deadline = defaultDeadline()
 ) {
   const addressPath = [tokenPath[0].address, tokenPath[1].address];
 
@@ -253,7 +251,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline,
+      deadline
     );
   }
   if (!!tokenPath[1].isNative) {
@@ -264,7 +262,7 @@ export async function swap(
       amountOutMin,
       addressPath,
       to,
-      deadline,
+      deadline
     );
   }
 
@@ -274,7 +272,7 @@ export async function swap(
     amountOutMin,
     addressPath,
     to,
-    deadline,
+    deadline
   );
 }
 
@@ -286,7 +284,7 @@ async function swapExactETHForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactETHForTokens");
@@ -299,7 +297,7 @@ async function swapExactETHForTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, value: amountIn, gasPrice },
+      { ...defaultOptions, value: amountIn, gasPrice }
     );
     let receipt = await tx.wait();
     return [receipt.status, receipt];
@@ -316,7 +314,7 @@ async function swapExactTokensForETH(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapExactTokensForETH...");
@@ -335,7 +333,7 @@ async function swapExactTokensForETH(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice },
+      { ...defaultOptions, gasPrice }
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);
@@ -348,7 +346,7 @@ async function swapExactTokensForETH(
 
 export async function getAmountsOut(routerContract, amount, tokenPath) {
   if (amount <= 0) {
-    return {data: null, error: "Amount below zero"};
+    return { data: null, error: "Amount below zero" };
   }
 
   const addressPath = [tokenPath[0].address, tokenPath[1].address];
@@ -379,7 +377,7 @@ async function swapExactTokensForTokens(
   amountOutMin,
   addressPath,
   to,
-  deadline,
+  deadline
 ) {
   const gasPrice = getGasPrice();
   console.log("swapTokensForExactTokens...");
@@ -393,7 +391,7 @@ async function swapExactTokensForTokens(
       addressPath,
       to,
       deadline,
-      { ...defaultOptions, gasPrice },
+      { ...defaultOptions, gasPrice }
     );
     let receipt = await tx.wait();
     console.log(">> " + receipt);

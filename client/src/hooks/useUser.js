@@ -1,20 +1,20 @@
 // @flow
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from "react";
 
-import { APICore } from '../helpers/api/apiCore';
+import { APICore } from "../helpers/api/apiCore";
 
 const useUser = (): { user: any | void, ... } => {
-    const api = useMemo(() => new APICore(), []);
+  const api = useMemo(() => new APICore(), []);
 
-    const [user, setuser] = useState();
+  const [user, setuser] = useState();
 
-    useEffect(() => {
-        if (api.isUserAuthenticated()) {
-            setuser(api.getLoggedInUser());
-        }
-    }, [api]);
+  useEffect(() => {
+    if (api.isUserAuthenticated()) {
+      setuser(api.getLoggedInUser());
+    }
+  }, [api]);
 
-    return { user };
+  return { user };
 };
 
 export default useUser;

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { injected } from "../chain/eth.js";
 import { Navbar, Nav, Container } from "react-bootstrap";
+import { store } from "../redux/store";
 
 // actions
 // import { showRightSidebar } from "../redux/actions";
@@ -22,7 +23,10 @@ import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 // get the notifications
 
 const AccountConnect = ({ connect }) => {
-  const { account, deactivate } = useWeb3React();  
+  const { account, deactivate } = useWeb3React();
+
+  let state = store.getState();
+  let connected = state.web3Reducer.connected;
 
   async function disconnect() {
     console.log("disconnect");
@@ -37,13 +41,13 @@ const AccountConnect = ({ connect }) => {
     if (account) {
       //console.log("account" + account);
       return (
-        <Button onClick={disconnect} variant="info" style={{width:"105px"}}>
+        <Button onClick={disconnect} variant="info" style={{ width: "105px" }}>
           Disconnect
         </Button>
       );
     } else {
       return (
-        <Button onClick={connect} variant="primary" style={{width:"105px"}}>
+        <Button onClick={connect} variant="primary" style={{ width: "105px" }}>
           Connect
         </Button>
       );
@@ -55,6 +59,22 @@ const AccountConnect = ({ connect }) => {
 
 const AccountInfo = () => {
   const { account } = useWeb3React();
+
+  // if (store.state != undefined){
+  //   //  console.log(">>>> store " + store.state.connected);
+  //   //  alert("store " + store.state.connected);
+
+  // //   if (store.state.connected)
+  // } else {
+  //   //alert("no state " + store.state)
+  // }
+
+  // if (store.state){
+  //   if (store.state.account == "" && store.state.connected){
+  //       console.log("!SET ")
+  //       store.dispatch({ type: "web3/switchConnected", payload: account }); //, payload: "x"
+  //   }
+  // }
 
   function accInfo() {
     if (account) {
@@ -111,17 +131,17 @@ const AccountManage = () => {
 };
 
 const Brand = () => {
-
-  return (<Navbar.Brand href="#home">
-  <span className="">
-    <img
-      src={vlogo}
-      alt="logo"
-      width="210"
-      height="110"
-      style={{ marginTop: "0px" }}
-    />
-    {/* <span
+  return (
+    <Navbar.Brand href="#home">
+      <span className="">
+        <img
+          src={vlogo}
+          alt="logo"
+          width="210"
+          height="110"
+          style={{ marginTop: "0px" }}
+        />
+        {/* <span
       style={{
         color: "white",
         marginLeft: "10px",
@@ -131,34 +151,37 @@ const Brand = () => {
     >
       Vegaswap
     </span> */}
-  </span>
-</Navbar.Brand>)
-}
+      </span>
+    </Navbar.Brand>
+  );
+};
 
 const VerticalMenu = () => {
   return (
     <Navbar bg="" expand="lg">
-      {/* uil-wallet */}
-
       <Container>
         <Brand />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto vegatopnav" style={{ fontSize: "20px" }}>
-            {/* <Nav.Link href="#home">Dashboard</Nav.Link> */}
-            {/* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
-              <i className="uil-home-alt"></i>
-              <span style={{ marginLeft: "5px" }}>Dashboard</span>
-            </Nav.Link> */}
+          <Nav
+            className="me-auto"
+            style={{ fontSize: "20px", marginLeft: "30px" }}
+          >
             <Nav.Link href="/swap" style={{ marginLeft: "30px" }}>
               <i className="uil-exchange"></i>
               <span style={{ marginLeft: "5px" }}>Swap</span>
             </Nav.Link>
+
             <Nav.Link href="/boost" style={{ marginLeft: "30px" }}>
-              <i className="dripicons-rocket"></i> 
+              <i className="dripicons-rocket"></i>
               <span style={{ marginLeft: "5px" }}>Farming</span>
-              
             </Nav.Link>
+
+            {/* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
+              <i className="uil-home-alt"></i>
+              <span style={{ marginLeft: "5px" }}>Dashboard</span>
+            </Nav.Link> */}
+
             {/* <Nav.Link href="/liq" style={{ marginLeft: "30px" }}>
               <i className="uil-layer-group"></i> 
               <span style={{ marginLeft: "5px" }}>Liquidity</span>
@@ -170,11 +193,7 @@ const VerticalMenu = () => {
   );
 };
 
-const Topbar = ({
-  hideLogo,
-  navCssClasses,
-  openLeftMenuCallBack,  
-}) => {
+const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack }) => {
   // const dispatch = useDispatch();
 
   // const [isopen, setIsopen] = useState(false);

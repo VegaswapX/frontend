@@ -2,13 +2,18 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
-import { getAllowance, unstake } from "../../chain/StakeFunctions";
+import {
+  getAllowance,
+  getAllowanceX,
+  unstake,
+} from "../../chain/StakeFunctions";
 import { getTokensPrices } from "../../api/data";
 import {
   statusPool,
   poolStakeable,
   poolHarvestable,
 } from "../../chain/StakeFunctions";
+import { Chains } from "../../chain/eth";
 
 // import { useWeb3React } from "@web3-react/core";
 import POOL_CONTRACT_ABI from "../../abis/BoostPool.json";
@@ -23,6 +28,10 @@ import { stake, approve } from "../../chain/StakeFunctions";
 import _ from "underscore";
 import { toast } from "react-toastify";
 import BigNumber from "bignumber.js";
+import { BSC_USDT, VEGA_TOKEN_ADDRESS } from "../../chain/Contracts";
+
+const MIN_USDT = 10;
+const MIN_VGA = 1000;
 
 const LoadingSpinner = () => {
   return (
@@ -58,9 +67,8 @@ const StakeableForm = ({
   stakeClick,
   pool,
   modalStatus,
-  setModalStatus
-}) => {  
-
+  setModalStatus,
+}) => {
   return (
     <>
       <div style={{ marginLeft: "10px", fontSize: "15pt" }}>
@@ -76,7 +84,6 @@ const StakeableForm = ({
               className="stakeInput"
             />{" "}
             {stakeCurrency}
-            
             <br />
           </Form.Group>
 
@@ -160,7 +167,7 @@ const HarvestPending = ({ stakedAmount, yaAmount, rewardCurrency, pool }) => {
         Staked Amount: {stakedAmount} {pool.stakedUnit}
         <br />
         <br />
-        Yield Amount: {yaAmount}  {rewardCurrency}
+        Yield Amount: {yaAmount} {rewardCurrency}
         <br />
         <br />
         Please wait for harvest
@@ -191,7 +198,7 @@ const HarvestForm = ({ stakedAmount, yaAmount, pool, unstakeClick }) => {
 const StakeForm = ({ pool }) => {
   //console.log(" pool " + pool.address);
 
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
   const [modalStatus, setModalStatus] = useState(false);
 
   //const multiCallContract = useContract(MULTICALL_ADDR, MULTICALL_ABI, true);
@@ -230,6 +237,9 @@ const StakeForm = ({ pool }) => {
   const stakeCurrency = pool.stakedUnit;
   const rewardCurrency = pool.yieldUnit;
 
+  //TODO pull from contract
+  const duration = 7;
+
   let poolContract;
 
   try {
@@ -250,33 +260,44 @@ const StakeForm = ({ pool }) => {
     return rounded_amount;
   }
 
-  function calculateRoi(reward) {
+  function calculateRoiUSDT(reward) {
     return Math.round(reward * yieldPrice * 10000) / 100;
   }
 
+  function calculateRoiVGA(reward, rq) {
+    return Math.round((reward / rq) * 10000);
+  }
+
   function calculateApy() {
-    return Math.round((roi * 365) / 7);
+    return Math.round((roi * 365) / duration);
   }
 
   useEffect(async () => {
     try {
       console.log("stakeToken " + stakeToken);
-      const allowance = await getAllowance(
-        multiCallContract,
+      //account, library, tokenAddress, froma, toa
+      const allowance = await getAllowanceX(
+        account,
+        library,
         stakeToken,
         account,
         poolContract.address
       );
       setAllowance(allowance);
       console.log("allowance >> " + allowance);
-      setApproveEnabled(allowance == 0);
+      let enabled = allowance == 0;
+      console.log("enabled >> " + enabled);
+      setApproveEnabled(enabled);
     } catch (error) {}
   }, [stakeToken]);
 
   useEffect(async () => {
     try {
       const stake = await poolContract.callStatic.stakes(account);
-      console.log(">> stake " + stake);
+      let stakeAmount = stake[1];
+      console.log("!!! >> stake account " + account);
+      console.log("!!! >> stake " + stake);
+
       console.log("!>> added " + stake[4]);
       console.log("!>> staked " + stake[5]);
 
@@ -284,18 +305,19 @@ const StakeForm = ({ pool }) => {
 
       let ya = stake[2] / 10 ** 18;
       setYamount(ya);
-      
+
       //isadded
-      setHasStaked(stake[4]);
+      //setHasStaked(stake[4]);
+      setHasStaked(stakeAmount > 0);
       //staked flag
       setIsStaked(stake[5]);
       setCanStake(stake[1] == 0);
     } catch {}
-  }, []);
+  }, [account]);
 
   useEffect(async () => {
     try {
-      const x = await poolContract.callStatic.rewardQuote();      
+      const x = await poolContract.callStatic.rewardQuote();
       setRQ(x.toNumber());
     } catch {}
   }, []);
@@ -351,13 +373,13 @@ const StakeForm = ({ pool }) => {
 
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
+  const [restTime, setRestTime] = useState();
   const [poolStatus, setPoolstatus] = useState();
   const [ispoolStakeable, setPoolStakeable] = useState();
   const [ispoolHarvestable, setIsPoolHarvestable] = useState();
 
   async function loadTime(isCancelled) {
     try {
-
       const st = await poolContract.callStatic.startTime();
 
       const et = await poolContract.callStatic.endTime();
@@ -366,24 +388,19 @@ const StakeForm = ({ pool }) => {
 
       setStartTime(st);
       setEndTime(et);
-     
+
+      setRestTime(et - st);
+
       let z = statusPool(startTime, endTime);
       setPoolstatus(z);
 
       let x1 = poolStakeable(startTime, endTime);
       let x2 = poolHarvestable(endTime);
 
-      // console.log("startTime: " + st);
-      // console.log("endTime: " + et);
-
-      console.log("stakeable: " + x1);
-      console.log("harvestable: " + x2);
-
       setPoolStakeable(x1);
       setIsPoolHarvestable(x2);
 
       setLoading(false);
-      //});
     } catch {}
   }
 
@@ -394,8 +411,6 @@ const StakeForm = ({ pool }) => {
     1000,
     true
   );
-
-  //loadTime();
 
   useInterval(
     async (isCancelled) => {
@@ -409,7 +424,13 @@ const StakeForm = ({ pool }) => {
 
         setReward(result.toNumber() / rq);
 
-        setRoi(calculateRoi(reward));
+        //alert("stakeCurrency " + stakeCurrency);
+
+        if (stakeCurrency == "USDT") {
+          setRoi(calculateRoiUSDT(reward, rq));
+        } else if (stakeCurrency == "VGA") {
+          setRoi(calculateRoiVGA(reward, rq));
+        }
         setApy(calculateApy());
       } catch (err) {
         console.log("call contract error:", step, err);
@@ -422,7 +443,7 @@ const StakeForm = ({ pool }) => {
   useInterval(
     async (isCancelled) => {
       try {
-        let result = await poolContract.callStatic.currentStep();        
+        let result = await poolContract.callStatic.currentStep();
 
         if (isCancelled()) return;
 
@@ -446,70 +467,78 @@ const StakeForm = ({ pool }) => {
         console.log("call error:", err);
       }
     },
-    1000,
+    2000,
     true
   );
 
   const stakeClick = async () => {
     console.log("stakeClick " + stakeAmount);
-    if (stakeAmount < 10) {
+    let mamount;
+    //TODO
+    if (stakeCurrency == "USDT") {
+      mamount = MIN_USDT;
+    } else {
+      mamount = MIN_VGA;
+    }
+    if (stakeAmount < mamount) {
       toast.error("Staking amount too low");
+      return;
     }
     //TODO check balance first
 
     try {
       setLoading(true);
+      //TODO double check receipt and tx handling here
       let [receipt, receiptstatus] = await stake(stakeAmount, poolContract);
 
       console.log("receipt >>> " + receipt);
       console.log(">>> " + receiptstatus);
       if (!receipt) {
         toast.error(receiptstatus.data.message);
+        setLoading(false);
+      } else {
+        toast.info("staked successfully");
       }
-    } catch {
+    } catch (error) {
+      console.log("error with stake " + error);
       toast.error("error with stake");
+      setLoading(false);
     }
-
-    setLoading(false);
-
-    // } else {
-    //   toast.info("staked successfully")
-    // }
-    //console.log(">>> " + statusInfo.message )
-
-    //stakeF(stakeAmount, poolContract);
   };
 
   const unstakeClick = async () => {
+    console.log("unstakeClick");
+    console.log("unstake: " + account);
     try {
       setLoading(true);
       let [receipt, receiptstatus] = await unstake(poolContract);
 
       if (!receipt) {
         toast.error(receiptstatus.data.message);
+        setLoading(false);
       } else {
         toast.success("unstaked successfully");
+        setLoading(false);
       }
-    } catch {
+    } catch (error) {
+      console.log("error with unstake" + error);
       toast.error("error with unstake");
     }
-
-    setLoading(false);
   };
 
-  const debounceOnChange = useMemo(
-    () =>
-      _.debounce(async (e) => {
-        try {
-          let z = e.target.value;
-          //TOOD
-          //const amountx = parseInt(z);
-          //setStakeamount(z);
-          //setTotalreward(z*reward);
-        } catch {}
-      }, 300),
-    []
-  );
+  // const debounceOnChange = useMemo(
+  //   () =>
+  //     _.debounce(async (e) => {
+  //       try {
+  //         let z = e.target.value;
+  //         //TOOD
+  //         //const amountx = parseInt(z);
+  //         //setStakeamount(z);
+  //         //setTotalreward(z*reward);
+  //       } catch {}
+  //     }, 300),
+  //   []
+  // );
 
   function handleStakeInput(e) {
     try {
@@ -552,71 +581,73 @@ const StakeForm = ({ pool }) => {
   if (loading) {
     return <LoadingSpinner />;
   } else {
-    if (ispoolStakeable && !isStaked) {
+    if (chainId !== Chains.BSC_MAINNET.chainId) {
       return (
-        <StakeableForm
-          stakeAmount={stakeAmount}
-          handleStakeInput={handleStakeInput}
-          totalReward={totalReward}
-          rewardCurrency={rewardCurrency}
-          reward={reward}          
-          stakeCurrency={stakeCurrency}
-          yieldPrice={yieldPrice}
-          roi={roi}
-          apy={apy}
-          approveEnabled={approveEnabled}
-          approveClick={approveClick}
-          stakeClick={stakeClick}
-          pool={pool}
-          modalStatus={modalStatus}
-          setModalStatus={setModalStatus}
-        />
+        <>
+          <p>Not logged in</p>
+        </>
       );
     } else {
-      if (ispoolHarvestable) {
-        if (!hasHarvested) {
-          return (
-            <HarvestForm
-              stakedAmount={stakedAmount}
-              yaAmount={yaAmount}
-              pool={pool}
-              unstakeClick={unstakeClick}
-            />
-          );
-        } else {
-          if (hasStaked){
-            return (
-              <>
-                <div style={{ textAlign: "center" }}>
-                  Harvested: {yaAmount} {pool.yieldUnit}
-                </div>
-              </>
-            );
-          } else {
-            return (
-              <>
-                <div style={{ textAlign: "center" }}>
-                  Pool closed
-                </div>
-              </>
-            );
-          }
-          
-        }
-      } else {
+      if (ispoolStakeable && !isStaked) {
         return (
-          <HarvestPending
-            stakedAmount={stakedAmount}
-            yaAmount={yaAmount}
+          <StakeableForm
+            stakeAmount={stakeAmount}
+            handleStakeInput={handleStakeInput}
+            totalReward={totalReward}
             rewardCurrency={rewardCurrency}
+            reward={reward}
+            stakeCurrency={stakeCurrency}
+            yieldPrice={yieldPrice}
+            roi={roi}
+            apy={apy}
+            approveEnabled={approveEnabled}
+            approveClick={approveClick}
+            stakeClick={stakeClick}
             pool={pool}
+            modalStatus={modalStatus}
+            setModalStatus={setModalStatus}
           />
         );
-        //return <>Not stakeable yet</>;
+      } else {
+        if (ispoolHarvestable) {
+          if (!hasHarvested) {
+            return (
+              <HarvestForm
+                stakedAmount={stakedAmount}
+                yaAmount={yaAmount}
+                pool={pool}
+                unstakeClick={unstakeClick}
+              />
+            );
+          } else {
+            if (hasStaked) {
+              return (
+                <>
+                  <div style={{ textAlign: "center" }}>
+                    Harvested: {yaAmount} {pool.yieldUnit}
+                  </div>
+                </>
+              );
+            } else {
+              return (
+                <>
+                  <div style={{ textAlign: "center" }}>Pool closed</div>
+                </>
+              );
+            }
+          }
+        } else {
+          return (
+            <HarvestPending
+              stakedAmount={stakedAmount}
+              yaAmount={yaAmount}
+              rewardCurrency={rewardCurrency}
+              pool={pool}
+            />
+          );
+        }
       }
     }
-
-    // else {
   }
 };
 

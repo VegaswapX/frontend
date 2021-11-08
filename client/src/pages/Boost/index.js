@@ -29,6 +29,7 @@ const PoolRow = ({ pool }) => {
   return (
     <tr style={{ textAlign: "center", color: "white", cellpadding: "10px" }}>
       <td>{pool.poolName}&nbsp;&nbsp;</td>
+      <td>{pool.datestr}&nbsp;&nbsp;</td>
 
       <td>
         <img
@@ -67,6 +68,7 @@ const HeadRow = ({ pool }) => {
   return (
     <tr style={{ textAlign: "center", color: "white", cellpadding: "10px" }}>
       <td>Pool Name</td>
+      <td>Date start</td>
 
       <td>Stake Currency</td>
 

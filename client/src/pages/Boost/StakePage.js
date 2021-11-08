@@ -176,6 +176,16 @@ const HarvestPending = ({ stakedAmount, yaAmount, rewardCurrency, pool }) => {
   );
 };
 
+const OpenPending = ({ }) => {
+  return (
+    <>
+      <div style={{ textAlign: "center" }}>
+        Please wait for the pool to open
+      </div>
+    </>
+  );
+};
+
 const HarvestForm = ({ stakedAmount, yaAmount, pool, unstakeClick }) => {
   return (
     <>
@@ -588,6 +598,9 @@ const StakeForm = ({ pool }) => {
         </>
       );
     } else {
+      if (!ispoolStakeable){
+        return (<OpenPending />)
+      }
       if (ispoolStakeable && !isStaked) {
         return (
           <StakeableForm

@@ -14,7 +14,7 @@ const Routes = (props) => {
   }));
 
   const getLayout = () => {
-    let layoutCls = DetachedLayout;    
+    let layoutCls = DetachedLayout;
 
     console.log("layout used " + layout.layoutType);
     return layoutCls;
@@ -24,8 +24,7 @@ const Routes = (props) => {
 
   return (
     <BrowserRouter>
-      <Switch>        
-
+      <Switch>
         <Route path={allFlattenRoutes.map((r) => r["path"])}>
           <Layout {...props} layout={layout}>
             <Switch>

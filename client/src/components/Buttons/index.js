@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const NetworkButton = styled.button`
   background-color: floralwhite;
@@ -19,6 +19,6 @@ const NetworkButton = styled.button`
     cursor: pointer;
     border: 1px solid rgb(231, 73, 37);
   }
-`
+`;
 
-export { NetworkButton }
+export { NetworkButton };

@@ -1,58 +1,11 @@
 // @flow
 import React from "react";
 import { Row, Col, Card } from "react-bootstrap";
-import Chart from "react-apexcharts";
 import classNames from "classnames";
 
 const BalanceInfo = (props) => {
   //  default options
-  const options = {
-    chart: {
-      sparkline: {
-        enabled: true,
-      },
-    },
-    plotOptions: {
-      bar: {
-        columnWidth: "60%",
-      },
-    },
-    xaxis: {
-      crosshairs: {
-        width: 1,
-      },
-    },
-    stroke: {
-      width: 2,
-      curve: "smooth",
-    },
-    colors: props.colors || ["#008FFB"],
-    tooltip: {
-      fixed: {
-        enabled: false,
-      },
-      x: {
-        show: false,
-      },
-      y: {
-        title: {
-          formatter: function (seriesName) {
-            return "";
-          },
-        },
-      },
-      marker: {
-        show: false,
-      },
-    },
-  };
-
-  // type - defaulted to bar
-  const type = props.type || "bar";
-
-  // chart data
-  const series = [{ name: props.name || "Data", data: props.data || [] }];
-
+  
   // textClass - defaulted to text-muted
   const textClass = props.textClass || "text-muted";
 
@@ -85,17 +38,7 @@ const BalanceInfo = (props) => {
             )}
           </Col>
 
-          <Col className="col-6">
-            <div className="text-end">
-              <Chart
-                className="apex-charts"
-                options={options}
-                series={series}
-                type={type}
-                height={60}
-              />
-            </div>
-          </Col>
+         
         </Row>
       </Card.Body>
     </Card>

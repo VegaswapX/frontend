@@ -9,16 +9,16 @@ import { agetPrices } from "../../api/data";
 import { BigNumber, ethers } from "ethers";
 
 var toHHMMSS = (secs) => {
-  var sec_num = parseInt(secs, 10)
-  var hours   = Math.floor(sec_num / 3600)
-  var minutes = Math.floor(sec_num / 60) % 60
-  var seconds = sec_num % 60
+  var sec_num = parseInt(secs, 10);
+  var hours = Math.floor(sec_num / 3600);
+  var minutes = Math.floor(sec_num / 60) % 60;
+  var seconds = sec_num % 60;
 
-  return [hours,minutes,seconds]
-      .map(v => v < 10 ? "0" + v : v)
-      .filter((v,i) => v !== "00" || i > 0)
-      .join(":")
-}
+  return [hours, minutes, seconds]
+    .map((v) => (v < 10 ? "0" + v : v))
+    .filter((v, i) => v !== "00" || i > 0)
+    .join(":");
+};
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -92,14 +92,14 @@ export function PoolInfo({ pool }) {
         let restTimeX = endTime - startTime;
 
         let restTimeF = "";
-        
+
         //var date_diff = new Date( restTime * 1000 );
         // console.log("date_diff " + dateDiffH);
         // console.log("date_diff " + dateDiffD);
-        
+
         // if (dateDiffD > 0){
         //   restTimeF = dateDiffD + ":" + dateDiffH;
-        // } else {          
+        // } else {
         //   restTimeF = dateDiffH + ":" + dateDiffM;
         // }
         // console.log("restTimeF " + restTimeF);
@@ -109,7 +109,7 @@ export function PoolInfo({ pool }) {
 
         setRestTime(restTimeF);
       });
-      
+
       poolContract.callStatic.totalAmountStaked().then((x) => {
         //let z = ethers.utils.formatEther(x[1].toString());
         console.log(">>> " + x);
@@ -195,7 +195,7 @@ export function PoolInfo({ pool }) {
     ["Current reward", reward / rq + " " + pool.per],
     ["Start time", startTimeF],
     ["End time", endTimeF],
-    ["Rest time", restTime],
+    // ["Rest time", restTime],
     ["totalAmountStaked", totalAmountStaked + " " + pool.stakedUnit],
     ["Maximum total to stake", poolMaxStake + " " + pool.stakedUnit],
     ["Yield token to distribute", poolYield + " " + pool.yieldUnit],

@@ -85,29 +85,24 @@ export function PoolInfo({ pool }) {
         var formattedTime = timeConverter(x);
         setEndTime(x);
         setEndTimeF(formattedTime);
-        let z = statusPool(startTime, endTime);
-        setPoolstatus(z);
-        console.log("rest " + endTime - startTime);
-        //setRestTime(endTime - startTime);
-        let restTimeX = endTime - startTime;
+        if (startTime){
+          let z = statusPool(startTime, endTime);
+          setPoolstatus(z);
+          console.log("rest " + endTime - startTime);
 
-        let restTimeF = "";
+          //setRestTime(endTime - startTime);
+          let restTimeX = endTime - startTime;
 
-        //var date_diff = new Date( restTime * 1000 );
-        // console.log("date_diff " + dateDiffH);
-        // console.log("date_diff " + dateDiffD);
+          let restTimeF = "";
+          
+          restTimeF = toHHMMSS(restTimeX);
 
-        // if (dateDiffD > 0){
-        //   restTimeF = dateDiffD + ":" + dateDiffH;
-        // } else {
-        //   restTimeF = dateDiffH + ":" + dateDiffM;
-        // }
-        // console.log("restTimeF " + restTimeF);
+          setRestTime(restTimeF);
 
-        //restTimeF = new Date(restTimeX * 1000).toISOString()
-        restTimeF = toHHMMSS(restTimeX);
+        } else {
+          console.log("start time not defined")
+        }
 
-        setRestTime(restTimeF);
       });
 
       poolContract.callStatic.totalAmountStaked().then((x) => {
@@ -180,6 +175,23 @@ export function PoolInfo({ pool }) {
       //   setSupported(false);
     }
   }, [account, library]);
+
+  useEffect(() => {
+
+    let z = statusPool(startTime, endTime);
+    setPoolstatus(z);
+    console.log("rest " + endTime - startTime);
+
+    //setRestTime(endTime - startTime);
+    let restTimeX = endTime - startTime;
+
+    let restTimeF = "";
+    
+    restTimeF = toHHMMSS(restTimeX);
+
+    setRestTime(restTimeF);
+      
+  }, [startTime, endTime]);
 
   function shortenAddress(addr) {
     let l = addr.length;

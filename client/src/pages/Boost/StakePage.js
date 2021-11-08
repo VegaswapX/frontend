@@ -474,19 +474,21 @@ const StakeForm = ({ pool }) => {
   const stakeClick = async () => {
     console.log("stakeClick " + stakeAmount);
     let mamount;
-    // if (stakeCurrency == "USDT") {
-    //   mamount = MIN_USDT;
-    // } else {
-    //   mamount = MIN_VGA;
-    // }
-    // if (stakeAmount < mamount) {
-    //   toast.error("Staking amount too low");
-    //   return;
-    // }
+    //TODO
+    if (stakeCurrency == "USDT") {
+      mamount = MIN_USDT;
+    } else {
+      mamount = MIN_VGA;
+    }
+    if (stakeAmount < mamount) {
+      toast.error("Staking amount too low");
+      return;
+    }
     //TODO check balance first
 
     try {
       setLoading(true);
+      //TODO double check receipt and tx handling here
       let [receipt, receiptstatus] = await stake(stakeAmount, poolContract);
 
       console.log("receipt >>> " + receipt);

@@ -136,11 +136,11 @@ export function PoolInfo({ pool }) {
       // });
       poolContract.callStatic.maxYield().then((x) => {
         x = x / 10 ** 18;
-        setMaxyield(x);
+        setMaxyield(Math.round(x));
       });
       poolContract.callStatic.maxStake().then((x) => {
         x = x / 10 ** 18;
-        setMaxStake(x);
+        setMaxStake(Math.round(x));
         setLoading(false);
       });
 

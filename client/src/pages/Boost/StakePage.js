@@ -271,11 +271,17 @@ const StakeForm = ({ pool }) => {
   }
 
   function calculateRoiUSDT(reward) {
-    return Math.round(reward * yieldPrice * 10000) / 100;
+    console.log("calculateRoiUSDT " + reward);
+    console.log("yieldPrice " + yieldPrice);
+    let r = Math.round(reward * yieldPrice * 10000) / 100;
+    console.log("r " + r);
+    return r;
   }
 
   function calculateRoiVGA(reward, rq) {
-    return Math.round((reward / rq) * 10000);
+    console.log("calculateRoiVGA " + reward);
+    console.log("rq " + rq);
+    return Math.round((reward / rq) * 10000) /100;
   }
 
   function calculateApy() {

@@ -176,6 +176,16 @@ const HarvestPending = ({ stakedAmount, yaAmount, rewardCurrency, pool }) => {
   );
 };
 
+const OpenPending = ({ }) => {
+  return (
+    <>
+      <div style={{ textAlign: "center" }}>
+        Please wait for the pool to open
+      </div>
+    </>
+  );
+};
+
 const HarvestForm = ({ stakedAmount, yaAmount, pool, unstakeClick }) => {
   return (
     <>
@@ -261,11 +271,17 @@ const StakeForm = ({ pool }) => {
   }
 
   function calculateRoiUSDT(reward) {
-    return Math.round(reward * yieldPrice * 10000) / 100;
+    console.log("calculateRoiUSDT " + reward);
+    console.log("yieldPrice " + yieldPrice);
+    let r = Math.round(reward * yieldPrice * 10000) / 100;
+    console.log("r " + r);
+    return r;
   }
 
   function calculateRoiVGA(reward, rq) {
-    return Math.round((reward / rq) * 10000);
+    console.log("calculateRoiVGA " + reward);
+    console.log("rq " + rq);
+    return Math.round((reward / rq) * 10000) /100;
   }
 
   function calculateApy() {
@@ -588,6 +604,9 @@ const StakeForm = ({ pool }) => {
         </>
       );
     } else {
+      if (!ispoolStakeable){
+        return (<OpenPending />)
+      }
       if (ispoolStakeable && !isStaked) {
         return (
           <StakeableForm

@@ -134,7 +134,7 @@ export function poolHarvestable(endTime) {
 
 export function statusPool(startTime, endTime) {
   let n = Date.now() / 1000;
-  //console.log(">>>> statusPool: " + startTime + " N: " + n);
+  console.log(">>>> statusPool: " + startTime + " N: " + n);
 
   if (n < startTime) {
     return "Not started yet";

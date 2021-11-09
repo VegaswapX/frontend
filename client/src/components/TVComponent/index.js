@@ -41,6 +41,7 @@ const client = new ApolloClient({
   uri: BITQUERY_ENDPOINT,
 });
 
+// TODO: Prepare to get data and measure response time to the chart
 try {
   client.query({
     query: exampleQuery,

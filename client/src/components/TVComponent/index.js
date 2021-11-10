@@ -5,7 +5,6 @@ import { ApolloClient, gql,
   InMemoryCache
 } from "@apollo/client";
 const BITQUERY_ENDPOINT = `https://graphql.bitquery.io`;
-
 const graphqlCache = new InMemoryCache();
 
 const exampleQuery = gql`
@@ -41,12 +40,28 @@ const client = new ApolloClient({
   uri: BITQUERY_ENDPOINT,
 });
 
-// TODO: Prepare to get data and measure response time to the chart
+function transformToChartData(graphqlData) {
+  const res = graphqlData.map(x => {
+    return {
+      time: x.timeInterval.minute, // minute chart, TODO: Make it work with other kind of chart
+      open: parseFloat(x.open_price),
+      high: x.maximum_price,
+      low: x.minimum_price,
+      close: parseFloat(x.close_price),
+    }
+  })
+  return res;
+}
+
+// TODO: Measure response time
 try {
   client.query({
     query: exampleQuery,
   }).then(res => {
     console.log("graphql res", res);
+    const {dexTrades} = res?.data?.ethereum;
+    const chartData = transformToChartData(dexTrades);
+    console.log(`chartData`, chartData);
   })
 } catch(e) {
   console.log(`e`, e);

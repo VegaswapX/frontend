@@ -83,7 +83,8 @@ async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurrency) {
   }
 }
 
-export function ChartWrapper() {
+// TODO base and quote token from output
+export function ChartWrapper({token0, token1}) {
   const chartDiv = useRef();
   const [chart, setChart] = useState(null);
 
@@ -138,10 +139,19 @@ export function ChartWrapper() {
 
     const priceData = await getOHLCData();
     console.log(`priceData`, priceData);
-
-    // candle chart
     lineSeries.setData(priceData);
+
+    // update data
+    const interval = setInterval(async () => {
+      const priceData = await getOHLCData(); // prepare with cors data
+      console.log(`update`, priceData);
+
+      lineSeries.setData(priceData);
+    }, 60*1000); // 1 minutes
+    return () => clearInterval(interval);
+
   }, []);
+
 
   return (
     <div ref={chartDiv} style={{ position: "relative" }}>

@@ -5,6 +5,7 @@ import { exampleData, minutesData } from "./data";
 const BITQUERY_ENDPOINT = `https://graphql.bitquery.io`;
 const graphqlCache = new InMemoryCache();
 
+// TODO: Get minute chart
 const exampleQuery = gql `
 query getOHLC($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: String) {
     ethereum(network: bsc) {
@@ -92,10 +93,35 @@ export function ChartWrapper() {
       height: 400,
 
       timeScale: {
+        lockVisibleTimeRangeOnResize: true,
+        rightBarStaysOnScroll: true,
+        borderVisible: false,
+        borderColor: '#fff000',
+        visible: true,
         autoScale: true,
         timeVisible: true,
         secondsVisible: false,
       },
+
+      localization: {
+        priceFormatter: price => {
+          // TODO: Depends on the price returned, display how many fixed number
+          // console.log(`price`, price);
+          return price.toFixed(10);
+        }
+        ,
+      },
+
+      // priceScale: {
+      //   autoScale: false,
+      //   invertScale: false,
+      //   alignLabels: false,
+      //   borderVisible: false,
+      //   scaleMargins: {
+      //     top: 0.30,
+      //     bottom: 0.25,
+      //   },
+      // },
 
       watermark: {
         visible: true,

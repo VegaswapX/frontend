@@ -1,13 +1,11 @@
-import {createChart} from "lightweight-charts";
-import React, {useEffect, useRef, useState} from "react";
-import {exampleData} from "./data";
-import { ApolloClient, gql,
-  InMemoryCache
-} from "@apollo/client";
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
+import { createChart } from "lightweight-charts";
+import React, { useEffect, useRef, useState } from "react";
+import { exampleData } from "./data";
 const BITQUERY_ENDPOINT = `https://graphql.bitquery.io`;
 const graphqlCache = new InMemoryCache();
 
-const exampleQuery = gql`
+const exampleQuery = gql `
 {
   ethereum(network: bsc) {
     dexTrades(options: {limit: 100, asc: "timeInterval.minute"}, date: {since: "2020-11-01"}, exchangeName: {in: ["Pancake", "Pancake v2"]}, baseCurrency: {is: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"}, quoteCurrency: {is: "0xe9e7cea3dedca5984780bafc599bd69add087d56"}) {
@@ -33,7 +31,7 @@ const exampleQuery = gql`
     }
   }
 }
-`
+`;
 
 const client = new ApolloClient({
   cache: graphqlCache,
@@ -48,8 +46,8 @@ function transformToChartData(graphqlData) {
       high: x.maximum_price,
       low: x.minimum_price,
       close: parseFloat(x.close_price),
-    }
-  })
+    };
+  });
   return res;
 }
 
@@ -59,11 +57,11 @@ try {
     query: exampleQuery,
   }).then(res => {
     console.log("graphql res", res);
-    const {dexTrades} = res?.data?.ethereum;
+    const { dexTrades } = res?.data?.ethereum;
     const chartData = transformToChartData(dexTrades);
     console.log(`chartData`, chartData);
-  })
-} catch(e) {
+  });
+} catch (e) {
   console.log(`e`, e);
 }
 
@@ -80,6 +78,7 @@ export function ChartWrapper() {
         timeVisible: true,
         secondsVisible: false,
       },
+
       watermark: {
         visible: true,
         fontSize: 34,

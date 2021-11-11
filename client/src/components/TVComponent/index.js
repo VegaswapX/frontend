@@ -8,62 +8,63 @@ const graphqlCache = new InMemoryCache();
 // TODO: Get minute chart
 // TODO: Get multiple query with WBNB/USDT so you can get USDT chart
 const exampleQuery = gql `
-query getOHLC($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: String) {
-    ethereum(network: bsc) {
-      dexTrades(options: {
-        limit: 100, 
-        asc: "timeInterval.minute"}, 
-        date: {since: "2020-11-01"}, 
-        exchangeName: {in: ["Pancake", "Pancake v2"]}, 
-        baseCurrency: {is: $baseCurrency}, quoteCurrency: {is: $quoteCurrency}) {
-        timeInterval {
-          minute(count: $minuteInterval)
-        }
-        baseCurrency {
-          symbol
-          address
-        }
-        baseAmount
-        quoteCurrency {
-          symbol
-          address
-        }
-        quoteAmount
-        trades: count
-        quotePrice
-        maximum_price: quotePrice(calculate: maximum)
-        minimum_price: quotePrice(calculate: minimum)
-        open_price: minimum(of: block, get: quote_price)
-        close_price: maximum(of: block, get: quote_price)
+query ($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: String) {
+  ethereum(network: bsc) {
+    BNBUSDT: dexTrades(
+      options: {limit: 100, asc: "timeInterval.minute"}
+      exchangeName: {in: ["Pancake", "Pancake v2"]}
+      baseCurrency: {is: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"}
+      quoteCurrency: {is: "0x55d398326f99059ff775485246999027b3197955"}
+      date: {after: "2021-09-14"}
+    ) {
+      timeInterval {
+        minute(count: $minuteInterval)
       }
-      BNBUSDT: dexTrades(
-        options: {limit: 100, asc: "timeInterval.minute"}
-        date: {since: "2020-11-01"}
-        exchangeName: {in: ["Pancake", "Pancake v2"]}
-        baseCurrency: {is: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"}
-        quoteCurrency: {is: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"}
-      ) {
-        timeInterval {
-          minute(count: $minuteInterval)
-        }
-        baseCurrency {
-          symbol
-          address
-        }
-        baseAmount
-        quoteCurrency {
-          symbol
-          address
-        }
-        quoteAmount
-        trades: count
-        quotePrice
-        maximum_price: quotePrice(calculate: maximum)
-        minimum_price: quotePrice(calculate: minimum)
-        open_price: minimum(of: block, get: quote_price)
-        close_price: maximum(of: block, get: quote_price)
+      baseCurrency {
+        symbol
+        address
       }
+      baseAmount
+      quoteCurrency {
+        symbol
+        address
+      }
+      quoteAmount
+      trades: count
+      quotePrice
+      maximum_price: quotePrice(calculate: maximum)
+      minimum_price: quotePrice(calculate: minimum)
+      open_price: minimum(of: block, get: quote_price)
+      close_price: maximum(of: block, get: quote_price)
     }
+    dexTrades(
+      options: {limit: 100, asc: "timeInterval.minute"}
+      exchangeName: {in: ["Pancake", "Pancake v2"]}
+      baseCurrency: {is: $baseCurrency}
+      quoteCurrency: {is: $quoteCurrency}
+      date: {after: "2021-09-14"}
+    ) {
+      timeInterval {
+        minute(count: $minuteInterval)
+      }
+      baseCurrency {
+        symbol
+        address
+      }
+      baseAmount
+      quoteCurrency {
+        symbol
+        address
+      }
+      quoteAmount
+      trades: count
+      quotePrice
+      maximum_price: quotePrice(calculate: maximum)
+      minimum_price: quotePrice(calculate: minimum)
+      open_price: minimum(of: block, get: quote_price)
+      close_price: maximum(of: block, get: quote_price)
+    }
+  }
 }
 `;
 
@@ -72,20 +73,7 @@ const client = new ApolloClient({
   uri: BITQUERY_ENDPOINT,
 });
 
-function transformToChartData(graphqlData) {
-  const res = graphqlData.map(x => {
-    return {
-      time: x.timeInterval.minute, // minute chart, TODO: Make it work with other kind of chart
-      open: parseFloat(x.open_price),
-      high: x.maximum_price,
-      low: x.minimum_price,
-      close: parseFloat(x.close_price),
-    };
-  });
-  return res;
-}
-
-// TODO: Measure response time
+// TODO: Make sure we get the token creation date on the query to get correct price data from WBNB / USDT
 async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurrency) {
   try {
     const t0 = performance.now();
@@ -102,10 +90,20 @@ async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurrency) {
     console.log(`[bitquery] responseTime`, t1 - t0);
 
     console.log("graphql res", res);
-    const { dexTrades } = res?.data?.ethereum;
-    const chartData = transformToChartData(dexTrades);
+    const { dexTrades, BNBUSDT } = res?.data?.ethereum;
+    const chartData = dexTrades.map((x, i) => {
+      const bnbUsdt = BNBUSDT[i];
+      // console.log(`bnbUsdt`, {bnbUsdt, x});
+      return {
+        time: x.timeInterval.minute,
+        open: parseFloat(x.open_price) * parseFloat(bnbUsdt.open_price),
+        high: x.maximum_price * bnbUsdt.maximum_price,
+        low: x.minimum_price * bnbUsdt.minimum_price,
+        close: parseFloat(x.close_price) * parseFloat(bnbUsdt.close_price),
+      };
+    });
+
     return chartData;
-    // console.log(`chartData`, chartData);
   } catch (e) {
     console.log(`e`, e);
   }

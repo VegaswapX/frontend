@@ -164,7 +164,7 @@ const PageSwapInner = () => {
     await checkAllowance(multiCallContract, chainId, account);
   }, [multiCallContract, chainId, account, token0]);
 
-  // recalculate token0 when token is changed
+  // recalculate token1 when token is changed
   useEffect(async () => {
     if (token0Input !== undefined) {
       debounceSetToken1Input(token0Input);
@@ -201,6 +201,7 @@ const PageSwapInner = () => {
   }
 
   // fetch user balances on token changes
+  // make this generalized on token1Input as well
   useEffect(async () => {
     if (account === undefined) {
       return;
@@ -222,29 +223,88 @@ const PageSwapInner = () => {
     account,
   ]);
 
-  const tokenInputDisabled = false;
+  // async function setToken1InputBasedOnRate(
+  //   routerContract,
+  //   token0Input,
+  //   token0Balance,
+  //   actionButtonState,
+  // ) {
+  //   if (routerContract === null) {
+  //     console.log("You don't connect to bsc mainnet");
+  //     return;
+  //   }
+  //
+  //   const [token0, token1] = store.getState().swapReducer.tokenPath;
+  //   const token0Amount = parseFloat(token0Input); // why parseInt
+  //   if (isNaN(token0Amount)) {
+  //     setToken1Input("");
+  //     return;
+  //   }
+  //
+  //   const token0AmountEther = trade.toUint256Dec(token0Amount, token0);
+  //   if (token0AmountEther === null) {
+  //     setToken1Input("");
+  //     return;
+  //   }
+  //
+  //   let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
+  //     token0,
+  //     token1,
+  //   ]);
+  //
+  //   if (result.error === "Amount below zero") {
+  //     return;
+  //   }
+  //
+  //   if (result.error !== false) {
+  //     const msgCode = result.error?.data?.code;
+  //     // no pool found
+  //     if (msgCode === -32000) {
+  //       setActionButtonState(actionButtonStates.insufficientLiquidity);
+  //     }
+  //     return;
+  //   }
+  //
+  //   const outAmount = result.data;
+  //   const outputFloat = trade.toFloatNumber(outAmount, token1);
+  //
+  //   setToken1Input(outputFloat);
+  //   // setLoadingAmount(false);
+  //
+  //   // extraUI
+  //   if (token0Amount > token0Balance) {
+  //     setActionButtonState(actionButtonStates.insufficientBalance);
+  //   } else if (actionButtonState !== actionButtonStates.swap) {
+  //     setActionButtonState(actionButtonStates.swap);
+  //   }
+  // }
 
   async function setToken1InputBasedOnRate(
     routerContract,
     token0Input,
     token0Balance,
     actionButtonState,
+    setTokenIndex = 1, // 0 or 1
   ) {
+    const tokenInput = token0Input; // can be 0 or 1
+    const tokenBalance = token0Balance; // can be 0 or 1
+    const setTokenFn = setTokenIndex === 0 ? setToken0Input : setToken1Input;
+
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
       return;
     }
 
     const [token0, token1] = store.getState().swapReducer.tokenPath;
-    const token0Amount = parseFloat(token0Input); // why parseInt
-    if (isNaN(token0Amount)) {
-      setToken1Input("");
+    const tokenAmount = parseFloat(tokenInput); // why parseInt
+    if (isNaN(tokenAmount)) {
+      setTokenFn("");
       return;
     }
 
-    const token0AmountEther = trade.toUint256Dec(token0Amount, token0);
+    const token0AmountEther = trade.toUint256Dec(tokenAmount, token0);
     if (token0AmountEther === null) {
-      setToken1Input("");
+      setTokenFn("");
       return;
     }
 
@@ -269,21 +329,15 @@ const PageSwapInner = () => {
     const outAmount = result.data;
     const outputFloat = trade.toFloatNumber(outAmount, token1);
 
-    setToken1Input(outputFloat);
+    setTokenFn(outputFloat);
     // setLoadingAmount(false);
 
     // extraUI
-    if (token0Amount > token0Balance) {
+    if (tokenAmount > tokenBalance) {
       setActionButtonState(actionButtonStates.insufficientBalance);
     } else if (actionButtonState !== actionButtonStates.swap) {
       setActionButtonState(actionButtonStates.swap);
     }
-
-    // TODO: Set proper error message, it can be anything
-    // else {
-    //   toast.error("Error Pair not available");
-    //   // setLoadingAmount(false);
-    // }
   }
 
   function handleTokenInputChange(e) {
@@ -399,18 +453,17 @@ const PageSwapInner = () => {
     0,
     handleTokenInputChange,
     {
-      disabled: tokenInputDisabled,
+      disabled: false,
       fromTo: "From",
       balance: token0Balance,
       clickMaxHandler: async () => {
         setToken0Input(token0Balance);
-        await setToken1Input(routerContract, token0Balance);
       },
     },
   );
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
-    disabled: tokenInputDisabled,
+    disabled: false,
     fromTo: "To",
     balance: token1Balance,
     clickMaxHandler: async () => {
@@ -525,9 +578,9 @@ const PageSwap = () => {
           </div>
         </Col>
         {/*DEBUG*/}
-        <Col lg={12}>
-          <ChartWrapper />
-        </Col>
+        {/*<Col lg={12}>*/}
+        {/*  <ChartWrapper />*/}
+        {/*</Col>*/}
       </Row>
     </>
   );

@@ -121,7 +121,7 @@ const PageSwapInner = () => {
         await setOtherTokenInputBasedOnRate(
           routerContract,
           token1Input,
-          token0Balance,
+          token1Balance,
           actionButtonState,
           0,
         ); // add routerContract here  because of network changes
@@ -260,14 +260,14 @@ const PageSwapInner = () => {
       return;
     }
 
-    const token0AmountEther = trade.toUint256Dec(tokenAmount, token0);
-    if (token0AmountEther === null) {
+    const tokenAmountUint256 = trade.toUint256Dec(tokenAmount, token0);
+    if (tokenAmountUint256 === null) {
       setTokenFn("");
       return;
     }
 
     const tokenPath = setTokenIndex === 1 ? [token0, token1] : [token1, token0];
-    let result = await trade.getAmountsOut(routerContract, token0AmountEther, tokenPath);
+    let result = await trade.getAmountsOut(routerContract, tokenAmountUint256, tokenPath);
 
     if (result.error === "Amount below zero") {
       return;

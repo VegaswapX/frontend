@@ -394,19 +394,8 @@ const PageSwapInner = () => {
   }
 
   function reverseInput() {
-    console.log("reverse");
-
     store.dispatch({ type: "swap/switchToken" });
-
     resetInputs();
-
-    // store.dispatch({
-    //   type: "swap/setToken",
-    //   payload: {
-    //     tokenIndex,
-    //     symbol,
-    //   },
-    // });
   }
 
   const tokenInputUI = TokenInput(
@@ -494,6 +483,8 @@ const PageSwapInner = () => {
           textAlign: "center",
         }}
       >
+        <div className={"swap-token-price-details"}>
+        </div>
         <Button
           variant="primary"
           onClick={function(e) {

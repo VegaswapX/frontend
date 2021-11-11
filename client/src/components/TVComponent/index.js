@@ -36,6 +36,34 @@ query getOHLC($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: Strin
         open_price: minimum(of: block, get: quote_price)
         close_price: maximum(of: block, get: quote_price)
       }
+      BNBUSDT: dexTrades(
+      options: {limit: 100, asc: "timeInterval.minute"}
+      date: {since: "2020-11-01"}
+      exchangeName: {in: ["Pancake", "Pancake v2"]}
+      baseCurrency: {is: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"}
+      quoteCurrency: {is: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"}
+      ) {
+        timeInterval {
+          minute(count: $minuteInterval)
+        }
+        baseCurrency {
+          symbol
+          address
+        }
+        baseAmount
+        quoteCurrency {
+          symbol
+          address
+        }
+        quoteAmount
+        trades: count
+        quotePrice
+        maximum_price: quotePrice(calculate: maximum)
+        minimum_price: quotePrice(calculate: minimum)
+        open_price: minimum(of: block, get: quote_price)
+        close_price: maximum(of: block, get: quote_price)
+      }
+    }
     }
 }
 `;

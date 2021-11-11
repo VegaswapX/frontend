@@ -104,14 +104,29 @@ const PageSwapInner = () => {
   const debounceSetToken1Input = useMemo(
     () =>
       _.debounce(async (token0Input) => {
-        await setToken1InputBasedOnRate(
+        await setOtherTokenInputBasedOnRate(
           routerContract,
           token0Input,
           token0Balance,
           actionButtonState,
+          1,
         ); // add routerContract here  because of network changes
       }, 500),
     [routerContract, token0Balance, actionButtonState],
+  );
+
+  const debounceSetToken0Input = useMemo(
+    () =>
+      _.debounce(async (token1Input) => {
+        await setOtherTokenInputBasedOnRate(
+          routerContract,
+          token1Input,
+          token0Balance,
+          actionButtonState,
+          0,
+        ); // add routerContract here  because of network changes
+      }, 500),
+    [routerContract, token1Balance, actionButtonState],
   );
 
   async function checkAllowance(multiCallContract, chainId, account) {
@@ -165,6 +180,7 @@ const PageSwapInner = () => {
   }, [multiCallContract, chainId, account, token0]);
 
   // recalculate token1 when token is changed
+  // do not calc for token1 in this case to avoid conflict when swap token places
   useEffect(async () => {
     if (token0Input !== undefined) {
       debounceSetToken1Input(token0Input);
@@ -207,7 +223,7 @@ const PageSwapInner = () => {
       return;
     }
     await fetchAccountBalances(token0, token1, account);
-    await setToken1InputBasedOnRate(
+    await setOtherTokenInputBasedOnRate(
       routerContract,
       token0Input,
       token0Balance,
@@ -223,71 +239,13 @@ const PageSwapInner = () => {
     account,
   ]);
 
-  // async function setToken1InputBasedOnRate(
-  //   routerContract,
-  //   token0Input,
-  //   token0Balance,
-  //   actionButtonState,
-  // ) {
-  //   if (routerContract === null) {
-  //     console.log("You don't connect to bsc mainnet");
-  //     return;
-  //   }
-  //
-  //   const [token0, token1] = store.getState().swapReducer.tokenPath;
-  //   const token0Amount = parseFloat(token0Input); // why parseInt
-  //   if (isNaN(token0Amount)) {
-  //     setToken1Input("");
-  //     return;
-  //   }
-  //
-  //   const token0AmountEther = trade.toUint256Dec(token0Amount, token0);
-  //   if (token0AmountEther === null) {
-  //     setToken1Input("");
-  //     return;
-  //   }
-  //
-  //   let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
-  //     token0,
-  //     token1,
-  //   ]);
-  //
-  //   if (result.error === "Amount below zero") {
-  //     return;
-  //   }
-  //
-  //   if (result.error !== false) {
-  //     const msgCode = result.error?.data?.code;
-  //     // no pool found
-  //     if (msgCode === -32000) {
-  //       setActionButtonState(actionButtonStates.insufficientLiquidity);
-  //     }
-  //     return;
-  //   }
-  //
-  //   const outAmount = result.data;
-  //   const outputFloat = trade.toFloatNumber(outAmount, token1);
-  //
-  //   setToken1Input(outputFloat);
-  //   // setLoadingAmount(false);
-  //
-  //   // extraUI
-  //   if (token0Amount > token0Balance) {
-  //     setActionButtonState(actionButtonStates.insufficientBalance);
-  //   } else if (actionButtonState !== actionButtonStates.swap) {
-  //     setActionButtonState(actionButtonStates.swap);
-  //   }
-  // }
-
-  async function setToken1InputBasedOnRate(
+  async function setOtherTokenInputBasedOnRate(
     routerContract,
-    token0Input,
-    token0Balance,
+    tokenInput, // can be 0 or 1
+    tokenBalance, // can be 0 or 1
     actionButtonState,
     setTokenIndex = 1, // 0 or 1
   ) {
-    const tokenInput = token0Input; // can be 0 or 1
-    const tokenBalance = token0Balance; // can be 0 or 1
     const setTokenFn = setTokenIndex === 0 ? setToken0Input : setToken1Input;
 
     if (routerContract === null) {
@@ -308,10 +266,8 @@ const PageSwapInner = () => {
       return;
     }
 
-    let result = await trade.getAmountsOut(routerContract, token0AmountEther, [
-      token0,
-      token1,
-    ]);
+    const tokenPath = setTokenIndex === 1 ? [token0, token1] : [token1, token0];
+    let result = await trade.getAmountsOut(routerContract, token0AmountEther, tokenPath);
 
     if (result.error === "Amount below zero") {
       return;
@@ -340,10 +296,16 @@ const PageSwapInner = () => {
     }
   }
 
-  function handleTokenInputChange(e) {
+  function handleToken0InputChange(e) {
     const token0Input = e.target.value;
     setToken0Input(token0Input);
     debounceSetToken1Input(token0Input);
+  }
+
+  function handleToken1InputChange(e) {
+    const token1Input = e.target.value;
+    setToken1Input(token1Input);
+    debounceSetToken0Input(token1Input);
   }
 
   async function approveToken0() {
@@ -451,7 +413,7 @@ const PageSwapInner = () => {
     token0Input,
     token0,
     0,
-    handleTokenInputChange,
+    handleToken0InputChange,
     {
       disabled: false,
       fromTo: "From",
@@ -462,14 +424,20 @@ const PageSwapInner = () => {
     },
   );
 
-  const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
-    disabled: false,
-    fromTo: "To",
-    balance: token1Balance,
-    clickMaxHandler: async () => {
-      setToken1Input(token1Balance);
+  const tokenOutputUI = TokenInput(
+    token1Input,
+    token1,
+    1,
+    handleToken1InputChange,
+    {
+      disabled: false,
+      fromTo: "To",
+      balance: token1Balance,
+      clickMaxHandler: async () => {
+        setToken1Input(token1Balance);
+      },
     },
-  });
+  );
 
   if (loading) {
     return <TransactionPending />;

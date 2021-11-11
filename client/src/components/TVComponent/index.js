@@ -6,6 +6,7 @@ const BITQUERY_ENDPOINT = `https://graphql.bitquery.io`;
 const graphqlCache = new InMemoryCache();
 
 // TODO: Get minute chart
+// TODO: Get multiple query with WBNB/USDT so you can get USDT chart
 const exampleQuery = gql `
 query getOHLC($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: String) {
     ethereum(network: bsc) {
@@ -84,7 +85,7 @@ async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurrency) {
 }
 
 // TODO base and quote token from output
-export function ChartWrapper({token0, token1}) {
+export function ChartWrapper({ token0, token1 }) {
   const chartDiv = useRef();
   const [chart, setChart] = useState(null);
 
@@ -97,7 +98,7 @@ export function ChartWrapper({token0, token1}) {
         lockVisibleTimeRangeOnResize: true,
         rightBarStaysOnScroll: true,
         borderVisible: false,
-        borderColor: '#fff000',
+        borderColor: "#fff000",
         visible: true,
         autoScale: true,
         timeVisible: true,
@@ -109,8 +110,7 @@ export function ChartWrapper({token0, token1}) {
           // TODO: Depends on the price returned, display how many fixed number
           // console.log(`price`, price);
           return price.toFixed(10);
-        }
-        ,
+        },
       },
 
       // priceScale: {
@@ -147,11 +147,9 @@ export function ChartWrapper({token0, token1}) {
       console.log(`update`, priceData);
 
       lineSeries.setData(priceData);
-    }, 60*1000); // 1 minutes
+    }, 60 * 1000); // 1 minutes
     return () => clearInterval(interval);
-
   }, []);
-
 
   return (
     <div ref={chartDiv} style={{ position: "relative" }}>

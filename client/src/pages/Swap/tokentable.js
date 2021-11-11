@@ -8,7 +8,7 @@ function Table({ tokenIndex, columns, data }) {
   // selecting in or out?
   // let selecting = store.getState().uiReducer.tokenSelect;
 
-  //const [hoveredRow, setHoveredRow] = useState(null);
+  // const [hoveredRow, setHoveredRow] = useState(null);
 
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -43,7 +43,8 @@ function Table({ tokenIndex, columns, data }) {
   // TODO: Fix the key property
   return (
     <table {...getTableProps()}>
-      {/* <thead>
+      {
+        /* <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -51,7 +52,8 @@ function Table({ tokenIndex, columns, data }) {
             ))}
           </tr>
         ))}
-      </thead> */}
+      </thead> */
+      }
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);

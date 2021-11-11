@@ -13,12 +13,12 @@ import { useSelector } from "react-redux";
 import { getTokensPrices } from "../../api/data";
 import { Chains, MULTICALL_ADDR } from "../../chain/eth";
 import * as trade from "../../chain/trade.js";
-//import { toUint256Dec } from "../../chain/trade.js";
+// import { toUint256Dec } from "../../chain/trade.js";
+import { ChartWrapper } from "../../components/TVComponent";
 import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
-import {ChartWrapper} from "../../components/TVComponent";
 
 const actionButtonStates = {
   wrongNetwork: {
@@ -90,7 +90,7 @@ const PageSwapInner = () => {
   const [token0, token1] = useSelector((state) => state.swapReducer.tokenPath);
 
   const [actionButtonState, setActionButtonState] = useState(
-    actionButtonStates.wrongNetwork
+    actionButtonStates.wrongNetwork,
   );
 
   const [token0Input, setToken0Input] = useState(0);
@@ -108,10 +108,10 @@ const PageSwapInner = () => {
           routerContract,
           token0Input,
           token0Balance,
-          actionButtonState
+          actionButtonState,
         ); // add routerContract here  because of network changes
       }, 500),
-    [routerContract, token0Balance, actionButtonState]
+    [routerContract, token0Balance, actionButtonState],
   );
 
   async function checkAllowance(multiCallContract, chainId, account) {
@@ -180,7 +180,7 @@ const PageSwapInner = () => {
       const res = await trade.fetchAccountBalances(
         multiCallContract,
         [token0, token1],
-        account
+        account,
       );
       if (!!res.error) {
         // handle to get baalance eror
@@ -210,7 +210,7 @@ const PageSwapInner = () => {
       routerContract,
       token0Input,
       token0Balance,
-      actionButtonState
+      actionButtonState,
     );
   }, [
     routerContract,
@@ -228,7 +228,7 @@ const PageSwapInner = () => {
     routerContract,
     token0Input,
     token0Balance,
-    actionButtonState
+    actionButtonState,
   ) {
     if (routerContract === null) {
       console.log("You don't connect to bsc mainnet");
@@ -348,7 +348,7 @@ const PageSwapInner = () => {
         amountIn,
         amountOutMin,
         [token0, token1],
-        account
+        account,
       );
       const [status, statusInfo] = result;
       if (status === 1) {
@@ -406,7 +406,7 @@ const PageSwapInner = () => {
         setToken0Input(token0Balance);
         await setToken1Input(routerContract, token0Balance);
       },
-    }
+    },
   );
 
   const tokenOutputUI = TokenInput(token1Input, token1, 1, () => {}, {
@@ -475,7 +475,7 @@ const PageSwapInner = () => {
       >
         <Button
           variant="primary"
-          onClick={function (e) {
+          onClick={function(e) {
             if (actionButtonState.name === "swap") {
               swap(token0, token1, account);
             } else if (actionButtonState.name === "needApprove") {
@@ -526,7 +526,7 @@ const PageSwap = () => {
         </Col>
         {/*DEBUG*/}
         <Col lg={12}>
-          <ChartWrapper/>
+          <ChartWrapper />
         </Col>
       </Row>
     </>

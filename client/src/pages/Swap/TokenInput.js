@@ -12,7 +12,7 @@ export function TokenInput(
     fromTo: "from",
     balance: "Loading",
     clickMaxHandler: (e) => {},
-  }
+  },
 ) {
   const { disabled, fromTo, balance, clickMaxHandler } = opts;
   const balanceText = balance === undefined ? "Loading" : balance;

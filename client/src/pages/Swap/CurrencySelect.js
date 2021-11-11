@@ -21,10 +21,10 @@ export function CurrencySelectorModal({}) {
   const [className] = useState(null);
   const [scroll] = useState(null);
   const isTokenSelectorModalOpened = useSelector(
-    (state) => state.uiReducer.isTokenSelectorModalOpened
+    (state) => state.uiReducer.isTokenSelectorModalOpened,
   );
   const currentModalTokenIndex = useSelector(
-    (state) => state.uiReducer.currentModalTokenIndex
+    (state) => state.uiReducer.currentModalTokenIndex,
   );
 
   return (
@@ -44,7 +44,8 @@ export function CurrencySelectorModal({}) {
       <Modal.Footer>
         <Button variant="light" onClick={toggle()}>
           Close
-        </Button>{" "}
+        </Button>
+        {" "}
       </Modal.Footer>
     </Modal>
   );

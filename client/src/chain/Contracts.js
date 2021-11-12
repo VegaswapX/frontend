@@ -2,6 +2,7 @@
 
 export const POOL1 = "0xD3F06D584908467B567E0F779D464349E786F3D8";
 export const POOL2 = "0xC69589D2fdf47bF5c62a65353268bdF5381Bc3AF";
+export const POOL3 = "0x1CB2E503005a397124Fbc5601AD59ebFea102b8D";
 
 export const VEGA_TOKEN_ADDRESS = "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d";
 export const BSC_USDT = "0x55d398326f99059fF775485246999027B3197955";
@@ -30,5 +31,16 @@ export const BPOOLS = [
     per: "VGA per VGA",
     stakedUnit: "VGA",
     yieldUnit: "VGA",
-  }  
+  },
+  {
+    poolName: "VGA-VGA L",
+    datestr: "2021-11-12",
+    address: POOL3,
+    description:
+      "Stake VGA and earn VGA. The staked amount will be locked for the specified time. After the expiration the VGA amount will be returned together with the reward in VGA",
+    per: "VGA per VGA",
+    stakedUnit: "VGA",
+    yieldUnit: "VGA",
+  },
+
 ];

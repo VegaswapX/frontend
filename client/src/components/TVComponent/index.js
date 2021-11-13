@@ -94,6 +94,7 @@ async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurrency) {
     const chartData = dexTrades.map((x, i) => {
       const bnbUsdt = BNBUSDT[i];
       // console.log(`bnbUsdt`, {bnbUsdt, x});
+      // TODO: Adjust these values to a better looking chart
       return {
         time: x.timeInterval.minute,
         open: parseFloat(x.open_price) * parseFloat(bnbUsdt.open_price),

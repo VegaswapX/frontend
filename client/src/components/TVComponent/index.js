@@ -116,6 +116,7 @@ export function ChartWrapper({ token0, token1 }) {
   const [chart, setChart] = useState(null);
 
   useEffect(async () => {
+    // Adjust this width and height for mobile
     const chart_ = createChart(chartDiv.current, {
       width: 800,
       height: 400,

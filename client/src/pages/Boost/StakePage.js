@@ -281,11 +281,13 @@ const StakeForm = ({ pool }) => {
   function calculateRoiVGA(reward, rq) {
     console.log("calculateRoiVGA " + reward);
     console.log("rq " + rq);
-    return Math.round((reward / rq) * 10000) /100;
+    return Math.round((reward / rq) * 10000);
   }
 
   function calculateApy() {
-    return Math.round((roi * 365) / duration);
+    //TODO
+    let days = 14;
+    return Math.round((roi * 365) / days);
   }
 
   useEffect(async () => {
@@ -527,15 +529,20 @@ const StakeForm = ({ pool }) => {
     console.log("unstake: " + account);
     try {
       setLoading(true);
-      let [receipt, receiptstatus] = await unstake(poolContract);
+      
+      //TODO fix receipt
 
-      if (!receipt) {
-        toast.error(receiptstatus.data.message);
-        setLoading(false);
-      } else {
-        toast.success("unstaked successfully");
-        setLoading(false);
-      }
+      //let [receipt, receiptstatus] = 
+      await unstake(poolContract);
+
+      // if (!receipt) {
+      //   toast.error(receiptstatus.data.message);
+      //   setLoading(false);
+      // } else {
+      toast.success("unstaked successfully");
+      setLoading(false);
+      //}
+
     } catch (error) {
       console.log("error with unstake" + error);
       toast.error("error with unstake");
@@ -594,6 +601,8 @@ const StakeForm = ({ pool }) => {
     }
   };
 
+  //alert("ispoolHarvestable " + ispoolHarvestable);
+
   if (loading) {
     return <LoadingSpinner />;
   } else {
@@ -604,7 +613,7 @@ const StakeForm = ({ pool }) => {
         </>
       );
     } else {
-      if (!ispoolStakeable){
+      if (!ispoolStakeable && !ispoolHarvestable){
         return (<OpenPending />)
       }
       if (ispoolStakeable && !isStaked) {

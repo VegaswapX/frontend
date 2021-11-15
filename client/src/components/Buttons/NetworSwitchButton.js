@@ -1,12 +1,8 @@
-import React from "react";
 import { useWeb3React } from "@web3-react/core";
+import React from "react";
 import { Button } from "react-bootstrap";
 // import NetworkSelectModal from "../Modal/NetworkSelectModal";
-import {
-  supportedChains,
-  LOCAL_NET_ID,
-  getChainName,
-} from "../../chain/eth.js";
+import { getChainName, LOCAL_NET_ID, supportedChains } from "../../chain/eth.js";
 
 const NetworkSwitchButton = () => {
   const { chainId } = useWeb3React();
@@ -23,7 +19,7 @@ const NetworkSwitchButton = () => {
   }
 
   if (chainId == LOCAL_NET_ID) {
-    return <> </>;
+    return <></>;
   }
 
   if (supportedChains.includes(chainId)) {
@@ -40,7 +36,7 @@ const NetworkSwitchButton = () => {
       </>
     );
   } else {
-    return <> </>;
+    return <></>;
   }
 };
 

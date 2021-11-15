@@ -11,7 +11,6 @@ const slippageRadios = [
 export const SettingsModal = () => {
   const [modal, setModal] = useState(false);
   const [size] = useState(null);
-  const [className] = useState(null);
   const [scroll] = useState(null);
 
   let currentSlippage = store.getState().swapReducer.slippage;
@@ -40,8 +39,8 @@ export const SettingsModal = () => {
       <Modal
         show={modal}
         onHide={toggle}
-        dialogClassName={className}
-        size={size}
+        dialogClassName={""}
+        // size={size}
         scrollable={scroll}
       >
         <Modal.Header onHide={toggle} closeButton>

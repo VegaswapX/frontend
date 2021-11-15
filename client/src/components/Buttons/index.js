@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const NetworkButton = styled.button`
+const NetworkButton = styled.button `
   background-color: floralwhite;
   outline: none;
   border: 1px solid rgb(73, 76, 83);

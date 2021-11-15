@@ -520,7 +520,8 @@ const PageSwap = () => {
         <Col lg={12}>
           <div
             style={{
-              width: "580px",
+              width: "100%",
+              maxWidth: "580px",
               backgroundColor: "#1c1f27",
               color: "white",
               margin: "0 auto",

@@ -1,10 +1,10 @@
 /* @flow */
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { Link } from "react-router-dom";
 import { injected } from "../chain/eth.js";
-import { Navbar, Nav, Container } from "react-bootstrap";
 import { store } from "../redux/store";
 
 // actions
@@ -14,7 +14,7 @@ import { store } from "../redux/store";
 // import vlogo from "../assets/images/logo_black.jpeg";
 import vlogo from "../assets/images/Horizontal_White.png";
 
-//constants
+// constants
 import * as layoutConstants from "../constants/layout";
 
 import { Button } from "react-bootstrap";
@@ -39,7 +39,7 @@ const AccountConnect = ({ connect }) => {
 
   function connectButton() {
     if (account) {
-      //console.log("account" + account);
+      // console.log("account" + account);
       return (
         <Button onClick={disconnect} variant="info" style={{ width: "105px" }}>
           Disconnect
@@ -99,7 +99,7 @@ const AccountManage = () => {
   const [networkStatus, setNetworkStatus] = useState(true);
   const { activate } = useWeb3React();
 
-  //console.log("networkStatus " + networkStatus);
+  // console.log("networkStatus " + networkStatus);
 
   async function connect() {
     await activate(injected, async (error) => {
@@ -141,7 +141,8 @@ const Brand = () => {
           height="110"
           style={{ marginTop: "0px" }}
         />
-        {/* <span
+        {
+          /* <span
       style={{
         color: "white",
         marginLeft: "10px",
@@ -150,7 +151,8 @@ const Brand = () => {
       }}
     >
       Vegaswap
-    </span> */}
+    </span> */
+        }
       </span>
     </Navbar.Brand>
   );
@@ -177,15 +179,19 @@ const VerticalMenu = () => {
               <span style={{ marginLeft: "5px" }}>Farming</span>
             </Nav.Link>
 
-            {/* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
+            {
+              /* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
               <i className="uil-home-alt"></i>
               <span style={{ marginLeft: "5px" }}>Dashboard</span>
-            </Nav.Link> */}
+            </Nav.Link> */
+            }
 
-            {/* <Nav.Link href="/liq" style={{ marginLeft: "30px" }}>
-              <i className="uil-layer-group"></i> 
+            {
+              /* <Nav.Link href="/liq" style={{ marginLeft: "30px" }}>
+              <i className="uil-layer-group"></i>
               <span style={{ marginLeft: "5px" }}>Liquidity</span>
-            </Nav.Link> */}
+            </Nav.Link> */
+            }
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -236,14 +242,16 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack }) => {
           <ul className="list-unstyled topbar-menu float-end mb-0 d-flex align-items-center">
             <AccountManage />
 
-            {/* <Button
+            {
+              /* <Button
               className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
               size="lg"
               variant={"outline-light"}
               onClick={handleRightSideBar}
             >
               <i className="dripicons-gear noti-icon" />
-            </Button> */}
+            </Button> */
+            }
           </ul>
 
           {/* toggle for detached layout */}

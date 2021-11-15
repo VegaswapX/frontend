@@ -33,12 +33,12 @@ const RightSideBar = (props) => {
    */
   const handleOtherClick = (e) => {
     if (
-      rightBarNodeRef &&
-      rightBarNodeRef.current &&
-      rightBarNodeRef.current.contains(e.target)
-    )
+      rightBarNodeRef
+      && rightBarNodeRef.current
+      && rightBarNodeRef.current.contains(e.target)
+    ) {
       return;
-    // else hide the right sidebar
+    } // else hide the right sidebar
     else dispatch(hideRightSidebar());
   };
 

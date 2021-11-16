@@ -3,15 +3,26 @@
   margin-left: 30px;
 }
 
-.navbar-logo {
+.navbar-brand {
   display: none;
 }
 @media (min-width: 992px) {
-  .navbar-logo {
+  .navbar-brand {
     display: block;
   }
 }
 
-#basic-navbar-nav {
+#basic-navbar-nav i {
+  margin-right: 5px;
+}
 
+@media (min-width: 992px) {
+  #basic-navbar-nav {
+    font-size: 20px;
+    margin-left: 20px;
+  }
+
+  #basic-navbar-nav .nav-link {
+    margin-left: 30px;
+  }
 }

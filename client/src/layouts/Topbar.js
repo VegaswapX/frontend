@@ -156,12 +156,12 @@ const VerticalMenu = () => {
         <Brand />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav style={{ fontSize: "20px", marginLeft: "30px" }}>
+          <Nav>
             {links.map(x => {
               return (
-                <Nav.Link href={x.link} key={x.link} style={{ marginLeft: "30px" }}>
+                <Nav.Link href={x.link} key={x.link}>
                   {x.icon}
-                  <span style={{ marginLeft: "5px" }}>{x.text}</span>
+                  <span>{x.text}</span>
                 </Nav.Link>
               );
             })}
@@ -213,18 +213,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack }) => {
           <VerticalMenu />
 
           <ul className="list-unstyled topbar-menu float-end mb-0 d-flex align-items-center">
-            {/*<AccountManage />*/}
-
-            {
-              /* <Button
-              className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"
-              size="lg"
-              variant={"outline-light"}
-              onClick={handleRightSideBar}
-            >
-              <i className="dripicons-gear noti-icon" />
-            </Button> */
-            }
+            <AccountManage />
           </ul>
 
           {/* toggle for detached layout */}

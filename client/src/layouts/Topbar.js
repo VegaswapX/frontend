@@ -23,38 +23,27 @@ import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 // get the notifications
 
 const AccountConnect = ({ connect }) => {
-  const { account, deactivate } = useWeb3React();
+  const { account, activate, deactivate } = useWeb3React();
 
   let state = store.getState();
   let connected = state.web3Reducer.connected; // unused var
 
   async function disconnect() {
-    console.log("disconnect");
     try {
       deactivate();
-    } catch (ex) {
-      console.log(ex);
+    } catch (e) {
+      console.log("Failed to disconnect", e);
     }
   }
 
-  function connectButton() {
-    if (account) {
-      // console.log("account" + account);
-      return (
-        <Button onClick={disconnect} variant="info" style={{ width: "105px" }}>
-          Disconnect
-        </Button>
-      );
-    } else {
-      return (
-        <Button onClick={connect} variant="primary" style={{ width: "105px" }}>
-          Connect
-        </Button>
-      );
-    }
-  }
+  const buttonText = !!account ? "Disconnect" : "Connect";
+  const buttonHandler = !!account ? disconnect : connect
 
-  return connectButton();
+  return (
+      <Button onClick={buttonHandler} variant="primary" style={{ width: "105px" }}>
+        {buttonText}
+      </Button>
+  );
 };
 
 const AccountInfo = () => {

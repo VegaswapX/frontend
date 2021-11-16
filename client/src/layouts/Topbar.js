@@ -3,22 +3,21 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { injected } from "../chain/eth.js";
+import { ReactSVG } from "react-svg";
+import { injectedConnector } from "../chain/eth.js";
 import { store } from "../redux/store";
 
 // actions
 // import { showRightSidebar } from "../redux/actions";
-
-// components
-// import vlogo from "../assets/images/logo_black.jpeg";
 import vlogo from "../assets/images/Horizontal_White.png";
+import blackLogoSVG from "../assets/images/logos/black_bg.svg";
 
 // constants
 import * as layoutConstants from "../constants/layout";
 
 import { Button } from "react-bootstrap";
 import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
+import "./nav.css";
 
 // get the notifications
 
@@ -37,12 +36,12 @@ const AccountConnect = ({ connect }) => {
   }
 
   const buttonText = !!account ? "Disconnect" : "Connect";
-  const buttonHandler = !!account ? disconnect : connect
+  const buttonHandler = !!account ? disconnect : connect;
 
   return (
-      <Button onClick={buttonHandler} variant="primary" style={{ width: "105px" }}>
-        {buttonText}
-      </Button>
+    <Button onClick={buttonHandler} variant="primary" style={{ width: "105px" }}>
+      {buttonText}
+    </Button>
   );
 };
 
@@ -91,7 +90,7 @@ const AccountManage = () => {
   // console.log("networkStatus " + networkStatus);
 
   async function connect() {
-    await activate(injected, async (error) => {
+    await activate(injectedConnector, async (error) => {
       if (error instanceof UnsupportedChainIdError) {
         setNetworkStatus();
         // const hasSetup = await setupNetwork()
@@ -123,7 +122,7 @@ const AccountManage = () => {
 const Brand = () => {
   return (
     <Navbar.Brand href="#home">
-      <span className="">
+      <span className="navbar-logo">
         <img
           src={vlogo}
           alt="logo"
@@ -131,6 +130,7 @@ const Brand = () => {
           height="110"
         />
       </span>
+      {/*<ReactSVG src={"../assets/images/logos/black_bg.svg"}/>*/}
     </Navbar.Brand>
   );
 };

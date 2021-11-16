@@ -1,4 +1,13 @@
 .vegatopnav {
-  font-size: "20px";
-  margin-left: "30px";
+  font-size: 20px;
+  margin-left: 30px;
+}
+
+.navbar-logo {
+  display: none;
+}
+@media (min-width: 992px) {
+  .navbar-logo {
+    display: block;
+  }
 }

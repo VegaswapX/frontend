@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useWeb3React } from "@web3-react/core";
-import { injected } from "../../chain/eth.js";
+import { injectedConnector } from "../../chain/eth.js";
 
 import { Button } from "react-bootstrap";
 
@@ -14,7 +14,7 @@ const AccountInfo = (): React$Element<any> => {
 
   async function connect() {
     try {
-      await activate(injected);
+      await activate(injectedConnector);
     } catch (ex) {
       console.log(ex);
     }

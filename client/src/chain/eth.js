@@ -128,10 +128,10 @@ const useEagerConnect = () => {
 
   useEffect(() => {
     console.log("useEagerConnect");
-    injected.isAuthorized().then((isAuthorized) => {
+    injectedConnector.isAuthorized().then((isAuthorized) => {
       if (isAuthorized) {
         console.log("activate");
-        activate(injected, onError, true).catch(() => {
+        activate(injectedConnector, onError, true).catch(() => {
           setTried(true);
         });
       } else {
@@ -152,7 +152,7 @@ const useEagerConnect = () => {
   return tried;
 };
 
-export const injected = new InjectedConnector({
+export const injectedConnector = new InjectedConnector({
   supportedChainIds: supportedChains,
 });
 
@@ -178,12 +178,12 @@ const useInactiveListener = (suppress = false) => {
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {
         console.log("Handling 'connect' event");
-        activate(injected);
+        activate(injectedConnector);
       };
       const handleChainChanged = (chainId) => {
         console.log("Handling 'chainChanged' event with payload", chainId);
         if (chainId in supportedChains) {
-          activate(injected);
+          activate(injectedConnector);
         } else {
           alert("chain not supported");
         }
@@ -191,7 +191,7 @@ const useInactiveListener = (suppress = false) => {
       const handleAccountsChanged = (accounts) => {
         console.log("Handling 'accountsChanged' event with payload", accounts);
         if (accounts.length > 0) {
-          activate(injected);
+          activate(injectedConnector);
         }
       };
 

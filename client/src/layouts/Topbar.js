@@ -135,6 +135,20 @@ const Brand = () => {
   );
 };
 
+const links = [
+  {
+    link: "/swap",
+    icon: <i className="uil-exchange"></i>,
+    text: "Swap",
+  },
+  {
+    link: "/boost",
+    icon: <i className="dripicons-rocket"></i>,
+    text: "Farming",
+  },
+];
+
+// TODO: Custom font-size breaks the UI
 const VerticalMenu = () => {
   return (
     <Navbar bg="" expand="lg">
@@ -142,33 +156,15 @@ const VerticalMenu = () => {
         <Brand />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav
-            className="me-auto"
-            style={{ fontSize: "20px", marginLeft: "30px" }}
-          >
-            <Nav.Link href="/swap" style={{ marginLeft: "30px" }}>
-              <i className="uil-exchange"></i>
-              <span style={{ marginLeft: "5px" }}>Swap</span>
-            </Nav.Link>
-
-            <Nav.Link href="/boost" style={{ marginLeft: "30px" }}>
-              <i className="dripicons-rocket"></i>
-              <span style={{ marginLeft: "5px" }}>Farming</span>
-            </Nav.Link>
-
-            {
-              /* <Nav.Link href="/dashboard" style={{ marginLeft: "20px" }}>
-              <i className="uil-home-alt"></i>
-              <span style={{ marginLeft: "5px" }}>Dashboard</span>
-            </Nav.Link> */
-            }
-
-            {
-              /* <Nav.Link href="/liq" style={{ marginLeft: "30px" }}>
-              <i className="uil-layer-group"></i>
-              <span style={{ marginLeft: "5px" }}>Liquidity</span>
-            </Nav.Link> */
-            }
+          <Nav style={{ fontSize: "20px", marginLeft: "30px" }}>
+            {links.map(x => {
+              return (
+                <Nav.Link href={x.link} key={x.link} style={{ marginLeft: "30px" }}>
+                  {x.icon}
+                  <span style={{ marginLeft: "5px" }}>{x.text}</span>
+                </Nav.Link>
+              );
+            })}
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -217,7 +213,7 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack }) => {
           <VerticalMenu />
 
           <ul className="list-unstyled topbar-menu float-end mb-0 d-flex align-items-center">
-            <AccountManage />
+            {/*<AccountManage />*/}
 
             {
               /* <Button

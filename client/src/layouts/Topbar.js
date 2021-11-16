@@ -26,7 +26,7 @@ const AccountConnect = ({ connect }) => {
   const { account, deactivate } = useWeb3React();
 
   let state = store.getState();
-  let connected = state.web3Reducer.connected;
+  let connected = state.web3Reducer.connected; // unused var
 
   async function disconnect() {
     console.log("disconnect");
@@ -130,6 +130,7 @@ const AccountManage = () => {
   }
 };
 
+// TODO: Image is not optimized for mobile
 const Brand = () => {
   return (
     <Navbar.Brand href="#home">
@@ -139,20 +140,7 @@ const Brand = () => {
           alt="logo"
           width="210"
           height="110"
-          style={{ marginTop: "0px" }}
         />
-        {
-          /* <span
-      style={{
-        color: "white",
-        marginLeft: "10px",
-        marginTop: "0px",
-        fontSize: "20px",
-      }}
-    >
-      Vegaswap
-    </span> */
-        }
       </span>
     </Navbar.Brand>
   );
@@ -255,19 +243,19 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack }) => {
           </ul>
 
           {/* toggle for detached layout */}
-          {layoutType === layoutConstants.LAYOUT_DETACHED && (
-            <Link
-              to="#"
-              className="button-menu-mobile disable-btn"
-              onClick={handleLeftMenuCallBack}
-            >
-              <div className="lines">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </Link>
-          )}
+          {/*{layoutType === layoutConstants.LAYOUT_DETACHED && (*/}
+          {/*  <Link*/}
+          {/*    to="#"*/}
+          {/*    className="button-menu-mobile disable-btn"*/}
+          {/*    onClick={handleLeftMenuCallBack}*/}
+          {/*  >*/}
+          {/*    <div className="lines">*/}
+          {/*      <span></span>*/}
+          {/*      <span></span>*/}
+          {/*      <span></span>*/}
+          {/*    </div>*/}
+          {/*  </Link>*/}
+          {/*)}*/}
         </div>
       </div>
     </React.Fragment>

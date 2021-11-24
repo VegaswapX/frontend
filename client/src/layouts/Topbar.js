@@ -83,6 +83,7 @@ const AccountInfo = () => {
   return accInfo();
 };
 
+// TODO: Change account to wallet connect
 const AccountManage = () => {
   const [networkStatus, setNetworkStatus] = useState(true);
   const { activate } = useWeb3React();

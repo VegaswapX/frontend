@@ -513,6 +513,7 @@ const PageSwapInner = () => {
   );
 };
 
+// TODO: Chrome simulator UI doesn't reflect real device size
 const PageSwap = () => {
   return (
     <>

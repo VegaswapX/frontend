@@ -59,16 +59,7 @@ export function CurrencySelector({ token, tokenIndex }) {
   return (
     <Button
       size="lg"
-      style={{
-        background: "#22262c",
-        // border: "3px solid #333",
-        // borderRadius: "8px",
-        height: "50px",
-        width: "140px",
-        boxShadow: "none",
-        border: "none",
-        fontSize: "1rem",
-      }}
+      className={"token-selector"}
       onClick={toggleHandle}
     >
       <img

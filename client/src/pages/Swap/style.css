@@ -31,3 +31,17 @@
     border-radius: 0.3rem;
   }
 }
+
+.token-selector {
+  background: #22262c !important;
+  box-shadow: none !important;
+  border: none !important;
+  font-size: 1rem !important;
+  padding: 0 !important;
+}
+@media (min-width: 992px) {
+  .token-selector {
+    height: 50px;
+    width: 140px;
+  }
+}

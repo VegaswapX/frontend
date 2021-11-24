@@ -64,9 +64,8 @@ const AccountInfo = () => {
   //   }
   // }
 
-  function accInfo() {
-    if (account) {
-      return (
+  if (account) {
+    return (
         <div style={{ fontSize: "18px", marginRight: "16px" }}>
           Account:{" "}
           <b>
@@ -74,13 +73,10 @@ const AccountInfo = () => {
             {account.substring(account.length - 3, account.length)}
           </b>
         </div>
-      );
-    } else {
-      return <span />;
-    }
+    );
   }
 
-  return accInfo();
+  return <span />;
 };
 
 // TODO: Change account to wallet connect

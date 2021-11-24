@@ -21,3 +21,13 @@
 .swap-inverseButton:hover {
   color: #ddd;
 }
+
+@media (min-width: 992px) {
+  .form-control.input-amount {
+    /* from form-control-lg */
+    min-height: calc(1.5em + 1rem + 2px);
+    padding: 0.5rem 1rem;
+    font-size: calc(1.2501rem + 0.0012vw);
+    border-radius: 0.3rem;
+  }
+}

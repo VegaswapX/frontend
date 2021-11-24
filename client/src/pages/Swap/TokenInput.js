@@ -60,20 +60,14 @@ export function TokenInput(
         </span>
 
         <FormControl
-          size="lg"
           type="number"
           placeholder="Amount"
           aria-label="Amount"
           aria-describedby="token0Input"
           value={tokenInput}
           disabled={disabled}
+          className={"input-amount"}
           style={{
-            // textAlign: "left",
-            // fontFamily: "Helvetica",
-            // fontSize: "1.3rem",
-            // height: "50px",
-            // border: "none",
-            // marginTop: "5px",
             borderRadius: "8px",
             background: "#1f2125",
           }}

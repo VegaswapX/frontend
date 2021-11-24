@@ -17,7 +17,7 @@ const getNodeUrl = () => {
   return nodes[randomIndex];
 };
 
-const RPC_URL = getNodeUrl();
+export const RPC_URL = getNodeUrl();
 
 const simpleRpcProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 

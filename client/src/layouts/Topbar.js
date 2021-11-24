@@ -1,26 +1,22 @@
 /* @flow */
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import React, { useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { ReactSVG } from "react-svg";
-import { injectedConnector } from "../chain/eth.js";
-import { store } from "../redux/store";
+import {UnsupportedChainIdError, useWeb3React} from "@web3-react/core";
+import React, {useState} from "react";
+import {Button, Container, Nav, Navbar} from "react-bootstrap";
+import {useSelector} from "react-redux";
+import {injectedConnector} from "../chain/eth.js";
+import {store} from "../redux/store";
 
 // actions
 // import { showRightSidebar } from "../redux/actions";
 import vlogo from "../assets/images/Horizontal_White.png";
-import blackLogoSVG from "../assets/images/logos/black_bg.svg";
 
 // constants
-import * as layoutConstants from "../constants/layout";
-
-import { Button } from "react-bootstrap";
 import NetworkSwitchButton from "../components/Buttons/NetworSwitchButton";
 import "./nav.css";
 
-// get the notifications
+// TODO: Rewrite this to a proper useAuth to support metamask and walletconnect
 
+// get the notifications
 const AccountConnect = ({ connect }) => {
   const { account, activate, deactivate } = useWeb3React();
 
@@ -39,7 +35,7 @@ const AccountConnect = ({ connect }) => {
   const buttonHandler = !!account ? disconnect : connect;
 
   return (
-    <Button onClick={buttonHandler} variant="primary" style={{ width: "105px" }}>
+    <Button onClick={buttonHandler} variant="primary">
       {buttonText}
     </Button>
   );
@@ -65,19 +61,17 @@ const AccountInfo = () => {
   // }
 
   if (account) {
+    const shortAccountAddress = account.substring(0, 3) + account.substring(account.length - 3, account.length)
     return (
-        <div style={{ fontSize: "18px", marginRight: "16px" }}>
-          Account:{" "}
-          <b>
-            {account.substring(0, 3)}..
-            {account.substring(account.length - 3, account.length)}
-          </b>
+        <div>
+          Account:{" "}{shortAccountAddress}
         </div>
     );
   }
 
   return <span />;
 };
+
 
 // TODO: Change account to wallet connect
 const AccountManage = () => {
@@ -144,7 +138,6 @@ const links = [
   },
 ];
 
-// TODO: Custom font-size breaks the UI
 const VerticalMenu = () => {
   return (
     <Navbar bg="" expand="lg">

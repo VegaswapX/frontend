@@ -1,10 +1,12 @@
-import { Contract } from "@ethersproject/contracts";
-import { Web3Provider } from "@ethersproject/providers";
-import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { NetworkConnector } from "@web3-react/network-connector";
-import { useEffect, useMemo, useState } from "react";
-import { store } from "../redux/store";
+import {Contract} from "@ethersproject/contracts";
+import {Web3Provider} from "@ethersproject/providers";
+import {useWeb3React, Web3ReactProvider} from "@web3-react/core";
+import {InjectedConnector} from "@web3-react/injected-connector";
+import {NetworkConnector} from "@web3-react/network-connector";
+import {useEffect, useMemo, useState} from "react";
+import {store} from "../redux/store";
+import {WalletConnectConnector} from "@web3-react/walletconnect-connector";
+import {RPC_URL} from "./providers";
 
 export const BSC_MAINNET_ID = 56;
 export const BSC_TESTNET_ID = 97;
@@ -278,3 +280,11 @@ export { Chains };
 //   urls: Object.fromEntries(Object.values(CHAINS).map(i => [i, RPC_URLS[i]])),
 //   defaultChainId: CHAINS.BSCTESTNET
 // });
+
+const POLLING_INTERVAL = 12000;
+const BSCChainId = 56;
+export const walletconnect = new WalletConnectConnector({
+  rpc: {[BSC_MAINNET_ID]: RPC_URL},
+  qrcode: true,
+  pollingInterval: POLLING_INTERVAL,
+})

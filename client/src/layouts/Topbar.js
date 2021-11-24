@@ -130,7 +130,6 @@ const Brand = () => {
           height="110"
         />
       </span>
-      {/*<ReactSVG src={"../assets/images/logos/black_bg.svg"}/>*/}
     </Navbar.Brand>
   );
 };

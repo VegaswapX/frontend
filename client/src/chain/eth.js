@@ -123,8 +123,8 @@ const useEagerConnect = () => {
   const [tried, setTried] = useState(false);
 
   // TODO: Double check connected var, since it doens't persist
-  let state = store.getState();
-  console.log("state connected " + state.web3Reducer.connected);
+  // let state = store.getState();
+  // console.log("state connected " + state.web3Reducer.connected);
 
   function onError(error) {
     console.log("error ");
@@ -159,6 +159,9 @@ const useEagerConnect = () => {
 export const injectedConnector = new InjectedConnector({
   supportedChainIds: supportedChains,
 });
+
+
+// create list of connector
 
 export const getEthereum = async () => {
   // event listener is not reliable

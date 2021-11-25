@@ -1,6 +1,6 @@
 /* @flow */
 import {UnsupportedChainIdError, useWeb3React} from "@web3-react/core";
-import React, {useState} from "react";
+import React, {useState, useCallback} from "react";
 import {Button, Container, Nav, Navbar} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {injectedConnector} from "../chain/eth.js";
@@ -17,22 +17,30 @@ import "./nav.css";
 // TODO: Rewrite this to a proper useAuth to support metamask and walletconnect
 
 // get the notifications
-const AccountConnect = ({ connect }) => {
+const AccountConnect = () => {
   const { account, activate, deactivate } = useWeb3React();
 
-  let state = store.getState();
-  let connected = state.web3Reducer.connected; // unused var
+  const connect = useCallback(async () => {
+    await activate(injectedConnector, async (error) => {
+      if (error instanceof UnsupportedChainIdError) {
+        // setNetworkStatus(); // set network status later
+      }
+    });
+  }, [activate])
 
-  async function disconnect() {
+  // refactor this to a hook
+  const logout = useCallback(() => {
     try {
+      // remove other things
       deactivate();
     } catch (e) {
       console.log("Failed to disconnect", e);
     }
-  }
+  }, [deactivate])
+
 
   const buttonText = !!account ? "Disconnect" : "Connect";
-  const buttonHandler = !!account ? disconnect : connect;
+  const buttonHandler = !!account ? logout : connect;
 
   return (
     <Button onClick={buttonHandler} variant="primary">
@@ -76,28 +84,16 @@ const AccountInfo = () => {
 // TODO: Change account to wallet connect
 const AccountManage = () => {
   const [networkStatus, setNetworkStatus] = useState(true);
-  const { activate } = useWeb3React();
 
   // console.log("networkStatus " + networkStatus);
 
-  async function connect() {
-    await activate(injectedConnector, async (error) => {
-      if (error instanceof UnsupportedChainIdError) {
-        setNetworkStatus();
-        // const hasSetup = await setupNetwork()
-        // if (hasSetup) {
-        //     activate(injected)
-        // }
-      }
-    });
-  }
 
   if (networkStatus) {
     return (
       <>
         <AccountInfo />
         <NetworkSwitchButton />
-        <AccountConnect connect={connect} />
+        <AccountConnect/>
       </>
     );
   } else {

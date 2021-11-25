@@ -116,11 +116,13 @@ export const useContractA = (address, ABI, account, library) => {
 };
 
 const useEagerConnect = () => {
+  // NOTE: always try to connect when login to app
   // console.log("useEagerConnect");
   const { activate, active } = useWeb3React();
 
   const [tried, setTried] = useState(false);
 
+  // TODO: Double check connected var, since it doens't persist
   let state = store.getState();
   console.log("state connected " + state.web3Reducer.connected);
 

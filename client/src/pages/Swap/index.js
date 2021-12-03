@@ -538,7 +538,7 @@ const PageSwap = () => {
             <PageSwapInner />
           </div>
         </Col>
-        {/*DEBUG*/}
+        {/*DEBUG123*/}
         {/*<Col lg={12}>*/}
         {/*  <ChartWrapper />*/}
         {/*</Col>*/}

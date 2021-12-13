@@ -1,6 +1,8 @@
 import * as React from 'react';
 import './index.css';
 import { widget } from '../../charting_library/charting_library';
+import Datafeed from './datafeed.js';
+
 
 //
 function getLanguageFromURL() {
@@ -11,7 +13,7 @@ function getLanguageFromURL() {
 
 export class TVChartContainer extends React.PureComponent {
   static defaultProps = {
-    symbol: 'AAPL',
+    symbol: 'BTC',
     interval: 'D',
     containerId: 'tv_chart_container',
     datafeedUrl: 'https://demo_feed.tradingview.com',
@@ -31,7 +33,7 @@ export class TVChartContainer extends React.PureComponent {
     const widgetOptions = {
       symbol: this.props.symbol,
       // BEWARE: no trailing slash is expected in feed URL
-      datafeed: new window.Datafeeds.UDFCompatibleDatafeed(this.props.datafeedUrl),
+      datafeed: Datafeed,
       interval: this.props.interval,
       container_id: this.props.containerId,
       library_path: this.props.libraryPath,

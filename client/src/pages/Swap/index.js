@@ -19,6 +19,7 @@ import { store } from "../../redux/store";
 import { CurrencySelectorModal } from "./CurrencySelect";
 import { SettingsModal } from "./SettingsModal.js";
 import { TokenInput } from "./TokenInput";
+import {TVChartContainer} from "../../components/TVComponent/TViewNext";
 
 const actionButtonStates = {
   wrongNetwork: {
@@ -539,9 +540,9 @@ const PageSwap = () => {
           </div>
         </Col>
         {/*DEBUG123*/}
-        {/*<Col lg={12}>*/}
-        {/*  <ChartWrapper />*/}
-        {/*</Col>*/}
+        <Col lg={12}>
+          <TVChartContainer />
+        </Col>
       </Row>
     </>
   );

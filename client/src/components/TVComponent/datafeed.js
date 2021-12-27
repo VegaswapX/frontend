@@ -84,6 +84,7 @@ export default {
   ) => {
     console.log('[resolveSymbol]: Method call', symbolName);
     const symbols = await getAllSymbols();
+    console.log(`symbols`, symbols);
     const symbolItem = symbols.find(({ full_name }) => full_name === symbolName);
     if (!symbolItem) {
       console.log('[resolveSymbol]: Cannot resolve symbol', symbolName);

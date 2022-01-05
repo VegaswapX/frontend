@@ -84,7 +84,7 @@ const client = new ApolloClient({
 });
 
 function toUnixTime(dt) {
-  return dt.getTime() / 1000;
+  return dt.getTime();
 }
 
 export async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurrency) {
@@ -105,17 +105,19 @@ export async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurr
     console.log("graphql res", res);
     const { dexTrades, BNBUSDT } = res?.data?.ethereum;
     const chartData = dexTrades.map((x, i) => {
+      const isLastBar = i === dexTrades.length - 1;
       const bnbUsdt = BNBUSDT[i];
       // console.log(`bnbUsdt`, {bnbUsdt, x});
       // TODO: Adjust these values to a better looking chart
+
       return {
         time: toUnixTime(new Date(x.timeInterval.minute)),
         open: parseFloat(x.open_price) * parseFloat(bnbUsdt.open_price),
         high: x.maximum_price * bnbUsdt.maximum_price,
         low: x.minimum_price * bnbUsdt.minimum_price,
         close: parseFloat(x.close_price) * parseFloat(bnbUsdt.close_price),
-        isBarClosed: true,
-        isLastBar: i === dexTrades.length - 1,
+        isBarClosed: isLastBar ? false : true,
+        isLastBar,
       };
     });
 

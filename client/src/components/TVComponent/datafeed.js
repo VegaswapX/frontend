@@ -74,7 +74,7 @@ const configurationData = {
 };
 
 async function _getBars(from, to, parsedSymbol) {
-  console.log(`parsedSymbol`, parsedSymbol);
+  console.log(`[_getBars] parsedSymbol`, parsedSymbol);
   const urlParameters = {
     e: parsedSymbol.exchange,
     fsym: parsedSymbol.fromSymbol,
@@ -112,6 +112,8 @@ async function _getBars(from, to, parsedSymbol) {
     return null;
   }
 }
+
+let calledOnce = false;
 
 export default {
   onReady: (callback) => {
@@ -157,11 +159,16 @@ export default {
 
   // return bars info
   getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-    const { from, to, firstDataRequest } = periodParams;
-    const data = await getOHLCData();
+    // if (calledOnce) {
+    //   onHistoryCallback([], { noData: true });
+    //   return;
+    // }
+    // calledOnce = true;
+    // const data = await getOHLCData();
     // console.log(`data`, data);
-    //
     // onHistoryCallback(data, { noData: false });
+
+    const { from, to, firstDataRequest } = periodParams;
 
     console.log("[getBars]: Method call", symbolInfo, resolution, from, to);
     const parsedSymbol = parseFullSymbol(symbolInfo.full_name);
@@ -191,5 +198,8 @@ export default {
       return isExchangeValid && isFullSymbolContainsInput;
     });
     onResultReadyCallback(newSymbols);
+  },
+
+  subscribeBars: async () => {
   },
 };

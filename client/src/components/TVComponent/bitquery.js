@@ -107,38 +107,17 @@ export async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurr
     const chartData = dexTrades.map((x, i) => {
       const isLastBar = i === dexTrades.length - 1;
       const bnbUsdt = BNBUSDT[i];
-      console.log(`x.maximum_price`, x.maximum_price);
-      if (x.maximum_price >= 1) {
-        console.log(`x`, x);
-        return {
-          time: toUnixTime(new Date(x.timeInterval.minute)),
-          open: parseFloat(x.open_price),
-          high: 0.00001867651364710226,
-          low: x.minimum_price,
-          close: parseFloat(x.close_price),
-          isBarClosed: isLastBar ? false : true,
-          isLastBar,
-        };
-      }
-      // console.log(`bnbUsdt`, {bnbUsdt, x});
-      // TODO: Adjust these values to a better looking chart
+      // console.log(`x.maximum_price`, x.maximum_price); // there is one with 1.0
+      const maximumPrice = x.maximum_price >= 1 ? 0.00001867651364710226 : x.maximum_price; // debug
 
-      // return {
-      //   time: toUnixTime(new Date(x.timeInterval.minute)),
-      //   open: parseFloat(x.open_price) * parseFloat(bnbUsdt.open_price),
-      //   high: x.maximum_price * bnbUsdt.maximum_price,
-      //   low: x.minimum_price * bnbUsdt.minimum_price,
-      //   close: parseFloat(x.close_price) * parseFloat(bnbUsdt.close_price),
-      //   isBarClosed: isLastBar ? false : true,
-      //   isLastBar,
-      // };
+      const bnbPrice = bnbUsdt.quotePrice;
 
       return {
         time: toUnixTime(new Date(x.timeInterval.minute)),
-        open: parseFloat(x.open_price),
-        high: x.maximum_price,
-        low: x.minimum_price,
-        close: parseFloat(x.close_price),
+        open: parseFloat(x.open_price) * parseFloat(bnbUsdt.open_price),
+        high: maximumPrice * bnbPrice,
+        low: x.minimum_price * bnbPrice,
+        close: parseFloat(x.close_price) * parseFloat(bnbUsdt.close_price),
         isBarClosed: isLastBar ? false : true,
         isLastBar,
       };

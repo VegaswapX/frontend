@@ -54,7 +54,7 @@ async function getAllSymbols() {
 }
 
 const configurationData = {
-  supported_resolutions: ["1", "5", "60", "D", "W"],
+  supported_resolutions: ["1", "5", "15", "30", "60", "D"],
   exchanges: [
     {
       value: "Binance",
@@ -126,25 +126,27 @@ export default {
     onSymbolResolvedCallback,
     onResolveErrorCallback,
   ) => {
-    console.log("[resolveSymbol]: Method call", symbolName);
-    const symbols = await getAllSymbols();
-    console.log(`symbols`, symbols);
-    const symbolItem = symbols.find(({ full_name }) => full_name === symbolName);
-    if (!symbolItem) {
-      console.log("[resolveSymbol]: Cannot resolve symbol", symbolName);
-      onResolveErrorCallback("cannot resolve symbol");
-      return;
-    }
+    // console.log("[resolveSymbol]: Method call", symbolName);
+    // const symbols = await getAllSymbols();
+    // console.log(`symbols`, symbols);
+    // const symbolItem = symbols.find(({ full_name }) => full_name === symbolName);
+    // if (!symbolItem) {
+    //   console.log("[resolveSymbol]: Cannot resolve symbol", symbolName);
+    //   onResolveErrorCallback("cannot resolve symbol");
+    //   return;
+    // }
+
     const symbolInfo = {
-      ticker: symbolItem.full_name,
-      name: symbolItem.symbol,
-      description: symbolItem.description,
-      type: symbolItem.type,
+      // ticker: symbolItem.full_name,
+      name: "VGA",
+      // description: symbolItem.description,
+      // type: symbolItem.type,
       session: "24x7",
       timezone: "Etc/UTC",
-      exchange: symbolItem.exchange,
+      // exchange: symbolItem.exchange,
       minmov: 1,
-      pricescale: 100,
+      pricescale: 100000, // adjust per token price
+      minmove2: 0,
       has_intraday: false,
       has_no_volume: true,
       has_weekly_and_monthly: false,
@@ -168,7 +170,7 @@ export default {
     console.log(`data`, data);
     onHistoryCallback(data, { noData: false });
 
-    //
+    // debug BTC price
     // const { from, to, firstDataRequest } = periodParams;
     //
     // console.log("[getBars]: Method call", symbolInfo, resolution, from, to);
@@ -182,25 +184,24 @@ export default {
     //
     // onHistoryCallback(bars, { noData: false });
   },
-
-  searchSymbols: async (
-    userInput,
-    exchange,
-    symbolType,
-    onResultReadyCallback,
-  ) => {
-    console.log("[searchSymbols]: Method call");
-    const symbols = await getAllSymbols();
-    const newSymbols = symbols.filter(symbol => {
-      const isExchangeValid = exchange === "" || symbol.exchange === exchange;
-      const isFullSymbolContainsInput = symbol.full_name
-        .toLowerCase()
-        .indexOf(userInput.toLowerCase()) !== -1;
-      return isExchangeValid && isFullSymbolContainsInput;
-    });
-    onResultReadyCallback(newSymbols);
-  },
-
-  subscribeBars: async () => {
-  },
+  // searchSymbols: async (
+  //   userInput,
+  //   exchange,
+  //   symbolType,
+  //   onResultReadyCallback,
+  // ) => {
+  //   console.log("[searchSymbols]: Method call");
+  //   const symbols = await getAllSymbols();
+  //   const newSymbols = symbols.filter(symbol => {
+  //     const isExchangeValid = exchange === "" || symbol.exchange === exchange;
+  //     const isFullSymbolContainsInput = symbol.full_name
+  //       .toLowerCase()
+  //       .indexOf(userInput.toLowerCase()) !== -1;
+  //     return isExchangeValid && isFullSymbolContainsInput;
+  //   });
+  //   onResultReadyCallback(newSymbols);
+  // },
+  //
+  // subscribeBars: async () => {
+  // },
 };

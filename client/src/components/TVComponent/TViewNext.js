@@ -12,7 +12,7 @@ function getLanguageFromURL() {
 
 export class TVChartContainer extends React.PureComponent {
   static defaultProps = {
-    symbol: "Binance:BTC/USDC",
+    symbol: "VGA/USD",
     interval: "15",
     containerId: "tv_chart_container",
     datafeedUrl: "https://demo_feed.tradingview.com",
@@ -37,9 +37,20 @@ export class TVChartContainer extends React.PureComponent {
       container_id: this.props.containerId,
       library_path: this.props.libraryPath,
 
+      theme: "dark",
+      allow_symbol_change: false,
+      hide_legend: true,
+      // debug: true,
+
       locale: getLanguageFromURL() || "en",
-      disabled_features: ["use_localstorage_for_settings"],
-      enabled_features: ["study_templates"],
+      disabled_features: [
+        "use_localstorage_for_settings",
+        "left_toolbar",
+        "header_compare",
+        "header_undo_redo",
+        "header_saveload",
+      ],
+      enabled_features: [],
       charts_storage_url: this.props.chartsStorageUrl,
       charts_storage_api_version: this.props.chartsStorageApiVersion,
       client_id: this.props.clientId,

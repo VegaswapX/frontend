@@ -54,7 +54,7 @@ async function getAllSymbols() {
 }
 
 const configurationData = {
-  supported_resolutions: ["5m", "15m", "1D"],
+  supported_resolutions: ["1", "5", "60", "D", "W"],
   exchanges: [
     {
       value: "Binance",
@@ -149,7 +149,7 @@ export default {
       has_no_volume: true,
       has_weekly_and_monthly: false,
       supported_resolutions: configurationData.supported_resolutions,
-      volume_precision: 2,
+      volume_precision: 2, // change according to each token
       // data_status: 'streaming',
     };
 
@@ -159,27 +159,28 @@ export default {
 
   // return bars info
   getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-    // if (calledOnce) {
-    //   onHistoryCallback([], { noData: true });
-    //   return;
-    // }
-    // calledOnce = true;
-    // const data = await getOHLCData();
-    // console.log(`data`, data);
-    // onHistoryCallback(data, { noData: false });
-
-    const { from, to, firstDataRequest } = periodParams;
-
-    console.log("[getBars]: Method call", symbolInfo, resolution, from, to);
-    const parsedSymbol = parseFullSymbol(symbolInfo.full_name);
-
-    const bars = await _getBars(from, to, parsedSymbol);
-
-    if (!!!bars) {
-      onErrorCallback(null);
+    if (calledOnce) {
+      onHistoryCallback([], { noData: true });
+      return;
     }
+    calledOnce = true;
+    const data = await getOHLCData();
+    console.log(`data`, data);
+    onHistoryCallback(data, { noData: false });
 
-    onHistoryCallback(bars, { noData: false });
+    //
+    // const { from, to, firstDataRequest } = periodParams;
+    //
+    // console.log("[getBars]: Method call", symbolInfo, resolution, from, to);
+    // const parsedSymbol = parseFullSymbol(symbolInfo.full_name);
+    //
+    // const bars = await _getBars(from, to, parsedSymbol);
+    //
+    // if (!!!bars) {
+    //   onErrorCallback(null);
+    // }
+    //
+    // onHistoryCallback(bars, { noData: false });
   },
 
   searchSymbols: async (

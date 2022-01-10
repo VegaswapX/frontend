@@ -13,7 +13,7 @@ function getLanguageFromURL() {
 export class TVChartContainer extends React.PureComponent {
   static defaultProps = {
     symbol: "Binance:BTC/USDC",
-    interval: "D",
+    interval: "15",
     containerId: "tv_chart_container",
     datafeedUrl: "https://demo_feed.tradingview.com",
     libraryPath: "/charting_library/",

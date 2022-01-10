@@ -8,7 +8,7 @@ const exampleQuery = gql `
 query ($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: String) {
   ethereum(network: bsc) {
     BNBUSDT: dexTrades(
-      options: {limit: 100, asc: "timeInterval.minute"}
+      options: {limit: 500, asc: "timeInterval.minute"}
       exchangeName: {in: ["Pancake", "Pancake v2"]}
       baseCurrency: {is: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"}
       quoteCurrency: {is: "0x55d398326f99059ff775485246999027b3197955"}
@@ -35,7 +35,7 @@ query ($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: String) {
       close_price: maximum(of: block, get: quote_price)
     }
     dexTrades(
-      options: {limit: 100, asc: "timeInterval.minute"}
+      options: {limit: 500, asc: "timeInterval.minute"}
       exchangeName: {in: ["Pancake", "Pancake v2"]}
       baseCurrency: {is: $baseCurrency}
       quoteCurrency: {is: $quoteCurrency}
@@ -107,15 +107,38 @@ export async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurr
     const chartData = dexTrades.map((x, i) => {
       const isLastBar = i === dexTrades.length - 1;
       const bnbUsdt = BNBUSDT[i];
+      console.log(`x.maximum_price`, x.maximum_price);
+      if (x.maximum_price >= 1) {
+        console.log(`x`, x);
+        return {
+          time: toUnixTime(new Date(x.timeInterval.minute)),
+          open: parseFloat(x.open_price),
+          high: 0.00001867651364710226,
+          low: x.minimum_price,
+          close: parseFloat(x.close_price),
+          isBarClosed: isLastBar ? false : true,
+          isLastBar,
+        };
+      }
       // console.log(`bnbUsdt`, {bnbUsdt, x});
       // TODO: Adjust these values to a better looking chart
 
+      // return {
+      //   time: toUnixTime(new Date(x.timeInterval.minute)),
+      //   open: parseFloat(x.open_price) * parseFloat(bnbUsdt.open_price),
+      //   high: x.maximum_price * bnbUsdt.maximum_price,
+      //   low: x.minimum_price * bnbUsdt.minimum_price,
+      //   close: parseFloat(x.close_price) * parseFloat(bnbUsdt.close_price),
+      //   isBarClosed: isLastBar ? false : true,
+      //   isLastBar,
+      // };
+
       return {
         time: toUnixTime(new Date(x.timeInterval.minute)),
-        open: parseFloat(x.open_price) * parseFloat(bnbUsdt.open_price),
-        high: x.maximum_price * bnbUsdt.maximum_price,
-        low: x.minimum_price * bnbUsdt.minimum_price,
-        close: parseFloat(x.close_price) * parseFloat(bnbUsdt.close_price),
+        open: parseFloat(x.open_price),
+        high: x.maximum_price,
+        low: x.minimum_price,
+        close: parseFloat(x.close_price),
         isBarClosed: isLastBar ? false : true,
         isLastBar,
       };

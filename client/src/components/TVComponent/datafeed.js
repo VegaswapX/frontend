@@ -138,7 +138,7 @@ export default {
 
     const symbolInfo = {
       // ticker: symbolItem.full_name,
-      name: "VGA",
+      name: "VGA", // TODO: Pass this from the constructor or somehow
       // description: symbolItem.description,
       // type: symbolItem.type,
       session: "24x7",
@@ -169,39 +169,7 @@ export default {
     const data = await getOHLCData();
     console.log(`data`, data);
     onHistoryCallback(data, { noData: false });
-
-    // debug BTC price
-    // const { from, to, firstDataRequest } = periodParams;
-    //
-    // console.log("[getBars]: Method call", symbolInfo, resolution, from, to);
-    // const parsedSymbol = parseFullSymbol(symbolInfo.full_name);
-    //
-    // const bars = await _getBars(from, to, parsedSymbol);
-    //
-    // if (!!!bars) {
-    //   onErrorCallback(null);
-    // }
-    //
-    // onHistoryCallback(bars, { noData: false });
   },
-  // searchSymbols: async (
-  //   userInput,
-  //   exchange,
-  //   symbolType,
-  //   onResultReadyCallback,
-  // ) => {
-  //   console.log("[searchSymbols]: Method call");
-  //   const symbols = await getAllSymbols();
-  //   const newSymbols = symbols.filter(symbol => {
-  //     const isExchangeValid = exchange === "" || symbol.exchange === exchange;
-  //     const isFullSymbolContainsInput = symbol.full_name
-  //       .toLowerCase()
-  //       .indexOf(userInput.toLowerCase()) !== -1;
-  //     return isExchangeValid && isFullSymbolContainsInput;
-  //   });
-  //   onResultReadyCallback(newSymbols);
-  // },
-  //
-  // subscribeBars: async () => {
-  // },
+  subscribeBars: async () => {
+  },
 };

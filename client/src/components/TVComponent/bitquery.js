@@ -88,9 +88,6 @@ function toUnixTime(dt) {
   return dt.getTime();
 }
 
-// "baseCurrency": "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
-// "quoteCurrency": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-
 const chain = "BSC";
 export async function getOHLCData(baseSymbol, quoteCurrency = TokenList[chain].WBNB, minuteInterval = 1440) {
   const baseCurrency = TokenList[chain][baseSymbol]; // BSC only for now
@@ -108,6 +105,7 @@ export async function getOHLCData(baseSymbol, quoteCurrency = TokenList[chain].W
       query: exampleQuery,
       variables: {
         "minuteInterval": minuteInterval,
+        // DEBUG: info
         // "baseCurrency": "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
         // "quoteCurrency": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
         "baseCurrency": baseCurrency.address,

@@ -551,7 +551,7 @@ const PageSwap = () => {
 
         <Col lg={12}>
           <Button onClick={() => {
-            setTradingSymbol("VGA");
+            setTradingSymbol("CAKE");
           }}>Change token</Button>
 
           <TVChartContainer symbol={tradingSymbol}/>

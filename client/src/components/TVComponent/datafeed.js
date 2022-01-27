@@ -173,4 +173,6 @@ export default {
   },
   subscribeBars: async () => {
   },
+  unsubscribeBars: async () => {
+  },
 };

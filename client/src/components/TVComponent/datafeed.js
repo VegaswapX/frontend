@@ -166,7 +166,8 @@ export default {
       return;
     }
     calledOnce = true;
-    const data = await getOHLCData();
+    console.log(`symbolInfo`, symbolInfo);
+    const data = await getOHLCData(symbolInfo.name);
     console.log(`[getBars] data`, data);
     onHistoryCallback(data, { noData: false });
   },

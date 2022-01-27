@@ -1,5 +1,6 @@
 import { ApolloClient, createHttpLink, gql, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { TokenList } from "../../chain/tokens";
 import { exampleData, minutesData } from "./data";
 const BITQUERY_ENDPOINT = `https://graphql.bitquery.io`;
 const graphqlCache = new InMemoryCache();
@@ -87,15 +88,30 @@ function toUnixTime(dt) {
   return dt.getTime();
 }
 
-export async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurrency) {
+// "baseCurrency": "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
+// "quoteCurrency": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+
+const chain = "BSC";
+export async function getOHLCData(baseSymbol, quoteCurrency = TokenList[chain].WBNB, minuteInterval = 1440) {
+  const baseCurrency = TokenList[chain][baseSymbol]; // BSC only for now
+  if (!!!baseCurrency) {
+    console.log(`${baseSymbol} is not found for chain ${chain}`);
+    return [];
+  }
+  console.log(`basecurrency`, baseCurrency);
+  console.log(`quoteCurrency`, quoteCurrency);
   try {
     const t0 = performance.now();
+
+    // we get token / wbnb, and wbnb / usdt to make conversion, this varies between token pools and price.
     const res = await client.query({
       query: exampleQuery,
       variables: {
         "minuteInterval": minuteInterval,
-        "baseCurrency": "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
-        "quoteCurrency": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        // "baseCurrency": "0x4EfDFe8fFAfF109451Fc306e0B529B088597dd8d",
+        // "quoteCurrency": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "baseCurrency": baseCurrency.address,
+        "quoteCurrency": quoteCurrency.address,
       },
     });
     const t1 = performance.now();
@@ -104,6 +120,7 @@ export async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurr
 
     console.log("graphql res", res);
     const { dexTrades, BNBUSDT } = res?.data?.ethereum;
+
     const chartData = dexTrades.map((x, i) => {
       const isLastBar = i === dexTrades.length - 1;
       const bnbUsdt = BNBUSDT[i];
@@ -118,11 +135,10 @@ export async function getOHLCData(minuteInterval = 1440, baseCurrency, quoteCurr
         high: maximumPrice * bnbPrice,
         low: x.minimum_price * bnbPrice,
         close: parseFloat(x.close_price) * parseFloat(bnbUsdt.close_price),
-        isBarClosed: isLastBar ? false : true,
+        isBarClosed: !isLastBar,
         isLastBar,
       };
     });
-
     return chartData;
   } catch (e) {
     console.log(`e`, e);

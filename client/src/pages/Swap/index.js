@@ -522,7 +522,7 @@ function getChartTokenTicker() {
 // TODO: Chrome simulator UI doesn't reflect real device size
 const PageSwap = () => {
   // TODO: Move this to the currencySelector
-  const [tradingSymbol, setTradingSymbol] = React.useState("BNB");
+  const [tradingSymbol, setTradingSymbol] = React.useState("VGA");
 
   return (
     <>
@@ -551,7 +551,7 @@ const PageSwap = () => {
 
         <Col lg={12}>
           <Button onClick={() => {
-            setTradingSymbol("VGA1");
+            setTradingSymbol("VGA");
           }}>Change token</Button>
 
           <TVChartContainer symbol={tradingSymbol}/>

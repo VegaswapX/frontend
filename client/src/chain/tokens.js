@@ -1,3 +1,4 @@
+// TODO: Need to track their pools as well
 export const TokenList = {
   BSC: {
     USDC: {

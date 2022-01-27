@@ -10,9 +10,10 @@ function getLanguageFromURL() {
   return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+// add props here
 export class TVChartContainer extends React.PureComponent {
   static defaultProps = {
-    symbol: "VGA/USD",
+    // symbol: "VGA", // Default
     interval: "15",
     containerId: "tv_chart_container",
     datafeedUrl: "https://demo_feed.tradingview.com",
@@ -28,7 +29,13 @@ export class TVChartContainer extends React.PureComponent {
 
   tvWidget = null;
 
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
+    console.log(`this.props.symbol`, this.props.symbol);
+
     const widgetOptions = {
       symbol: this.props.symbol,
       // BEWARE: no trailing slash is expected in feed URL
@@ -79,6 +86,23 @@ export class TVChartContainer extends React.PureComponent {
 
         button.innerHTML = "Check API";
       });
+
+      tvWidget
+        .chart()
+        .onSymbolChanged()
+        .subscribe(null, function(symbolData) {
+          console.log("Symbol change ");
+          console.log(`symbolData`, symbolData);
+          // thisComponent.getPattern();
+        });
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log(`this.props.symbol`, this.props.symbol);
+
+    this.tvWidget.setSymbol(this.props.symbol, this.props.interval, () => {
+      console.log(`changed to ${this.props.symbol}`);
     });
   }
 

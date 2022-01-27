@@ -138,7 +138,7 @@ export default {
 
     const symbolInfo = {
       // ticker: symbolItem.full_name,
-      name: "VGA", // TODO: Pass this from the constructor or somehow
+      name: symbolName, // TODO: Pass this from the constructor or somehow
       // description: symbolItem.description,
       // type: symbolItem.type,
       session: "24x7",
@@ -167,7 +167,7 @@ export default {
     }
     calledOnce = true;
     const data = await getOHLCData();
-    console.log(`data`, data);
+    console.log(`[getBars] data`, data);
     onHistoryCallback(data, { noData: false });
   },
   subscribeBars: async () => {

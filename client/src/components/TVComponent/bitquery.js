@@ -5,7 +5,7 @@ import { exampleData, minutesData } from "./data";
 const BITQUERY_ENDPOINT = `https://graphql.bitquery.io`;
 const graphqlCache = new InMemoryCache();
 
-const exampleQuery = gql `
+const BNBAndTokenTrades = gql `
 query ($minuteInterval: Int, $baseCurrency: String, $quoteCurrency: String) {
   ethereum(network: bsc) {
     BNBUSDT: dexTrades(
@@ -102,7 +102,7 @@ export async function getOHLCData(baseSymbol, quoteCurrency = TokenList[chain].W
 
     // we get token / wbnb, and wbnb / usdt to make conversion, this varies between token pools and price.
     const res = await client.query({
-      query: exampleQuery,
+      query: BNBAndTokenTrades,
       variables: {
         "minuteInterval": minuteInterval,
         // DEBUG: info

@@ -161,15 +161,15 @@ export default {
 
   // return bars info
   getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-    if (calledOnce) {
-      onHistoryCallback([], { noData: true });
-      return;
-    }
-    calledOnce = true;
+    // TODO: Fix the problem it's being call continuously
+    // if (calledOnce) {
+    //   onHistoryCallback([], { noData: true });
+    //   return;
+    // }
     console.log(`symbolInfo`, symbolInfo);
     const data = await getOHLCData(symbolInfo.name);
     console.log(`[getBars] data`, data);
-    onHistoryCallback(data, { noData: false });
+    onHistoryCallback(data, { noData: true });
   },
   subscribeBars: async () => {
   },

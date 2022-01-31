@@ -89,7 +89,8 @@ function toUnixTime(dt) {
 }
 
 const chain = "BSC";
-export async function getOHLCData(baseSymbol, quoteCurrency = TokenList[chain].WBNB, minuteInterval = 1440) {
+const defaultInterval = 1440; // minutes = 1D
+export async function getOHLCData(baseSymbol, quoteCurrency = TokenList[chain].WBNB, minuteInterval = defaultInterval) {
   const baseCurrency = TokenList[chain][baseSymbol]; // BSC only for now
   if (!!!baseCurrency) {
     console.log(`${baseSymbol} is not found for chain ${chain}`);

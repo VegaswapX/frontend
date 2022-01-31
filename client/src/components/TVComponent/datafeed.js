@@ -30,7 +30,6 @@ export function parseFullSymbol(fullSymbol) {
 
 async function getAllSymbols() {
   const data = await makeApiRequest("data/v3/all/exchanges");
-  console.log(` getAllSymbols data`, data.Data);
   let allSymbols = [];
 
   for (const exchange of configurationData.exchanges) {
@@ -74,7 +73,7 @@ const configurationData = {
 };
 
 async function _getBars(from, to, parsedSymbol) {
-  console.log(`[_getBars] parsedSymbol`, parsedSymbol);
+  // console.log(`[_getBars] parsedSymbol`, parsedSymbol);
   const urlParameters = {
     e: parsedSymbol.exchange,
     fsym: parsedSymbol.fromSymbol,
@@ -104,20 +103,21 @@ async function _getBars(from, to, parsedSymbol) {
         }];
       }
     });
-    console.log(`[getBars]: returned ${bars.length} bar(s)`);
-    console.log(`bars`, bars);
+    // console.log(`[getBars]: returned ${bars.length} bar(s)`);
+    // console.log(`bars`, bars);
     return bars;
   } catch (error) {
-    console.log("[getBars]: Get error", error);
+    // console.log("[getBars]: Get error", error);
     return null;
   }
 }
 
-let calledOnce = false;
+let thereIsMoreData = true;
+let currentSymbol = undefined;
 
 export default {
   onReady: (callback) => {
-    console.log("[onReady]: Method call");
+    // console.log("[onReady]: Method call");
     setTimeout(() => callback(configurationData));
   },
 
@@ -155,21 +155,31 @@ export default {
       // data_status: 'streaming',
     };
 
-    console.log("[resolveSymbol]: Symbol resolved", symbolName);
+    // console.log("[resolveSymbol]: Symbol resolved", symbolName);
     onSymbolResolvedCallback(symbolInfo);
   },
 
   // return bars info
   getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
+    // console.log(`periodParams.countBack`, periodParams.countBack);
+    if (!!!currentSymbol || currentSymbol !== symbolInfo.name) {
+      currentSymbol = symbolInfo.name;
+      thereIsMoreData = true;
+    }
+
     // TODO: Fix the problem it's being call continuously
-    // if (calledOnce) {
-    //   onHistoryCallback([], { noData: true });
-    //   return;
-    // }
-    console.log(`symbolInfo`, symbolInfo);
+    if (!!!thereIsMoreData) {
+      onHistoryCallback([], { noData: true });
+      return;
+    }
+    // console.log(`symbolInfo`, symbolInfo);
     const data = await getOHLCData(symbolInfo.name);
-    console.log(`[getBars] data`, data);
-    onHistoryCallback(data, { noData: true });
+    // console.log(`[getBars] data.length`, data.length);
+    thereIsMoreData = false;
+    // if (data.length < periodParams.countBack) {
+    //   thereIsMoreData = false; // check newSymbol
+    // }
+    onHistoryCallback(data, { noData: false });
   },
   subscribeBars: async () => {
   },

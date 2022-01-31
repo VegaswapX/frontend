@@ -14,7 +14,7 @@ function getLanguageFromURL() {
 export class TVChartContainer extends React.PureComponent {
   static defaultProps = {
     // symbol: "VGA", // Default
-    interval: "15",
+    interval: "1D",
     containerId: "tv_chart_container",
     datafeedUrl: "https://demo_feed.tradingview.com",
     libraryPath: "/charting_library/",
@@ -56,6 +56,9 @@ export class TVChartContainer extends React.PureComponent {
         "header_compare",
         "header_undo_redo",
         "header_saveload",
+
+        "chart_scroll",
+        "chart_zoom",
       ],
       enabled_features: [],
       charts_storage_url: this.props.chartsStorageUrl,
@@ -72,29 +75,20 @@ export class TVChartContainer extends React.PureComponent {
 
     tvWidget.onChartReady(() => {
       tvWidget.headerReady().then(() => {
-        const button = tvWidget.createButton();
-        button.setAttribute("title", "Click to show a notification popup");
-        button.classList.add("apply-common-tooltip");
-        button.addEventListener("click", () =>
-          tvWidget.showNoticeDialog({
-            title: "Notification",
-            body: "TradingView Charting Library API works correctly",
-            callback: () => {
-              console.log("Noticed!");
-            },
-          }));
-
-        button.innerHTML = "Check API";
+        // const button = tvWidget.createButton();
+        // button.setAttribute("title", "Click to show a notification popup");
+        // button.classList.add("apply-common-tooltip");
+        // button.addEventListener("click", () =>
+        //   tvWidget.showNoticeDialog({
+        //     title: "Notification",
+        //     body: "TradingView Charting Library API works correctly",
+        //     callback: () => {
+        //       console.log("Noticed!");
+        //     },
+        //   }));
+        //
+        // button.innerHTML = "Check API";
       });
-
-      tvWidget
-        .chart()
-        .onSymbolChanged()
-        .subscribe(null, function(symbolData) {
-          console.log("Symbol change ");
-          console.log(`symbolData`, symbolData);
-          // thisComponent.getPattern();
-        });
     });
   }
 
